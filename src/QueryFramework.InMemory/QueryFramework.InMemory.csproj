@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <PackageId>pauldeen79.QueryFramework.InMemory</PackageId>
+    <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
+    <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
+  </ItemGroup>
+
+</Project>
