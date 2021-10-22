@@ -272,7 +272,7 @@ namespace QueryFramework.SqlServer.Extensions
                 stringBuilder.Append(")");
             }
 
-            return ++paramCounter;
+            return paramCounter + 1;
         }
 
         private static void AppendOperatorAndValue(IDbCommand command,

@@ -33,30 +33,42 @@ namespace QueryFramework.Core.Extensions
                 {
                     if (value[i] == noSplitOpenToken)
                     {
-                        if (nestedCount == 0)
-                        {
-                            nestedCount = 1;
-                        }
-                        else
-                        {
-                            nestedCount = 0;
-                        }
+                        nestedCount = GetNextNestedCountForEqualSplitOpenAndCloseToken(nestedCount);
                     }
                 }
                 else
                 {
-                    if (value[i] == noSplitOpenToken)
-                    {
-                        nestedCount++;
-                    }
-
-                    if (value[i] == noSplitCloseToken)
-                    {
-                        nestedCount--;
-                    }
+                    nestedCount = GetNextNestedCountForUnequalSplitOpenAndCloseToken(nestedCount, value[i], noSplitOpenToken, noSplitCloseToken);
                 }
             }
 
+            AddRemainder(value, lst, lastSeparatorPostition);
+
+            return lst.Select(x => RemoveQuotes(x, noSplitOpenToken, noSplitCloseToken)).ToArray();
+        }
+
+        private static int GetNextNestedCountForUnequalSplitOpenAndCloseToken(int nestedCount, char current, char noSplitOpenToken, char noSplitCloseToken)
+        {
+            if (current == noSplitOpenToken)
+            {
+                return nestedCount + 1;
+            }
+
+            if (current == noSplitCloseToken)
+            {
+                return nestedCount - 1;
+            }
+
+            return nestedCount;
+        }
+
+        private static int GetNextNestedCountForEqualSplitOpenAndCloseToken(int nestedCount)
+            => nestedCount == 0
+                ? 1
+                : 0;
+
+        private static void AddRemainder(string value, List<string> lst, int lastSeparatorPostition)
+        {
             if (lastSeparatorPostition != value.Length - 1)
             {
                 lst.Add(value.Substring(lastSeparatorPostition + 1));
@@ -65,8 +77,6 @@ namespace QueryFramework.Core.Extensions
             {
                 lst.Add(string.Empty);
             }
-
-            return lst.Select(x => RemoveQuotes(x, noSplitOpenToken, noSplitCloseToken)).ToArray();
         }
 
         private static string RemoveQuotes(string arg, char noSplitOpenToken, char noSplitCloseToken)

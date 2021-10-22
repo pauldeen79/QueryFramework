@@ -31,22 +31,16 @@ namespace QueryFramework.InMemory
                 }
                 if (currentValue == null)
                 {
-                    return orderByField.Order == QuerySortOrderDirection.Ascending
-                        ? - 1
-                        : 1;
+                    return CompareToCurrentNull(orderByField);
                 }
                 if (otherValue == null)
                 {
-                    return orderByField.Order == QuerySortOrderDirection.Ascending
-                        ? 1
-                        : -1;
+                    return CompareToOtherNull(orderByField);
                 }
                 var result = currentValue.CompareTo(otherValue);
                 if (result != 0)
                 {
-                    return orderByField.Order == QuerySortOrderDirection.Ascending
-                        ? result
-                        : -result;
+                    return CompareToNotNull(orderByField, result);
                 }
             }
 
@@ -91,5 +85,20 @@ namespace QueryFramework.InMemory
 
         public static bool operator <=(OrderByWrapper<T> left, OrderByWrapper<T> right)
             => left.CompareTo(right) <= 0;
+
+        private static int CompareToNotNull(IQuerySortOrder orderByField, int result)
+            => orderByField.Order == QuerySortOrderDirection.Ascending
+                ? result
+                : -result;
+
+        private static int CompareToOtherNull(IQuerySortOrder orderByField)
+            => orderByField.Order == QuerySortOrderDirection.Ascending
+                ? 1
+                : -1;
+
+        private static int CompareToCurrentNull(IQuerySortOrder orderByField)
+            => orderByField.Order == QuerySortOrderDirection.Ascending
+                ? -1
+                : 1;
     }
 }
