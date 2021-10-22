@@ -243,31 +243,11 @@ namespace QueryFramework.SqlServer.Extensions
 
                     if (getFieldNameDelegate != null)
                     {
-                        var newFieldName = getFieldNameDelegate(querySortOrder.Field.FieldName);
-                        if (newFieldName == null && validateFieldNames)
-                        {
-                            throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
-                        }
-                        var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
-                        if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(newQuerySortOrder.Field))
-                        {
-                            throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", newQuerySortOrder.Field));
-                        }
-                        instance
-                            .Append(newQuerySortOrder.Field.Expression)
-                            .Append(" ")
-                            .Append(newQuerySortOrder.ToSql());
+                        AppendOrderByForDynamicFieldNames(instance, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate, querySortOrder);
                     }
                     else
                     {
-                        if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(querySortOrder.Field))
-                        {
-                            throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", querySortOrder.Field));
-                        }
-                        instance
-                            .Append(querySortOrder.Field.Expression)
-                            .Append(" ")
-                            .Append(querySortOrder.ToSql());
+                        AppendOrderByForStaticFieldNames(instance, expressionValidationDelegate, querySortOrder);
                     }
                     fieldCounter++;
                 }
@@ -279,6 +259,36 @@ namespace QueryFramework.SqlServer.Extensions
             }
 
             return instance;
+        }
+
+        private static void AppendOrderByForStaticFieldNames(StringBuilder instance, Func<IQueryExpression, bool> expressionValidationDelegate, IQuerySortOrder querySortOrder)
+        {
+            if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(querySortOrder.Field))
+            {
+                throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", querySortOrder.Field));
+            }
+            instance
+                .Append(querySortOrder.Field.Expression)
+                .Append(" ")
+                .Append(querySortOrder.ToSql());
+        }
+
+        private static void AppendOrderByForDynamicFieldNames(StringBuilder instance, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IQuerySortOrder querySortOrder)
+        {
+            var newFieldName = getFieldNameDelegate(querySortOrder.Field.FieldName);
+            if (newFieldName == null && validateFieldNames)
+            {
+                throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
+            }
+            var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
+            if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(newQuerySortOrder.Field))
+            {
+                throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", newQuerySortOrder.Field));
+            }
+            instance
+                .Append(newQuerySortOrder.Field.Expression)
+                .Append(" ")
+                .Append(newQuerySortOrder.ToSql());
         }
 
         /// <summary>
@@ -313,30 +323,40 @@ namespace QueryFramework.SqlServer.Extensions
 
                 if (getFieldNameDelegate != null)
                 {
-                    var correctedFieldName = getFieldNameDelegate(groupBy.FieldName);
-                    if (correctedFieldName == null && validateFieldNames)
-                    {
-                        throw new InvalidOperationException(string.Format("Query group by fields contains unknown field [{0}]", groupBy.FieldName));
-                    }
-                    var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
-                    if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(corrected))
-                    {
-                        throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", corrected));
-                    }
-                    instance.Append(corrected.Expression);
+                    AppendGroupByForDynamicFieldNames(instance, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate, groupBy);
                 }
                 else
                 {
-                    if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(groupBy))
-                    {
-                        throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", groupBy));
-                    }
-                    instance.Append(groupBy.Expression);
+                    AppendGroupByForStaticFieldNames(instance, expressionValidationDelegate, groupBy);
                 }
                 fieldCounter++;
             }
 
             return instance;
+        }
+
+        private static void AppendGroupByForStaticFieldNames(StringBuilder instance, Func<IQueryExpression, bool> expressionValidationDelegate, IQueryExpression groupBy)
+        {
+            if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(groupBy))
+            {
+                throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", groupBy));
+            }
+            instance.Append(groupBy.Expression);
+        }
+
+        private static void AppendGroupByForDynamicFieldNames(StringBuilder instance, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IQueryExpression groupBy)
+        {
+            var correctedFieldName = getFieldNameDelegate(groupBy.FieldName);
+            if (correctedFieldName == null && validateFieldNames)
+            {
+                throw new InvalidOperationException(string.Format("Query group by fields contains unknown field [{0}]", groupBy.FieldName));
+            }
+            var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
+            if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(corrected))
+            {
+                throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", corrected));
+            }
+            instance.Append(corrected.Expression);
         }
 
         /// <summary>
@@ -552,17 +572,7 @@ namespace QueryFramework.SqlServer.Extensions
                         orderByBuilder.Append(", ");
                     }
 
-                    var fieldName = getFieldNameDelegate == null
-                        ? null
-                        : getFieldNameDelegate(querySortOrder.Field.FieldName);
-
-                    if (getFieldNameDelegate != null
-                        && fieldName == null
-                        && validateFieldNames)
-                    {
-                        throw new InvalidOperationException(string.Format("Query OrderByFields contains unknown field [{0}]", querySortOrder.Field));
-                    }
-                    
+                    var fieldName = GetOrderByFieldName(validateFieldNames, getFieldNameDelegate, querySortOrder);
                     var corrected = new QuerySortOrder(new QueryExpression(fieldName ?? querySortOrder.Field.FieldName, querySortOrder.Field.GetRawExpression()), querySortOrder.Order);
                     if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(corrected.Field))
                     {
@@ -583,6 +593,22 @@ namespace QueryFramework.SqlServer.Extensions
             }
 
             return instance;
+        }
+
+        private static string GetOrderByFieldName(bool validateFieldNames, Func<string, string> getFieldNameDelegate, IQuerySortOrder querySortOrder)
+        {
+            var fieldName = getFieldNameDelegate == null
+                ? null
+                : getFieldNameDelegate(querySortOrder.Field.FieldName);
+
+            if (getFieldNameDelegate != null
+                && fieldName == null
+                && validateFieldNames)
+            {
+                throw new InvalidOperationException(string.Format("Query OrderByFields contains unknown field [{0}]", querySortOrder.Field));
+            }
+
+            return fieldName;
         }
 
         /// <summary>Appends the paging suffix.</summary>
