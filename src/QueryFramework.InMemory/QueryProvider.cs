@@ -21,29 +21,19 @@ namespace QueryFramework.InMemory
 
         public IQueryResult<T> Query(ISingleEntityQuery query)
         {
-            var filteredRecords = new List<T>();
+            var filteredRecords = new List<T>(SourceData.Where(item => ItemIsValid(item, query.Conditions)));
+            return new QueryResult<T>(GetPagedData(query, filteredRecords), filteredRecords.Count);
+        }
 
-            foreach (var item in SourceData)
-            {
-                if (ItemIsValid(item, query.Conditions))
-                {
-                    filteredRecords.Add(item);
-                }
-            }
-
-            var set = GetPagedData(query, filteredRecords);
+        private IEnumerable<T> GetPagedData(ISingleEntityQuery query, List<T> filteredRecords)
+        {
+            IEnumerable<T> result = filteredRecords;
 
             if (query.OrderByFields.Any())
             {
-                set = set.OrderBy(x => new OrderByWrapper<T>(x, query.OrderByFields, ValueRetriever));
+                result = result.OrderBy(x => new OrderByWrapper<T>(x, query.OrderByFields, ValueRetriever));
             }
 
-            return new QueryResult<T>(set, filteredRecords.Count);
-        }
-
-        private static IEnumerable<T> GetPagedData(ISingleEntityQuery query, List<T> filteredRecords)
-        {
-            IEnumerable<T> result = filteredRecords;
             if (query.Offset != null)
             {
                 result = result.Skip(query.Offset.Value);
@@ -80,26 +70,9 @@ namespace QueryFramework.InMemory
 
         private static bool EvaluateBooleanExpression(string expression)
         {
-            var result = true;
-            var @operator = "&";
-            var openIndex = -1;
-            int closeIndex;
-            do
-            {
-                closeIndex = expression.IndexOf(")");
-                if (closeIndex > -1)
-                {
-                    openIndex = expression.LastIndexOf("(", closeIndex);
-                    if (openIndex > -1)
-                    {
-                        result = EvaluateBooleanExpression(expression.Substring(openIndex + 1, closeIndex - openIndex - 1));
-                        expression = (openIndex == 0 ? string.Empty : expression.Substring(0, openIndex - 1))
-                            + (result ? "T" : "F")
-                            + (closeIndex == expression.Length ? string.Empty : expression.Substring(closeIndex + 1));
-                    }
-                }
-            } while (closeIndex > -1 && openIndex > -1);
+            var result = ProcessRecursive(ref expression);
 
+            var @operator = "&";
             foreach (var character in expression)
             {
                 bool currentResult;
@@ -123,6 +96,38 @@ namespace QueryFramework.InMemory
 
             return result;
         }
+
+        private static bool ProcessRecursive(ref string expression)
+        {
+            var result = true;
+            var openIndex = -1;
+            int closeIndex;
+            do
+            {
+                closeIndex = expression.IndexOf(")");
+                if (closeIndex > -1)
+                {
+                    openIndex = expression.LastIndexOf("(", closeIndex);
+                    if (openIndex > -1)
+                    {
+                        result = EvaluateBooleanExpression(expression.Substring(openIndex + 1, closeIndex - openIndex - 1));
+                        expression = string.Concat(GetPrefix(expression, openIndex),
+                                                   GetCurrent(result),
+                                                   GetSuffix(expression, closeIndex));
+                    }
+                }
+            } while (closeIndex > -1 && openIndex > -1);
+            return result;
+        }
+
+        private static string GetPrefix(string expression, int openIndex)
+            => openIndex == 0 ? string.Empty : expression.Substring(0, openIndex - 1);
+
+        private static string GetCurrent(bool result)
+            => result ? "T" : "F";
+
+        private static string GetSuffix(string expression, int closeIndex)
+            => closeIndex == expression.Length ? string.Empty : expression.Substring(closeIndex + 1);
 
         private static bool Evaluate(IQueryCondition condition, object value)
         {
