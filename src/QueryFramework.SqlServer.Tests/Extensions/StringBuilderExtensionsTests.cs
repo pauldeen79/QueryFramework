@@ -121,7 +121,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             builder.Invoking(x => x.AppendSelectFields(query, Array.Empty<string>(), countOnly: false, getFieldNameDelegate: _ => null))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
         }
 
@@ -134,7 +134,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             builder.Invoking(x => x.AppendSelectFields(query, Array.Empty<string>(), countOnly: false, expressionValidationDelegate: _ => false))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains invalid expression [Field1]");
         }
 
@@ -339,7 +339,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendOrderByClause(query.OrderByFields, defaultOrderBy: null, query.Offset, countOnly: false, getFieldNameDelegate: _ => null))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains unknown field [Field]");
         }
 
@@ -352,7 +352,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendOrderByClause(query.OrderByFields, defaultOrderBy: null, query.Offset, countOnly: false, expressionValidationDelegate: _ => false, getFieldNameDelegate: null))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
 
@@ -365,7 +365,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendOrderByClause(query.OrderByFields, defaultOrderBy: null, query.Offset, countOnly: false,  expressionValidationDelegate: _ => false, getFieldNameDelegate: x => x))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
 
@@ -447,7 +447,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendGroupByClause(query.GroupByFields, getFieldNameDelegate: x => null))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
         }
 
@@ -460,7 +460,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendGroupByClause(query.GroupByFields, getFieldNameDelegate: x => null, expressionValidationDelegate: _ => true))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
         }
 
@@ -473,7 +473,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendGroupByClause(query.GroupByFields, getFieldNameDelegate: null, expressionValidationDelegate: _ => false))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
 
@@ -486,7 +486,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendGroupByClause(query.GroupByFields, getFieldNameDelegate: x => x, expressionValidationDelegate: _ => false))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
 
@@ -658,7 +658,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendPagingPrefix(query, false, getFieldNameDelegate: _ => null))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query OrderByFields contains unknown field [Field]");
         }
 
@@ -671,7 +671,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             builder.Invoking(x => x.AppendPagingPrefix(query, false, expressionValidationDelegate: _ => false))
-                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query OrderByFields contains invalid expression [Field]");
         }
 

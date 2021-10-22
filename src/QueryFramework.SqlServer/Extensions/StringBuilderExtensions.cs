@@ -33,7 +33,6 @@ namespace QueryFramework.SqlServer.Extensions
                                                        Func<IEnumerable<string>> getAllFieldsDelegate = null,
                                                        Func<IQueryExpression, bool> expressionValidationDelegate = null)
         {
-            var paramCounter = 0;
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             if (countOnly)
             {
@@ -41,60 +40,72 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else if (fieldSelectionQuery?.GetAllFields != false)
             {
-                if (getAllFieldsDelegate == null)
-                {
-                    instance.Append(fields.WhenNullOrWhitespace("*"));
-                }
-                else
-                {
-                    foreach (var fieldName in getAllFieldsDelegate())
-                    {
-                        if (paramCounter > 0)
-                        {
-                            instance.Append(", ");
-                        }
-
-                        instance.Append(fieldName);
-                        paramCounter++;
-                    }
-                }
+                AppendSelectFieldsForAllFields(instance, fields, getAllFieldsDelegate);
             }
             else
             {
-                foreach (var expression in fieldSelectionQuery.GetSelectFields(skipFields))
+                AppendSelectFieldsForSpecifiedFields(instance, skipFields, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate, fieldSelectionQuery);
+            }
+
+            return instance;
+        }
+
+        private static void AppendSelectFieldsForAllFields(StringBuilder instance, string fields, Func<IEnumerable<string>> getAllFieldsDelegate)
+        {
+            if (getAllFieldsDelegate == null)
+            {
+                instance.Append(fields.WhenNullOrWhitespace("*"));
+            }
+            else
+            {
+                var paramCounter = 0;
+                foreach (var fieldName in getAllFieldsDelegate())
                 {
                     if (paramCounter > 0)
                     {
                         instance.Append(", ");
                     }
 
-                    var correctedExpression = expression;
-                    if (getFieldNameDelegate != null)
-                    {
-                        var correctedFieldName = getFieldNameDelegate(expression.FieldName);
-                        if (correctedFieldName == null && validateFieldNames)
-                        {
-                            throw new ArgumentOutOfRangeException(nameof(query), string.Format("Query fields contains unknown field in expression [{0}]", expression));
-                        }
-
-                        if (correctedFieldName != null)
-                        {
-                            //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
-                            correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
-                        }
-                    }
-
-                    if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(correctedExpression))
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(query), string.Format("Query fields contains invalid expression [{0}]", expression));
-                    }
-
-                    instance.Append(correctedExpression.Expression);
+                    instance.Append(fieldName);
                     paramCounter++;
                 }
             }
+        }
 
-            return instance;
+        private static void AppendSelectFieldsForSpecifiedFields(StringBuilder instance, string[] skipFields, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IFieldSelectionQuery fieldSelectionQuery)
+        {
+            var paramCounter = 0;
+            foreach (var expression in fieldSelectionQuery.GetSelectFields(skipFields))
+            {
+                if (paramCounter > 0)
+                {
+                    instance.Append(", ");
+                }
+
+                var correctedExpression = expression;
+                if (getFieldNameDelegate != null)
+                {
+                    var correctedFieldName = getFieldNameDelegate(expression.FieldName);
+                    if (correctedFieldName == null && validateFieldNames)
+                    {
+                        throw new InvalidOperationException(string.Format("Query fields contains unknown field in expression [{0}]", expression));
+                    }
+
+                    if (correctedFieldName != null)
+                    {
+                        //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
+                        correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
+                    }
+                }
+
+                if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(correctedExpression))
+                {
+                    throw new InvalidOperationException(string.Format("Query fields contains invalid expression [{0}]", expression));
+                }
+
+                instance.Append(correctedExpression.Expression);
+                paramCounter++;
+            }
         }
 
         /// <summary>
@@ -235,12 +246,12 @@ namespace QueryFramework.SqlServer.Extensions
                         var newFieldName = getFieldNameDelegate(querySortOrder.Field.FieldName);
                         if (newFieldName == null && validateFieldNames)
                         {
-                            throw new ArgumentOutOfRangeException(nameof(orderByFields), string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
+                            throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
                         }
                         var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
                         if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(newQuerySortOrder.Field))
                         {
-                            throw new ArgumentOutOfRangeException(nameof(orderByFields), string.Format("Query order by fields contains invalid expression [{0}]", newQuerySortOrder.Field));
+                            throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", newQuerySortOrder.Field));
                         }
                         instance
                             .Append(newQuerySortOrder.Field.Expression)
@@ -251,7 +262,7 @@ namespace QueryFramework.SqlServer.Extensions
                     {
                         if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(querySortOrder.Field))
                         {
-                            throw new ArgumentOutOfRangeException(nameof(orderByFields), string.Format("Query order by fields contains invalid expression [{0}]", querySortOrder.Field));
+                            throw new InvalidOperationException(string.Format("Query order by fields contains invalid expression [{0}]", querySortOrder.Field));
                         }
                         instance
                             .Append(querySortOrder.Field.Expression)
@@ -305,12 +316,12 @@ namespace QueryFramework.SqlServer.Extensions
                     var correctedFieldName = getFieldNameDelegate(groupBy.FieldName);
                     if (correctedFieldName == null && validateFieldNames)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(groupByFields), string.Format("Query group by fields contains unknown field [{0}]", groupBy.FieldName));
+                        throw new InvalidOperationException(string.Format("Query group by fields contains unknown field [{0}]", groupBy.FieldName));
                     }
                     var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
                     if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(corrected))
                     {
-                        throw new ArgumentOutOfRangeException(nameof(groupByFields), string.Format("Query group by fields contains invalid expression [{0}]", corrected));
+                        throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", corrected));
                     }
                     instance.Append(corrected.Expression);
                 }
@@ -318,7 +329,7 @@ namespace QueryFramework.SqlServer.Extensions
                 {
                     if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(groupBy))
                     {
-                        throw new ArgumentOutOfRangeException(nameof(groupByFields), string.Format("Query group by fields contains invalid expression [{0}]", groupBy));
+                        throw new InvalidOperationException(string.Format("Query group by fields contains invalid expression [{0}]", groupBy));
                     }
                     instance.Append(groupBy.Expression);
                 }
@@ -549,13 +560,13 @@ namespace QueryFramework.SqlServer.Extensions
                         && fieldName == null
                         && validateFieldNames)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(query), string.Format("Query OrderByFields contains unknown field [{0}]", querySortOrder.Field));
+                        throw new InvalidOperationException(string.Format("Query OrderByFields contains unknown field [{0}]", querySortOrder.Field));
                     }
                     
                     var corrected = new QuerySortOrder(new QueryExpression(fieldName ?? querySortOrder.Field.FieldName, querySortOrder.Field.GetRawExpression()), querySortOrder.Order);
                     if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(corrected.Field))
                     {
-                        throw new ArgumentOutOfRangeException(nameof(query), string.Format("Query OrderByFields contains invalid expression [{0}]", corrected.Field));
+                        throw new InvalidOperationException(string.Format("Query OrderByFields contains invalid expression [{0}]", corrected.Field));
                     }
                     orderByBuilder
                         .Append(corrected.Field.Expression)
