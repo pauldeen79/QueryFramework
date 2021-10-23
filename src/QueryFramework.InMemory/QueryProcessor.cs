@@ -8,18 +8,18 @@ using QueryFramework.Core;
 
 namespace QueryFramework.InMemory
 {
-    public class QueryProvider<T> : IQueryProcessor<T>
+    public class QueryProcessor<T> : IQueryProcessor<T>
     {
         private IEnumerable<T> SourceData { get; }
         private IExpressionEvaluator<T> ValueRetriever { get; }
 
-        public QueryProvider(IEnumerable<T> sourceData)
+        public QueryProcessor(IEnumerable<T> sourceData)
         {
             SourceData = sourceData;
             ValueRetriever = new ExpressionEvaluator<T>(new ValueProvider());
         }
 
-        public IQueryResult<T> Query(ISingleEntityQuery query)
+        public IQueryResult<T> Execute(ISingleEntityQuery query)
         {
             var filteredRecords = new List<T>(SourceData.Where(item => ItemIsValid(item, query.Conditions)));
             return new QueryResult<T>(GetPagedData(query, filteredRecords), filteredRecords.Count);
@@ -121,13 +121,19 @@ namespace QueryFramework.InMemory
         }
 
         private static string GetPrefix(string expression, int openIndex)
-            => openIndex == 0 ? string.Empty : expression.Substring(0, openIndex - 1);
+            => openIndex == 0
+                ? string.Empty
+            : expression.Substring(0, openIndex - 1);
 
         private static string GetCurrent(bool result)
-            => result ? "T" : "F";
+            => result
+                ? "T"
+            : "F";
 
         private static string GetSuffix(string expression, int closeIndex)
-            => closeIndex == expression.Length ? string.Empty : expression.Substring(closeIndex + 1);
+            => closeIndex == expression.Length
+                ? string.Empty
+            : expression.Substring(closeIndex + 1);
 
         private static bool Evaluate(IQueryCondition condition, object value)
         {
