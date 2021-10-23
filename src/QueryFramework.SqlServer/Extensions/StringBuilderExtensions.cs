@@ -50,7 +50,9 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static void AppendSelectFieldsForAllFields(StringBuilder instance, string fields, Func<IEnumerable<string>> getAllFieldsDelegate)
+        private static void AppendSelectFieldsForAllFields(StringBuilder instance,
+                                                           string fields,
+                                                           Func<IEnumerable<string>> getAllFieldsDelegate)
         {
             if (getAllFieldsDelegate == null)
             {
@@ -72,7 +74,12 @@ namespace QueryFramework.SqlServer.Extensions
             }
         }
 
-        private static void AppendSelectFieldsForSpecifiedFields(StringBuilder instance, string[] skipFields, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IFieldSelectionQuery fieldSelectionQuery)
+        private static void AppendSelectFieldsForSpecifiedFields(StringBuilder instance,
+                                                                 string[] skipFields,
+                                                                 bool validateFieldNames,
+                                                                 Func<string, string> getFieldNameDelegate,
+                                                                 Func<IQueryExpression, bool> expressionValidationDelegate,
+                                                                 IFieldSelectionQuery fieldSelectionQuery)
         {
             var paramCounter = 0;
             foreach (var expression in fieldSelectionQuery.GetSelectFields(skipFields))
@@ -232,36 +239,48 @@ namespace QueryFramework.SqlServer.Extensions
             else if (orderByFields?.Any() == true
                 || !string.IsNullOrEmpty(defaultOrderBy))
             {
-                instance.Append(" ORDER BY ");
-                var fieldCounter = 0;
-                foreach (var querySortOrder in orderByFields.NotNull())
-                {
-                    if (fieldCounter > 0)
-                    {
-                        instance.Append(", ");
-                    }
-
-                    if (getFieldNameDelegate != null)
-                    {
-                        AppendOrderByForDynamicFieldNames(instance, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate, querySortOrder);
-                    }
-                    else
-                    {
-                        AppendOrderByForStaticFieldNames(instance, expressionValidationDelegate, querySortOrder);
-                    }
-                    fieldCounter++;
-                }
-
-                if (fieldCounter == 0 && !string.IsNullOrEmpty(defaultOrderBy))
-                {
-                    instance.Append(defaultOrderBy);
-                }
+                AppendOrderBy(instance, orderByFields, defaultOrderBy, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate);
             }
 
             return instance;
         }
 
-        private static void AppendOrderByForStaticFieldNames(StringBuilder instance, Func<IQueryExpression, bool> expressionValidationDelegate, IQuerySortOrder querySortOrder)
+        private static void AppendOrderBy(StringBuilder instance,
+                                          IEnumerable<IQuerySortOrder> orderByFields,
+                                          string defaultOrderBy,
+                                          bool validateFieldNames,
+                                          Func<string, string> getFieldNameDelegate,
+                                          Func<IQueryExpression, bool> expressionValidationDelegate)
+        {
+            instance.Append(" ORDER BY ");
+            var fieldCounter = 0;
+            foreach (var querySortOrder in orderByFields.NotNull())
+            {
+                if (fieldCounter > 0)
+                {
+                    instance.Append(", ");
+                }
+
+                if (getFieldNameDelegate != null)
+                {
+                    AppendOrderByForDynamicFieldNames(instance, validateFieldNames, getFieldNameDelegate, expressionValidationDelegate, querySortOrder);
+                }
+                else
+                {
+                    AppendOrderByForStaticFieldNames(instance, expressionValidationDelegate, querySortOrder);
+                }
+                fieldCounter++;
+            }
+
+            if (fieldCounter == 0 && !string.IsNullOrEmpty(defaultOrderBy))
+            {
+                instance.Append(defaultOrderBy);
+            }
+        }
+
+        private static void AppendOrderByForStaticFieldNames(StringBuilder instance,
+                                                             Func<IQueryExpression, bool> expressionValidationDelegate,
+                                                             IQuerySortOrder querySortOrder)
         {
             if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(querySortOrder.Field))
             {
@@ -273,7 +292,11 @@ namespace QueryFramework.SqlServer.Extensions
                 .Append(querySortOrder.ToSql());
         }
 
-        private static void AppendOrderByForDynamicFieldNames(StringBuilder instance, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IQuerySortOrder querySortOrder)
+        private static void AppendOrderByForDynamicFieldNames(StringBuilder instance,
+                                                              bool validateFieldNames,
+                                                              Func<string, string> getFieldNameDelegate,
+                                                              Func<IQueryExpression, bool> expressionValidationDelegate,
+                                                              IQuerySortOrder querySortOrder)
         {
             var newFieldName = getFieldNameDelegate(querySortOrder.Field.FieldName);
             if (newFieldName == null && validateFieldNames)
@@ -335,7 +358,9 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static void AppendGroupByForStaticFieldNames(StringBuilder instance, Func<IQueryExpression, bool> expressionValidationDelegate, IQueryExpression groupBy)
+        private static void AppendGroupByForStaticFieldNames(StringBuilder instance,
+                                                             Func<IQueryExpression, bool> expressionValidationDelegate,
+                                                             IQueryExpression groupBy)
         {
             if (expressionValidationDelegate != null && !expressionValidationDelegate.Invoke(groupBy))
             {
@@ -344,7 +369,11 @@ namespace QueryFramework.SqlServer.Extensions
             instance.Append(groupBy.Expression);
         }
 
-        private static void AppendGroupByForDynamicFieldNames(StringBuilder instance, bool validateFieldNames, Func<string, string> getFieldNameDelegate, Func<IQueryExpression, bool> expressionValidationDelegate, IQueryExpression groupBy)
+        private static void AppendGroupByForDynamicFieldNames(StringBuilder instance,
+                                                              bool validateFieldNames,
+                                                              Func<string, string> getFieldNameDelegate,
+                                                              Func<IQueryExpression, bool> expressionValidationDelegate,
+                                                              IQueryExpression groupBy)
         {
             var correctedFieldName = getFieldNameDelegate(groupBy.FieldName);
             if (correctedFieldName == null && validateFieldNames)
@@ -595,7 +624,9 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static string GetOrderByFieldName(bool validateFieldNames, Func<string, string> getFieldNameDelegate, IQuerySortOrder querySortOrder)
+        private static string GetOrderByFieldName(bool validateFieldNames,
+                                                  Func<string, string> getFieldNameDelegate,
+                                                  IQuerySortOrder querySortOrder)
         {
             var fieldName = getFieldNameDelegate == null
                 ? null

@@ -84,13 +84,9 @@ namespace QueryFramework.QueryParsers
                     OpenBracket = openBracket,
                     CloseBracket = closeBracket,
                     Combination = nextSearchCombination,
-                    Field = _defaultFieldExpressionBuilderFactory == null
-                        ? new TQueryExpressionBuilder().WithFieldName(fieldName)
-                        : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName),
+                    Field = GetField(fieldName),
                     Operator = queryOperator.Value,
-                    Value = queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
-                        ? null
-                        : fieldValue
+                    Value = GetValue(queryOperator.Value, fieldValue)
                 };
 
                 if (items.Length > i + 3)
@@ -108,6 +104,16 @@ namespace QueryFramework.QueryParsers
 
             return result;
         }
+
+        private IQueryExpressionBuilder GetField(string fieldName)
+            => _defaultFieldExpressionBuilderFactory == null
+                ? new TQueryExpressionBuilder().WithFieldName(fieldName)
+                : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
+
+        private object GetValue(QueryOperator queryOperator, object fieldValue)
+            => queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
+                ? null
+                : fieldValue;
 
         private List<IQueryConditionBuilder> PerformSimpleSearch(string[] items)
             => items
