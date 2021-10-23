@@ -19,7 +19,13 @@ namespace QueryFramework.InMemory
             ValueRetriever = new ExpressionEvaluator<T>(new ValueProvider());
         }
 
-        public IQueryResult<T> Execute(ISingleEntityQuery query)
+        public T FindOne(ISingleEntityQuery query)
+            => SourceData.FirstOrDefault(item => ItemIsValid(item, query.Conditions));
+
+        public IReadOnlyCollection<T> FindMany(ISingleEntityQuery query)
+            => SourceData.Where(item => ItemIsValid(item, query.Conditions)).ToList();
+
+        public IQueryResult<T> FindPaged(ISingleEntityQuery query)
         {
             var filteredRecords = new List<T>(SourceData.Where(item => ItemIsValid(item, query.Conditions)));
             return new QueryResult<T>(GetPagedData(query, filteredRecords), filteredRecords.Count);
