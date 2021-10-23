@@ -123,17 +123,17 @@ namespace QueryFramework.InMemory
         private static string GetPrefix(string expression, int openIndex)
             => openIndex == 0
                 ? string.Empty
-            : expression.Substring(0, openIndex - 1);
+                : expression.Substring(0, openIndex - 1);
 
         private static string GetCurrent(bool result)
             => result
                 ? "T"
-            : "F";
+                : "F";
 
         private static string GetSuffix(string expression, int closeIndex)
             => closeIndex == expression.Length
                 ? string.Empty
-            : expression.Substring(closeIndex + 1);
+                : expression.Substring(closeIndex + 1);
 
         private static bool Evaluate(IQueryCondition condition, object value)
         {
