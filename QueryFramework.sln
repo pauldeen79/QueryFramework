@@ -24,6 +24,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers", "src\QueryFramework.QueryParsers\QueryFramework.QueryParsers.csproj", "{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers.Tests", "src\QueryFramework.QueryParsers.Tests\QueryFramework.QueryParsers.Tests.csproj", "{54E5B259-1A4D-4C7A-8D10-3B200DA05344}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +66,14 @@ Global
 		{7A03CF17-8E59-4332-8514-8E04E2E30AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A03CF17-8E59-4332-8514-8E04E2E30AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A03CF17-8E59-4332-8514-8E04E2E30AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
