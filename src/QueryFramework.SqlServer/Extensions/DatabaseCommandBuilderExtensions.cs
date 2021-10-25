@@ -18,13 +18,14 @@ namespace QueryFramework.SqlServer.Extensions
         internal static DatabaseCommandBuilder AppendPagingOuterQuery(this DatabaseCommandBuilder instance,
                                                                       ISingleEntityQuery query,
                                                                       IQueryProcessorSettings settings,
+                                                                      IQueryFieldNameProvider fieldNameProvider,
                                                                       bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly)
             {
                 return instance
                     .Append("SELECT ")
-                    .AppendSelectFields(query, settings, countOnly)
+                    .AppendSelectFields(query, settings, fieldNameProvider, countOnly)
                     .AppendFromClause()
                     .Append("(");
             }
@@ -35,6 +36,7 @@ namespace QueryFramework.SqlServer.Extensions
         internal static DatabaseCommandBuilder AppendSelectFields(this DatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
                                                                   IQueryProcessorSettings settings,
+                                                                  IQueryFieldNameProvider fieldNameProvider,
                                                                   bool countOnly)
         {
             var fieldSelectionQuery = query as IFieldSelectionQuery;
@@ -48,7 +50,7 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else
             {
-                return instance.AppendSelectFieldsForSpecifiedFields(settings, fieldSelectionQuery);
+                return instance.AppendSelectFieldsForSpecifiedFields(settings, fieldSelectionQuery, fieldNameProvider);
             }
         }
 
@@ -79,10 +81,11 @@ namespace QueryFramework.SqlServer.Extensions
 
         private static DatabaseCommandBuilder AppendSelectFieldsForSpecifiedFields(this DatabaseCommandBuilder instance,
                                                                                    IQueryProcessorSettings settings,
-                                                                                   IFieldSelectionQuery fieldSelectionQuery)
+                                                                                   IFieldSelectionQuery fieldSelectionQuery,
+                                                                                   IQueryFieldNameProvider fieldNameProvider)
         {
             var paramCounter = 0;
-            foreach (var expression in fieldSelectionQuery.GetSelectFields(settings))
+            foreach (var expression in fieldSelectionQuery.GetSelectFields(fieldNameProvider))
             {
                 if (paramCounter > 0)
                 {
@@ -148,10 +151,11 @@ namespace QueryFramework.SqlServer.Extensions
         internal static DatabaseCommandBuilder AppendCountOrSelectFields(this DatabaseCommandBuilder instance,
                                                                          ISingleEntityQuery query,
                                                                          IQueryProcessorSettings settings,
+                                                                         IQueryFieldNameProvider fieldNameProvider,
                                                                          bool countOnly)
             => countOnly
                 ? instance.Append("COUNT(*)")
-                : instance.AppendSelectFields(query, settings, countOnly);
+                : instance.AppendSelectFields(query, settings, fieldNameProvider, countOnly);
 
         internal static DatabaseCommandBuilder AppendPagingPrefix(this DatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,

@@ -1,8 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
+using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
 using Xunit;
 
@@ -16,9 +19,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var selectFields = sut.GetSelectFields(new QueryProcessorSettings());
+            var selectFields = sut.GetSelectFields(fieldNameProviderMock.Object);
 
             // Assert
             selectFields.Should().HaveCount(3);
@@ -32,9 +38,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field1" && x != "Field3"));
 
             // Act
-            var selectFields = sut.GetSelectFields(new QueryProcessorSettings(skipFields: new[] { "Field1", "Field3" }));
+            var selectFields = sut.GetSelectFields(fieldNameProviderMock.Object);
 
             // Assert
             selectFields.Should().HaveCount(1);

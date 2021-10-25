@@ -4,11 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Core.Builders;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Core;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
+using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
 using Xunit;
 
@@ -23,9 +25,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: new[] { "Field2" }), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("Field1, Field3");
@@ -37,9 +42,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: new[] { "Field2" }), countOnly: true);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(), fieldNameProviderMock.Object, countOnly: true);
 
             // Assert
             actual.Build().CommandText.Should().Be("COUNT(*)");
@@ -51,9 +59,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), fields: "Field4, Field5, Field6"), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(fields: "Field4, Field5, Field6"), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("Field4, Field5, Field6");
@@ -65,9 +76,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), fields: null), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(fields: null), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("*");
@@ -79,9 +93,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), fields: null, getAllFieldsDelegate: () => new[] { "Field1", "Field2", "Field3" }), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(fields: null, getAllFieldsDelegate: () => new[] { "Field1", "Field2", "Field3" }), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("Field1, Field2, Field3");
@@ -93,9 +110,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>()), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("Field1, Field2, Field3");
@@ -107,9 +127,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), getFieldNameDelegate: x => x + "A"), countOnly: false);
+            var actual = builder.AppendSelectFields(query, new QueryProcessorSettings(getFieldNameDelegate: x => x + "A"), fieldNameProviderMock.Object, countOnly: false);
 
             // Assert
             actual.Build().CommandText.Should().Be("Field1A, Field2A, Field3A");
@@ -121,9 +144,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            builder.Invoking(x => x.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), getFieldNameDelegate: _ => null), countOnly: false))
+            builder.Invoking(x => x.AppendSelectFields(query, new QueryProcessorSettings(getFieldNameDelegate: _ => null), fieldNameProviderMock.Object, countOnly: false))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
         }
@@ -134,9 +160,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var builder = new DatabaseCommandBuilder();
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            builder.Invoking(x => x.AppendSelectFields(query, new QueryProcessorSettings(skipFields: Array.Empty<string>(), expressionValidationDelegate: _ => false), countOnly: false))
+            builder.Invoking(x => x.AppendSelectFields(query, new QueryProcessorSettings(expressionValidationDelegate: _ => false), fieldNameProviderMock.Object, countOnly: false))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains invalid expression [Field1]");
         }

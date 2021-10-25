@@ -11,6 +11,7 @@ namespace QueryFramework.SqlServer
     {
         public IDatabaseCommand Generate<TQuery>(TQuery query,
                                                  IQueryProcessorSettings settings,
+                                                 IQueryFieldNameProvider fieldNameProvider,
                                                  bool countOnly)
             where TQuery : ISingleEntityQuery
         {
@@ -24,13 +25,18 @@ namespace QueryFramework.SqlServer
                 throw new ArgumentNullException(nameof(settings));
             }
 
+            if (fieldNameProvider == null)
+            {
+                throw new ArgumentNullException(nameof(fieldNameProvider));
+            }
+
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             var groupingQuery = query as IGroupingQuery;
             return new DatabaseCommandBuilder()
-                .AppendPagingOuterQuery(query, settings, countOnly)
+                .AppendPagingOuterQuery(query, settings, fieldNameProvider, countOnly)
                 .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)
                 .AppendTopClause(query, settings, countOnly)
-                .AppendCountOrSelectFields(query, settings, countOnly)
+                .AppendCountOrSelectFields(query, settings, fieldNameProvider, countOnly)
                 .AppendPagingPrefix(query, settings, countOnly)
                 .AppendFromClause()
                 .AppendTableName(query, settings)

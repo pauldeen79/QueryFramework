@@ -28,6 +28,7 @@ namespace QueryFramework.SqlServer.Tests
         private DbConnectionCallback Callback { get; }
         private Mock<IDataReaderMapper<MyEntity>> MapperMock { get; }
         private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
+        public Mock<IQueryFieldNameProvider> FieldNameProviderMock { get; }
 
         public QueryProcessorTests()
         {
@@ -37,6 +38,10 @@ namespace QueryFramework.SqlServer.Tests
             MapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
             DatabaseCommandGeneratorMock = new Mock<IDatabaseCommandGenerator>();
+            FieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            FieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
+
         }
 
         public void Dispose()
@@ -48,7 +53,7 @@ namespace QueryFramework.SqlServer.Tests
         public void FindPaged_Throws_On_Null_Query()
         {
             // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
 
             // Act
             sut.Invoking(x => x.FindPaged(null))
@@ -61,7 +66,7 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -79,7 +84,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
             Connection.AddResultForScalarCommand(10);
             var queryMock = new Mock<ISingleEntityQuery>();
@@ -98,7 +103,7 @@ namespace QueryFramework.SqlServer.Tests
         public void FindOne_Throws_On_Null_Query()
         {
             // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
 
             // Act
             sut.Invoking(x => x.FindOne(null))
@@ -111,7 +116,7 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -126,7 +131,7 @@ namespace QueryFramework.SqlServer.Tests
         public void FindMany_Throws_On_Null_Query()
         {
             // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
 
             // Act
             sut.Invoking(x => x.FindMany(null))
@@ -139,7 +144,7 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -156,7 +161,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT Field1, Field2 FROM (SELECT TOP 10 Field1, Field2, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) as sq_row_number FROM MyEntity) sq WHERE sq.sq_row_number BETWEEN 11 and 20;";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(fields: "Field1, Field2"), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(fields: "Field1, Field2"), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new DynamicQueryMock();
 
             // Act
@@ -171,7 +176,7 @@ namespace QueryFramework.SqlServer.Tests
         public void FindMany_Validates_Query_When_ValidateFieldNames_Is_Set_To_True()
         {
             // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new ValidatableQueryMock();
 
             // Act & Assert
@@ -183,7 +188,7 @@ namespace QueryFramework.SqlServer.Tests
         public void FindMany_Does_Not_Validate_Query_When_ValidateFieldNames_Is_Set_To_False()
         {
             // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(validateFieldNames: false), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(validateFieldNames: false), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new ValidatableQueryMock();
 
             // Act & Assert
@@ -197,7 +202,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT Field1, Field2 FROM (SELECT Field1, Field2, ROW_NUMBER() OVER (ORDER BY Field2 ASC) as sq_row_number FROM MyEntity WHERE Field1 = @p0 OR Field1 = @p1) sq WHERE sq.sq_row_number BETWEEN 21 and 30;";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .Select("Field1", "Field2")
                 .Limit(10)
@@ -222,7 +227,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT DISTINCT Field1, Field2 FROM MyEntity";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .SelectDistinct("Field1", "Field2")
                 .From("MyEntity")
@@ -242,7 +247,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT * FROM MyEntity WHERE field = @myparameter";
             SetupDatabaseCommandGenerator(Sql, new { myparameter = "value" });
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new ParameterizedQueryMock
             {
                 Conditions = new List<IQueryCondition> { new QueryCondition("field", QueryOperator.Equal, new QueryParameterValue("myparameter")) },
@@ -266,7 +271,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT TOP 100 Field1, Field2 FROM MyEntity WHERE Field1 = @p0 ORDER BY Field2 ASC";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(defaultOrderBy: "Field2 ASC"), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(defaultOrderBy: "Field2 ASC"), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .Select("Field1", "Field2")
                 .Limit(100)
@@ -288,7 +293,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT TOP 100 Field1, Field2 FROM MyEntity WHERE Field1 = 'Value' ORDER BY Field2 ASC";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(defaultWhere: "Field1 = 'Value'"), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(defaultWhere: "Field1 = 'Value'"), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .Select("Field1", "Field2")
                 .Limit(100)
@@ -310,7 +315,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT TOP 100 Field1, Field2 FROM Table WHERE Field1 = @p0 ORDER BY Field2 ASC";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(tableName: "Table"), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(tableName: "Table"), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .Select("Field1", "Field2")
                 .Limit(100)
@@ -322,7 +327,7 @@ namespace QueryFramework.SqlServer.Tests
             sut.FindMany(query);
 
             // Assert
-            DatabaseCommandGeneratorMock.Verify(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.Is<IQueryProcessorSettings>(x => x.TableName == "Table"), false), Times.Once);
+            DatabaseCommandGeneratorMock.Verify(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.Is<IQueryProcessorSettings>(x => x.TableName == "Table"), It.IsAny<IQueryFieldNameProvider>(), false), Times.Once);
             Callback.Commands.Should().HaveCount(1);
             Callback.Commands.First().CommandText.Should().Be(Sql);
         }
@@ -333,7 +338,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT TOP 10 Field1, Field2 FROM MyEntity WHERE Field1 = @p0 ORDER BY Field2 ASC";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(overrideLimit: 10), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(overrideLimit: 10), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .Select("Field1", "Field2")
                 .Limit(100)
@@ -356,7 +361,7 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             const string Sql = "SELECT TOP 100 Field1, Field2 FROM MyEntity WHERE Field1 = @p0 ORDER BY Field2 ASC";
             SetupDatabaseCommandGenerator(Sql);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(getAllFieldsDelegate: () => new[] { "Field1", "Field2" }), DatabaseCommandGeneratorMock.Object);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, new QueryProcessorSettings(getAllFieldsDelegate: () => new[] { "Field1", "Field2" }), DatabaseCommandGeneratorMock.Object, FieldNameProviderMock.Object);
             var query = new AdvancedSingleDataObjectQueryBuilder()
                 .SelectAll()
                 .Limit(100)
@@ -374,11 +379,11 @@ namespace QueryFramework.SqlServer.Tests
         }
 
         private void SetupDatabaseCommandGenerator(string sql, object parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), false))
+            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldNameProvider>(), false))
                                            .Returns(new SqlTextCommand(sql, parameters));
 
         private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), true))
+            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldNameProvider>(), true))
                                    .Returns(new SqlTextCommand(sql, parameters));
 
     }

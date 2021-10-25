@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Stub;
 using System.Data.Stub.Extensions;
@@ -365,7 +366,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var mapperMock = new Mock<IDataReaderMapper<MyEntity>>();
             mapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(), new DatabaseCommandGenerator());
+            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
+            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                                 .Returns<IEnumerable<string>>(input => input);
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(), new DatabaseCommandGenerator(), fieldNameProviderMock.Object);
             var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
             sut.FindMany(query);
 
