@@ -40,13 +40,13 @@ namespace QueryFramework.SqlServer.Tests.QueryExpressions
             var mapperMock = new Mock<IDataReaderMapper<MyEntity>>();
             mapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(tableName: "Table"), new DatabaseCommandGenerator());
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(), new DatabaseCommandGenerator());
             var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
             sut.FindMany(query);
 
             // Assert
             callback.Commands.Should().HaveCount(1);
-            callback.Commands.First().CommandText.Should().Be($"SELECT * FROM Table WHERE {expectedSqlForExpression} = @p0");
+            callback.Commands.First().CommandText.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
         }
     }
 }

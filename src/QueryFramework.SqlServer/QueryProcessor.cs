@@ -69,7 +69,7 @@ namespace QueryFramework.SqlServer
             }
 
             query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query, _settings, countOnly);
+            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), countOnly);
         }
     }
 }
