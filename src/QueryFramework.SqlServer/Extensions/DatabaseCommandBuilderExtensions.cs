@@ -531,7 +531,7 @@ namespace QueryFramework.SqlServer.Extensions
                     instance.Append("COALESCE(");
                 }
 
-                instance.Append(field.Expression.WithPrefix(settings.FieldPrefix));
+                instance.Append(field.Expression);
 
                 if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
                 {
@@ -541,7 +541,7 @@ namespace QueryFramework.SqlServer.Extensions
 
             var paramName = GetQueryParameterName(paramCounter, queryCondition.Value);
 
-            AppendOperatorAndValue(instance, paramCounter, queryCondition, field, paramName, settings.FieldPrefix);
+            AppendOperatorAndValue(instance, paramCounter, queryCondition, field, paramName);
 
             if (queryCondition.CloseBracket)
             {
@@ -555,8 +555,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                    int paramCounter,
                                                    IQueryCondition queryCondition,
                                                    IQueryExpression field,
-                                                   string paramName,
-                                                   string fieldPrefix)
+                                                   string paramName)
         {
             if (queryCondition.Operator == QueryOperator.IsNull)
             {
@@ -576,32 +575,32 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else if (queryCondition.Operator == QueryOperator.Contains)
             {
-                instance.Append($"CHARINDEX({paramName}, {field.Expression.WithPrefix(fieldPrefix)}) > 0");
+                instance.Append($"CHARINDEX({paramName}, {field.Expression}) > 0");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotContains)
             {
-                instance.Append($"CHARINDEX({paramName}, {field.Expression.WithPrefix(fieldPrefix)}) = 0");
+                instance.Append($"CHARINDEX({paramName}, {field.Expression}) = 0");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.StartsWith)
             {
-                instance.Append($"LEFT({field.Expression.WithPrefix(fieldPrefix)}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
+                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotStartsWith)
             {
-                instance.Append($"LEFT({field.Expression.WithPrefix(fieldPrefix)}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
+                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.EndsWith)
             {
-                instance.Append($"RIGHT({field.Expression.WithPrefix(fieldPrefix)}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
+                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotEndsWith)
             {
-                instance.Append($"RIGHT({field.Expression.WithPrefix(fieldPrefix)}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
+                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else

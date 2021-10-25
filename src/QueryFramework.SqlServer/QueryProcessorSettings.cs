@@ -14,7 +14,6 @@ namespace QueryFramework.SqlServer
         public int? OverrideLimit { get; }
         public bool ValidateFieldNames { get; }
         public int InitialParameterNumber { get; }
-        public string FieldPrefix { get; }
         public IEnumerable<string> SkipFields { get; }
         public Func<string, string> GetFieldNameDelegate { get; }
         public Func<IEnumerable<string>> GetAllFieldsDelegate { get; }
@@ -27,7 +26,6 @@ namespace QueryFramework.SqlServer
                                       int? overrideLimit = null,
                                       bool validateFieldNames = true,
                                       int initialParameterNumber = 0,
-                                      string fieldPrefix = null,
                                       IEnumerable<string> skipFields = null,
                                       Func<string, string> getFieldNameDelegate = null,
                                       Func<IEnumerable<string>> getAllFieldsDelegate = null,
@@ -40,7 +38,6 @@ namespace QueryFramework.SqlServer
             OverrideLimit = overrideLimit;
             ValidateFieldNames = validateFieldNames;
             InitialParameterNumber = initialParameterNumber;
-            FieldPrefix = fieldPrefix;
             SkipFields = skipFields;
             GetFieldNameDelegate = getFieldNameDelegate;
             GetAllFieldsDelegate = getAllFieldsDelegate;

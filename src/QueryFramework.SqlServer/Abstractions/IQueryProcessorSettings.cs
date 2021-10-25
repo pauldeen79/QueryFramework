@@ -13,7 +13,6 @@ namespace QueryFramework.SqlServer.Abstractions
         int? OverrideLimit { get; }
         bool ValidateFieldNames { get; }
         int InitialParameterNumber { get; }
-        string FieldPrefix { get; }
         IEnumerable<string> SkipFields { get; }
         Func<string, string> GetFieldNameDelegate { get; }
         Func<IEnumerable<string>> GetAllFieldsDelegate { get; }
