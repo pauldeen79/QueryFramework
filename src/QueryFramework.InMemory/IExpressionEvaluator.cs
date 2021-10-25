@@ -2,7 +2,8 @@
 
 namespace QueryFramework.InMemory
 {
-    internal interface IExpressionEvaluator<in T>
+    public interface IExpressionEvaluator<in T>
+        where T : class
     {
         object GetValue(T item, IQueryExpression field);
     }

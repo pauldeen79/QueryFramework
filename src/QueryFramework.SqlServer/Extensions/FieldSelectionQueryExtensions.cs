@@ -2,6 +2,7 @@
 using System.Linq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
+using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Extensions
 {
@@ -11,9 +12,9 @@ namespace QueryFramework.SqlServer.Extensions
         /// <param name="fieldSelectionQuery">The field selection query.</param>
         /// <param name="skipFields">The skip fields.</param>
         public static IEnumerable<IQueryExpression> GetSelectFields(this IFieldSelectionQuery fieldSelectionQuery,
-                                                                    IEnumerable<string> skipFields = null)
+                                                                    IQueryProcessorSettings settings)
             => fieldSelectionQuery
                 .Fields
-                .Where(expression => skipFields == null || !skipFields.Contains(expression.FieldName));
+                .Where(expression => settings.SkipFields == null || !settings.SkipFields.Contains(expression.FieldName));
     }
 }

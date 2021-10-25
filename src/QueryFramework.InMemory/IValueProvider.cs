@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.InMemory
 {
-    internal interface IValueProvider
+    public interface IValueProvider
     {
         object GetFieldValue(object item, string fieldName);
     }

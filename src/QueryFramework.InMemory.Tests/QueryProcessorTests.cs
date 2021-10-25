@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
@@ -20,7 +21,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryConditionBuilder
                 {
@@ -39,7 +40,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where("UnknownField".IsEqualTo("something"))
                 .Build();
@@ -55,7 +56,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "UNKNOWN({0})").IsEqualTo("something"))
                 .Build();
@@ -71,7 +72,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder().Build();
 
             // Act
@@ -87,7 +88,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder().Build();
 
             // Act
@@ -104,7 +105,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder().Build();
 
             // Act
@@ -121,7 +122,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsEqualTo("B"))
                 .Build();
@@ -139,7 +140,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsEqualTo("B"))
                 .Or(nameof(MyClass.Property).IsEqualTo("A"))
@@ -159,7 +160,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsEqualTo("B"))
                 .And(nameof(MyClass.Property).IsEqualTo("A"))
@@ -177,7 +178,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsNotEqualTo("B"))
                 .Build();
@@ -195,7 +196,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .OrAll(nameof(MyClass.Property).IsNotEqualTo("B"))
                 .Build();
@@ -213,7 +214,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesContain("zz"))
                 .Build();
@@ -231,7 +232,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesNotContain("zz"))
                 .Build();
@@ -249,7 +250,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesEndWith("er"))
                 .Build();
@@ -267,7 +268,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesNotEndWith("er"))
                 .Build();
@@ -285,7 +286,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesStartWith("Be"))
                 .Build();
@@ -303,7 +304,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).DoesNotStartWith("Be"))
                 .Build();
@@ -321,7 +322,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsNull())
                 .Build();
@@ -338,7 +339,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsNotNull())
                 .Build();
@@ -357,7 +358,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsNullOrEmpty())
                 .Build();
@@ -374,7 +375,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsNotNullOrEmpty())
                 .Build();
@@ -393,7 +394,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsLowerThan("Coconut"))
                 .Build();
@@ -411,7 +412,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsLowerOrEqualThan("Beer"))
                 .Build();
@@ -429,7 +430,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsGreaterThan("Coconut"))
                 .Build();
@@ -447,7 +448,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsGreaterOrEqualThan("Pizza"))
                 .Build();
@@ -465,7 +466,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(nameof(MyClass.Property).IsEqualTo("b"))
                 .Build();
@@ -483,7 +484,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Skip(1)
                 .Take(1)
@@ -502,7 +503,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .OrderBy(nameof(MyClass.Property))
                 .Build();
@@ -522,7 +523,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .OrderByDescending(nameof(MyClass.Property))
                 .Build();
@@ -547,7 +548,7 @@ namespace QueryFramework.InMemory.Tests
                 new MyClass { Property = "B", Property2 = "X" },
                 new MyClass { Property = "C", Property2 = "Z" }
             };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .OrderBy(nameof(MyClass.Property2))
                 .ThenByDescending(nameof(MyClass.Property))
@@ -568,7 +569,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "LEN({0})").IsEqualTo(2))
                 .Build();
@@ -586,7 +587,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "LEFT({0},1)").IsEqualTo("B"))
                 .Build();
@@ -604,7 +605,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "RIGHT({0},1)").IsEqualTo("2"))
                 .Build();
@@ -622,7 +623,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "b" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "UPPER({0})").IsEqualTo("B"))
                 .Build();
@@ -640,7 +641,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "LOWER({0})").IsEqualTo("b"))
                 .Build();
@@ -658,7 +659,7 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B " } };
-            var sut = new QueryProcessor<MyClass>(items);
+            var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), "TRIM({0})").IsEqualTo("B"))
                 .Build();
@@ -670,6 +671,9 @@ namespace QueryFramework.InMemory.Tests
             actual.Should().HaveCount(1);
             actual.First().Property.Should().Be("B ");
         }
+
+        private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
+            => new QueryProcessor<ISingleEntityQuery, MyClass>(items, new ExpressionEvaluator<MyClass>(new ValueProvider()));
 
         // Expressions: coalesce?
 

@@ -1,11 +1,18 @@
-﻿using System.Data.Stub;
+﻿using System.Data;
+using System.Data.Stub;
+using System.Data.Stub.Extensions;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Queries;
+using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
 using QueryFramework.SqlServer.QueryExpressions;
+using QueryFramework.SqlServer.Tests.Fixtures;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests.QueryExpressions
@@ -28,13 +35,18 @@ namespace QueryFramework.SqlServer.Tests.QueryExpressions
 
         private static void ExpressionSqlShouldBe(IQueryExpression expression, string expectedSqlForExpression)
         {
-            using var connection = new DbConnection();
-            using var command = connection.CreateCommand();
+            var callback = new DbConnectionCallback();
+            using var connection = new DbConnection().AddCallback(callback);
+            var mapperMock = new Mock<IDataReaderMapper<MyEntity>>();
+            mapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
+                      .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
+            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(tableName: "Table"), new DatabaseCommandGenerator());
             var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
-            command.FillSelectCommand(query, tableName: "Table");
+            sut.FindMany(query);
 
             // Assert
-            command.CommandText.Should().Be($"SELECT * FROM Table WHERE {expectedSqlForExpression} = @p0");
+            callback.Commands.Should().HaveCount(1);
+            callback.Commands.First().CommandText.Should().Be($"SELECT * FROM Table WHERE {expectedSqlForExpression} = @p0");
         }
     }
 }

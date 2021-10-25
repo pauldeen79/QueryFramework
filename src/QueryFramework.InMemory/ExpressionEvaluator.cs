@@ -4,7 +4,8 @@ using QueryFramework.Abstractions;
 
 namespace QueryFramework.InMemory
 {
-    internal class ExpressionEvaluator<T> : IExpressionEvaluator<T>
+    public class ExpressionEvaluator<T> : IExpressionEvaluator<T>
+        where T : class
     {
         private readonly IValueProvider _valueProvider;
 

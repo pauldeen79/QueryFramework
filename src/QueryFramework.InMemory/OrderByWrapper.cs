@@ -5,6 +5,7 @@ using QueryFramework.Abstractions;
 namespace QueryFramework.InMemory
 {
     internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquatable<OrderByWrapper<T>>, IComparable
+        where T : class
     {
         public OrderByWrapper(T wrappedItem,
                               IReadOnlyCollection<IQuerySortOrder> orderByFields,

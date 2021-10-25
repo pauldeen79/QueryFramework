@@ -18,7 +18,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
 
             // Act
-            var selectFields = sut.GetSelectFields();
+            var selectFields = sut.GetSelectFields(new QueryProcessorSettings());
 
             // Assert
             selectFields.Should().HaveCount(3);
@@ -34,7 +34,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
 
             // Act
-            var selectFields = sut.GetSelectFields(skipFields: new[] { "Field1", "Field3" });
+            var selectFields = sut.GetSelectFields(new QueryProcessorSettings(skipFields: new[] { "Field1", "Field3" }));
 
             // Assert
             selectFields.Should().HaveCount(1);
