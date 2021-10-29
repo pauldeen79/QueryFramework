@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
     <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
   </ItemGroup>
 

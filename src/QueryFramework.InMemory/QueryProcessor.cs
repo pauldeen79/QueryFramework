@@ -2,36 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CrossCutting.Data.Abstractions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core;
 
 namespace QueryFramework.InMemory
 {
-    public class QueryProcessor<T> : IQueryProcessor<T>
+    public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
+        where TQuery : ISingleEntityQuery
+        where TResult : class
     {
-        private IEnumerable<T> SourceData { get; }
-        private IExpressionEvaluator<T> ValueRetriever { get; }
+        private readonly IEnumerable<TResult> _sourceData;
+        private readonly IExpressionEvaluator<TResult> _valueRetriever;
 
-        public QueryProcessor(IEnumerable<T> sourceData)
+        public QueryProcessor(IEnumerable<TResult> sourceData,
+                              IExpressionEvaluator<TResult> valueRetriever)
         {
-            SourceData = sourceData;
-            ValueRetriever = new ExpressionEvaluator<T>(new ValueProvider());
+            _sourceData = sourceData;
+            _valueRetriever = valueRetriever;
         }
 
-        public IQueryResult<T> Execute(ISingleEntityQuery query)
+        public TResult FindOne(TQuery query)
+            => _sourceData.FirstOrDefault(item => ItemIsValid(item, query.Conditions));
+
+        public IReadOnlyCollection<TResult> FindMany(TQuery query)
+            => _sourceData.Where(item => ItemIsValid(item, query.Conditions)).ToList();
+
+        public IPagedResult<TResult> FindPaged(TQuery query)
         {
-            var filteredRecords = new List<T>(SourceData.Where(item => ItemIsValid(item, query.Conditions)));
-            return new QueryResult<T>(GetPagedData(query, filteredRecords), filteredRecords.Count);
+            var filteredRecords = new List<TResult>(_sourceData.Where(item => ItemIsValid(item, query.Conditions)));
+            return new PagedResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count);
         }
 
-        private IEnumerable<T> GetPagedData(ISingleEntityQuery query, List<T> filteredRecords)
+        private IEnumerable<TResult> GetPagedData(TQuery query, List<TResult> filteredRecords)
         {
-            IEnumerable<T> result = filteredRecords;
+            IEnumerable<TResult> result = filteredRecords;
 
             if (query.OrderByFields.Any())
             {
-                result = result.OrderBy(x => new OrderByWrapper<T>(x, query.OrderByFields, ValueRetriever));
+                result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, _valueRetriever));
             }
 
             if (query.Offset != null)
@@ -46,7 +55,7 @@ namespace QueryFramework.InMemory
             return result;
         }
 
-        private bool ItemIsValid(T item, IReadOnlyCollection<IQueryCondition> conditions)
+        private bool ItemIsValid(TResult item, IReadOnlyCollection<IQueryCondition> conditions)
         {
             var builder = new StringBuilder();
             foreach (var condition in conditions)
@@ -56,7 +65,7 @@ namespace QueryFramework.InMemory
                     builder.Append(condition.Combination == QueryCombination.And ? "&" : "|");
                 }
 
-                var value = ValueRetriever.GetValue(item, condition.Field);
+                var value = _valueRetriever.GetValue(item, condition.Field);
                 var prefix = condition.OpenBracket ? "(" : string.Empty;
                 var suffix = condition.CloseBracket ? ")" : string.Empty;
                 var result = Evaluate(condition, value);

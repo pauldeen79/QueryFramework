@@ -9,7 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Sql" Version="1.1.0" />
+    <Compile Remove="Default\**" />
+    <EmbeddedResource Remove="Default\**" />
+    <None Remove="Default\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="1.2.0" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Sql" Version="1.2.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">

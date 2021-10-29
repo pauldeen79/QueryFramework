@@ -2,18 +2,19 @@
 using System.Linq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
+using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Extensions
 {
     public static class FieldSelectionQueryExtensions
     {
-        /// <summary>Gets the fields that should be added to the SELECT clause on a query.</summary>
-        /// <param name="fieldSelectionQuery">The field selection query.</param>
-        /// <param name="skipFields">The skip fields.</param>
         public static IEnumerable<IQueryExpression> GetSelectFields(this IFieldSelectionQuery fieldSelectionQuery,
-                                                                    IEnumerable<string> skipFields = null)
-            => fieldSelectionQuery
+                                                                    IQueryFieldProvider fieldProvider)
+        {
+            var fields = fieldProvider.GetSelectFields(fieldSelectionQuery.Fields.Select(x => x.FieldName));
+            return fieldSelectionQuery
                 .Fields
-                .Where(expression => skipFields == null || !skipFields.Contains(expression.FieldName));
+                .Where(expression => fields.Contains(expression.FieldName));
+        }
     }
 }

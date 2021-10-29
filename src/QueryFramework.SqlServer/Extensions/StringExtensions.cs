@@ -6,11 +6,6 @@ namespace QueryFramework.SqlServer.Extensions
 {
     public static class StringExtensions
     {
-        public static string WithPrefix(this string instance, string prefix)
-            => !string.IsNullOrEmpty(prefix)
-                ? string.Concat(prefix, instance)
-                : instance;
-
         #region Built-in Sql functions
         /// <summary>Gets the length of this field.</summary>
         public static IQueryExpression Len(this string fieldName)
