@@ -6,7 +6,6 @@ using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core;
 using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
 
@@ -41,24 +40,8 @@ namespace QueryFramework.SqlServer
         public TResult FindOne(TQuery query)
             => _connection.FindOne(GenerateCommand(query, false), _mapper.Map);
 
-        public IQueryResult<TResult> FindPaged(TQuery query)
-        {
-            //TODO: Use FindPaged method from CrossCutting.Data.Sql
-            var items = new List<TResult>(_connection.FindMany(GenerateCommand(query, false), _mapper.Map));
-            var totalRecordCount = -1;
-
-            if (items.Count > 0
-                && items.Count == query.Limit.DetermineLimit(_settings.OverrideLimit))
-            {
-                totalRecordCount = (int)_connection.ExecuteScalar(GenerateCommand(query, true));
-            }
-            else
-            {
-                totalRecordCount = items.Count;
-            }
-
-            return new QueryResult<TResult>(items, totalRecordCount);
-        }
+        public IPagedResult<TResult> FindPaged(TQuery query)
+            => _connection.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), _mapper.Map);
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {

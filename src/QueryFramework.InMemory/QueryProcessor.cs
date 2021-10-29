@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CrossCutting.Data.Abstractions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core;
 
 namespace QueryFramework.InMemory
 {
@@ -28,10 +28,10 @@ namespace QueryFramework.InMemory
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
             => _sourceData.Where(item => ItemIsValid(item, query.Conditions)).ToList();
 
-        public IQueryResult<TResult> FindPaged(TQuery query)
+        public IPagedResult<TResult> FindPaged(TQuery query)
         {
             var filteredRecords = new List<TResult>(_sourceData.Where(item => ItemIsValid(item, query.Conditions)));
-            return new QueryResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count);
+            return new PagedResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count);
         }
 
         private IEnumerable<TResult> GetPagedData(TQuery query, List<TResult> filteredRecords)

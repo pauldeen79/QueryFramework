@@ -62,8 +62,10 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
+            SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
             Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
+            Connection.AddResultForScalarCommand(1);
 
             // Act
             var actual = sut.FindPaged(new Mock<ISingleEntityQuery>().Object);

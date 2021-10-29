@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CrossCutting.Data.Abstractions;
 using QueryFramework.Abstractions.Queries;
 
 namespace QueryFramework.Abstractions
@@ -9,7 +10,7 @@ namespace QueryFramework.Abstractions
     {
         TResult FindOne(TQuery query);
         IReadOnlyCollection<TResult> FindMany(TQuery query);
-        IQueryResult<TResult> FindPaged(TQuery query);
+        IPagedResult<TResult> FindPaged(TQuery query);
     }
 
     public interface IQueryProcessor<out TResult> : IQueryProcessor<ISingleEntityQuery, TResult>
