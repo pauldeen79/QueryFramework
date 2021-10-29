@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CrossCutting.Common.Extensions;
-using CrossCutting.Data.Core.Builders;
+using CrossCutting.Data.Abstractions.Builders;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
@@ -15,17 +15,17 @@ namespace QueryFramework.SqlServer.Extensions
 {
     internal static class DatabaseCommandBuilderExtensions
     {
-        internal static DatabaseCommandBuilder AppendPagingOuterQuery(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendPagingOuterQuery(this IDatabaseCommandBuilder instance,
                                                                       ISingleEntityQuery query,
                                                                       IQueryProcessorSettings settings,
-                                                                      IQueryFieldNameProvider fieldNameProvider,
+                                                                      IQueryFieldProvider fieldProvider,
                                                                       bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly)
             {
                 return instance
                     .Append("SELECT ")
-                    .AppendSelectFields(query, settings, fieldNameProvider, countOnly)
+                    .AppendSelectFields(query, settings, fieldProvider, countOnly)
                     .AppendFromClause()
                     .Append("(");
             }
@@ -33,10 +33,10 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendSelectFields(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendSelectFields(this IDatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
                                                                   IQueryProcessorSettings settings,
-                                                                  IQueryFieldNameProvider fieldNameProvider,
+                                                                  IQueryFieldProvider fieldProvider,
                                                                   bool countOnly)
         {
             var fieldSelectionQuery = query as IFieldSelectionQuery;
@@ -46,25 +46,27 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else if (fieldSelectionQuery?.GetAllFields != false)
             {
-                return instance.AppendSelectFieldsForAllFields(settings);
+                return instance.AppendSelectFieldsForAllFields(settings, fieldProvider);
             }
             else
             {
-                return instance.AppendSelectFieldsForSpecifiedFields(settings, fieldSelectionQuery, fieldNameProvider);
+                return instance.AppendSelectFieldsForSpecifiedFields(settings, fieldSelectionQuery, fieldProvider);
             }
         }
 
-        private static DatabaseCommandBuilder AppendSelectFieldsForAllFields(this DatabaseCommandBuilder instance,
-                                                                             IQueryProcessorSettings settings)
+        private static IDatabaseCommandBuilder AppendSelectFieldsForAllFields(this IDatabaseCommandBuilder instance,
+                                                                             IQueryProcessorSettings settings,
+                                                                             IQueryFieldProvider fieldProvider)
         {
-            if (settings.GetAllFieldsDelegate == null)
+            var allFields = fieldProvider.GetAllFields();
+            if (allFields == null)
             {
                 instance.Append(settings.Fields.WhenNullOrWhitespace("*"));
             }
             else
             {
                 var paramCounter = 0;
-                foreach (var fieldName in settings.GetAllFieldsDelegate.Invoke())
+                foreach (var fieldName in allFields)
                 {
                     if (paramCounter > 0)
                     {
@@ -79,13 +81,13 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static DatabaseCommandBuilder AppendSelectFieldsForSpecifiedFields(this DatabaseCommandBuilder instance,
+        private static IDatabaseCommandBuilder AppendSelectFieldsForSpecifiedFields(this IDatabaseCommandBuilder instance,
                                                                                    IQueryProcessorSettings settings,
                                                                                    IFieldSelectionQuery fieldSelectionQuery,
-                                                                                   IQueryFieldNameProvider fieldNameProvider)
+                                                                                   IQueryFieldProvider fieldProvider)
         {
             var paramCounter = 0;
-            foreach (var expression in fieldSelectionQuery.GetSelectFields(fieldNameProvider))
+            foreach (var expression in fieldSelectionQuery.GetSelectFields(fieldProvider))
             {
                 if (paramCounter > 0)
                 {
@@ -93,22 +95,19 @@ namespace QueryFramework.SqlServer.Extensions
                 }
 
                 var correctedExpression = expression;
-                if (settings.GetFieldNameDelegate != null)
+                var correctedFieldName = fieldProvider.GetDatabaseFieldName(expression.FieldName);
+                if (correctedFieldName == null && settings.ValidateFieldNames)
                 {
-                    var correctedFieldName = settings.GetFieldNameDelegate(expression.FieldName);
-                    if (correctedFieldName == null && settings.ValidateFieldNames)
-                    {
-                        throw new InvalidOperationException($"Query fields contains unknown field in expression [{expression}]");
-                    }
-
-                    if (correctedFieldName != null)
-                    {
-                        //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
-                        correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
-                    }
+                    throw new InvalidOperationException($"Query fields contains unknown field in expression [{expression}]");
                 }
 
-                if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(correctedExpression))
+                if (correctedFieldName != null)
+                {
+                    //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
+                    correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
+                }
+
+                if (!fieldProvider.ValidateExpression(correctedExpression))
                 {
                     throw new InvalidOperationException($"Query fields contains invalid expression [{expression}]");
                 }
@@ -120,7 +119,7 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendSelectAndDistinctClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendSelectAndDistinctClause(this IDatabaseCommandBuilder instance,
                                                                              IFieldSelectionQuery fieldSelectionQuery,
                                                                              bool countOnly)
         {
@@ -133,7 +132,7 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendTopClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendTopClause(this IDatabaseCommandBuilder instance,
                                                                ISingleEntityQuery query,
                                                                IQueryProcessorSettings settings,
                                                                bool countOnly)
@@ -148,18 +147,19 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendCountOrSelectFields(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendCountOrSelectFields(this IDatabaseCommandBuilder instance,
                                                                          ISingleEntityQuery query,
                                                                          IQueryProcessorSettings settings,
-                                                                         IQueryFieldNameProvider fieldNameProvider,
+                                                                         IQueryFieldProvider fieldProvider,
                                                                          bool countOnly)
             => countOnly
                 ? instance.Append("COUNT(*)")
-                : instance.AppendSelectFields(query, settings, fieldNameProvider, countOnly);
+                : instance.AppendSelectFields(query, settings, fieldProvider, countOnly);
 
-        internal static DatabaseCommandBuilder AppendPagingPrefix(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendPagingPrefix(this IDatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
                                                                   IQueryProcessorSettings settings,
+                                                                  IQueryFieldProvider fieldProvider,
                                                                   bool countOnly)
         {
             if (query.Offset.HasValue
@@ -174,9 +174,9 @@ namespace QueryFramework.SqlServer.Extensions
                         orderByBuilder.Append(", ");
                     }
 
-                    var fieldName = GetOrderByFieldName(settings, querySortOrder);
+                    var fieldName = GetOrderByFieldName(settings, fieldProvider, querySortOrder);
                     var corrected = new QuerySortOrder(new QueryExpression(fieldName ?? querySortOrder.Field.FieldName, querySortOrder.Field.GetRawExpression()), querySortOrder.Order);
-                    if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(corrected.Field))
+                    if (!fieldProvider.ValidateExpression(corrected.Field))
                     {
                         throw new InvalidOperationException($"Query OrderByFields contains invalid expression [{corrected.Field}]");
                     }
@@ -198,15 +198,11 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         private static string GetOrderByFieldName(IQueryProcessorSettings settings,
+                                                  IQueryFieldProvider fieldProvider,
                                                   IQuerySortOrder querySortOrder)
         {
-            var fieldName = settings.GetFieldNameDelegate == null
-                ? null
-                : settings.GetFieldNameDelegate.Invoke(querySortOrder.Field.FieldName);
-
-            if (settings.GetFieldNameDelegate != null
-                && fieldName == null
-                && settings.ValidateFieldNames)
+            var fieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.Field.FieldName);
+            if (fieldName == null && settings.ValidateFieldNames)
             {
                 throw new InvalidOperationException($"Query OrderByFields contains unknown field [{querySortOrder.Field}]");
             }
@@ -214,26 +210,18 @@ namespace QueryFramework.SqlServer.Extensions
             return fieldName;
         }
 
-        internal static DatabaseCommandBuilder AppendFromClause (this DatabaseCommandBuilder instance)
+        internal static IDatabaseCommandBuilder AppendFromClause (this IDatabaseCommandBuilder instance)
             => instance.Append(" FROM ");
 
-        internal static DatabaseCommandBuilder AppendTableName(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendTableName(this IDatabaseCommandBuilder instance,
                                                                ISingleEntityQuery query,
                                                                IQueryProcessorSettings settings)
-        {
-            var tableName = query.GetTableName(settings.TableName);
+            => instance.Append(query.GetTableName(settings.TableName));
 
-            if (string.IsNullOrEmpty(tableName))
-            {
-                throw new InvalidOperationException("Table name is required");
-            }
-
-            return instance.Append(tableName);
-        }
-
-        internal static DatabaseCommandBuilder AppendWhereClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendWhereClause(this IDatabaseCommandBuilder instance,
                                                                  ISingleEntityQuery query,
                                                                  IQueryProcessorSettings settings,
+                                                                 IQueryFieldProvider fieldProvider,
                                                                  out int paramCounter)
         {
             if ((query.Conditions?.Any() != true)
@@ -263,16 +251,18 @@ namespace QueryFramework.SqlServer.Extensions
                 (
                     paramCounter,
                     queryCondition,
-                    settings
+                    settings,
+                    fieldProvider
                 );
             }
 
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendGroupByClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendGroupByClause(this IDatabaseCommandBuilder instance,
                                                                    IGroupingQuery groupingQuery,
-                                                                   IQueryProcessorSettings settings)
+                                                                   IQueryProcessorSettings settings,
+                                                                   IQueryFieldProvider fieldProvider)
         {
             if (groupingQuery?.GroupByFields?.Any() != true)
             {
@@ -288,51 +278,27 @@ namespace QueryFramework.SqlServer.Extensions
                     instance.Append(", ");
                 }
 
-                if (settings.GetFieldNameDelegate != null)
+                var correctedFieldName = fieldProvider.GetDatabaseFieldName(groupBy.FieldName);
+                if (correctedFieldName == null && settings.ValidateFieldNames)
                 {
-                    AppendGroupByForDynamicFieldNames(instance, groupBy, settings);
+                    throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
                 }
-                else
+                var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
+                if (!fieldProvider.ValidateExpression(corrected))
                 {
-                    AppendGroupByForStaticFieldNames(instance, groupBy, settings);
+                    throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected}]");
                 }
+                instance.Append(corrected.Expression);
                 fieldCounter++;
             }
 
             return instance;
         }
 
-        private static void AppendGroupByForStaticFieldNames(DatabaseCommandBuilder instance,
-                                                             IQueryExpression groupBy,
-                                                             IQueryProcessorSettings settings)
-        {
-            if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(groupBy))
-            {
-                throw new InvalidOperationException($"Query group by fields contains invalid expression [{groupBy}]");
-            }
-            instance.Append(groupBy.Expression);
-        }
-
-        private static void AppendGroupByForDynamicFieldNames(DatabaseCommandBuilder instance,
-                                                              IQueryExpression groupBy,
-                                                              IQueryProcessorSettings settings)
-        {
-            var correctedFieldName = settings.GetFieldNameDelegate.Invoke(groupBy.FieldName);
-            if (correctedFieldName == null && settings.ValidateFieldNames)
-            {
-                throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
-            }
-            var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
-            if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(corrected))
-            {
-                throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected}]");
-            }
-            instance.Append(corrected.Expression);
-        }
-
-        internal static DatabaseCommandBuilder AppendHavingClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendHavingClause(this IDatabaseCommandBuilder instance,
                                                                   IGroupingQuery groupingQuery,
                                                                   IQueryProcessorSettings settings,
+                                                                  IQueryFieldProvider fieldProvider,
                                                                   ref int paramCounter)
         {
             if (groupingQuery?.HavingFields?.Any() != true)
@@ -349,6 +315,7 @@ namespace QueryFramework.SqlServer.Extensions
                     paramCounter,
                     having,
                     settings,
+                    fieldProvider,
                     fieldCounter == 0
                 );
                 fieldCounter++;
@@ -357,9 +324,10 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AppendOrderByClause(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendOrderByClause(this IDatabaseCommandBuilder instance,
                                                                    ISingleEntityQuery query,
                                                                    IQueryProcessorSettings settings,
+                                                                   IQueryFieldProvider fieldProvider,
                                                                    bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0)
@@ -375,7 +343,7 @@ namespace QueryFramework.SqlServer.Extensions
             else if (query.OrderByFields?.Any() == true
                 || !string.IsNullOrEmpty(settings.DefaultOrderBy))
             {
-                return instance.AppendOrderBy(query.OrderByFields, settings);
+                return instance.AppendOrderBy(query.OrderByFields, settings, fieldProvider);
             }
             else
             {
@@ -383,9 +351,10 @@ namespace QueryFramework.SqlServer.Extensions
             }
         }
 
-        private static DatabaseCommandBuilder AppendOrderBy(this DatabaseCommandBuilder instance,
+        private static IDatabaseCommandBuilder AppendOrderBy(this IDatabaseCommandBuilder instance,
                                                             IEnumerable<IQuerySortOrder> orderByFields,
-                                                            IQueryProcessorSettings settings)
+                                                            IQueryProcessorSettings settings,
+                                                            IQueryFieldProvider fieldProvider)
         {
             instance.Append(" ORDER BY ");
             var fieldCounter = 0;
@@ -396,14 +365,21 @@ namespace QueryFramework.SqlServer.Extensions
                     instance.Append(", ");
                 }
 
-                if (settings.GetFieldNameDelegate != null)
+                var newFieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.Field.FieldName);
+                if (newFieldName == null && settings.ValidateFieldNames)
                 {
-                    AppendOrderByForDynamicFieldNames(instance, querySortOrder, settings);
+                    throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
                 }
-                else
+                var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
+                if (!fieldProvider.ValidateExpression(newQuerySortOrder.Field))
                 {
-                    AppendOrderByForStaticFieldNames(instance, querySortOrder, settings);
+                    throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field}]");
                 }
+                instance
+                    .Append(newQuerySortOrder.Field.Expression)
+                    .Append(" ")
+                    .Append(newQuerySortOrder.ToSql());
+
                 fieldCounter++;
             }
 
@@ -415,41 +391,7 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static void AppendOrderByForStaticFieldNames(DatabaseCommandBuilder instance,
-                                                             IQuerySortOrder querySortOrder,
-                                                             IQueryProcessorSettings settings)
-        {
-            if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(querySortOrder.Field))
-            {
-                throw new InvalidOperationException($"Query order by fields contains invalid expression [{querySortOrder.Field}]");
-            }
-            instance
-                .Append(querySortOrder.Field.Expression)
-                .Append(" ")
-                .Append(querySortOrder.ToSql());
-        }
-
-        private static void AppendOrderByForDynamicFieldNames(DatabaseCommandBuilder instance,
-                                                              IQuerySortOrder querySortOrder,
-                                                              IQueryProcessorSettings settings)
-        {
-            var newFieldName = settings.GetFieldNameDelegate.Invoke(querySortOrder.Field.FieldName);
-            if (newFieldName == null && settings.ValidateFieldNames)
-            {
-                throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
-            }
-            var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
-            if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(newQuerySortOrder.Field))
-            {
-                throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field}]");
-            }
-            instance
-                .Append(newQuerySortOrder.Field.Expression)
-                .Append(" ")
-                .Append(newQuerySortOrder.ToSql());
-        }
-
-        internal static DatabaseCommandBuilder AppendPagingSuffix(this DatabaseCommandBuilder instance,
+        internal static IDatabaseCommandBuilder AppendPagingSuffix(this IDatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
                                                                   IQueryProcessorSettings settings,
                                                                   bool countOnly)
@@ -469,8 +411,8 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static DatabaseCommandBuilder AddQueryParameters(this DatabaseCommandBuilder instance,
-                                                                  ISingleEntityQuery query)
+        internal static IDatabaseCommandBuilder AddQueryParameters(this IDatabaseCommandBuilder instance,
+                                                                   ISingleEntityQuery query)
         {
             if (query is IParameterizedQuery parameterizedQuery)
             {
@@ -483,10 +425,11 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        internal static int AppendQueryCondition(this DatabaseCommandBuilder instance,
+        internal static int AppendQueryCondition(this IDatabaseCommandBuilder instance,
                                                  int paramCounter,
                                                  IQueryCondition queryCondition,
                                                  IQueryProcessorSettings settings,
+                                                 IQueryFieldProvider fieldProvider,
                                                  bool skipFirstCombination = false)
         {
             if (paramCounter > 0 && !skipFirstCombination)
@@ -502,20 +445,15 @@ namespace QueryFramework.SqlServer.Extensions
                 instance.Append("(");
             }
 
-            var customFieldName = settings.GetFieldNameDelegate == null
-                ? null
-                : settings.GetFieldNameDelegate.Invoke(queryCondition.Field.FieldName);
-
-            if (settings.GetFieldNameDelegate != null
-                && customFieldName == null
-                && settings.ValidateFieldNames)
+            var customFieldName = fieldProvider.GetDatabaseFieldName(queryCondition.Field.FieldName);
+            if (customFieldName == null && settings.ValidateFieldNames)
             {
                 throw new InvalidOperationException($"Query conditions contains unknown field [{queryCondition.Field.FieldName}]");
             }
 
             var field = queryCondition.Field.With(fieldName: customFieldName ?? queryCondition.Field.FieldName);
 
-            if (settings.ExpressionValidationDelegate != null && !settings.ExpressionValidationDelegate.Invoke(field))
+            if (!fieldProvider.ValidateExpression(field))
             {
                 throw new InvalidOperationException($"Query conditions contains invalid expression [{field}]");
             }
@@ -555,7 +493,7 @@ namespace QueryFramework.SqlServer.Extensions
             return paramCounter + 1;
         }
 
-        private static void AppendOperatorAndValue(DatabaseCommandBuilder instance,
+        private static void AppendOperatorAndValue(IDatabaseCommandBuilder instance,
                                                    int paramCounter,
                                                    IQueryCondition queryCondition,
                                                    IQueryExpression field,
@@ -614,7 +552,7 @@ namespace QueryFramework.SqlServer.Extensions
             }
         }
 
-        private static void AppendParameterIfNecessary(DatabaseCommandBuilder instance,
+        private static void AppendParameterIfNecessary(IDatabaseCommandBuilder instance,
                                                        int paramCounter,
                                                        IQueryCondition queryCondition)
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using QueryFramework.Abstractions;
-
-namespace QueryFramework.SqlServer.Abstractions
+﻿namespace QueryFramework.SqlServer.Abstractions
 {
     public interface IQueryProcessorSettings
     {
@@ -13,8 +9,5 @@ namespace QueryFramework.SqlServer.Abstractions
         int? OverrideLimit { get; }
         bool ValidateFieldNames { get; }
         int InitialParameterNumber { get; }
-        Func<string, string> GetFieldNameDelegate { get; }
-        Func<IEnumerable<string>> GetAllFieldsDelegate { get; }
-        Func<IQueryExpression, bool> ExpressionValidationDelegate { get; }
-    }
+   }
 }

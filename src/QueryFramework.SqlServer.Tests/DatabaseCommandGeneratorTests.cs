@@ -16,13 +16,14 @@ namespace QueryFramework.SqlServer.Tests.Default
         public void Generate_Throws_On_Null_Query()
         {
             // Arrange
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input);
+            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var fieldProviderMock = new Mock<IQueryFieldProvider>();
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                             .Returns<IEnumerable<string>>(input => input);
             var sut = new DatabaseCommandGenerator();
 
             // Act & Assert
-            sut.Invoking(x => x.Generate<ISingleEntityQuery>(null, new QueryProcessorSettings(), fieldNameProviderMock.Object, false))
+            sut.Invoking(x => x.Generate<ISingleEntityQuery>(null, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false))
                .Should().Throw<ArgumentNullException>()
                .WithParameterName("query");
         }
@@ -32,32 +33,32 @@ namespace QueryFramework.SqlServer.Tests.Default
         {
             // Arrange
             var queryMock = new Mock<ISingleEntityQuery>();
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input);
+            var fieldProviderMock = new Mock<IQueryFieldProvider>();
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                             .Returns<IEnumerable<string>>(input => input);
             var sut = new DatabaseCommandGenerator();
 
             // Act & Assert
-            sut.Invoking(x => x.Generate(queryMock.Object, null, fieldNameProviderMock.Object, false))
+            sut.Invoking(x => x.Generate(queryMock.Object, null, fieldProviderMock.Object, false))
                .Should().Throw<ArgumentNullException>()
                .WithParameterName("settings");
         }
 
         [Fact]
-        public void Generate_Throws_On_Null_FieldNameProvider()
+        public void Generate_Throws_On_Null_FieldProvider()
         {
             // Arrange
             var queryMock = new Mock<ISingleEntityQuery>();
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input);
+            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var fieldProviderMock = new Mock<IQueryFieldProvider>();
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                             .Returns<IEnumerable<string>>(input => input);
             var sut = new DatabaseCommandGenerator();
 
             // Act & Assert
-            sut.Invoking(x => x.Generate(queryMock.Object, new QueryProcessorSettings(), null, false))
+            sut.Invoking(x => x.Generate(queryMock.Object, queryProcessorSettingsMock.Object, null, false))
                .Should().Throw<ArgumentNullException>()
-               .WithParameterName("fieldNameProvider");
+               .WithParameterName("fieldProvider");
         }
-
     }
 }

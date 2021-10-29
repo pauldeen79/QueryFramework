@@ -20,19 +20,19 @@ namespace QueryFramework.SqlServer
         private readonly IDataReaderMapper<TResult> _mapper;
         private readonly IQueryProcessorSettings _settings;
         private readonly IDatabaseCommandGenerator _databaseCommandGenerator;
-        private readonly IQueryFieldNameProvider _fieldNameProvider;
+        private readonly IQueryFieldProvider _fieldProvider;
 
         public QueryProcessor(IDbConnection connection,
                               IDataReaderMapper<TResult> mapper,
                               IQueryProcessorSettings settings,
                               IDatabaseCommandGenerator databaseCommandGenerator,
-                              IQueryFieldNameProvider fieldNameProvider)
+                              IQueryFieldProvider fieldProvider)
         {
             _connection = connection;
             _mapper = mapper;
             _settings = settings;
             _databaseCommandGenerator = databaseCommandGenerator;
-            _fieldNameProvider = fieldNameProvider;
+            _fieldProvider = fieldProvider;
         }
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
@@ -43,6 +43,7 @@ namespace QueryFramework.SqlServer
 
         public IQueryResult<TResult> FindPaged(TQuery query)
         {
+            //TODO: Use FindPaged method from CrossCutting.Data.Sql
             var items = new List<TResult>(_connection.FindMany(GenerateCommand(query, false), _mapper.Map));
             var totalRecordCount = -1;
 
@@ -72,7 +73,7 @@ namespace QueryFramework.SqlServer
             }
 
             query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), _fieldNameProvider, countOnly);
+            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), _fieldProvider, countOnly);
         }
     }
 }

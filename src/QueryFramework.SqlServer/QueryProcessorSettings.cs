@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using QueryFramework.Abstractions;
-using QueryFramework.SqlServer.Abstractions;
+﻿using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer
 {
@@ -14,9 +11,6 @@ namespace QueryFramework.SqlServer
         public int? OverrideLimit { get; }
         public bool ValidateFieldNames { get; }
         public int InitialParameterNumber { get; }
-        public Func<string, string> GetFieldNameDelegate { get; }
-        public Func<IEnumerable<string>> GetAllFieldsDelegate { get; }
-        public Func<IQueryExpression, bool> ExpressionValidationDelegate { get; }
 
         public QueryProcessorSettings(string tableName = null,
                                       string fields = null,
@@ -24,10 +18,7 @@ namespace QueryFramework.SqlServer
                                       string defaultWhere = null,
                                       int? overrideLimit = null,
                                       bool validateFieldNames = true,
-                                      int initialParameterNumber = 0,
-                                      Func<string, string> getFieldNameDelegate = null,
-                                      Func<IEnumerable<string>> getAllFieldsDelegate = null,
-                                      Func<IQueryExpression, bool> expressionValidationDelegate = null)
+                                      int initialParameterNumber = 0)
         {
             TableName = tableName;
             Fields = fields;
@@ -36,9 +27,6 @@ namespace QueryFramework.SqlServer
             OverrideLimit = overrideLimit;
             ValidateFieldNames = validateFieldNames;
             InitialParameterNumber = initialParameterNumber;
-            GetFieldNameDelegate = getFieldNameDelegate;
-            GetAllFieldsDelegate = getAllFieldsDelegate;
-            ExpressionValidationDelegate = expressionValidationDelegate;
         }
     }
 }

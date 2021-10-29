@@ -9,9 +9,9 @@ namespace QueryFramework.SqlServer.Extensions
     public static class FieldSelectionQueryExtensions
     {
         public static IEnumerable<IQueryExpression> GetSelectFields(this IFieldSelectionQuery fieldSelectionQuery,
-                                                                    IQueryFieldNameProvider fieldNameProvider)
+                                                                    IQueryFieldProvider fieldProvider)
         {
-            var fields = fieldNameProvider.GetSelectFields(fieldSelectionQuery.Fields.Select(x => x.FieldName));
+            var fields = fieldProvider.GetSelectFields(fieldSelectionQuery.Fields.Select(x => x.FieldName));
             return fieldSelectionQuery
                 .Fields
                 .Where(expression => fields.Contains(expression.FieldName));

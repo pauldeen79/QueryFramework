@@ -19,12 +19,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input);
+            var fieldProviderMock = new Mock<IQueryFieldProvider>();
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                             .Returns<IEnumerable<string>>(input => input);
 
             // Act
-            var selectFields = sut.GetSelectFields(fieldNameProviderMock.Object);
+            var selectFields = sut.GetSelectFields(fieldProviderMock.Object);
 
             // Assert
             selectFields.Should().HaveCount(3);
@@ -38,12 +38,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field1" && x != "Field3"));
+            var fieldProviderMock = new Mock<IQueryFieldProvider>();
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
+                             .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field1" && x != "Field3"));
 
             // Act
-            var selectFields = sut.GetSelectFields(fieldNameProviderMock.Object);
+            var selectFields = sut.GetSelectFields(fieldProviderMock.Object);
 
             // Assert
             selectFields.Should().HaveCount(1);

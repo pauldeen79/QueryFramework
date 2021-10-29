@@ -1,18 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.Stub;
-using System.Data.Stub.Extensions;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using FluentAssertions;
-using Moq;
-using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core;
-using QueryFramework.Core.Queries;
-using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
-using QueryFramework.SqlServer.Tests.Fixtures;
+using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests.Extensions
@@ -30,7 +19,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Len();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "LEN(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "LEN(Field)");
         }
 
         [Fact]
@@ -43,7 +32,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.SqlTrim();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "TRIM(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "TRIM(Field)");
         }
 
         [Fact]
@@ -56,7 +45,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Upper();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "UPPER(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "UPPER(Field)");
         }
 
         [Fact]
@@ -69,7 +58,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Lower();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "LOWER(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "LOWER(Field)");
         }
 
         [Fact]
@@ -82,7 +71,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Left(1);
 
             // Assert
-            ExpressionSqlShouldBe(actual, "LEFT(Field, 1)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "LEFT(Field, 1)");
         }
 
         [Fact]
@@ -95,7 +84,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Right(1);
 
             // Assert
-            ExpressionSqlShouldBe(actual, "RIGHT(Field, 1)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "RIGHT(Field, 1)");
         }
 
         [Fact]
@@ -108,7 +97,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Year();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "YEAR(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(Field)");
         }
 
         [Fact]
@@ -121,7 +110,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Month();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "MONTH(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(Field)");
         }
 
         [Fact]
@@ -134,7 +123,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Day();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "DAY(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(Field)");
         }
 
         [Fact]
@@ -147,7 +136,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Coalesce("default");
 
             // Assert
-            ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
         }
 
         [Fact]
@@ -160,7 +149,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Count();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "COUNT(Field)");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(Field)");
         }
 
         [Fact]
@@ -173,26 +162,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = sut.Sum();
 
             // Assert
-            ExpressionSqlShouldBe(actual, "SUM(Field)");
-        }
-
-        private static void ExpressionSqlShouldBe(IQueryExpression expression, string expectedSqlForExpression)
-        {
-            var callback = new DbConnectionCallback();
-            using var connection = new DbConnection().AddCallback(callback);
-            var mapperMock = new Mock<IDataReaderMapper<MyEntity>>();
-            mapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
-                      .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
-            var fieldNameProviderMock = new Mock<IQueryFieldNameProvider>();
-            fieldNameProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                                 .Returns<IEnumerable<string>>(input => input);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, new QueryProcessorSettings(), new DatabaseCommandGenerator(), fieldNameProviderMock.Object);
-            var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
-            sut.FindMany(query);
-
-            // Assert
-            callback.Commands.Should().HaveCount(1);
-            callback.Commands.First().CommandText.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(Field)");
         }
     }
 }

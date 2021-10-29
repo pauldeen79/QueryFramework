@@ -11,7 +11,7 @@ namespace QueryFramework.SqlServer
     {
         public IDatabaseCommand Generate<TQuery>(TQuery query,
                                                  IQueryProcessorSettings settings,
-                                                 IQueryFieldNameProvider fieldNameProvider,
+                                                 IQueryFieldProvider fieldProvider,
                                                  bool countOnly)
             where TQuery : ISingleEntityQuery
         {
@@ -25,25 +25,25 @@ namespace QueryFramework.SqlServer
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            if (fieldNameProvider == null)
+            if (fieldProvider == null)
             {
-                throw new ArgumentNullException(nameof(fieldNameProvider));
+                throw new ArgumentNullException(nameof(fieldProvider));
             }
 
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             var groupingQuery = query as IGroupingQuery;
             return new DatabaseCommandBuilder()
-                .AppendPagingOuterQuery(query, settings, fieldNameProvider, countOnly)
+                .AppendPagingOuterQuery(query, settings, fieldProvider, countOnly)
                 .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)
                 .AppendTopClause(query, settings, countOnly)
-                .AppendCountOrSelectFields(query, settings, fieldNameProvider, countOnly)
-                .AppendPagingPrefix(query, settings, countOnly)
+                .AppendCountOrSelectFields(query, settings, fieldProvider, countOnly)
+                .AppendPagingPrefix(query, settings, fieldProvider, countOnly)
                 .AppendFromClause()
                 .AppendTableName(query, settings)
-                .AppendWhereClause(query, settings, out int paramCounter)
-                .AppendGroupByClause(groupingQuery, settings)
-                .AppendHavingClause(groupingQuery, settings, ref paramCounter)
-                .AppendOrderByClause(query, settings, countOnly)
+                .AppendWhereClause(query, settings, fieldProvider, out int paramCounter)
+                .AppendGroupByClause(groupingQuery, settings, fieldProvider)
+                .AppendHavingClause(groupingQuery, settings, fieldProvider, ref paramCounter)
+                .AppendOrderByClause(query, settings, fieldProvider, countOnly)
                 .AppendPagingSuffix(query, settings, countOnly)
                 .AddQueryParameters(query)
                 .Build();

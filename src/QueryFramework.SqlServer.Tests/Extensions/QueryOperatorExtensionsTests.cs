@@ -15,7 +15,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Act & Assert
             ((QueryOperator)99).Invoking(x => x.ToSql())
-                                  .Should().Throw<ArgumentOutOfRangeException>();
+                               .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Theory]
@@ -47,6 +47,21 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Act
             var actual = input.ToSql();
+
+            // Assert
+            actual.Should().Be(expectedOutput);
+        }
+
+        [Theory]
+        [InlineData(QueryOperator.NotContains, "NOT ")]
+        [InlineData(QueryOperator.NotEndsWith, "NOT ")]
+        [InlineData(QueryOperator.NotStartsWith, "NOT ")]
+        [InlineData(QueryOperator.Equal, "")]
+        [InlineData(QueryOperator.Contains, "")]
+        public void ToNot_Returns_Correct_Result(QueryOperator input, string expectedOutput)
+        {
+            // Act
+            var actual = input.ToNot();
 
             // Assert
             actual.Should().Be(expectedOutput);
