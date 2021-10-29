@@ -7,6 +7,7 @@ using CrossCutting.Data.Abstractions.Builders;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
@@ -487,12 +488,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Does_Not_Append_Anything_When_GroupByFields_Is_Empty()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().Build();
+            var queryMock = new Mock<IGroupingQuery>();
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -502,14 +503,16 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Appends_Single_GroupBy_Clause()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().GroupBy("Field").Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.GroupByFields)
+                     .Returns(new[] { new QueryExpression("Field") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY Field");
@@ -519,14 +522,16 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Appends_Multiple_GroupBy_Clauses()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().GroupBy("Field1", "Field2").Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.GroupByFields)
+                     .Returns(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY Field1, Field2");
@@ -536,7 +541,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Appends_GroupBy_Clause_With_GetFieldNameDelegate()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().GroupBy("Field").Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.GroupByFields)
+                     .Returns(new[] { new QueryExpression("Field") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -545,7 +552,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY FieldA");
@@ -555,7 +562,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Throws_When_GetFieldNameDelegate_Returns_Null()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().GroupBy("Field").Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.GroupByFields)
+                     .Returns(new[] { new QueryExpression("Field") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
@@ -566,7 +575,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
+            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
         }
@@ -575,7 +584,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Throws_When_ExpressionValidationDelegate_Returns_False()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().GroupBy("Field").Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.GroupByFields)
+                     .Returns(new[] { new QueryExpression("Field") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -584,7 +595,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
+            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
@@ -593,7 +604,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendHaving_Adds_Single_Condition()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().Having("Field".IsEqualTo("value")).Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.HavingFields)
+                     .Returns(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
@@ -601,7 +614,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().Be(" HAVING Field = @p0");
@@ -611,9 +624,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendHaving_Adds_Multiple_Conditions()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().Having("Field1".IsEqualTo("value"))
-                                                                  .Having("Field2".IsEqualTo("value"))
-                                                                  .Build();
+            var queryMock = new Mock<IGroupingQuery>();
+            queryMock.SetupGet(x => x.HavingFields)
+                     .Returns(new[] { new QueryCondition("Field1", QueryOperator.Equal, "value1"),
+                                      new QueryCondition("Field2", QueryOperator.Equal, "value2") });
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
@@ -621,7 +635,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().Be(" HAVING Field1 = @p0 AND Field2 = @p1");
@@ -646,13 +660,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendHaving_Does_Not_Append_Anything_When_HavingFields_Is_Empty()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().Build();
+            var queryMock = new Mock<IGroupingQuery>();
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -986,16 +1000,16 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendPagingOuterQuery_Adds_Prefix_To_CommandText_When_Query_Has_Offset()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().SelectAll()
-                                                                  .Offset(10)
-                                                                  .Build();
+            var queryMock = new Mock<IFieldSelectionQuery>();
+            queryMock.SetupGet(x => x.GetAllFields).Returns(true);
+            queryMock.SetupGet(x => x.Offset).Returns(10);
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetAllFields())
                              .Returns(default(IEnumerable<string>));
 
             // Act
-            _ = BuilderMock.Object.AppendPagingOuterQuery(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendPagingOuterQuery(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("SELECT * FROM (");
@@ -1005,10 +1019,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendSelectAndDistinctClause_Adds_Select_When_Distinct_Is_False()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().SelectAll().Build();
+            var queryMock = new Mock<IFieldSelectionQuery>();
+            queryMock.SetupGet(x => x.GetAllFields).Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendSelectAndDistinctClause(query, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectAndDistinctClause(queryMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("SELECT ");
@@ -1018,10 +1033,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendSelectAndDistinctClause_Adds_Select_Distinct_When_Distinct_Is_True()
         {
             // Arrange
-            var query = new AdvancedSingleDataObjectQueryBuilder().SelectAll().Distinct().Build();
+            var queryMock = new Mock<IFieldSelectionQuery>();
+            queryMock.SetupGet(x => x.GetAllFields).Returns(true);
+            queryMock.SetupGet(x => x.Distinct).Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendSelectAndDistinctClause(query, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectAndDistinctClause(queryMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("SELECT DISTINCT ");
@@ -1032,7 +1049,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            var query = new AdvancedSingleDataObjectQueryBuilder().Take(10).Build();
+            var query = new SingleEntityQueryBuilder().Take(10).Build();
 
             // Act
             _ = BuilderMock.Object.AppendTopClause(query, queryProcessorSettingsMock.Object, countOnly: false);
@@ -1047,7 +1064,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             queryProcessorSettingsMock.SetupGet(x => x.OverrideLimit).Returns(10);
-            var query = new AdvancedSingleDataObjectQueryBuilder().Build();
+            var query = new SingleEntityQueryBuilder().Build();
 
             // Act
             _ = BuilderMock.Object.AppendTopClause(query, queryProcessorSettingsMock.Object, countOnly: false);
