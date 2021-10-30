@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
     <ProjectReference Include="..\QueryFramework.SqlServer\QueryFramework.SqlServer.csproj" />
   </ItemGroup>
 

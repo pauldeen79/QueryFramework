@@ -7,25 +7,13 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Extensions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Queries;
-using QueryFramework.SqlServer.Extensions;
+using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
     public class TestRepository : ITestRepository
     {
-        private TestEntity Map(IDataReader reader)
-        {
-            var instance = new TestEntity
-            {
-                Id = reader.GetInt32("Id"),
-                Name = reader.GetString("Name")
-            };
-
-            return instance;
-        }
-
         public TestEntity Add(TestEntity instance)
         {
             if (instance == null)
@@ -114,49 +102,31 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return resultEntity;
         }
 
-        public IQueryResult<TestEntity> Execute(ITestQuery query)
+        public TestEntity FindOne(ITestQuery query)
         {
-
-            return _connection.Query
-            (
-                query,
-                Map,
-                DefaultOverrideLimit,
-                TableAlias,
-                SelectFields,
-                GetDefaultOrderByClause(query),
-                GetDefaultWhereClause(query)
-            );
+            return _queryProcessor.FindOne(query);
         }
 
-#pragma warning disable S1172 // Unused method parameters should be removed
-        private string GetDefaultWhereClause(ISingleEntityQuery query)
-#pragma warning restore S1172 // Unused method parameters should be removed
+        public IReadOnlyCollection<TestEntity> FindMany(ITestQuery query)
         {
-            var builder = new StringBuilder();
-
-            return builder.ToString();
+            return _queryProcessor.FindMany(query);
         }
 
-#pragma warning disable S1172 // Unused method parameters should be removed
-        private string GetDefaultOrderByClause(ISingleEntityQuery query)
-#pragma warning restore S1172 // Unused method parameters should be removed
+        public IPagedResult<TestEntity> FindPaged(ITestQuery query)
         {
-            var builder = new StringBuilder();
-            builder.Append("[Name]");
-            return builder.ToString();
+            return _queryProcessor.FindPaged(query);
         }
 
         public TestEntity FindOne(IDatabaseCommand command)
         {
 
-            return _connection.FindOne(command, Map);
+            return _connection.FindOne(command, _mapper.Map);
         }
 
         public IReadOnlyCollection<TestEntity> FindMany(IDatabaseCommand command)
         {
 
-            return _connection.FindMany(command, Map);
+            return _connection.FindMany(command, _mapper.Map);
         }
 
         public TestEntity Find(TestEntityIdentity identity)
@@ -169,21 +139,33 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return FindOne(new Mock<IDatabaseCommand>().Object);
         }
 
-        public TestRepository(IDbConnection connection)
+        public TestRepository(IDbConnection connection,
+                              IQueryProcessor<ITestQuery, TestEntity> queryProcessor,
+                              IDataReaderMapper<TestEntity> mapper)
         {
             if (connection == null)
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+            if (queryProcessor == null)
+            {
+                throw new ArgumentNullException(nameof(queryProcessor));
+            }
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper));
+            }
             _connection = connection;
+            _queryProcessor = queryProcessor;
+            _mapper = mapper;
 
         }
 
         private readonly IDbConnection _connection;
+        private readonly IQueryProcessor<ITestQuery, TestEntity> _queryProcessor;
+        private readonly IDataReaderMapper<TestEntity> _mapper;
 
         private const string SelectFields = @"[Id], [Name], [DateCreated], [DateLastModified], [DateSynchronized], [DriveSerialNumber], [DriveTypeCodeType], [DriveTypeCode], [DriveTypeDescription], [DriveTotalSize], [DriveFreeSpace], [Recursive], [Sorted], [StartDirectory], [ExtraField1], [ExtraField2], [ExtraField3], [ExtraField4], [ExtraField5], [ExtraField6], [ExtraField7], [ExtraField8], [ExtraField9], [ExtraField10], [ExtraField11], [ExtraField12], [ExtraField13], [ExtraField14], [ExtraField15], [ExtraField16]";
-
-        private const int DefaultOverrideLimit = -1;
 
         private const string TableAlias = @"(SELECT c.[Id], [Name], [DateCreated], [DateLastModified], [DateSynchronized], [DriveSerialNumber], c.[DriveTypeCodeType], c.[DriveTypeCode], c.[DriveTotalSize], c.[DriveFreeSpace], c.[Recursive], c.[Sorted], c.[StartDirectory], c.[ExtraField1], c.[ExtraField2], c.[ExtraField3], c.[ExtraField4], c.[ExtraField5], c.[ExtraField6], c.[ExtraField7], c.[ExtraField8], c.[ExtraField9], c.[ExtraField10], c.[ExtraField11], c.[ExtraField12], c.[ExtraField13], c.[ExtraField14], c.[ExtraField15], c.[ExtraField16], cd.[Description] AS [DriveTypeDescription] FROM [Catalog] c INNER JOIN [Code] cd ON c.[DriveTypeCode] = cd.[Code] AND cd.[CodeType] = 'CDT') AS [CatalogView]";
     }
