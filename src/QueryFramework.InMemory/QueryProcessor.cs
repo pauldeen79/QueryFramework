@@ -22,6 +22,11 @@ namespace QueryFramework.InMemory
             _valueRetriever = valueRetriever;
         }
 
+        public QueryProcessor(IEnumerable<TResult> sourceData)
+            : this(sourceData, new ExpressionEvaluator<TResult>(new ValueProvider()))
+        {
+        }
+
         public TResult FindOne(TQuery query)
             => _sourceData.FirstOrDefault(item => ItemIsValid(item, query.Conditions));
 
@@ -38,7 +43,7 @@ namespace QueryFramework.InMemory
         {
             IEnumerable<TResult> result = filteredRecords;
 
-            if (query.OrderByFields.Any())
+            if (query?.OrderByFields?.Any() == true)
             {
                 result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, _valueRetriever));
             }
@@ -58,7 +63,7 @@ namespace QueryFramework.InMemory
         private bool ItemIsValid(TResult item, IReadOnlyCollection<IQueryCondition> conditions)
         {
             var builder = new StringBuilder();
-            foreach (var condition in conditions)
+            foreach (var condition in conditions ?? Enumerable.Empty<IQueryCondition>())
             {
                 if (builder.Length > 0)
                 {

@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
@@ -670,6 +671,21 @@ namespace QueryFramework.InMemory.Tests
             // Assert
             actual.Should().HaveCount(1);
             actual.First().Property.Should().Be("B ");
+        }
+
+        [Fact]
+        public void Query_With_Null_Properties_Results_In_Same_Result_As_Input()
+        {
+            // Arrange
+            var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+            var sut = CreateSut(items);
+            var query = new Mock<ISingleEntityQuery>().Object;
+
+            // Act
+            var actual = sut.FindMany(query);
+
+            // Assert
+            actual.Should().BeEquivalentTo(items);
         }
 
         private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
