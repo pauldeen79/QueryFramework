@@ -31,7 +31,7 @@ namespace QueryFramework.InMemory
         public IPagedResult<TResult> FindPaged(TQuery query)
         {
             var filteredRecords = new List<TResult>(_sourceData.Where(item => ItemIsValid(item, query.Conditions)));
-            return new PagedResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count);
+            return new PagedResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count, query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault());
         }
 
         private IEnumerable<TResult> GetPagedData(TQuery query, List<TResult> filteredRecords)

@@ -41,7 +41,7 @@ namespace QueryFramework.SqlServer
             => _connection.FindOne(GenerateCommand(query, false), _mapper.Map);
 
         public IPagedResult<TResult> FindPaged(TQuery query)
-            => _connection.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), _mapper.Map);
+            => _connection.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault(), _mapper.Map);
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {
