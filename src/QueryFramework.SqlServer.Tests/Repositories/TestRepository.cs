@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Sql.Extensions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
@@ -16,93 +12,20 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     {
         public TestEntity Add(TestEntity instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-            return _connection.InvokeCommand
-            (
-                instance,
-                x => new Mock<IDatabaseCommand>().Object,
-                "Test entity was not added",
-                AddResultEntity,
-                AddAfterRead,
-                AddFinalize
-            );
-        }
-
-        private TestEntity AddResultEntity(TestEntity resultEntity)
-        {
-            return resultEntity;
-        }
-
-        private TestEntity AddFinalize(TestEntity resultEntity, Exception? exception)
-        {
-            return resultEntity;
-        }
-
-        private TestEntity AddAfterRead(TestEntity resultEntity, IDataReader reader)
-        {
-            resultEntity.Id = reader.GetInt32("Id");
-            resultEntity.Name = reader.GetString("Name", default(string));
-
-            return resultEntity;
+            return _addProcessor.InvokeCommand(instance);
         }
 
         public TestEntity Update(TestEntity instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-            return _connection.InvokeCommand
-            (
-                instance,
-                x => new Mock<IDatabaseCommand>().Object,
-                "Catalog entity was not updated",
-                UpdateResultEntity,
-                UpdateAfterRead
-            );
-        }
-
-        private TestEntity UpdateResultEntity(TestEntity resultEntity)
-        {
-
-            return resultEntity;
-        }
-
-#pragma warning disable S4144 // Methods should not have identical implementations
-        private TestEntity UpdateAfterRead(TestEntity resultEntity, IDataReader reader)
-#pragma warning restore S4144 // Methods should not have identical implementations
-        {
-            resultEntity.Id = reader.GetInt32("Id");
-            resultEntity.Name = reader.GetString("Name", default(string));
-
-            return resultEntity;
+            return _updateProcessor.InvokeCommand(instance);
         }
 
         public TestEntity Delete(TestEntity instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-            return _connection.InvokeCommand
-            (
-                instance,
-                x => new Mock<IDatabaseCommand>().Object,
-                "Test entity was not deleted",
-                DeleteResultEntity
-            );
+            return _deleteProcessor.InvokeCommand(instance);
         }
 
-        private TestEntity DeleteResultEntity(TestEntity resultEntity)
-        {
-            resultEntity.Id = 2; //for test purposes.
-            return resultEntity;
-        }
-
-        public TestEntity FindOne(ITestQuery query)
+        public TestEntity? FindOne(ITestQuery query)
         {
             return _queryProcessor.FindOne(query);
         }
@@ -117,19 +40,17 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return _queryProcessor.FindPaged(query);
         }
 
-        public TestEntity FindOne(IDatabaseCommand command)
+        public TestEntity? FindOne(IDatabaseCommand command)
         {
-
-            return _connection.FindOne(command, _mapper.Map);
+            return _findProcessor.FindOne(command);
         }
 
         public IReadOnlyCollection<TestEntity> FindMany(IDatabaseCommand command)
         {
-
-            return _connection.FindMany(command, _mapper.Map);
+            return _findProcessor.FindMany(command);
         }
 
-        public TestEntity Find(TestEntityIdentity identity)
+        public TestEntity? Find(TestEntityIdentity identity)
         {
 
             if (identity == null)
@@ -139,30 +60,23 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return FindOne(new Mock<IDatabaseCommand>().Object);
         }
 
-        public TestRepository(IDbConnection connection,
-                              IQueryProcessor<ITestQuery, TestEntity> queryProcessor,
-                              IDataReaderMapper<TestEntity> mapper)
+        public TestRepository(IDatabaseCommandProcessor<TestEntity> addProcessor,
+                              IDatabaseCommandProcessor<TestEntity> updateProcessor,
+                              IDatabaseCommandProcessor<TestEntity> deleteProcessor,
+                              IDatabaseCommandProcessor<TestEntity> findProcessor,
+                              IQueryProcessor<ITestQuery, TestEntity> queryProcessor)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
-            if (queryProcessor == null)
-            {
-                throw new ArgumentNullException(nameof(queryProcessor));
-            }
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-            _connection = connection;
+            _addProcessor = addProcessor;
+            _updateProcessor = updateProcessor;
+            _deleteProcessor = deleteProcessor;
+            _findProcessor = findProcessor;
             _queryProcessor = queryProcessor;
-            _mapper = mapper;
-
         }
 
-        private readonly IDbConnection _connection;
+        private readonly IDatabaseCommandProcessor<TestEntity> _addProcessor;
+        private readonly IDatabaseCommandProcessor<TestEntity> _updateProcessor;
+        private readonly IDatabaseCommandProcessor<TestEntity> _deleteProcessor;
+        private readonly IDatabaseCommandProcessor<TestEntity> _findProcessor;
         private readonly IQueryProcessor<ITestQuery, TestEntity> _queryProcessor;
-        private readonly IDataReaderMapper<TestEntity> _mapper;
     }
 }

@@ -527,22 +527,22 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else if (queryCondition.Operator == QueryOperator.StartsWith)
             {
-                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
+                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotStartsWith)
             {
-                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
+                instance.Append($"LEFT({field.Expression}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.EndsWith)
             {
-                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) = {paramName}");
+                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotEndsWith)
             {
-                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithDefault(string.Empty).Length}) <> {paramName}");
+                instance.Append($"RIGHT({field.Expression}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else

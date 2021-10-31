@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.Stub;
-using System.Data.Stub.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
 using FluentAssertions;
 using Moq;
@@ -17,19 +14,22 @@ using Xunit;
 namespace QueryFramework.SqlServer.Tests
 {
     [ExcludeFromCodeCoverage]
-    public sealed class QueryProcessorTests : IDisposable
+    public class QueryProcessorTests
     {
-        private DbConnection Connection { get; }
-        private DbConnectionCallback Callback { get; }
+        private Mock<IDatabaseCommandProcessor<MyEntity>> DatabaseCommandProcessorMock { get; }
         private Mock<IDataReaderMapper<MyEntity>> MapperMock { get; }
         private Mock<IQueryProcessorSettings> QueryProcessorSettingsMock { get; }
         private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
         private Mock<IQueryFieldProvider> FieldProviderMock { get; }
+        private QueryProcessor<ISingleEntityQuery, MyEntity> Sut
+            => new QueryProcessor<ISingleEntityQuery, MyEntity>(DatabaseCommandProcessorMock.Object,
+                                                                QueryProcessorSettingsMock.Object,
+                                                                DatabaseCommandGeneratorMock.Object,
+                                                                FieldProviderMock.Object);
 
         public QueryProcessorTests()
         {
-            Callback = new DbConnectionCallback();
-            Connection = new DbConnection().AddCallback(Callback);
+            DatabaseCommandProcessorMock = new Mock<IDatabaseCommandProcessor<MyEntity>>();
             MapperMock = new Mock<IDataReaderMapper<MyEntity>>();
             MapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
@@ -40,23 +40,16 @@ namespace QueryFramework.SqlServer.Tests
                              .Returns<IEnumerable<string>>(input => input);
         }
 
-        public void Dispose()
-        {
-            Connection.Dispose();
-        }
-
         [Fact]
         public void FindPaged_Returns_MappedEntities()
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
-            Connection.AddResultForScalarCommand(1);
+            SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = sut.FindPaged(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindPaged(new Mock<ISingleEntityQuery>().Object);
 
             // Assert
             actual.Should().HaveCount(1);
@@ -70,15 +63,13 @@ namespace QueryFramework.SqlServer.Tests
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
-            Connection.AddResultForScalarCommand(10);
+            SetupSourceData(new[] { new MyEntity { Property = "Value" } }, totalRecordCount: 10);
             var queryMock = new Mock<ISingleEntityQuery>();
             queryMock.SetupGet(x => x.Limit)
                      .Returns(1);
 
             // Act
-            var actual = sut.FindPaged(queryMock.Object);
+            var actual = Sut.FindPaged(queryMock.Object);
 
             // Assert
             actual.Should().HaveCount(1);
@@ -91,15 +82,17 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
+            SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = sut.FindOne(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindOne(new Mock<ISingleEntityQuery>().Object);
 
             // Assert
             actual.Should().NotBeNull();
-            actual.Property.Should().Be("Value");
+            if (actual != null)
+            {
+                actual.Property.Should().Be("Value");
+            }
         }
 
         [Fact]
@@ -107,60 +100,14 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            Connection.AddResultForDataReader(new[] { new MyEntity { Property = "Value" } });
+            SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = sut.FindMany(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindMany(new Mock<ISingleEntityQuery>().Object);
 
             // Assert
             actual.Should().HaveCount(1);
             actual.First().Property.Should().Be("Value");
-        }
-
-        [Fact]
-        public void FindMany_Uses_DynamicQuery_Result_When_Query_Implements_IDynamicQuery()
-        {
-            // Arrange
-            const string Sql = "SELECT Field1, Field2 FROM (SELECT TOP 10 Field1, Field2, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) as sq_row_number FROM MyEntity) sq WHERE sq.sq_row_number BETWEEN 11 and 20;";
-            SetupDatabaseCommandGenerator(Sql);
-            QueryProcessorSettingsMock.SetupGet(x => x.Fields)
-                                      .Returns("Field1, Field2");
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            var query = new DynamicQueryMock();
-
-            // Act
-            sut.FindMany(query);
-
-            // Assert
-            Callback.Commands.Should().HaveCount(1);
-            Callback.Commands.First().CommandText.Should().Be(Sql);
-        }
-
-        [Fact]
-        public void FindMany_Validates_Query_When_ValidateFieldNames_Is_Set_To_True()
-        {
-            // Arrange
-            QueryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
-                                      .Returns(true);
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            var query = new ValidatableQueryMock();
-
-            // Act & Assert
-            sut.Invoking(x => x.FindMany(query))
-               .Should().Throw<ValidationException>();
-        }
-
-        [Fact]
-        public void FindMany_Does_Not_Validate_Query_When_ValidateFieldNames_Is_Set_To_False()
-        {
-            // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-            var query = new ValidatableQueryMock();
-
-            // Act & Assert
-            sut.Invoking(x => x.FindMany(query))
-               .Should().NotThrow<ValidationException>();
         }
 
         private void SetupDatabaseCommandGenerator(string sql, object? parameters = null)
@@ -169,6 +116,20 @@ namespace QueryFramework.SqlServer.Tests
 
         private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object? parameters = null)
             => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldProvider>(), true))
-                                   .Returns(new SqlTextCommand(sql, parameters));
+                                           .Returns(new SqlTextCommand(sql, parameters));
+
+        private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
+        {
+            // For FindOne/FindMany
+            DatabaseCommandProcessorMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
+            DatabaseCommandProcessorMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
+
+            // For FindPaged
+            DatabaseCommandProcessorMock.Setup(x => x.FindPaged(It.IsAny<IDatabaseCommand>(), It.IsAny<IDatabaseCommand>(), It.IsAny<int>(), It.IsAny<int>()))
+                                        .Returns<IDatabaseCommand, IDatabaseCommand, int, int>((_, _, offset, pageSize) => CreatePagedResult(data, totalRecordCount ?? data.Count(), offset, pageSize));
+        }
+
+        private IPagedResult<MyEntity> CreatePagedResult(IEnumerable<MyEntity> data, int totalRecordCount, int offset, int pageSize)
+            => new PagedResult<MyEntity>(data, totalRecordCount, offset, pageSize);
     }
 }

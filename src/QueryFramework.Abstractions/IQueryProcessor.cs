@@ -8,7 +8,7 @@ namespace QueryFramework.Abstractions
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        TResult FindOne(TQuery query);
+        TResult? FindOne(TQuery query);
         IReadOnlyCollection<TResult> FindMany(TQuery query);
         IPagedResult<TResult> FindPaged(TQuery query);
     }

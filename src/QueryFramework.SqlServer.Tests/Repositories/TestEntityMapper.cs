@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Text;
+using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Extensions;
-using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {

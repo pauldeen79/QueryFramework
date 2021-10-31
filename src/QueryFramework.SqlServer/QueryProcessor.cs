@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
@@ -14,33 +12,30 @@ namespace QueryFramework.SqlServer
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        private readonly IDbConnection _connection;
-        private readonly IDataReaderMapper<TResult> _mapper;
+        private readonly IDatabaseCommandProcessor<TResult> _processor;
         private readonly IQueryProcessorSettings _settings;
         private readonly IDatabaseCommandGenerator _databaseCommandGenerator;
         private readonly IQueryFieldProvider _fieldProvider;
 
-        public QueryProcessor(IDbConnection connection,
-                              IDataReaderMapper<TResult> mapper,
+        public QueryProcessor(IDatabaseCommandProcessor<TResult> processor,
                               IQueryProcessorSettings settings,
                               IDatabaseCommandGenerator databaseCommandGenerator,
                               IQueryFieldProvider fieldProvider)
         {
-            _connection = connection;
-            _mapper = mapper;
+            _processor = processor;
             _settings = settings;
             _databaseCommandGenerator = databaseCommandGenerator;
             _fieldProvider = fieldProvider;
         }
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
-            => _connection.FindMany(GenerateCommand(query, false), _mapper.Map);
+            => _processor.FindMany(GenerateCommand(query, false));
 
-        public TResult FindOne(TQuery query)
-            => _connection.FindOne(GenerateCommand(query, false), _mapper.Map);
+        public TResult? FindOne(TQuery query)
+            => _processor.FindOne(GenerateCommand(query, false));
 
         public IPagedResult<TResult> FindPaged(TQuery query)
-            => _connection.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault(), _mapper.Map);
+            => _processor.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault());
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {
@@ -50,7 +45,10 @@ namespace QueryFramework.SqlServer
             }
 
             query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), _fieldProvider, countOnly);
+            return _databaseCommandGenerator.Generate(query,
+                                                      _settings.WithDefaultTableName(typeof(TResult).Name),
+                                                      _fieldProvider,
+                                                      countOnly);
         }
     }
 }

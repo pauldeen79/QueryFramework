@@ -1,34 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Stub;
-using System.Data.Stub.Extensions;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.SqlServer.Abstractions;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public sealed class TestRepositoryTests : IDisposable
+    public class TestRepositoryTests
     {
-        private DbConnection Connection { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> AddProcessorMock { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> FindProcessorMock { get; }
         private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; set; }
-        private IDataReaderMapper<TestEntity> Mapper { get; }
         private IEnumerable<TestEntity> SourceData { get; set; }
-        private TestRepository Sut => new TestRepository(Connection, QueryProcessor, Mapper);
+        private TestRepository Sut => new TestRepository(AddProcessorMock.Object,
+                                                         UpdateProcessorMock.Object,
+                                                         DeleteProcessorMock.Object,
+                                                         FindProcessorMock.Object,
+                                                         QueryProcessor);
 
         public TestRepositoryTests()
         {
-            Connection = new DbConnection();
-            Mapper = new TestEntityMapper();
+            AddProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            AddProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
+            UpdateProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            UpdateProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
+            DeleteProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            DeleteProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 2; return x; });
+            FindProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
             
             // Only needed to satisfy compiler. Both are filled in SetupSourceData, but this is not detected...
-            QueryProcessor = new Mock<IQueryProcessor<ITestQuery, TestEntity>>().Object; // overwritten in 
+            QueryProcessor = new Mock<IQueryProcessor<ITestQuery, TestEntity>>().Object;
             SourceData = Enumerable.Empty<TestEntity>();
             
             SetupSourceData(Enumerable.Empty<TestEntity>());
@@ -45,7 +52,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             entity = Sut.Add(entity);
 
             // Assert
-            entity.Id.Should().Be(1);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+            }
         }
 
         [Fact]
@@ -59,21 +70,28 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             entity = Sut.Update(entity);
 
             // Assert
-            entity.Id.Should().Be(1);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+            }
         }
 
         [Fact]
         public void Can_Delete_Entity()
         {
             // Arrange
-            Connection.AddResultForNonQueryCommand(1);
             var entity = new TestEntity { Id = 1, Name = "Test" };
 
             // Act
             entity = Sut.Delete(entity);
 
             // Assert
-            entity.Id.Should().Be(2);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(2);
+            }
         }
 
         [Fact]
@@ -87,8 +105,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entity.Should().NotBeNull();
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+                entity.Name.Should().Be("Test");
+            }
         }
 
         [Fact]
@@ -102,8 +123,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entity.Should().NotBeNull();
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+                entity.Name.Should().Be("Test");
+            }
         }
 
         [Fact]
@@ -121,9 +145,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entities.Should().HaveCount(2);
-            entities.First().Should().NotBeNull();
             entities.First().Id.Should().Be(1);
-            entities.Last().Should().NotBeNull();
             entities.Last().Id.Should().Be(2);
         }
 
@@ -142,21 +164,15 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entities.Should().HaveCount(2);
-            entities.First().Should().NotBeNull();
             entities.First().Id.Should().Be(1);
-            entities.Last().Should().NotBeNull();
             entities.Last().Id.Should().Be(2);
-        }
-
-        public void Dispose()
-        {
-            Connection.Dispose();
         }
 
         private void SetupSourceData(IEnumerable<TestEntity> data)
         {
-            // For Add/Update/Delete
-            Connection.AddResultForDataReader(data);
+            // For FindOne/FindMany
+            FindProcessorMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
+            FindProcessorMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
             // For Query
             SourceData = data;

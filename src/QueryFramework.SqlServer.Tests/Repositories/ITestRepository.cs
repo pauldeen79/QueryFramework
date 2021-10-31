@@ -12,10 +12,10 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
         TestEntity Delete(TestEntity instance);
 
-        TestEntity FindOne(IDatabaseCommand command);
+        TestEntity? FindOne(IDatabaseCommand command);
 
         IReadOnlyCollection<TestEntity> FindMany(IDatabaseCommand command);
 
-        TestEntity Find(TestEntityIdentity identity);
+        TestEntity? Find(TestEntityIdentity identity);
     }
 }
