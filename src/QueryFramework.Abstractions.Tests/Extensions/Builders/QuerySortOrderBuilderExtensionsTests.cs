@@ -23,7 +23,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             // Assert
             sut.VerifySet(x => x.Order = default, Times.Once);
             fieldMock.VerifySet(x => x.Expression = default, Times.Once);
-            fieldMock.VerifySet(x => x.FieldName = default, Times.Once);
+            fieldMock.VerifySet(x => x.FieldName = string.Empty, Times.Once);
         }
 
         [Fact]

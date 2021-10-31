@@ -1,5 +1,4 @@
-﻿using System;
-using CrossCutting.Data.Abstractions;
+﻿using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.SqlServer.Abstractions;
@@ -15,21 +14,6 @@ namespace QueryFramework.SqlServer
                                                  bool countOnly)
             where TQuery : ISingleEntityQuery
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
-
-            if (fieldProvider == null)
-            {
-                throw new ArgumentNullException(nameof(fieldProvider));
-            }
-
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             var groupingQuery = query as IGroupingQuery;
             return new DatabaseCommandBuilder()

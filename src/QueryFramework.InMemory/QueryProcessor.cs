@@ -43,7 +43,7 @@ namespace QueryFramework.InMemory
         {
             IEnumerable<TResult> result = filteredRecords;
 
-            if (query?.OrderByFields?.Any() == true)
+            if (query.OrderByFields?.Any() == true)
             {
                 result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, _valueRetriever));
             }
@@ -149,7 +149,7 @@ namespace QueryFramework.InMemory
                 ? string.Empty
                 : expression.Substring(closeIndex + 1);
 
-        private static bool Evaluate(IQueryCondition condition, object value)
+        private static bool Evaluate(IQueryCondition condition, object? value)
         {
             var conditionValueString = condition.Value == null
                 ? null

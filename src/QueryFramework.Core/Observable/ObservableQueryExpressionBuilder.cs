@@ -7,7 +7,7 @@ namespace QueryFramework.Core.Observable
     public class ObservableQueryExpressionBuilder : IQueryExpressionBuilder, INotifyPropertyChanged
     {
         private string _fieldName;
-        private string _expression;
+        private string? _expression;
 
         public string FieldName
         {
@@ -19,7 +19,7 @@ namespace QueryFramework.Core.Observable
             }
         }
 
-        public string Expression
+        public string? Expression
         {
             get => _expression;
             set
@@ -29,7 +29,7 @@ namespace QueryFramework.Core.Observable
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public IQueryExpression Build()
         {
@@ -38,20 +38,25 @@ namespace QueryFramework.Core.Observable
         public ObservableQueryExpressionBuilder() : this(null)
         {
         }
-        public ObservableQueryExpressionBuilder(IQueryExpression source)
+        public ObservableQueryExpressionBuilder(IQueryExpression? source)
         {
             if (source != null)
             {
-                FieldName = source.FieldName;
-                Expression = !(source is IExpressionContainer expressionContainer)
+                _fieldName = source.FieldName;
+                _expression = !(source is IExpressionContainer expressionContainer)
                     ? source.Expression
                     : expressionContainer.SourceExpression;
             }
+            else
+            {
+                _fieldName = string.Empty;
+                _expression = null;
+            }
         }
-        public ObservableQueryExpressionBuilder(string fieldName, string expression = null)
+        public ObservableQueryExpressionBuilder(string fieldName, string? expression = null)
         {
-            FieldName = fieldName;
-            Expression = expression;
+            _fieldName = fieldName;
+            _expression = expression;
         }
     }
 }

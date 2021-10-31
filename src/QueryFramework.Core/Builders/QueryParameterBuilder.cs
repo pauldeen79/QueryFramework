@@ -11,12 +11,17 @@ namespace QueryFramework.Core.Builders
         {
             return new QueryParameter(Name, Value);
         }
-        public QueryParameterBuilder(IQueryParameter source = null)
+        public QueryParameterBuilder(IQueryParameter? source = null)
         {
             if (source != null)
             {
                 Name = source.Name;
                 Value = source.Value;
+            }
+            else
+            {
+                Name = string.Empty;
+                Value = new object();
             }
         }
         public QueryParameterBuilder(string name, object value)

@@ -24,7 +24,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             sut.VerifySet(x => x.CloseBracket = default, Times.Once);
             sut.VerifySet(x => x.Combination = default, Times.Once);
             fieldMock.VerifySet(x => x.Expression = default, Times.Once);
-            fieldMock.VerifySet(x => x.FieldName = default, Times.Once);
+            fieldMock.VerifySet(x => x.FieldName = string.Empty, Times.Once);
             sut.VerifySet(x => x.OpenBracket = default, Times.Once);
             sut.VerifySet(x => x.Operator = default, Times.Once);
             sut.VerifySet(x => x.Value = default, Times.Once);

@@ -16,10 +16,10 @@ namespace QueryFramework.SqlServer.Extensions
     internal static class DatabaseCommandBuilderExtensions
     {
         internal static IDatabaseCommandBuilder AppendPagingOuterQuery(this IDatabaseCommandBuilder instance,
-                                                                      ISingleEntityQuery query,
-                                                                      IQueryProcessorSettings settings,
-                                                                      IQueryFieldProvider fieldProvider,
-                                                                      bool countOnly)
+                                                                       ISingleEntityQuery query,
+                                                                       IQueryProcessorSettings settings,
+                                                                       IQueryFieldProvider fieldProvider,
+                                                                       bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly)
             {
@@ -34,10 +34,10 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendSelectFields(this IDatabaseCommandBuilder instance,
-                                                                  ISingleEntityQuery query,
-                                                                  IQueryProcessorSettings settings,
-                                                                  IQueryFieldProvider fieldProvider,
-                                                                  bool countOnly)
+                                                                   ISingleEntityQuery query,
+                                                                   IQueryProcessorSettings settings,
+                                                                   IQueryFieldProvider fieldProvider,
+                                                                   bool countOnly)
         {
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             if (countOnly)
@@ -59,7 +59,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                                              IQueryFieldProvider fieldProvider)
         {
             var allFields = fieldProvider.GetAllFields();
-            if (allFields == null)
+            if (!allFields.Any())
             {
                 instance.Append(settings.Fields.WhenNullOrWhitespace("*"));
             }
@@ -82,9 +82,9 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         private static IDatabaseCommandBuilder AppendSelectFieldsForSpecifiedFields(this IDatabaseCommandBuilder instance,
-                                                                                   IQueryProcessorSettings settings,
-                                                                                   IFieldSelectionQuery fieldSelectionQuery,
-                                                                                   IQueryFieldProvider fieldProvider)
+                                                                                    IQueryProcessorSettings settings,
+                                                                                    IFieldSelectionQuery fieldSelectionQuery,
+                                                                                    IQueryFieldProvider fieldProvider)
         {
             var paramCounter = 0;
             foreach (var expression in fieldSelectionQuery.GetSelectFields(fieldProvider))
@@ -120,8 +120,8 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendSelectAndDistinctClause(this IDatabaseCommandBuilder instance,
-                                                                             IFieldSelectionQuery fieldSelectionQuery,
-                                                                             bool countOnly)
+                                                                              IFieldSelectionQuery? fieldSelectionQuery,
+                                                                              bool countOnly)
         {
             instance.Append("SELECT ");
             if (fieldSelectionQuery?.Distinct == true && !countOnly)
@@ -133,9 +133,9 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendTopClause(this IDatabaseCommandBuilder instance,
-                                                               ISingleEntityQuery query,
-                                                               IQueryProcessorSettings settings,
-                                                               bool countOnly)
+                                                                ISingleEntityQuery query,
+                                                                IQueryProcessorSettings settings,
+                                                                bool countOnly)
         {
             if ((query.Offset == null || query.Offset.Value <= 0 || query.OrderByFields.Count == 0)
                 && ((query.Limit.HasValue && query.Limit.Value >= 0) || (settings.OverrideLimit.HasValue && settings.OverrideLimit.Value >= 0))
@@ -148,19 +148,19 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendCountOrSelectFields(this IDatabaseCommandBuilder instance,
-                                                                         ISingleEntityQuery query,
-                                                                         IQueryProcessorSettings settings,
-                                                                         IQueryFieldProvider fieldProvider,
-                                                                         bool countOnly)
+                                                                          ISingleEntityQuery query,
+                                                                          IQueryProcessorSettings settings,
+                                                                          IQueryFieldProvider fieldProvider,
+                                                                          bool countOnly)
             => countOnly
                 ? instance.Append("COUNT(*)")
                 : instance.AppendSelectFields(query, settings, fieldProvider, countOnly);
 
         internal static IDatabaseCommandBuilder AppendPagingPrefix(this IDatabaseCommandBuilder instance,
-                                                                  ISingleEntityQuery query,
-                                                                  IQueryProcessorSettings settings,
-                                                                  IQueryFieldProvider fieldProvider,
-                                                                  bool countOnly)
+                                                                   ISingleEntityQuery query,
+                                                                   IQueryProcessorSettings settings,
+                                                                   IQueryFieldProvider fieldProvider,
+                                                                   bool countOnly)
         {
             if (query.Offset.HasValue
                 && query.Offset.Value >= 0
@@ -197,9 +197,9 @@ namespace QueryFramework.SqlServer.Extensions
             return instance;
         }
 
-        private static string GetOrderByFieldName(IQueryProcessorSettings settings,
-                                                  IQueryFieldProvider fieldProvider,
-                                                  IQuerySortOrder querySortOrder)
+        private static string? GetOrderByFieldName(IQueryProcessorSettings settings,
+                                                   IQueryFieldProvider fieldProvider,
+                                                   IQuerySortOrder querySortOrder)
         {
             var fieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.Field.FieldName);
             if (fieldName == null && settings.ValidateFieldNames)
@@ -214,15 +214,15 @@ namespace QueryFramework.SqlServer.Extensions
             => instance.Append(" FROM ");
 
         internal static IDatabaseCommandBuilder AppendTableName(this IDatabaseCommandBuilder instance,
-                                                               ISingleEntityQuery query,
-                                                               IQueryProcessorSettings settings)
+                                                                ISingleEntityQuery query,
+                                                                IQueryProcessorSettings settings)
             => instance.Append(query.GetTableName(settings.TableName));
 
         internal static IDatabaseCommandBuilder AppendWhereClause(this IDatabaseCommandBuilder instance,
-                                                                 ISingleEntityQuery query,
-                                                                 IQueryProcessorSettings settings,
-                                                                 IQueryFieldProvider fieldProvider,
-                                                                 out int paramCounter)
+                                                                  ISingleEntityQuery query,
+                                                                  IQueryProcessorSettings settings,
+                                                                  IQueryFieldProvider fieldProvider,
+                                                                  out int paramCounter)
         {
             if ((query.Conditions?.Any() != true)
                 && string.IsNullOrEmpty(settings.DefaultWhere))
@@ -245,7 +245,7 @@ namespace QueryFramework.SqlServer.Extensions
 
             paramCounter = settings.InitialParameterNumber; //When parameters length = 2, this means 0 and 1. Then we have to start with 2.
 
-            foreach (var queryCondition in query.Conditions)
+            foreach (var queryCondition in query.Conditions ?? Enumerable.Empty<IQueryCondition>())
             {
                 paramCounter = instance.AppendQueryCondition
                 (
@@ -260,9 +260,9 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendGroupByClause(this IDatabaseCommandBuilder instance,
-                                                                   IGroupingQuery groupingQuery,
-                                                                   IQueryProcessorSettings settings,
-                                                                   IQueryFieldProvider fieldProvider)
+                                                                    IGroupingQuery? groupingQuery,
+                                                                    IQueryProcessorSettings settings,
+                                                                    IQueryFieldProvider fieldProvider)
         {
             if (groupingQuery?.GroupByFields?.Any() != true)
             {
@@ -296,10 +296,10 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendHavingClause(this IDatabaseCommandBuilder instance,
-                                                                  IGroupingQuery groupingQuery,
-                                                                  IQueryProcessorSettings settings,
-                                                                  IQueryFieldProvider fieldProvider,
-                                                                  ref int paramCounter)
+                                                                   IGroupingQuery? groupingQuery,
+                                                                   IQueryProcessorSettings settings,
+                                                                   IQueryFieldProvider fieldProvider,
+                                                                   ref int paramCounter)
         {
             if (groupingQuery?.HavingFields?.Any() != true)
             {
@@ -325,10 +325,10 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendOrderByClause(this IDatabaseCommandBuilder instance,
-                                                                   ISingleEntityQuery query,
-                                                                   IQueryProcessorSettings settings,
-                                                                   IQueryFieldProvider fieldProvider,
-                                                                   bool countOnly)
+                                                                    ISingleEntityQuery query,
+                                                                    IQueryProcessorSettings settings,
+                                                                    IQueryFieldProvider fieldProvider,
+                                                                    bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0)
             {
@@ -343,7 +343,7 @@ namespace QueryFramework.SqlServer.Extensions
             else if (query.OrderByFields?.Any() == true
                 || !string.IsNullOrEmpty(settings.DefaultOrderBy))
             {
-                return instance.AppendOrderBy(query.OrderByFields, settings, fieldProvider);
+                return instance.AppendOrderBy(query.OrderByFields ?? Enumerable.Empty<IQuerySortOrder>(), settings, fieldProvider);
             }
             else
             {
@@ -352,13 +352,13 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         private static IDatabaseCommandBuilder AppendOrderBy(this IDatabaseCommandBuilder instance,
-                                                            IEnumerable<IQuerySortOrder> orderByFields,
-                                                            IQueryProcessorSettings settings,
-                                                            IQueryFieldProvider fieldProvider)
+                                                             IEnumerable<IQuerySortOrder> orderByFields,
+                                                             IQueryProcessorSettings settings,
+                                                             IQueryFieldProvider fieldProvider)
         {
             instance.Append(" ORDER BY ");
             var fieldCounter = 0;
-            foreach (var querySortOrder in orderByFields.NotNull())
+            foreach (var querySortOrder in orderByFields)
             {
                 if (fieldCounter > 0)
                 {
@@ -392,9 +392,9 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         internal static IDatabaseCommandBuilder AppendPagingSuffix(this IDatabaseCommandBuilder instance,
-                                                                  ISingleEntityQuery query,
-                                                                  IQueryProcessorSettings settings,
-                                                                  bool countOnly)
+                                                                   ISingleEntityQuery query,
+                                                                   IQueryProcessorSettings settings,
+                                                                   bool countOnly)
         {
             if (query.Offset.HasValue && query.Offset.Value > 0 && !countOnly)
             {
@@ -561,11 +561,11 @@ namespace QueryFramework.SqlServer.Extensions
                 instance.AppendParameter(string.Format("p{0}", paramCounter),
                                          queryCondition.Value is KeyValuePair<string, object> keyValuePair
                                              ? keyValuePair.Value
-                                             : queryCondition.Value);
+                                             : queryCondition.Value ?? new object());
             }
         }
 
-        private static string GetQueryParameterName(int paramCounter, object value)
+        private static string GetQueryParameterName(int paramCounter, object? value)
         {
             if (value is KeyValuePair<string, object> keyValuePair)
             {

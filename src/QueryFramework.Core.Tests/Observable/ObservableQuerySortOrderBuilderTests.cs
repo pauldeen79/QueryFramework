@@ -66,7 +66,7 @@ namespace QueryFramework.Core.Tests.Observable
         {
             // Arrange
             var sut = new ObservableQuerySortOrderBuilder();
-            var changedPropertiesList = new List<string>();
+            var changedPropertiesList = new List<string?>();
             sut.PropertyChanged += (sender, args) =>
             {
                 changedPropertiesList.Add(args.PropertyName);

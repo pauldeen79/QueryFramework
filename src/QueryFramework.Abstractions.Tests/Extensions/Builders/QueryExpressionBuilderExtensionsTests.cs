@@ -20,7 +20,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
 
             // Assert
             sut.VerifySet(x => x.Expression = default, Times.Once);
-            sut.VerifySet(x => x.FieldName = default, Times.Once);
+            sut.VerifySet(x => x.FieldName = string.Empty, Times.Once);
         }
 
         [Fact]

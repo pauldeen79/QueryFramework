@@ -83,7 +83,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(default(IEnumerable<string>));
+                             .Returns(Enumerable.Empty<string>());
 
             // Act
             _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
@@ -99,7 +99,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             queryProcessorSettingsMock.SetupGet(x => x.Fields)
-                                      .Returns(default(string));
+                                      .Returns(string.Empty);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -164,14 +164,14 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
-                             .Returns<string>(x => null);
+                             .Returns(default(string));
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
             BuilderMock.Object.Invoking(x => x.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
         }
 
         [Fact]
@@ -448,8 +448,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
 
         [Fact]
@@ -576,8 +576,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
         }
 
         [Fact]
@@ -596,8 +596,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act & Assert
             BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
 
         [Fact]
@@ -779,7 +779,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Build();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, null, true);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, new Mock<IQueryProcessorSettings>().Object, true);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -794,7 +794,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(offset).Build();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, null, false);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, new Mock<IQueryProcessorSettings>().Object, false);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -1006,7 +1006,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(default(IEnumerable<string>));
+                             .Returns(Enumerable.Empty<string>());
 
             // Act
             _ = BuilderMock.Object.AppendPagingOuterQuery(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);

@@ -11,13 +11,13 @@ namespace QueryFramework.Core.Builders
         public bool CloseBracket { get; set; }
         public IQueryExpressionBuilder Field { get; set; }
         public QueryOperator Operator { get; set; }
-        public object Value { get; set; }
+        public object? Value { get; set; }
         public QueryCombination Combination { get; set; }
         public IQueryCondition Build()
         {
             return new QueryCondition(Field.Build(), Operator, Value, OpenBracket, CloseBracket, Combination);
         }
-        public QueryConditionBuilder(IQueryCondition source = null)
+        public QueryConditionBuilder(IQueryCondition? source = null)
         {
             Field = new QueryExpressionBuilder();
             if (source != null)
@@ -32,7 +32,7 @@ namespace QueryFramework.Core.Builders
         }
         public QueryConditionBuilder(IQueryExpression expression,
                                      QueryOperator queryOperator,
-                                     object value = null,
+                                     object? value = null,
                                      bool openBracket = false,
                                      bool closeBracket = false,
                                      QueryCombination combination = QueryCombination.And)
@@ -46,7 +46,7 @@ namespace QueryFramework.Core.Builders
         }
         public QueryConditionBuilder(string fieldName,
                                      QueryOperator queryOperator,
-                                     object value = null,
+                                     object? value = null,
                                      bool openBracket = false,
                                      bool closeBracket = false,
                                      QueryCombination combination = QueryCombination.And)

@@ -26,6 +26,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         {
             Connection = new DbConnection();
             Mapper = new TestEntityMapper();
+            
+            // Only needed to satisfy compiler. Both are filled in SetupSourceData, but this is not detected...
+            QueryProcessor = new Mock<IQueryProcessor<ITestQuery, TestEntity>>().Object; // overwritten in 
+            SourceData = Enumerable.Empty<TestEntity>();
+            
             SetupSourceData(Enumerable.Empty<TestEntity>());
         }
 

@@ -12,7 +12,7 @@ namespace QueryFramework.Core.Observable
         private IQueryExpressionBuilder _field;
         private QuerySortOrderDirection _order;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public IQueryExpressionBuilder Field
         {
@@ -38,9 +38,9 @@ namespace QueryFramework.Core.Observable
         {
             return new QuerySortOrder(Field.Build(), Order);
         }
-        public ObservableQuerySortOrderBuilder(IQuerySortOrder source = null)
+        public ObservableQuerySortOrderBuilder(IQuerySortOrder? source = null)
         {
-            Field = new QueryExpressionBuilder();
+            _field = new QueryExpressionBuilder();
             if (source != null)
             {
                 Field.Update(source.Field);
@@ -49,12 +49,12 @@ namespace QueryFramework.Core.Observable
         }
         public ObservableQuerySortOrderBuilder(IQueryExpression expression, QuerySortOrderDirection order = QuerySortOrderDirection.Ascending)
         {
-            Field = expression.ToBuilder();
+            _field = expression.ToBuilder();
             Order = order;
         }
         public ObservableQuerySortOrderBuilder(string fieldName, QuerySortOrderDirection order = QuerySortOrderDirection.Ascending)
         {
-            Field = new QueryExpressionBuilder(fieldName);
+            _field = new QueryExpressionBuilder(fieldName);
             Order = order;
         }
     }

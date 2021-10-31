@@ -46,18 +46,6 @@ namespace QueryFramework.SqlServer.Tests
         }
 
         [Fact]
-        public void FindPaged_Throws_On_Null_Query()
-        {
-            // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-
-            // Act
-            sut.Invoking(x => x.FindPaged(null))
-               .Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be("query");
-        }
-
-        [Fact]
         public void FindPaged_Returns_MappedEntities()
         {
             // Arrange
@@ -99,18 +87,6 @@ namespace QueryFramework.SqlServer.Tests
         }
 
         [Fact]
-        public void FindOne_Throws_On_Null_Query()
-        {
-            // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-
-            // Act
-            sut.Invoking(x => x.FindOne(null))
-               .Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be("query");
-        }
-
-        [Fact]
         public void FindOne_Returns_MappedEntity()
         {
             // Arrange
@@ -124,18 +100,6 @@ namespace QueryFramework.SqlServer.Tests
             // Assert
             actual.Should().NotBeNull();
             actual.Property.Should().Be("Value");
-        }
-
-        [Fact]
-        public void FindMany_Throws_On_Null_Query()
-        {
-            // Arrange
-            var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(Connection, MapperMock.Object, QueryProcessorSettingsMock.Object, DatabaseCommandGeneratorMock.Object, FieldProviderMock.Object);
-
-            // Act
-            sut.Invoking(x => x.FindMany(null))
-               .Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be("query");
         }
 
         [Fact]
@@ -199,11 +163,11 @@ namespace QueryFramework.SqlServer.Tests
                .Should().NotThrow<ValidationException>();
         }
 
-        private void SetupDatabaseCommandGenerator(string sql, object parameters = null)
+        private void SetupDatabaseCommandGenerator(string sql, object? parameters = null)
             => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldProvider>(), false))
                                            .Returns(new SqlTextCommand(sql, parameters));
 
-        private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object parameters = null)
+        private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object? parameters = null)
             => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldProvider>(), true))
                                    .Returns(new SqlTextCommand(sql, parameters));
     }

@@ -6,7 +6,7 @@ namespace QueryFramework.Core
     {
         public QueryCondition(IQueryExpression field,
                               QueryOperator queryOperator,
-                              object value = null,
+                              object? value = null,
                               bool openBracket = false,
                               bool closeBracket = false,
                               QueryCombination combination = QueryCombination.And)
@@ -21,7 +21,7 @@ namespace QueryFramework.Core
 
         public QueryCondition(string fieldName,
                               QueryOperator queryOperator,
-                              object value = null,
+                              object? value = null,
                               bool openBracket = false,
                               bool closeBracket = false,
                               QueryCombination combination = QueryCombination.And)
@@ -42,7 +42,7 @@ namespace QueryFramework.Core
 
         public QueryOperator Operator { get; }
 
-        public object Value { get; }
+        public object? Value { get; }
 
         public QueryCombination Combination { get; }
     }

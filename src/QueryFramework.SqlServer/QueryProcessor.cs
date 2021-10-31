@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Extensions;
@@ -45,11 +44,6 @@ namespace QueryFramework.SqlServer
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
             if (query is IDynamicQuery dynamicQuery)
             {
                 query = (TQuery)dynamicQuery.Process();

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions.Extensions.Queries;
@@ -93,13 +94,13 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
 
             public int? Offset { get; set; }
 
-            public IReadOnlyCollection<IQueryCondition> Conditions { get; set; }
+            public IReadOnlyCollection<IQueryCondition> Conditions { get; set; } = new List<IQueryCondition>();
 
-            public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
+            public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; } = new List<IQuerySortOrder>();
 
-            public string DataObjectName { get; set; }
+            public string DataObjectName { get; set; } = string.Empty;
 
-            public IEnumerable<ValidationResult> ValidationResultValue { get; set; }
+            public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
 
             public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
             {

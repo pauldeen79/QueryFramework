@@ -13,7 +13,7 @@ namespace QueryFramework.Core.Builders
         {
             return new QuerySortOrder(Field.Build(), Order);
         }
-        public QuerySortOrderBuilder(IQuerySortOrder source = null)
+        public QuerySortOrderBuilder(IQuerySortOrder? source = null)
         {
             Field = new QueryExpressionBuilder();
             if (source != null)

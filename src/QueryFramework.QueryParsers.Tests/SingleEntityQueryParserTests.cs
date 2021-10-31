@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
@@ -241,19 +240,6 @@ namespace QueryFramework.QueryParsers.Tests
 
             // Assert
             actual.Conditions.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void Null_Query_Throws_On_Parse()
-        {
-            // Arrange
-            var builder = new SingleEntityQueryBuilder();
-            var sut = CreateSut();
-
-            // Act & Assert
-            sut.Invoking(x => x.Parse(builder, null))
-               .Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be("queryString");
         }
 
         private static SingleEntityQueryParser<ISingleEntityQueryBuilder, QueryExpressionBuilder> CreateSut()

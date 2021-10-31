@@ -270,9 +270,10 @@ namespace QueryFramework.InMemory.Tests
             actual.Should().BeFalse();
         }
 
-        private class MyClass
+        [ExcludeFromCodeCoverage]
+        public class MyClass
         {
-            public string Property { get; set; }
+            public string? Property { get; set; }
         }
     }
 }

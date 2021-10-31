@@ -6,7 +6,7 @@ namespace QueryFramework.SqlServer.Abstractions
     public interface IQueryFieldProvider
     {
         IEnumerable<string> GetSelectFields(IEnumerable<string> querySelectFields);
-        string GetDatabaseFieldName(string queryFieldName);
+        string? GetDatabaseFieldName(string queryFieldName);
         IEnumerable<string> GetAllFields();
         bool ValidateExpression(IQueryExpression expression);
     }

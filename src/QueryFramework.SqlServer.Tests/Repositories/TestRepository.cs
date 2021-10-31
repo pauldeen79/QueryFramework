@@ -36,7 +36,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return resultEntity;
         }
 
-        private TestEntity AddFinalize(TestEntity resultEntity, Exception exception)
+        private TestEntity AddFinalize(TestEntity resultEntity, Exception? exception)
         {
             return resultEntity;
         }

@@ -12,10 +12,10 @@ namespace QueryFramework.SqlServer
         public bool ValidateFieldNames { get; }
         public int InitialParameterNumber { get; }
 
-        public QueryProcessorSettings(string tableName = null,
-                                      string fields = null,
-                                      string defaultOrderBy = null,
-                                      string defaultWhere = null,
+        public QueryProcessorSettings(string tableName = "",
+                                      string fields = "",
+                                      string defaultOrderBy = "",
+                                      string defaultWhere = "",
                                       int? overrideLimit = null,
                                       bool validateFieldNames = true,
                                       int initialParameterNumber = 0)

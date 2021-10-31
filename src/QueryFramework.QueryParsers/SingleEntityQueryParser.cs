@@ -24,11 +24,6 @@ namespace QueryFramework.QueryParsers
 
         public TQueryBuilder Parse(TQueryBuilder builder, string queryString)
         {
-            if (queryString is null)
-            {
-                throw new ArgumentNullException(nameof(queryString));
-            }
-
             var items = queryString
                 .Replace("\r\n", " ")
                 .Replace("\n", " ")
@@ -40,7 +35,7 @@ namespace QueryFramework.QueryParsers
             return builder;
         }
 
-        private List<IQueryConditionBuilder> PerformQuerySearch(string[] items)
+        private List<IQueryConditionBuilder>? PerformQuerySearch(string[] items)
         {
             var itemCountIsCorrect = (items.Length - 3) % 4 == 0;
             if (!itemCountIsCorrect)
@@ -110,7 +105,7 @@ namespace QueryFramework.QueryParsers
                 ? new TQueryExpressionBuilder().WithFieldName(fieldName)
                 : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
-        private object GetValue(QueryOperator queryOperator, object fieldValue)
+        private object? GetValue(QueryOperator queryOperator, object fieldValue)
             => queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
                 ? null
                 : fieldValue;

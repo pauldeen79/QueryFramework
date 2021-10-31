@@ -7,7 +7,7 @@
         IQueryExpressionBuilder Field { get; set; }
         bool OpenBracket { get; set; }
         QueryOperator Operator { get; set; }
-        object Value { get; set; }
+        object? Value { get; set; }
 
         IQueryCondition Build();
     }

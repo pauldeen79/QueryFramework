@@ -694,10 +694,10 @@ namespace QueryFramework.InMemory.Tests
         // Expressions: coalesce?
 
         [ExcludeFromCodeCoverage]
-        private class MyClass
+        public class MyClass
         {
-            public string Property { get; set; }
-            public string Property2 { get; set; }
+            public string? Property { get; set; }
+            public string? Property2 { get; set; }
         }
     }
 }

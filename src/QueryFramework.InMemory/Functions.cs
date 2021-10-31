@@ -7,7 +7,7 @@ namespace QueryFramework.InMemory
 {
     internal static class Functions
     {
-        internal static readonly Dictionary<string, Func<object, IEnumerable<string>, object>> Items = new Dictionary<string, Func<object, IEnumerable<string>, object>>(StringComparer.CurrentCultureIgnoreCase)
+        internal static readonly Dictionary<string, Func<object?, IEnumerable<string>, object>> Items = new Dictionary<string, Func<object?, IEnumerable<string>, object>>(StringComparer.CurrentCultureIgnoreCase)
         {
             { "LEN", (value, _) => GetStringValue(value).Length },
             { "LEFT", (value, arguments) => GetStringValue(value).Substring(0, int.TryParse(arguments.FirstOrDefault() ?? string.Empty, out int length) ? length : 0) },
@@ -21,7 +21,7 @@ namespace QueryFramework.InMemory
             { "TRIM", (value, _) => GetStringValue(value).Trim() },
         };
 
-        private static string GetStringValue(object value)
+        private static string GetStringValue(object? value)
             => value?.ToString() ?? string.Empty;
     }
 }

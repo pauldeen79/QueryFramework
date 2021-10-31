@@ -29,7 +29,7 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(default(IEnumerable<string>));
+                             .Returns(Enumerable.Empty<string>());
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
             var sut = new QueryProcessor<ISingleEntityQuery, MyEntity>(connection, mapperMock.Object, queryProcessorSettingsMock.Object, new DatabaseCommandGenerator(), fieldProviderMock.Object);

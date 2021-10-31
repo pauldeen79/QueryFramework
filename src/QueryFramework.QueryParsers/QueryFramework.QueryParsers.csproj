@@ -5,6 +5,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <PackageId>pauldeen79.QueryFramework.QueryParsers</PackageId>
     <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
   </PropertyGroup>

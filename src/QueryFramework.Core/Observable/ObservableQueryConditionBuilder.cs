@@ -11,10 +11,10 @@ namespace QueryFramework.Core.Observable
         private bool _closeBracket;
         private IQueryExpressionBuilder _field;
         private QueryOperator _operator;
-        private object _value;
+        private object? _value;
         private QueryCombination _combination;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool OpenBracket
         {
@@ -52,7 +52,7 @@ namespace QueryFramework.Core.Observable
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Operator)));
             }
         }
-        public object Value
+        public object? Value
         {
             get => _value;
             set
@@ -74,9 +74,9 @@ namespace QueryFramework.Core.Observable
         {
             return new QueryCondition(Field.Build(), Operator, Value, OpenBracket, CloseBracket, Combination);
         }
-        public ObservableQueryConditionBuilder(IQueryCondition source = null)
+        public ObservableQueryConditionBuilder(IQueryCondition? source = null)
         {
-            Field = new ObservableQueryExpressionBuilder();
+            _field = new ObservableQueryExpressionBuilder();
             if (source != null)
             {
                 OpenBracket = source.OpenBracket;
@@ -89,12 +89,12 @@ namespace QueryFramework.Core.Observable
         }
         public ObservableQueryConditionBuilder(IQueryExpression expression,
                                                QueryOperator queryOperator,
-                                               object value = null,
+                                               object? value = null,
                                                bool openBracket = false,
                                                bool closeBracket = false,
                                                QueryCombination combination = QueryCombination.And)
         {
-            Field = new ObservableQueryExpressionBuilder(expression);
+            _field = new ObservableQueryExpressionBuilder(expression);
             Operator = queryOperator;
             Value = value;
             OpenBracket = openBracket;
@@ -103,12 +103,12 @@ namespace QueryFramework.Core.Observable
         }
         public ObservableQueryConditionBuilder(string fieldName,
                                                QueryOperator queryOperator,
-                                               object value = null,
+                                               object? value = null,
                                                bool openBracket = false,
                                                bool closeBracket = false,
                                                QueryCombination combination = QueryCombination.And)
         {
-            Field = new ObservableQueryExpressionBuilder(new QueryExpression(fieldName));
+            _field = new ObservableQueryExpressionBuilder(new QueryExpression(fieldName));
             Operator = queryOperator;
             Value = value;
             OpenBracket = openBracket;
