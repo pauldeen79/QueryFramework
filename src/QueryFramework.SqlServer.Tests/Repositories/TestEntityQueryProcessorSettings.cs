@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Threading.Tasks;
 using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class TestEntityQueryProcessorSettings : IQueryProcessorSettings
     {
         public string TableName => throw new NotImplementedException();
