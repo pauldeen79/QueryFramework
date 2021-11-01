@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using CrossCutting.Data.Abstractions;
 using Moq;
@@ -40,24 +39,9 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             return _queryProcessor.FindPaged(query);
         }
 
-        public TestEntity? FindOne(IDatabaseCommand command)
-        {
-            return _findProcessor.FindOne(command);
-        }
-
-        public IReadOnlyCollection<TestEntity> FindMany(IDatabaseCommand command)
-        {
-            return _findProcessor.FindMany(command);
-        }
-
         public TestEntity? Find(TestEntityIdentity identity)
         {
-
-            if (identity == null)
-            {
-                throw new ArgumentNullException(nameof(identity));
-            }
-            return FindOne(new Mock<IDatabaseCommand>().Object);
+            return _findProcessor.FindOne(new Mock<IDatabaseCommand>().Object);
         }
 
         public TestRepository(IDatabaseCommandProcessor<TestEntity> addProcessor,

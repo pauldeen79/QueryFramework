@@ -119,7 +119,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             SetupSourceData(new[] { new TestEntity { Id = 1, Name = "Test" } });
 
             // Act
-            var entity = Sut.FindOne(new Mock<IDatabaseCommand>().Object);
+            var entity = Sut.FindOne(new Mock<ITestQuery>().Object);
 
             // Assert
             entity.Should().NotBeNull();
@@ -141,7 +141,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             });
 
             // Act
-            var entities = Sut.FindMany(new Mock<IDatabaseCommand>().Object);
+            var entities = Sut.FindMany(new Mock<ITestQuery>().Object);
 
             // Assert
             entities.Should().HaveCount(2);
@@ -170,11 +170,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
         private void SetupSourceData(IEnumerable<TestEntity> data)
         {
-            // For FindOne/FindMany
+            // For Find
             FindProcessorMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
             FindProcessorMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
-            // For Query
+            // For FindOne, FindMany and Query
             SourceData = data;
             QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(SourceData);
         }
