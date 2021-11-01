@@ -16,8 +16,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         private Mock<IDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
         private Mock<IDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
         private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
-        private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; set; }
-        private IEnumerable<TestEntity> SourceData { get; set; }
+        private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; }
+        private IEnumerable<TestEntity> SourceData { get; set; } = Enumerable.Empty<TestEntity>();
         private TestRepository Sut => new TestRepository(AddProcessorMock.Object,
                                                          UpdateProcessorMock.Object,
                                                          DeleteProcessorMock.Object,
@@ -33,12 +33,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             DeleteProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
             DeleteProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 2; return x; });
             RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-            
-            // Only needed to satisfy compiler. Both are filled in SetupSourceData, but this is not detected...
-            QueryProcessor = new Mock<IQueryProcessor<ITestQuery, TestEntity>>().Object;
-            SourceData = Enumerable.Empty<TestEntity>();
-            
-            SetupSourceData(Enumerable.Empty<TestEntity>());
+            QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(() => SourceData);
         }
 
         [Fact]
@@ -170,13 +165,12 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
         private void SetupSourceData(IEnumerable<TestEntity> data)
         {
-            // For Find
+            // For DatbabaseCommand-based find operations
             RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
             RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
-            // For FindOne, FindMany and Query
+            // For Query-based find operations
             SourceData = data;
-            QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(SourceData);
         }
     }
 }
