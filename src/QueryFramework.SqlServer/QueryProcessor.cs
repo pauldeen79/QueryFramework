@@ -15,17 +15,14 @@ namespace QueryFramework.SqlServer
         private readonly IDatabaseCommandProcessor<TResult> _processor;
         private readonly IQueryProcessorSettings _settings;
         private readonly IDatabaseCommandGenerator _databaseCommandGenerator;
-        private readonly IQueryFieldProvider _fieldProvider;
 
         public QueryProcessor(IDatabaseCommandProcessor<TResult> processor,
                               IQueryProcessorSettings settings,
-                              IDatabaseCommandGenerator databaseCommandGenerator,
-                              IQueryFieldProvider fieldProvider)
+                              IDatabaseCommandGenerator databaseCommandGenerator)
         {
             _processor = processor;
             _settings = settings;
             _databaseCommandGenerator = databaseCommandGenerator;
-            _fieldProvider = fieldProvider;
         }
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
@@ -47,7 +44,6 @@ namespace QueryFramework.SqlServer
             query.Validate(_settings.ValidateFieldNames);
             return _databaseCommandGenerator.Generate(query,
                                                       _settings.WithDefaultTableName(typeof(TResult).Name),
-                                                      _fieldProvider,
                                                       countOnly);
         }
     }

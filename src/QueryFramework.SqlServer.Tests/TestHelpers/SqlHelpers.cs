@@ -29,10 +29,7 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
 
             // Act
-            var actual = new DatabaseCommandGenerator().Generate(query,
-                                                                 settingsMock.Object,
-                                                                 fieldProviderMock.Object,
-                                                                 false).CommandText;
+            var actual = new DatabaseCommandGenerator(fieldProviderMock.Object).Generate(query, settingsMock.Object, false).CommandText;
 
             // Assert
             actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");

@@ -20,12 +20,10 @@ namespace QueryFramework.SqlServer.Tests
         private Mock<IDataReaderMapper<MyEntity>> MapperMock { get; }
         private Mock<IQueryProcessorSettings> QueryProcessorSettingsMock { get; }
         private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
-        private Mock<IQueryFieldProvider> FieldProviderMock { get; }
         private QueryProcessor<ISingleEntityQuery, MyEntity> Sut
             => new QueryProcessor<ISingleEntityQuery, MyEntity>(DatabaseCommandProcessorMock.Object,
                                                                 QueryProcessorSettingsMock.Object,
-                                                                DatabaseCommandGeneratorMock.Object,
-                                                                FieldProviderMock.Object);
+                                                                DatabaseCommandGeneratorMock.Object);
 
         public QueryProcessorTests()
         {
@@ -35,9 +33,6 @@ namespace QueryFramework.SqlServer.Tests
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
             QueryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
             DatabaseCommandGeneratorMock = new Mock<IDatabaseCommandGenerator>();
-            FieldProviderMock = new Mock<IQueryFieldProvider>();
-            FieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                             .Returns<IEnumerable<string>>(input => input);
         }
 
         [Fact]
@@ -111,11 +106,11 @@ namespace QueryFramework.SqlServer.Tests
         }
 
         private void SetupDatabaseCommandGenerator(string sql, object? parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldProvider>(), false))
+            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), false))
                                            .Returns(new SqlTextCommand(sql, parameters));
 
         private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object? parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), It.IsAny<IQueryFieldProvider>(), true))
+            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), true))
                                            .Returns(new SqlTextCommand(sql, parameters));
 
         private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
