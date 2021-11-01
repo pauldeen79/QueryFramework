@@ -10,57 +10,43 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     public class TestRepository : ITestRepository
     {
         public TestEntity Add(TestEntity instance)
-        {
-            return _addProcessor.InvokeCommand(instance);
-        }
+            => _addProcessor.InvokeCommand(instance);
 
         public TestEntity Update(TestEntity instance)
-        {
-            return _updateProcessor.InvokeCommand(instance);
-        }
+            => _updateProcessor.InvokeCommand(instance);
 
         public TestEntity Delete(TestEntity instance)
-        {
-            return _deleteProcessor.InvokeCommand(instance);
-        }
+            => _deleteProcessor.InvokeCommand(instance);
 
         public TestEntity? FindOne(ITestQuery query)
-        {
-            return _queryProcessor.FindOne(query);
-        }
+            => _queryProcessor.FindOne(query);
 
         public IReadOnlyCollection<TestEntity> FindMany(ITestQuery query)
-        {
-            return _queryProcessor.FindMany(query);
-        }
+            => _queryProcessor.FindMany(query);
 
         public IPagedResult<TestEntity> FindPaged(ITestQuery query)
-        {
-            return _queryProcessor.FindPaged(query);
-        }
+            => _queryProcessor.FindPaged(query);
 
         public TestEntity? Find(TestEntityIdentity identity)
-        {
-            return _findProcessor.FindOne(new Mock<IDatabaseCommand>().Object);
-        }
+            => _retriever.FindOne(new Mock<IDatabaseCommand>().Object);
 
         public TestRepository(IDatabaseCommandProcessor<TestEntity> addProcessor,
                               IDatabaseCommandProcessor<TestEntity> updateProcessor,
                               IDatabaseCommandProcessor<TestEntity> deleteProcessor,
-                              IDatabaseCommandProcessor<TestEntity> findProcessor,
+                              IDatabaseEntityRetriever<TestEntity> retriever,
                               IQueryProcessor<ITestQuery, TestEntity> queryProcessor)
         {
             _addProcessor = addProcessor;
             _updateProcessor = updateProcessor;
             _deleteProcessor = deleteProcessor;
-            _findProcessor = findProcessor;
+            _retriever = retriever;
             _queryProcessor = queryProcessor;
         }
 
         private readonly IDatabaseCommandProcessor<TestEntity> _addProcessor;
         private readonly IDatabaseCommandProcessor<TestEntity> _updateProcessor;
         private readonly IDatabaseCommandProcessor<TestEntity> _deleteProcessor;
-        private readonly IDatabaseCommandProcessor<TestEntity> _findProcessor;
+        private readonly IDatabaseEntityRetriever<TestEntity> _retriever;
         private readonly IQueryProcessor<ITestQuery, TestEntity> _queryProcessor;
     }
 }

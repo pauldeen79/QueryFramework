@@ -15,13 +15,13 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         private Mock<IDatabaseCommandProcessor<TestEntity>> AddProcessorMock { get; }
         private Mock<IDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
         private Mock<IDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
-        private Mock<IDatabaseCommandProcessor<TestEntity>> FindProcessorMock { get; }
+        private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
         private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; set; }
         private IEnumerable<TestEntity> SourceData { get; set; }
         private TestRepository Sut => new TestRepository(AddProcessorMock.Object,
                                                          UpdateProcessorMock.Object,
                                                          DeleteProcessorMock.Object,
-                                                         FindProcessorMock.Object,
+                                                         RetrieverMock.Object,
                                                          QueryProcessor);
 
         public TestRepositoryTests()
@@ -32,7 +32,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             UpdateProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
             DeleteProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
             DeleteProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 2; return x; });
-            FindProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
             
             // Only needed to satisfy compiler. Both are filled in SetupSourceData, but this is not detected...
             QueryProcessor = new Mock<IQueryProcessor<ITestQuery, TestEntity>>().Object;
@@ -171,8 +171,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         private void SetupSourceData(IEnumerable<TestEntity> data)
         {
             // For Find
-            FindProcessorMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
-            FindProcessorMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
+            RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
             // For FindOne, FindMany and Query
             SourceData = data;

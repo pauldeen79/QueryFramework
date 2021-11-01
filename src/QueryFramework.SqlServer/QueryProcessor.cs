@@ -12,27 +12,30 @@ namespace QueryFramework.SqlServer
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        private readonly IDatabaseCommandProcessor<TResult> _processor;
+        private readonly IDatabaseEntityRetriever<TResult> _retriever;
         private readonly IQueryProcessorSettings _settings;
         private readonly IDatabaseCommandGenerator _databaseCommandGenerator;
 
-        public QueryProcessor(IDatabaseCommandProcessor<TResult> processor,
+        public QueryProcessor(IDatabaseEntityRetriever<TResult> retriever,
                               IQueryProcessorSettings settings,
                               IDatabaseCommandGenerator databaseCommandGenerator)
         {
-            _processor = processor;
+            _retriever = retriever;
             _settings = settings;
             _databaseCommandGenerator = databaseCommandGenerator;
         }
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
-            => _processor.FindMany(GenerateCommand(query, false));
+            => _retriever.FindMany(GenerateCommand(query, false));
 
         public TResult? FindOne(TQuery query)
-            => _processor.FindOne(GenerateCommand(query, false));
+            => _retriever.FindOne(GenerateCommand(query, false));
 
         public IPagedResult<TResult> FindPaged(TQuery query)
-            => _processor.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault());
+            => _retriever.FindPaged(GenerateCommand(query, false),
+                                    GenerateCommand(query, true),
+                                    query.Offset.GetValueOrDefault(),
+                                    query.Limit.GetValueOrDefault());
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {
@@ -42,9 +45,7 @@ namespace QueryFramework.SqlServer
             }
 
             query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query,
-                                                      _settings.WithDefaultTableName(typeof(TResult).Name),
-                                                      countOnly);
+            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), countOnly);
         }
     }
 }

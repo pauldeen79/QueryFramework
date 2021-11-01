@@ -16,18 +16,18 @@ namespace QueryFramework.SqlServer.Tests
     [ExcludeFromCodeCoverage]
     public class QueryProcessorTests
     {
-        private Mock<IDatabaseCommandProcessor<MyEntity>> DatabaseCommandProcessorMock { get; }
+        private Mock<IDatabaseEntityRetriever<MyEntity>> RetrieverMock { get; }
         private Mock<IDataReaderMapper<MyEntity>> MapperMock { get; }
         private Mock<IQueryProcessorSettings> QueryProcessorSettingsMock { get; }
         private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
         private QueryProcessor<ISingleEntityQuery, MyEntity> Sut
-            => new QueryProcessor<ISingleEntityQuery, MyEntity>(DatabaseCommandProcessorMock.Object,
+            => new QueryProcessor<ISingleEntityQuery, MyEntity>(RetrieverMock.Object,
                                                                 QueryProcessorSettingsMock.Object,
                                                                 DatabaseCommandGeneratorMock.Object);
 
         public QueryProcessorTests()
         {
-            DatabaseCommandProcessorMock = new Mock<IDatabaseCommandProcessor<MyEntity>>();
+            RetrieverMock = new Mock<IDatabaseEntityRetriever<MyEntity>>();
             MapperMock = new Mock<IDataReaderMapper<MyEntity>>();
             MapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
@@ -116,12 +116,12 @@ namespace QueryFramework.SqlServer.Tests
         private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
         {
             // For FindOne/FindMany
-            DatabaseCommandProcessorMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
-            DatabaseCommandProcessorMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
+            RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
             // For FindPaged
-            DatabaseCommandProcessorMock.Setup(x => x.FindPaged(It.IsAny<IDatabaseCommand>(), It.IsAny<IDatabaseCommand>(), It.IsAny<int>(), It.IsAny<int>()))
-                                        .Returns<IDatabaseCommand, IDatabaseCommand, int, int>((_, _, offset, pageSize) => CreatePagedResult(data, totalRecordCount ?? data.Count(), offset, pageSize));
+            RetrieverMock.Setup(x => x.FindPaged(It.IsAny<IDatabaseCommand>(), It.IsAny<IDatabaseCommand>(), It.IsAny<int>(), It.IsAny<int>()))
+                                      .Returns<IDatabaseCommand, IDatabaseCommand, int, int>((_, _, offset, pageSize) => CreatePagedResult(data, totalRecordCount ?? data.Count(), offset, pageSize));
         }
 
         private IPagedResult<MyEntity> CreatePagedResult(IEnumerable<MyEntity> data, int totalRecordCount, int offset, int pageSize)
