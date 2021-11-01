@@ -39,8 +39,6 @@ namespace QueryFramework.SqlServer.Tests
         public void FindPaged_Returns_MappedEntities()
         {
             // Arrange
-            SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -56,8 +54,6 @@ namespace QueryFramework.SqlServer.Tests
         public void FindPaged_Fills_TotalRecordCount_On_Paged_Query()
         {
             // Arrange
-            SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
-            SetupDatabaseCommandGeneratorForCountQuery("SELECT COUNT(*) From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupSourceData(new[] { new MyEntity { Property = "Value" } }, totalRecordCount: 10);
             var queryMock = new Mock<ISingleEntityQuery>();
             queryMock.SetupGet(x => x.Limit)
@@ -76,7 +72,6 @@ namespace QueryFramework.SqlServer.Tests
         public void FindOne_Returns_MappedEntity()
         {
             // Arrange
-            SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -94,7 +89,6 @@ namespace QueryFramework.SqlServer.Tests
         public void FindMany_Returns_MappedEntities()
         {
             // Arrange
-            SetupDatabaseCommandGenerator("SELECT * From UnitTest"); // Doesn't matter what command text we use, as long as it's not empty
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
@@ -104,14 +98,6 @@ namespace QueryFramework.SqlServer.Tests
             actual.Should().HaveCount(1);
             actual.First().Property.Should().Be("Value");
         }
-
-        private void SetupDatabaseCommandGenerator(string sql, object? parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), false))
-                                           .Returns(new SqlTextCommand(sql, parameters));
-
-        private void SetupDatabaseCommandGeneratorForCountQuery(string sql, object? parameters = null)
-            => DatabaseCommandGeneratorMock.Setup(x => x.Generate(It.IsAny<ISingleEntityQuery>(), It.IsAny<IQueryProcessorSettings>(), true))
-                                           .Returns(new SqlTextCommand(sql, parameters));
 
         private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
         {
