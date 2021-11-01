@@ -6,14 +6,14 @@ namespace QueryFramework.Abstractions.Extensions.Builders
     {
         public static IQueryExpressionBuilder Clear(this IQueryExpressionBuilder instance)
         {
-            instance.FieldName = default;
-            instance.Expression = default;
+            instance.FieldName = string.Empty;
+            instance.Expression = null;
             return instance;
         }
         public static IQueryExpressionBuilder Update(this IQueryExpressionBuilder instance, IQueryExpression source)
         {
-            instance.FieldName = default;
-            instance.Expression = default;
+            instance.FieldName = string.Empty;
+            instance.Expression = null;
             if (source != null)
             {
                 instance.FieldName = source.FieldName;
@@ -28,7 +28,7 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.FieldName = fieldName;
             return instance;
         }
-        public static IQueryExpressionBuilder WithExpression(this IQueryExpressionBuilder instance, string expression)
+        public static IQueryExpressionBuilder WithExpression(this IQueryExpressionBuilder instance, string? expression)
         {
             instance.Expression = expression;
             return instance;

@@ -689,15 +689,15 @@ namespace QueryFramework.InMemory.Tests
         }
 
         private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
-            => new QueryProcessor<ISingleEntityQuery, MyClass>(items, new ExpressionEvaluator<MyClass>(new ValueProvider()));
+            => new QueryProcessor<ISingleEntityQuery, MyClass>(() => items, new ExpressionEvaluator<MyClass>(new ValueProvider()));
 
         // Expressions: coalesce?
 
         [ExcludeFromCodeCoverage]
-        private class MyClass
+        public class MyClass
         {
-            public string Property { get; set; }
-            public string Property2 { get; set; }
+            public string? Property { get; set; }
+            public string? Property2 { get; set; }
         }
     }
 }

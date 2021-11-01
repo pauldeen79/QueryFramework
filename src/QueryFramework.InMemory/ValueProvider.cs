@@ -4,7 +4,7 @@ namespace QueryFramework.InMemory
 {
     internal class ValueProvider : IValueProvider
     {
-        public object GetFieldValue(object item, string fieldName)
+        public object? GetFieldValue(object? item, string fieldName)
         {
             if (item == null)
             {

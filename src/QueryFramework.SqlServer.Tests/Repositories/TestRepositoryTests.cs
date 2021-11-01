@@ -1,32 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Stub;
-using System.Data.Stub.Extensions;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.SqlServer.Abstractions;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public sealed class TestRepositoryTests : IDisposable
+    public class TestRepositoryTests
     {
-        private DbConnection Connection { get; }
-        private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; set; }
-        private IDataReaderMapper<TestEntity> Mapper { get; }
-        private IEnumerable<TestEntity> SourceData { get; set; }
-        private TestRepository Sut => new TestRepository(Connection, QueryProcessor, Mapper);
+        private Mock<IDatabaseCommandProcessor<TestEntity>> AddProcessorMock { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
+        private Mock<IDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
+        private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
+        private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; }
+        private IEnumerable<TestEntity> SourceData { get; set; } = Enumerable.Empty<TestEntity>();
+        private TestRepository Sut => new TestRepository(AddProcessorMock.Object,
+                                                         UpdateProcessorMock.Object,
+                                                         DeleteProcessorMock.Object,
+                                                         RetrieverMock.Object,
+                                                         QueryProcessor);
 
         public TestRepositoryTests()
         {
-            Connection = new DbConnection();
-            Mapper = new TestEntityMapper();
-            SetupSourceData(Enumerable.Empty<TestEntity>());
+            AddProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            AddProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
+            UpdateProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            UpdateProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
+            DeleteProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            DeleteProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 2; return x; });
+            RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
+            QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(() => SourceData);
         }
 
         [Fact]
@@ -40,7 +47,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             entity = Sut.Add(entity);
 
             // Assert
-            entity.Id.Should().Be(1);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+            }
         }
 
         [Fact]
@@ -54,21 +65,28 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             entity = Sut.Update(entity);
 
             // Assert
-            entity.Id.Should().Be(1);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+            }
         }
 
         [Fact]
         public void Can_Delete_Entity()
         {
             // Arrange
-            Connection.AddResultForNonQueryCommand(1);
             var entity = new TestEntity { Id = 1, Name = "Test" };
 
             // Act
             entity = Sut.Delete(entity);
 
             // Assert
-            entity.Id.Should().Be(2);
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(2);
+            }
         }
 
         [Fact]
@@ -82,8 +100,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entity.Should().NotBeNull();
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+                entity.Name.Should().Be("Test");
+            }
         }
 
         [Fact]
@@ -93,12 +114,15 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             SetupSourceData(new[] { new TestEntity { Id = 1, Name = "Test" } });
 
             // Act
-            var entity = Sut.FindOne(new Mock<IDatabaseCommand>().Object);
+            var entity = Sut.FindOne(new Mock<ITestQuery>().Object);
 
             // Assert
             entity.Should().NotBeNull();
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+                entity.Name.Should().Be("Test");
+            }
         }
 
         [Fact]
@@ -112,13 +136,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             });
 
             // Act
-            var entities = Sut.FindMany(new Mock<IDatabaseCommand>().Object);
+            var entities = Sut.FindMany(new Mock<ITestQuery>().Object);
 
             // Assert
             entities.Should().HaveCount(2);
-            entities.First().Should().NotBeNull();
             entities.First().Id.Should().Be(1);
-            entities.Last().Should().NotBeNull();
             entities.Last().Id.Should().Be(2);
         }
 
@@ -137,25 +159,18 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
             // Assert
             entities.Should().HaveCount(2);
-            entities.First().Should().NotBeNull();
             entities.First().Id.Should().Be(1);
-            entities.Last().Should().NotBeNull();
             entities.Last().Id.Should().Be(2);
-        }
-
-        public void Dispose()
-        {
-            Connection.Dispose();
         }
 
         private void SetupSourceData(IEnumerable<TestEntity> data)
         {
-            // For Add/Update/Delete
-            Connection.AddResultForDataReader(data);
+            // For DatbabaseCommand-based find operations
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
+            RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
-            // For Query
+            // For Query-based find operations
             SourceData = data;
-            QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(SourceData);
         }
     }
 }

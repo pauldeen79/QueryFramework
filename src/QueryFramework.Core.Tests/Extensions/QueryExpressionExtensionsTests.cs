@@ -32,7 +32,7 @@ namespace QueryFramework.Core.Tests.Extensions
             var sut = new QueryExpression("field", "expression");
 
             // Act
-            var actual = sut.With(null, null);
+            var actual = sut.With(string.Empty, null);
 
             // Assert
             actual.Expression.Should().Be(sut.Expression);
@@ -98,9 +98,8 @@ namespace QueryFramework.Core.Tests.Extensions
         [ExcludeFromCodeCoverage]
         private class QueryExpressionMock : ICustomQueryExpression
         {
-            public string FieldName { get; set; }
-
-            public string Expression { get; set; }
+            public string FieldName { get; set; } = "";
+            public string Expression { get; set; } = "";
 
             public IQueryExpressionBuilder CreateBuilder()
             {
@@ -115,15 +114,15 @@ namespace QueryFramework.Core.Tests.Extensions
         [ExcludeFromCodeCoverage]
         private class QueryExpressionBuilderMock : IQueryExpressionBuilder
         {
-            public string Expression { get; set; }
-            public string FieldName { get; set; }
+            public string? Expression { get; set; }
+            public string FieldName { get; set; } = "";
 
             public IQueryExpression Build()
             {
                 return new QueryExpressionMock
                 {
                     FieldName = FieldName,
-                    Expression = Expression
+                    Expression = Expression ?? FieldName
                 };
             }
         }

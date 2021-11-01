@@ -14,11 +14,13 @@ namespace QueryFramework.InMemory
             _valueProvider = valueProvider;
         }
 
-        public object GetValue(T item, IQueryExpression field)
+        public object? GetValue(T item, IQueryExpression field)
         {
             if (field.Expression != field.FieldName)
             {
-                var functionName = GetFunctionName(field is IExpressionContainer c ? c.SourceExpression : field.Expression, out string parameters);
+                var functionName = GetFunctionName(field is IExpressionContainer c
+                    ? c.SourceExpression ?? string.Empty
+                    : field.Expression, out var parameters);
                 if (Functions.Items.TryGetValue(functionName, out var function))
                 {
                     var split = parameters.Split(',');
@@ -35,8 +37,8 @@ namespace QueryFramework.InMemory
 
         private static string GetFunctionName(string expression, out string parameter)
         {
-            int closeIndex = expression.IndexOf(")");
-            parameter = null;
+            var closeIndex = expression.IndexOf(")");
+            parameter = string.Empty;
             if (closeIndex == -1)
             {
                 return string.Empty;
@@ -48,7 +50,7 @@ namespace QueryFramework.InMemory
                 return string.Empty;
             }
 
-            parameter = expression.Substring(openIndex + 1, closeIndex - openIndex -1);
+            parameter = expression.Substring(openIndex + 1, closeIndex - openIndex - 1);
             return expression.Substring(0, openIndex);
         }
     }

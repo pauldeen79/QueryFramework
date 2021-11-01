@@ -12,30 +12,30 @@ namespace QueryFramework.InMemory
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        private readonly IEnumerable<TResult> _sourceData;
+        private readonly Func<IEnumerable<TResult>> _sourceDataDelegate;
         private readonly IExpressionEvaluator<TResult> _valueRetriever;
 
-        public QueryProcessor(IEnumerable<TResult> sourceData,
+        public QueryProcessor(Func<IEnumerable<TResult>> sourceDataDelegate,
                               IExpressionEvaluator<TResult> valueRetriever)
         {
-            _sourceData = sourceData;
+            _sourceDataDelegate = sourceDataDelegate;
             _valueRetriever = valueRetriever;
         }
 
-        public QueryProcessor(IEnumerable<TResult> sourceData)
-            : this(sourceData, new ExpressionEvaluator<TResult>(new ValueProvider()))
+        public QueryProcessor(Func<IEnumerable<TResult>> sourceDataDelegate)
+            : this(sourceDataDelegate, new ExpressionEvaluator<TResult>(new ValueProvider()))
         {
         }
 
         public TResult FindOne(TQuery query)
-            => _sourceData.FirstOrDefault(item => ItemIsValid(item, query.Conditions));
+            => _sourceDataDelegate.Invoke().FirstOrDefault(item => ItemIsValid(item, query.Conditions));
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
-            => _sourceData.Where(item => ItemIsValid(item, query.Conditions)).ToList();
+            => _sourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)).ToList();
 
         public IPagedResult<TResult> FindPaged(TQuery query)
         {
-            var filteredRecords = new List<TResult>(_sourceData.Where(item => ItemIsValid(item, query.Conditions)));
+            var filteredRecords = new List<TResult>(_sourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)));
             return new PagedResult<TResult>(GetPagedData(query, filteredRecords), filteredRecords.Count, query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault());
         }
 
@@ -43,7 +43,7 @@ namespace QueryFramework.InMemory
         {
             IEnumerable<TResult> result = filteredRecords;
 
-            if (query?.OrderByFields?.Any() == true)
+            if (query.OrderByFields?.Any() == true)
             {
                 result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, _valueRetriever));
             }
@@ -149,7 +149,7 @@ namespace QueryFramework.InMemory
                 ? string.Empty
                 : expression.Substring(closeIndex + 1);
 
-        private static bool Evaluate(IQueryCondition condition, object value)
+        private static bool Evaluate(IQueryCondition condition, object? value)
         {
             var conditionValueString = condition.Value == null
                 ? null

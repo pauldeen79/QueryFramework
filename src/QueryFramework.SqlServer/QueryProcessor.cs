@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
@@ -15,48 +12,40 @@ namespace QueryFramework.SqlServer
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        private readonly IDbConnection _connection;
-        private readonly IDataReaderMapper<TResult> _mapper;
+        private readonly IDatabaseEntityRetriever<TResult> _retriever;
         private readonly IQueryProcessorSettings _settings;
         private readonly IDatabaseCommandGenerator _databaseCommandGenerator;
-        private readonly IQueryFieldProvider _fieldProvider;
 
-        public QueryProcessor(IDbConnection connection,
-                              IDataReaderMapper<TResult> mapper,
+        public QueryProcessor(IDatabaseEntityRetriever<TResult> retriever,
                               IQueryProcessorSettings settings,
-                              IDatabaseCommandGenerator databaseCommandGenerator,
-                              IQueryFieldProvider fieldProvider)
+                              IDatabaseCommandGenerator databaseCommandGenerator)
         {
-            _connection = connection;
-            _mapper = mapper;
+            _retriever = retriever;
             _settings = settings;
             _databaseCommandGenerator = databaseCommandGenerator;
-            _fieldProvider = fieldProvider;
         }
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
-            => _connection.FindMany(GenerateCommand(query, false), _mapper.Map);
+            => _retriever.FindMany(GenerateCommand(query, false));
 
-        public TResult FindOne(TQuery query)
-            => _connection.FindOne(GenerateCommand(query, false), _mapper.Map);
+        public TResult? FindOne(TQuery query)
+            => _retriever.FindOne(GenerateCommand(query, false));
 
         public IPagedResult<TResult> FindPaged(TQuery query)
-            => _connection.FindPaged(GenerateCommand(query, false), GenerateCommand(query, true), query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault(), _mapper.Map);
+            => _retriever.FindPaged(GenerateCommand(query, false),
+                                    GenerateCommand(query, true),
+                                    query.Offset.GetValueOrDefault(),
+                                    query.Limit.GetValueOrDefault());
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
             if (query is IDynamicQuery dynamicQuery)
             {
                 query = (TQuery)dynamicQuery.Process();
             }
 
             query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), _fieldProvider, countOnly);
+            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), countOnly);
         }
     }
 }

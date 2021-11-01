@@ -91,11 +91,11 @@ namespace QueryFramework.Core.Tests.Observable
         {
             // Act
             var actual = new ObservableQueryConditionBuilder(closeBracket: true,
-                                                   combination: QueryCombination.Or,
-                                                   fieldName: "fieldname",
-                                                   openBracket: true,
-                                                   queryOperator: QueryOperator.Contains,
-                                                   value: "value");
+                                                             combination: QueryCombination.Or,
+                                                             fieldName: "fieldname",
+                                                             openBracket: true,
+                                                             queryOperator: QueryOperator.Contains,
+                                                             value: "value");
 
             // Assert
             actual.CloseBracket.Should().Be(true);
@@ -112,7 +112,7 @@ namespace QueryFramework.Core.Tests.Observable
         {
             // Arrange
             var sut = new ObservableQueryConditionBuilder();
-            var changedPropertiesList = new List<string>();
+            var changedPropertiesList = new List<string?>();
             sut.PropertyChanged += (sender, args) =>
             {
                 changedPropertiesList.Add(args.PropertyName);

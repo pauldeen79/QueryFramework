@@ -54,7 +54,7 @@ namespace QueryFramework.InMemory
                 : 1;
 
         public override bool Equals(object obj)
-            => Equals(obj as OrderByWrapper<T>);
+            => obj is OrderByWrapper<T> wrapper && Equals(wrapper);
 
         public bool Equals(OrderByWrapper<T> other)
             => CompareTo(other) == 0;

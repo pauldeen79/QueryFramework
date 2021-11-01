@@ -169,14 +169,12 @@ namespace QueryFramework.Core.Tests.Extensions
         private class QueryConditionMock : ICustomQueryCondition
         {
             public bool OpenBracket { get; set; }
-
             public bool CloseBracket { get; set; }
-
-            public IQueryExpression Field { get; set; }
+            public IQueryExpression Field { get; set; } = new QueryExpression(string.Empty);
 
             public QueryOperator Operator { get; set; }
 
-            public object Value { get; set; }
+            public object? Value { get; set; }
 
             public QueryCombination Combination { get; set; }
 
@@ -201,10 +199,10 @@ namespace QueryFramework.Core.Tests.Extensions
         {
             public bool CloseBracket { get; set; }
             public QueryCombination Combination { get; set; }
-            public IQueryExpressionBuilder Field { get; set; }
+            public IQueryExpressionBuilder Field { get; set; } = new QueryExpressionBuilder();
             public bool OpenBracket { get; set; }
             public QueryOperator Operator { get; set; }
-            public object Value { get; set; }
+            public object? Value { get; set; }
 
             public IQueryCondition Build()
             {

@@ -4,9 +4,9 @@ namespace QueryFramework.Core
 {
     public sealed record QueryExpression : IQueryExpression, IExpressionContainer
     {
-        private readonly string _expression;
+        private readonly string? _expression;
 
-        public QueryExpression(string fieldName, string expression = null)
+        public QueryExpression(string fieldName, string? expression = null)
         {
             FieldName = fieldName;
             _expression = expression;
@@ -18,7 +18,7 @@ namespace QueryFramework.Core
             ? FieldName
             : string.Format(_expression, FieldName);
 
-        string IExpressionContainer.SourceExpression => _expression;
+        string? IExpressionContainer.SourceExpression => _expression;
 
         public override string ToString() => Expression;
     }

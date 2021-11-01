@@ -2,6 +2,6 @@
 {
     public interface IExpressionContainer
     {
-        string SourceExpression { get; }
+        string? SourceExpression { get; }
     }
 }

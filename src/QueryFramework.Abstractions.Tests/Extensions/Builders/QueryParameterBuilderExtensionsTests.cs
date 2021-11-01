@@ -14,13 +14,14 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         {
             // Arrange
             var sut = new Mock<IQueryParameterBuilder>();
+            sut.SetupSet(x => x.Value = It.IsAny<object>()).Verifiable();
 
             // Act
             sut.Object.Clear();
 
             // Assert
-            sut.VerifySet(x => x.Name = default, Times.Once);
-            sut.VerifySet(x => x.Value = default, Times.Once);
+            sut.VerifySet(x => x.Name = string.Empty, Times.Once);
+            sut.VerifySet(x => x.Value = It.IsAny<object>());
         }
 
         [Fact]

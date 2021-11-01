@@ -34,7 +34,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             BuilderMock.Setup(x => x.Append(It.IsAny<string>()))
                        .Returns<string>(x => { Builder.Append(x); return BuilderMock.Object; });
             BuilderMock.Setup(x => x.AppendParameter(It.IsAny<string>(), It.IsAny<object>()))
-                       .Returns<string, object>((name, value) => { Parameters.Add(new Tuple<string, object>(name, value)); return BuilderMock.Object; });
+                       .Returns<string, object>((name, value) =>
+                       {
+                           Parameters.Add(new Tuple<string, object>(name, value));
+                           return BuilderMock.Object;
+                       });
         }
 
         [Fact]
@@ -42,7 +46,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
@@ -50,7 +54,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("Field1, Field3");
@@ -61,13 +65,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
 
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: true);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: true);
 
             // Assert
             Builder.ToString().Should().Be("COUNT(*)");
@@ -78,15 +82,15 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(default(IEnumerable<string>));
+                             .Returns(Enumerable.Empty<string>());
 
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("*");
@@ -97,16 +101,16 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.Fields)
-                                      .Returns(default(string));
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.Fields)
+                                      .Returns(string.Empty);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetAllFields())
                              .Returns(new[] { "Field1", "Field2", "Field3" });
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("Field1, Field2, Field3");
@@ -117,7 +121,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -125,7 +129,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("Field1, Field2, Field3");
@@ -136,7 +140,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -146,7 +150,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendSelectFields(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("Field1A, Field2A, Field3A");
@@ -157,21 +161,24 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
-                             .Returns<string>(x => null);
+                             .Returns(default(string));
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            BuilderMock.Object.Invoking(x => x.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
+            BuilderMock.Object.Invoking(x => x.AppendSelectFields(query,
+                                                                  settingsMock.Object,
+                                                                  fieldProviderMock.Object,
+                                                                  countOnly: false))
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
         }
 
         [Fact]
@@ -179,7 +186,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -187,7 +194,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act
-            BuilderMock.Object.Invoking(x => x.AppendSelectFields(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
+            BuilderMock.Object.Invoking(x => x.AppendSelectFields(query,
+                                                                  settingsMock.Object,
+                                                                  fieldProviderMock.Object,
+                                                                  countOnly: false))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query fields contains invalid expression [Field1]");
         }
@@ -197,11 +207,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendWhereClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, out _);
+            _ = BuilderMock.Object.AppendWhereClause(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -212,13 +222,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendWhereClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, out _);
+            _ = BuilderMock.Object.AppendWhereClause(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
             Builder.ToString().Should().Be(" WHERE Field = @p0");
@@ -229,15 +239,15 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultWhere)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.DefaultWhere)
                                       .Returns("Field IS NOT NULL");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendWhereClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, out _);
+            _ = BuilderMock.Object.AppendWhereClause(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
             Builder.ToString().Should().Be(" WHERE Field IS NOT NULL AND Field = @p0");
@@ -250,13 +260,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value"))
                                                         .And("Field2".IsNotNull())
                                                         .Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendWhereClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, out _);
+            _ = BuilderMock.Object.AppendWhereClause(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
             Builder.ToString().Should().Be(" WHERE Field = @p0 AND Field2 IS NOT NULL");
@@ -267,15 +277,15 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).And("Field2".IsNotNull()).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultWhere)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.DefaultWhere)
                                       .Returns("Field IS NOT NULL");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendWhereClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, out _);
+            _ = BuilderMock.Object.AppendWhereClause(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
             Builder.ToString().Should().Be(" WHERE Field IS NOT NULL AND Field = @p0 AND Field2 IS NOT NULL");
@@ -286,13 +296,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Limit(10).Offset(20).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultOrderBy)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.DefaultOrderBy)
                                       .Returns("Ignored");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -303,13 +313,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultOrderBy)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.DefaultOrderBy)
                                       .Returns("Ignored");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: true);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: true);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -320,11 +330,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -335,13 +345,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be(" ORDER BY Field ASC");
@@ -352,13 +362,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field1").ThenByDescending("Field2").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be(" ORDER BY Field1 ASC, Field2 DESC");
@@ -369,13 +379,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultOrderBy)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.DefaultOrderBy)
                                       .Returns("Field ASC");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be(" ORDER BY Field ASC");
@@ -386,14 +396,14 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.DefaultOrderBy).Returns("Ignored");
+            var settingsMoc = new Mock<IQueryProcessorSettings>();
+            settingsMoc.SetupGet(x => x.DefaultOrderBy).Returns("Ignored");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMoc.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be(" ORDER BY Field ASC");
@@ -404,7 +414,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x + "A");
@@ -412,7 +422,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be(" ORDER BY FieldA ASC");
@@ -423,13 +433,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
+            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query order by fields contains unknown field [Field]");
         }
@@ -439,7 +449,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns(default(string));
@@ -447,9 +457,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
+            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false))
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
 
         [Fact]
@@ -457,7 +467,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x);
@@ -465,7 +475,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false))
+            BuilderMock.Object.Invoking(x => x.AppendOrderByClause(query, settingsMock.Object, fieldProviderMock.Object, countOnly: false))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
@@ -474,11 +484,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendGroupBy_Does_Not_Append_Anything_When_GroupByFields_Is_Null()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(null, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(null, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -489,11 +499,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -506,13 +516,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new[] { new QueryExpression("Field") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY Field");
@@ -525,13 +535,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY Field1, Field2");
@@ -544,7 +554,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new[] { new QueryExpression("Field") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x + "A");
@@ -552,7 +562,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object);
+            _ = BuilderMock.Object.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
             Builder.ToString().Should().Be(" GROUP BY FieldA");
@@ -565,8 +575,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new[] { new QueryExpression("Field") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -575,9 +585,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
+            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object))
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
         }
 
         [Fact]
@@ -587,7 +597,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new[] { new QueryExpression("Field") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x);
@@ -595,9 +605,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object))
-                          .Should().Throw<InvalidOperationException>()
-                          .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
+            BuilderMock.Object.Invoking(x => x.AppendGroupByClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object))
+                              .Should().Throw<InvalidOperationException>()
+                              .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
 
         [Fact]
@@ -607,14 +617,14 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.HavingFields)
                      .Returns(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().Be(" HAVING Field = @p0");
@@ -628,14 +638,14 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             queryMock.SetupGet(x => x.HavingFields)
                      .Returns(new[] { new QueryCondition("Field1", QueryOperator.Equal, "value1"),
                                       new QueryCondition("Field2", QueryOperator.Equal, "value2") });
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().Be(" HAVING Field1 = @p0 AND Field2 = @p1");
@@ -645,12 +655,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendHaving_Does_Not_Append_Anything_When_HavingFields_Is_Null()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(null, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(null, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -661,12 +671,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             int paramCounter = 0;
 
             // Act
-            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, ref paramCounter);
+            _ = BuilderMock.Object.AppendHavingClause(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -677,11 +687,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(", ROW_NUMBER() OVER (ORDER BY (SELECT 0)) as sq_row_number");
@@ -692,13 +702,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(", ROW_NUMBER() OVER (ORDER BY Field ASC) as sq_row_number");
@@ -709,13 +719,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field1").ThenBy("Field2").Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(", ROW_NUMBER() OVER (ORDER BY Field1 ASC, Field2 ASC) as sq_row_number");
@@ -726,7 +736,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x + "A");
@@ -734,7 +744,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(true);
 
             // Act
-            _ = BuilderMock.Object.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(", ROW_NUMBER() OVER (ORDER BY FieldA ASC) as sq_row_number");
@@ -745,13 +755,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false))
+            BuilderMock.Object.Invoking(x => x.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query OrderByFields contains unknown field [Field]");
         }
@@ -761,13 +771,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(false);
 
             // Act & Assert
-            BuilderMock.Object.Invoking(x => x.AppendPagingPrefix(query, queryProcessorSettingsMock.Object, fieldProviderMock.Object, false))
+            BuilderMock.Object.Invoking(x => x.AppendPagingPrefix(query, settingsMock.Object, fieldProviderMock.Object, false))
                           .Should().Throw<InvalidOperationException>()
                           .And.Message.Should().StartWith("Query OrderByFields contains invalid expression [Field]");
         }
@@ -779,7 +789,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Build();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, null, true);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, new Mock<IQueryProcessorSettings>().Object, true);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -794,7 +804,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(offset).Build();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, null, false);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, new Mock<IQueryProcessorSettings>().Object, false);
 
             // Assert
             Builder.ToString().Should().BeEmpty();
@@ -805,10 +815,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Limit(20).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, queryProcessorSettingsMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, settingsMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(") sq WHERE sq.sq_row_number BETWEEN 11 and 30;");
@@ -819,10 +829,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new SingleEntityQueryBuilder().OrderBy("Field").Offset(10).Limit(0).Build();
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
 
             // Act
-            _ = BuilderMock.Object.AppendPagingSuffix(query, queryProcessorSettingsMock.Object, false);
+            _ = BuilderMock.Object.AppendPagingSuffix(query, settingsMock.Object, false);
 
             // Assert
             Builder.ToString().Should().Be(") sq WHERE sq.sq_row_number > 10;");
@@ -836,7 +846,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Adds_Combination_Conditionally_But_Always_Increases_ParamCountner_When_ParamCounter_Is(int paramCounter, bool shouldAddCombination)
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
@@ -844,7 +854,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             var actual = BuilderMock.Object.AppendQueryCondition(paramCounter,
                                                                  new QueryCondition("Field", QueryOperator.Greater, "value"),
-                                                                 queryProcessorSettingsMock.Object,
+                                                                 settingsMock.Object,
                                                                  fieldProviderMock.Object);
 
             // Assert
@@ -863,7 +873,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Adds_Brackets_When_Necessary()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
@@ -871,7 +881,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.AppendQueryCondition(0,
                                                     new QueryCondition("Field", QueryOperator.Greater, "value", true, true),
-                                                    queryProcessorSettingsMock.Object,
+                                                    settingsMock.Object,
                                                     fieldProviderMock.Object);
 
             // Assert
@@ -882,7 +892,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Gets_CustomFieldName_When_Possible()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x == "Field" ? "CustomField" : x);
@@ -892,7 +902,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.AppendQueryCondition(0,
                                                     new QueryCondition("Field", QueryOperator.Greater, "value"),
-                                                    queryProcessorSettingsMock.Object,
+                                                    settingsMock.Object,
                                                     fieldProviderMock.Object);
 
             // Assert
@@ -903,8 +913,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Throws_On_Invalid_CustomFieldName_When_ValidateFieldNames_Is_Set_To_True()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.ValidateFieldNames)
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -915,7 +925,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.Invoking(x => x.AppendQueryCondition(0,
                                                                     new QueryCondition("Field", QueryOperator.Greater, "value"),
-                                                                    queryProcessorSettingsMock.Object,
+                                                                    settingsMock.Object,
                                                                     fieldProviderMock.Object))
                .Should().Throw<InvalidOperationException>()
                .And.Message.Should().StartWith("Query conditions contains unknown field [Field]");
@@ -925,7 +935,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Throws_On_Invalid_Expression_When_ExpressionValidationDelegate_Returns_False()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(false);
@@ -933,7 +943,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.Invoking(x => x.AppendQueryCondition(0,
                                                                     new QueryCondition(new QueryExpression("Field", "SUM({0})"), QueryOperator.Greater, "value"),
-                                                                    queryProcessorSettingsMock.Object,
+                                                                    settingsMock.Object,
                                                                     fieldProviderMock.Object))
                .Should().Throw<InvalidOperationException>()
                .And.Message.Should().StartWith("Query conditions contains invalid expression [SUM(Field)]");
@@ -947,7 +957,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Fills_CommandText_Correctly_For_QueryOperator_Without_Value(QueryOperator queryOperator, string expectedCommandText)
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
@@ -955,7 +965,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.AppendQueryCondition(0,
                                                     new QueryCondition("Field", queryOperator),
-                                                    queryProcessorSettingsMock.Object,
+                                                    settingsMock.Object,
                                                     fieldProviderMock.Object);
 
             // Assert
@@ -978,7 +988,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Fills_CommandText_And_Parameters_Correctly_For_QueryOperator_With_Value(QueryOperator queryOperator, string expectedCommandText)
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
                              .Returns(true);
@@ -986,7 +996,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Act
             BuilderMock.Object.AppendQueryCondition(0,
                                                     new QueryCondition("Field", queryOperator, "test"),
-                                                    queryProcessorSettingsMock.Object,
+                                                    settingsMock.Object,
                                                     fieldProviderMock.Object);
 
             // Assert
@@ -1003,13 +1013,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IFieldSelectionQuery>();
             queryMock.SetupGet(x => x.GetAllFields).Returns(true);
             queryMock.SetupGet(x => x.Offset).Returns(10);
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(default(IEnumerable<string>));
+                             .Returns(Enumerable.Empty<string>());
 
             // Act
-            _ = BuilderMock.Object.AppendPagingOuterQuery(queryMock.Object, queryProcessorSettingsMock.Object, fieldProviderMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendPagingOuterQuery(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("SELECT * FROM (");
@@ -1048,11 +1058,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendTopClause_Appends_Top_Clause_When_Offset_Is_Empty_And_Limit_Is_Filled_On_Query()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IQueryProcessorSettings>();
             var query = new SingleEntityQueryBuilder().Take(10).Build();
 
             // Act
-            _ = BuilderMock.Object.AppendTopClause(query, queryProcessorSettingsMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendTopClause(query, settingsMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("TOP 10 ");
@@ -1062,12 +1072,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendTopClause_Appends_Top_Clause_When_Offset_Is_Empty_And_Limit_Is_Filled_On_Settings()
         {
             // Arrange
-            var queryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            queryProcessorSettingsMock.SetupGet(x => x.OverrideLimit).Returns(10);
+            var settingsMock = new Mock<IQueryProcessorSettings>();
+            settingsMock.SetupGet(x => x.OverrideLimit).Returns(10);
             var query = new SingleEntityQueryBuilder().Build();
 
             // Act
-            _ = BuilderMock.Object.AppendTopClause(query, queryProcessorSettingsMock.Object, countOnly: false);
+            _ = BuilderMock.Object.AppendTopClause(query, settingsMock.Object, countOnly: false);
 
             // Assert
             Builder.ToString().Should().Be("TOP 10 ");

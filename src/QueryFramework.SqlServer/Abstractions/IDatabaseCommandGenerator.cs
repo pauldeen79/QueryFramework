@@ -7,7 +7,6 @@ namespace QueryFramework.SqlServer.Abstractions
     {
         IDatabaseCommand Generate<TQuery>(TQuery query,
                                           IQueryProcessorSettings settings,
-                                          IQueryFieldProvider fieldProvider,
                                           bool countOnly)
             where TQuery : ISingleEntityQuery;
     }

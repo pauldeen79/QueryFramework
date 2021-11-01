@@ -1,10 +1,12 @@
 ﻿using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Extensions;
-using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class TestEntityMapper : IDataReaderMapper<TestEntity>
     {
         public TestEntity Map(IDataReader reader)

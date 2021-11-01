@@ -1,5 +1,4 @@
-﻿using System;
-using CrossCutting.Data.Abstractions;
+﻿using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.SqlServer.Abstractions;
@@ -9,41 +8,32 @@ namespace QueryFramework.SqlServer
 {
     public class DatabaseCommandGenerator : IDatabaseCommandGenerator
     {
+        private readonly IQueryFieldProvider _fieldProvider;
+
+        public DatabaseCommandGenerator(IQueryFieldProvider fieldProvider)
+        {
+            _fieldProvider = fieldProvider;
+        }
+
         public IDatabaseCommand Generate<TQuery>(TQuery query,
                                                  IQueryProcessorSettings settings,
-                                                 IQueryFieldProvider fieldProvider,
                                                  bool countOnly)
             where TQuery : ISingleEntityQuery
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
-
-            if (fieldProvider == null)
-            {
-                throw new ArgumentNullException(nameof(fieldProvider));
-            }
-
             var fieldSelectionQuery = query as IFieldSelectionQuery;
             var groupingQuery = query as IGroupingQuery;
             return new DatabaseCommandBuilder()
-                .AppendPagingOuterQuery(query, settings, fieldProvider, countOnly)
+                .AppendPagingOuterQuery(query, settings, _fieldProvider, countOnly)
                 .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)
                 .AppendTopClause(query, settings, countOnly)
-                .AppendCountOrSelectFields(query, settings, fieldProvider, countOnly)
-                .AppendPagingPrefix(query, settings, fieldProvider, countOnly)
+                .AppendCountOrSelectFields(query, settings, _fieldProvider, countOnly)
+                .AppendPagingPrefix(query, settings, _fieldProvider, countOnly)
                 .AppendFromClause()
                 .AppendTableName(query, settings)
-                .AppendWhereClause(query, settings, fieldProvider, out int paramCounter)
-                .AppendGroupByClause(groupingQuery, settings, fieldProvider)
-                .AppendHavingClause(groupingQuery, settings, fieldProvider, ref paramCounter)
-                .AppendOrderByClause(query, settings, fieldProvider, countOnly)
+                .AppendWhereClause(query, settings, _fieldProvider, out int paramCounter)
+                .AppendGroupByClause(groupingQuery, settings, _fieldProvider)
+                .AppendHavingClause(groupingQuery, settings, _fieldProvider, ref paramCounter)
+                .AppendOrderByClause(query, settings, _fieldProvider, countOnly)
                 .AppendPagingSuffix(query, settings, countOnly)
                 .AddQueryParameters(query)
                 .Build();
