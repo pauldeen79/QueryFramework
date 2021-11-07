@@ -11,7 +11,7 @@ using Xunit;
 namespace QueryFramework.Abstractions.Tests.Extensions.Queries
 {
     [ExcludeFromCodeCoverage]
-    public class SingleEntityQueryExtensions
+    public class SingleEntityQueryExtensionsTests
     {
         [Fact]
         public void Validate_Validates_Instance_When_ValidateFieldNames_Is_True()
@@ -46,13 +46,11 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
         public void GetTableName_Returns_DataObjectName_When_Available_And_Filled()
         {
             // Arrange
-            var sut = new SingleEntityQueryMock
-            {
-                DataObjectName = "custom"
-            };
+            var sut = new Mock<IDataObjectNameQuery>();
+            sut.SetupGet(x => x.DataObjectName).Returns("custom");
 
             // Act
-            var actual = sut.GetTableName("default");
+            var actual = sut.Object.GetTableName("default");
 
             // Assert
             actual.Should().Be("custom");
@@ -62,13 +60,11 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
         public void GetTableName_Returns_TableName_When_DataObjectName_Is_Available_And_Not_Filled()
         {
             // Arrange
-            var sut = new SingleEntityQueryMock
-            {
-                DataObjectName = string.Empty
-            };
+            var sut = new Mock<IDataObjectNameQuery>();
+            sut.SetupGet(x => x.DataObjectName).Returns(string.Empty);
 
             // Act
-            var actual = sut.GetTableName("default");
+            var actual = sut.Object.GetTableName("default");
 
             // Assert
             actual.Should().Be("default");
@@ -88,7 +84,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
         }
 
         [ExcludeFromCodeCoverage]
-        private class SingleEntityQueryMock : IDataObjectNameQuery, IValidatableObject
+        private class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
         {
             public int? Limit { get; set; }
 
@@ -98,14 +94,9 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
 
             public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; } = new List<IQuerySortOrder>();
 
-            public string DataObjectName { get; set; } = string.Empty;
-
             public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
 
-            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-            {
-                return ValidationResultValue;
-            }
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => ValidationResultValue;
         }
     }
 }
