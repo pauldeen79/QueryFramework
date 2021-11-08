@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CrossCutting.Common;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 
@@ -19,17 +20,17 @@ namespace QueryFramework.Core.Queries
             Offset = offset;
             Distinct = distinct;
             GetAllFields = getAllFields;
-            Fields = new List<IQueryExpression>(fields ?? Enumerable.Empty<IQueryExpression>()).AsReadOnly();
-            Conditions = new List<IQueryCondition>(conditions ?? Enumerable.Empty<IQueryCondition>()).AsReadOnly();
-            OrderByFields = new List<IQuerySortOrder>(orderByFields ?? Enumerable.Empty<IQuerySortOrder>()).AsReadOnly();
+            Fields = new ValueCollection<IQueryExpression>(fields ?? Enumerable.Empty<IQueryExpression>());
+            Conditions = new ValueCollection<IQueryCondition>(conditions ?? Enumerable.Empty<IQueryCondition>());
+            OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields ?? Enumerable.Empty<IQuerySortOrder>());
         }
 
         public int? Limit { get; }
         public int? Offset { get; }
         public bool Distinct { get; }
         public bool GetAllFields { get; }
-        public IReadOnlyCollection<IQueryExpression> Fields { get; }
-        public IReadOnlyCollection<IQueryCondition> Conditions { get; }
-        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
+        public ValueCollection<IQueryExpression> Fields { get; }
+        public ValueCollection<IQueryCondition> Conditions { get; }
+        public ValueCollection<IQuerySortOrder> OrderByFields { get; }
     }
 }

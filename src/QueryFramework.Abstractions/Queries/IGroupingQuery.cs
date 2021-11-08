@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CrossCutting.Common;
 
 namespace QueryFramework.Abstractions.Queries
 {
@@ -10,7 +10,7 @@ namespace QueryFramework.Abstractions.Queries
         /// <value>
         /// The group by fields.
         /// </value>
-        IReadOnlyCollection<IQueryExpression> GroupByFields { get; }
+        ValueCollection<IQueryExpression> GroupByFields { get; }
 
         /// <summary>
         /// Gets the having fields.
@@ -18,6 +18,6 @@ namespace QueryFramework.Abstractions.Queries
         /// <value>
         /// The having fields.
         /// </value>
-        IReadOnlyCollection<IQueryCondition> HavingFields { get; }
+        ValueCollection<IQueryCondition> HavingFields { get; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CrossCutting.Common;
 
 namespace QueryFramework.Abstractions.Queries
 {
@@ -26,7 +26,7 @@ namespace QueryFramework.Abstractions.Queries
         /// <value>
         /// The conditions.
         /// </value>
-        IReadOnlyCollection<IQueryCondition> Conditions { get; }
+        ValueCollection<IQueryCondition> Conditions { get; }
 
         /// <summary>
         /// Gets the order by fields.
@@ -34,6 +34,6 @@ namespace QueryFramework.Abstractions.Queries
         /// <value>
         /// The order by fields.
         /// </value>
-        IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
+        ValueCollection<IQuerySortOrder> OrderByFields { get; }
     }
 }

@@ -39,5 +39,19 @@ namespace QueryFramework.Core.Tests.Queries
             sut.Offset.Should().Be(offset);
             sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
         }
+
+        [Fact]
+        public void Can_Compare_SingleEntityQuery_With_Equal_Values()
+        {
+            // Arrange
+            var q1 = new SingleEntityQuery(new[] { new QueryCondition("Field", Abstractions.QueryOperator.Equal, "A") }, limit: 5, offset: 64);
+            var q2 = new SingleEntityQuery(new[] { new QueryCondition("Field", Abstractions.QueryOperator.Equal, "A") }, limit: 5, offset: 64);
+
+            // Act
+            var actual = q1.Equals(q2);
+
+            // Asset
+            actual.Should().BeTrue();
+        }
     }
 }

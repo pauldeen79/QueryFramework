@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using CrossCutting.Common;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 
@@ -13,9 +14,9 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
 
         public int? Offset { get; set; }
 
-        public IReadOnlyCollection<IQueryCondition> Conditions { get; set; }
+        public ValueCollection<IQueryCondition> Conditions { get; set; }
 
-        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
+        public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -31,8 +32,8 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
 
         public ValidatableQueryMock()
         {
-            Conditions = new List<IQueryCondition>();
-            OrderByFields = new List<IQuerySortOrder>();
+            Conditions = new ValueCollection<IQueryCondition>();
+            OrderByFields = new ValueCollection<IQuerySortOrder>();
         }
     }
 }

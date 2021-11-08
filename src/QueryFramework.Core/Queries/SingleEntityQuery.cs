@@ -1,7 +1,8 @@
-﻿using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Queries;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CrossCutting.Common;
+using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 
 namespace QueryFramework.Core.Queries
 {
@@ -14,13 +15,13 @@ namespace QueryFramework.Core.Queries
         {
             Limit = limit;
             Offset = offset;
-            Conditions = new List<IQueryCondition>(conditions ?? Enumerable.Empty<IQueryCondition>()).AsReadOnly();
-            OrderByFields = new List<IQuerySortOrder>(orderByFields ?? Enumerable.Empty<IQuerySortOrder>()).AsReadOnly();
+            Conditions = new ValueCollection<IQueryCondition>(conditions ?? Enumerable.Empty<IQueryCondition>());
+            OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields ?? Enumerable.Empty<IQuerySortOrder>());
         }
 
         public int? Limit { get; }
         public int? Offset { get; }
-        public IReadOnlyCollection<IQueryCondition> Conditions { get; }
-        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
+        public ValueCollection<IQueryCondition> Conditions { get; }
+        public ValueCollection<IQuerySortOrder> OrderByFields { get; }
     }
 }

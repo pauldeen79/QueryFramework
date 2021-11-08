@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CrossCutting.Common;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 
@@ -11,19 +12,15 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
     {
         public ParameterizedQueryMock(IEnumerable<IQueryParameter> parameters)
         {
-            Conditions = new List<IQueryCondition>();
-            OrderByFields = new List<IQuerySortOrder>();
-            Parameters = parameters.ToList();
+            Conditions = new ValueCollection<IQueryCondition>();
+            OrderByFields = new ValueCollection<IQuerySortOrder>();
+            Parameters = new ValueCollection<IQueryParameter>(parameters.ToList());
         }
 
-        public IReadOnlyCollection<IQueryParameter> Parameters { get; set; }
-
+        public ValueCollection<IQueryParameter> Parameters { get; set; }
         public int? Limit { get; set; }
-
         public int? Offset { get; set; }
-
-        public IReadOnlyCollection<IQueryCondition> Conditions { get; set; }
-
-        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
+        public ValueCollection<IQueryCondition> Conditions { get; set; }
+        public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CrossCutting.Common;
 
 namespace QueryFramework.Abstractions.Queries
 {
@@ -10,6 +10,6 @@ namespace QueryFramework.Abstractions.Queries
         /// <summary>
         /// Gets the parameters for this query.
         /// </summary>
-        IReadOnlyCollection<IQueryParameter> Parameters { get; }
+        ValueCollection<IQueryParameter> Parameters { get; }
     }
 }

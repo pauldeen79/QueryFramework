@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using CrossCutting.Common;
 using CrossCutting.Data.Abstractions.Builders;
 using FluentAssertions;
 using Moq;
@@ -515,7 +516,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new[] { new QueryExpression("Field") });
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
@@ -534,7 +535,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") });
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
@@ -553,7 +554,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new[] { new QueryExpression("Field") });
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -574,7 +575,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new[] { new QueryExpression("Field") });
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             settingsMock.SetupGet(x => x.ValidateFieldNames)
                                       .Returns(true);
@@ -596,7 +597,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new[] { new QueryExpression("Field") });
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -616,7 +617,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.HavingFields)
-                     .Returns(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") });
+                     .Returns(new ValueCollection<IQueryCondition>(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
@@ -636,8 +637,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.HavingFields)
-                     .Returns(new[] { new QueryCondition("Field1", QueryOperator.Equal, "value1"),
-                                      new QueryCondition("Field2", QueryOperator.Equal, "value2") });
+                     .Returns(new ValueCollection<IQueryCondition>(new[]
+                     {
+                         new QueryCondition("Field1", QueryOperator.Equal, "value1"),
+                         new QueryCondition("Field2", QueryOperator.Equal, "value2")
+                     }));
             var settingsMock = new Mock<IQueryProcessorSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))

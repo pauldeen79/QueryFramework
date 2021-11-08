@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CrossCutting.Common;
 
 namespace QueryFramework.Abstractions.Queries
 {
@@ -32,6 +32,6 @@ namespace QueryFramework.Abstractions.Queries
         /// <remarks>
         /// Only useful when GetAllFields is <c>false</c>.
         /// </remarks>
-        IReadOnlyCollection<IQueryExpression> Fields { get; }
+        ValueCollection<IQueryExpression> Fields { get; }
     }
 }
