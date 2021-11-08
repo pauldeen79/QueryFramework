@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using CrossCutting.Data.Abstractions;
-using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Core;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
@@ -28,25 +28,22 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             => _queryProcessor.FindPaged(query);
 
         public TestEntity? Find(TestEntityIdentity identity)
-            => _retriever.FindOne(new Mock<IDatabaseCommand>().Object);
+            => _queryProcessor.FindOne(new TestQuery(new[] { new QueryCondition("Id", QueryOperator.Equal, identity.Id) }));
 
         public TestRepository(IDatabaseCommandProcessor<TestEntity> addProcessor,
                               IDatabaseCommandProcessor<TestEntity> updateProcessor,
                               IDatabaseCommandProcessor<TestEntity> deleteProcessor,
-                              IDatabaseEntityRetriever<TestEntity> retriever,
                               IQueryProcessor<ITestQuery, TestEntity> queryProcessor)
         {
             _addProcessor = addProcessor;
             _updateProcessor = updateProcessor;
             _deleteProcessor = deleteProcessor;
-            _retriever = retriever;
             _queryProcessor = queryProcessor;
         }
 
         private readonly IDatabaseCommandProcessor<TestEntity> _addProcessor;
         private readonly IDatabaseCommandProcessor<TestEntity> _updateProcessor;
         private readonly IDatabaseCommandProcessor<TestEntity> _deleteProcessor;
-        private readonly IDatabaseEntityRetriever<TestEntity> _retriever;
         private readonly IQueryProcessor<ITestQuery, TestEntity> _queryProcessor;
     }
 }
