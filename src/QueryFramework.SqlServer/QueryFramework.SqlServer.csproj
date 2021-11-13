@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <PackageId>pauldeen79.QueryFramework.SqlServer</PackageId>
     <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
+    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,14 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="2.1.1" />
     <PackageReference Include="pauldeen79.CrossCutting.Data.Sql" Version="2.1.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

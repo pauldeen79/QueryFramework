@@ -20,9 +20,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.SqlServer.Tests", "src\QueryFramework.SqlServer.Tests\QueryFramework.SqlServer.Tests.csproj", "{7A03CF17-8E59-4332-8514-8E04E2E30AE5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4DD0B4A5-0C50-4CAB-BFB6-4E262344D28B}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers", "src\QueryFramework.QueryParsers\QueryFramework.QueryParsers.csproj", "{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}"
 EndProject
