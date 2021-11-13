@@ -12,24 +12,27 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     [ExcludeFromCodeCoverage]
     public class TestRepositoryTests
     {
-        private Mock<IDatabaseCommandProcessor<TestEntity>> AddProcessorMock { get; }
-        private Mock<IDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
-        private Mock<IDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
+        private Mock<IAddDatabaseCommandProcessor<TestEntity>> AddProcessorMock { get; }
+        private Mock<IUpdateDatabaseCommandProcessor<TestEntity>> UpdateProcessorMock { get; }
+        private Mock<IDeleteDatabaseCommandProcessor<TestEntity>> DeleteProcessorMock { get; }
+        private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
         private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; }
         private IEnumerable<TestEntity> SourceData { get; set; } = Enumerable.Empty<TestEntity>();
         private TestRepository Sut => new TestRepository(AddProcessorMock.Object,
                                                          UpdateProcessorMock.Object,
                                                          DeleteProcessorMock.Object,
+                                                         RetrieverMock.Object,
                                                          QueryProcessor);
 
         public TestRepositoryTests()
         {
-            AddProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            AddProcessorMock = new Mock<IAddDatabaseCommandProcessor<TestEntity>>();
             AddProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
-            UpdateProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            UpdateProcessorMock = new Mock<IUpdateDatabaseCommandProcessor<TestEntity>>();
             UpdateProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 1; return x; });
-            DeleteProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
+            DeleteProcessorMock = new Mock<IDeleteDatabaseCommandProcessor<TestEntity>>();
             DeleteProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>())).Returns<TestEntity>(x => { x.Id = 2; return x; });
+            RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
             QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(() => SourceData);
         }
 
