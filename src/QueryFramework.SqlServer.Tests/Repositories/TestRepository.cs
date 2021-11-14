@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using CrossCutting.Data.Abstractions;
+using CrossCutting.Data.Abstractions.Extensions;
 using CrossCutting.Data.Core;
 using QueryFramework.Abstractions;
 using QueryFramework.Core;
@@ -11,13 +12,13 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     public class TestRepository : ITestRepository
     {
         public TestEntity Add(TestEntity instance)
-            => _addProcessor.InvokeCommand(instance);
+            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been added");
 
         public TestEntity Update(TestEntity instance)
-            => _updateProcessor.InvokeCommand(instance);
+            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been updated");
 
         public TestEntity Delete(TestEntity instance)
-            => _deleteProcessor.InvokeCommand(instance);
+            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been deleted");
 
         public TestEntity? FindOne(ITestQuery query)
             => _queryProcessor.FindOne(query);
@@ -35,22 +36,16 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public TestEntity? FindUsingCommand(TestEntityIdentity identity)
             => _retriever.FindOne(new SqlTextCommand("SELECT * FROM [Table] WHERE [Id] = @Id", new { Id = identity.Id } ));
 
-        public TestRepository(IAddDatabaseCommandProcessor<TestEntity> addProcessor,
-                              IUpdateDatabaseCommandProcessor<TestEntity> updateProcessor,
-                              IDeleteDatabaseCommandProcessor<TestEntity> deleteProcessor,
+        public TestRepository(IDatabaseCommandProcessor<TestEntity> commandProcessor,
                               IDatabaseEntityRetriever<TestEntity> retriever,
                               IQueryProcessor<ITestQuery, TestEntity> queryProcessor)
         {
-            _addProcessor = addProcessor;
-            _updateProcessor = updateProcessor;
-            _deleteProcessor = deleteProcessor;
+            _commandProcessor = commandProcessor;
             _retriever = retriever;
             _queryProcessor = queryProcessor;
         }
 
-        private readonly IAddDatabaseCommandProcessor<TestEntity> _addProcessor;
-        private readonly IUpdateDatabaseCommandProcessor<TestEntity> _updateProcessor;
-        private readonly IDeleteDatabaseCommandProcessor<TestEntity> _deleteProcessor;
+        private readonly IDatabaseCommandProcessor<TestEntity> _commandProcessor;
         private readonly IDatabaseEntityRetriever<TestEntity> _retriever;
         private readonly IQueryProcessor<ITestQuery, TestEntity> _queryProcessor;
     }
