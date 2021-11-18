@@ -20,18 +20,13 @@ namespace QueryFramework.SqlServer.Extensions
                                                                       IQueryProcessorSettings settings,
                                                                       IQueryFieldProvider fieldProvider,
                                                                       bool countOnly)
-        {
-            if (query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly)
-            {
-                return instance
+            => query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly
+                ? instance
                     .Append("SELECT ")
                     .AppendSelectFields(query, settings, fieldProvider, countOnly)
                     .AppendFromClause()
-                    .Append("(");
-            }
-
-            return instance;
-        }
+                    .Append("(")
+                : instance;
 
         internal static DatabaseCommandBuilder AppendSelectFields(this DatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
