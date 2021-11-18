@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrossCutting.Data.Abstractions;
+using CrossCutting.Data.Core;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
@@ -32,10 +33,10 @@ namespace QueryFramework.SqlServer
             => _retriever.FindOne(GenerateCommand(query, false));
 
         public IPagedResult<TResult> FindPaged(TQuery query)
-            => _retriever.FindPaged(GenerateCommand(query, false),
-                                    GenerateCommand(query, true),
-                                    query.Offset.GetValueOrDefault(),
-                                    query.Limit.GetValueOrDefault());
+            => _retriever.FindPaged(new PagedDatabaseCommand(GenerateCommand(query, false),
+                                                             GenerateCommand(query, true),
+                                                             query.Offset.GetValueOrDefault(),
+                                                             query.Limit.GetValueOrDefault()));
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
             => _databaseCommandGenerator.Generate

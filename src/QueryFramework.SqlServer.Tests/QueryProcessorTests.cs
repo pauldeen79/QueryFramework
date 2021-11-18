@@ -106,8 +106,8 @@ namespace QueryFramework.SqlServer.Tests
             RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
 
             // For FindPaged
-            RetrieverMock.Setup(x => x.FindPaged(It.IsAny<IDatabaseCommand>(), It.IsAny<IDatabaseCommand>(), It.IsAny<int>(), It.IsAny<int>()))
-                                      .Returns<IDatabaseCommand, IDatabaseCommand, int, int>((_, _, offset, pageSize) => CreatePagedResult(data, totalRecordCount ?? data.Count(), offset, pageSize));
+            RetrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>()))
+                                      .Returns<IPagedDatabaseCommand>(command => CreatePagedResult(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
         }
 
         private IPagedResult<MyEntity> CreatePagedResult(IEnumerable<MyEntity> data, int totalRecordCount, int offset, int pageSize)
