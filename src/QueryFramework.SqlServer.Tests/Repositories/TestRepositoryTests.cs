@@ -32,8 +32,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Add_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>()))
-                                .Returns<TestEntity>(x => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
+            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Insert))
+                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
             SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
             var entity = new TestEntity { Name = "Test" };
 
@@ -52,8 +52,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Update_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>()))
-                                .Returns<TestEntity>(x => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
+            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Update))
+                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
             SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
             var entity = new TestEntity { Name = "Test" };
 
@@ -72,8 +72,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Delete_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>()))
-                                .Returns<TestEntity>(x => { x.Id = 2; return new DatabaseCommandResult<TestEntity>(x); });
+            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Delete))
+                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 2; return new DatabaseCommandResult<TestEntity>(x); });
             var entity = new TestEntity { Id = 1, Name = "Test" };
 
             // Act

@@ -12,13 +12,13 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     public class TestRepository : ITestRepository
     {
         public TestEntity Add(TestEntity instance)
-            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been added");
+            => _commandProcessor.InvokeCommand(instance, DatabaseOperation.Insert).HandleResult("TestEntity has not been added");
 
         public TestEntity Update(TestEntity instance)
-            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been updated");
+            => _commandProcessor.InvokeCommand(instance, DatabaseOperation.Update).HandleResult("TestEntity has not been updated");
 
         public TestEntity Delete(TestEntity instance)
-            => _commandProcessor.InvokeCommand(instance).HandleResult("TestEntity has not been deleted");
+            => _commandProcessor.InvokeCommand(instance, DatabaseOperation.Delete).HandleResult("TestEntity has not been deleted");
 
         public TestEntity? FindOne(ITestQuery query)
             => _queryProcessor.FindOne(query);
