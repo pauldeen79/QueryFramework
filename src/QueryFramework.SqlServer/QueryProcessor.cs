@@ -38,14 +38,11 @@ namespace QueryFramework.SqlServer
                                     query.Limit.GetValueOrDefault());
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
-        {
-            if (query is IDynamicQuery dynamicQuery)
-            {
-                query = (TQuery)dynamicQuery.Process();
-            }
-
-            query.Validate(_settings.ValidateFieldNames);
-            return _databaseCommandGenerator.Generate(query, _settings.WithDefaultTableName(typeof(TResult).Name), countOnly);
-        }
+            => _databaseCommandGenerator.Generate
+            (
+                query.Validate(_settings.ValidateFieldNames).ProcessDynamicQuery(),
+                _settings.WithDefaultTableName(typeof(TResult).Name),
+                countOnly
+            );
     }
 }

@@ -2,8 +2,9 @@
 
 namespace QueryFramework.Abstractions
 {
-    public interface IDynamicQuery : ISingleEntityQuery
+    public interface IDynamicQuery<out TQuery> : ISingleEntityQuery
+        where TQuery : ISingleEntityQuery
     {
-        ISingleEntityQuery Process();
+        TQuery Process();
     }
 }

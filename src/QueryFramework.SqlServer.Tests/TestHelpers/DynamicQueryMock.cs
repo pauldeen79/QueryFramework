@@ -6,7 +6,7 @@ using QueryFramework.Abstractions.Queries;
 namespace QueryFramework.SqlServer.Tests.TestHelpers
 {
     [ExcludeFromCodeCoverage]
-    internal class DynamicQueryMock : IDynamicQuery
+    internal class DynamicQueryMock : IDynamicQuery<ISingleEntityQuery>
     {
         public int? Limit { get; set; }
         public int? Offset { get; set; }

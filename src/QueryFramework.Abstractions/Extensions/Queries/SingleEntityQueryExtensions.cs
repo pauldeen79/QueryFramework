@@ -20,6 +20,17 @@ namespace QueryFramework.Abstractions.Extensions.Queries
             return instance;
         }
 
+        public static T ProcessDynamicQuery<T>(this T query)
+            where T : ISingleEntityQuery
+        {
+            if (query is IDynamicQuery<T> dynamicQuery)
+            {
+                return dynamicQuery.Process();
+            }
+
+            return query;
+        }
+
         public static string GetTableName(this ISingleEntityQuery instance, string tableName)
             => instance is IDataObjectNameQuery asdoq && !string.IsNullOrEmpty(asdoq.DataObjectName)
                 ? asdoq.DataObjectName
