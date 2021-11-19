@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using QueryFramework.SqlServer.Abstractions;
 
@@ -8,9 +7,9 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     [ExcludeFromCodeCoverage]
     public class TestEntityQueryProcessorSettings : IQueryProcessorSettings
     {
-        public string TableName => throw new NotImplementedException();
+        public string TableName => "TestEntity";
 
-        public string Fields => throw new NotImplementedException();
+        public string Fields => "Field1, Field2, Field3";
 
         public string DefaultOrderBy
         {
