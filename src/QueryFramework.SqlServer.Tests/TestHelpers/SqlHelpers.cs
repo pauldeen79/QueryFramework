@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
@@ -19,17 +17,11 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             var settingsMock = new Mock<IQueryProcessorSettings>();
             settingsMock.SetupGet(x => x.TableName)
                         .Returns(nameof(MyEntity));
-            var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                             .Returns<IEnumerable<string>>(input => input);
-            fieldProviderMock.Setup(x => x.GetAllFields())
-                             .Returns(Enumerable.Empty<string>());
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            var fieldProvider = new DefaultQueryFieldProvider();
             var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
 
             // Act
-            var actual = new DatabaseCommandGenerator(fieldProviderMock.Object).Generate(query, settingsMock.Object, false).CommandText;
+            var actual = new DatabaseCommandGenerator(fieldProvider).Generate(query, settingsMock.Object, false).CommandText;
 
             // Assert
             actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
