@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;

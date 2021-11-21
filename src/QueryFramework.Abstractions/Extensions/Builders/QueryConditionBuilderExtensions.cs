@@ -4,7 +4,8 @@ namespace QueryFramework.Abstractions.Extensions.Builders
 {
     public static class QueryConditionBuilderExtensions
     {
-        public static IQueryConditionBuilder Clear(this IQueryConditionBuilder instance)
+        public static T Clear<T>(this T instance)
+            where T : IQueryConditionBuilder
         {
             instance.OpenBracket = default;
             instance.CloseBracket = default;
@@ -14,7 +15,8 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.Combination = default;
             return instance;
         }
-        public static IQueryConditionBuilder Update(this IQueryConditionBuilder instance, IQueryCondition source)
+        public static T Update<T>(this T instance, IQueryCondition source)
+            where T : IQueryConditionBuilder
         {
             instance.OpenBracket = default;
             instance.CloseBracket = default;
@@ -33,42 +35,50 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             }
             return instance;
         }
-        public static IQueryConditionBuilder WithOpenBracket(this IQueryConditionBuilder instance, bool openBracket)
+        public static T WithOpenBracket<T>(this T instance, bool openBracket)
+            where T : IQueryConditionBuilder
         {
             instance.OpenBracket = openBracket;
             return instance;
         }
-        public static IQueryConditionBuilder WithCloseBracket(this IQueryConditionBuilder instance, bool closeBracket)
+        public static T WithCloseBracket<T>(this T instance, bool closeBracket)
+            where T : IQueryConditionBuilder
         {
             instance.CloseBracket = closeBracket;
             return instance;
         }
-        public static IQueryConditionBuilder WithField(this IQueryConditionBuilder instance, IQueryExpressionBuilder field)
+        public static T WithField<T>(this T instance, IQueryExpressionBuilder field)
+            where T : IQueryConditionBuilder
         {
             instance.Field = field;
             return instance;
         }
-        public static IQueryConditionBuilder WithField(this IQueryConditionBuilder instance, IQueryExpression field)
+        public static T WithField<T>(this T instance, IQueryExpression field)
+            where T : IQueryConditionBuilder
         {
             instance.Field.Update(field);
             return instance;
         }
-        public static IQueryConditionBuilder WithField(this IQueryConditionBuilder instance, string field)
+        public static T WithField<T>(this T instance, string field)
+            where T : IQueryConditionBuilder
         {
             instance.Field.FieldName = field;
             return instance;
         }
-        public static IQueryConditionBuilder WithOperator(this IQueryConditionBuilder instance, QueryOperator @operator)
+        public static T WithOperator<T>(this T instance, QueryOperator @operator)
+            where T : IQueryConditionBuilder
         {
             instance.Operator = @operator;
             return instance;
         }
-        public static IQueryConditionBuilder WithValue(this IQueryConditionBuilder instance, object value)
+        public static T WithValue<T>(this T instance, object value)
+            where T : IQueryConditionBuilder
         {
             instance.Value = value;
             return instance;
         }
-        public static IQueryConditionBuilder WithCombination(this IQueryConditionBuilder instance, QueryCombination combination)
+        public static T WithCombination<T>(this T instance, QueryCombination combination)
+            where T : IQueryConditionBuilder
         {
             instance.Combination = combination;
             return instance;
