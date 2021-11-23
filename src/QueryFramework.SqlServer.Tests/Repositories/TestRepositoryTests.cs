@@ -16,12 +16,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         private Mock<IPagedDatabaseCommandProvider<TestEntityIdentity>> IdentityDatabaseCommandProviderMock { get; }
         private Mock<IDatabaseCommandProvider<TestEntity>> EntityDatabaseCommandProviderMock { get; }
         private Mock<IPagedDatabaseCommandProvider<ITestQuery>> QueryDatabaseCommandProviderMock { get; }
-
-        private TestRepository Sut => new TestRepository(CommandProcessorMock.Object,
-                                                         RetrieverMock.Object,
-                                                         IdentityDatabaseCommandProviderMock.Object,
-                                                         EntityDatabaseCommandProviderMock.Object,
-                                                         QueryDatabaseCommandProviderMock.Object);
+        private TestRepository Sut { get; }
 
         public TestRepositoryTests()
         {
@@ -30,6 +25,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             IdentityDatabaseCommandProviderMock = new Mock<IPagedDatabaseCommandProvider<TestEntityIdentity>>();
             EntityDatabaseCommandProviderMock = new Mock<IDatabaseCommandProvider<TestEntity>>();
             QueryDatabaseCommandProviderMock = new Mock<IPagedDatabaseCommandProvider<ITestQuery>>();
+            Sut = new TestRepository(CommandProcessorMock.Object,
+                                     RetrieverMock.Object,
+                                     IdentityDatabaseCommandProviderMock.Object,
+                                     EntityDatabaseCommandProviderMock.Object,
+                                     QueryDatabaseCommandProviderMock.Object);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         }
 
         [Fact]
-        public void Can_FindPaged_With_Query()
+        public void Can_FindPaged_Entities()
         {
             // Arrange
             RetrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>())).Returns(new PagedResult<TestEntity>(new[]
@@ -161,6 +161,24 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             entities.Should().HaveCount(2);
             entities.First().Id.Should().Be(1);
             entities.Last().Id.Should().Be(2);
+        }
+
+        [Fact]
+        public void Can_FindUsingCommand()
+        {
+            // Arrange
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(new TestEntity { Id = 1, Name = "Test" });
+
+            // Act
+            var entity = Sut.FindUsingCommand(new TestEntityIdentity { Id = 1 });
+
+            // Assert
+            entity.Should().NotBeNull();
+            if (entity != null)
+            {
+                entity.Id.Should().Be(1);
+                entity.Name.Should().Be("Test");
+            }
         }
     }
 }
