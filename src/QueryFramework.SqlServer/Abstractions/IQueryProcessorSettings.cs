@@ -1,11 +1,9 @@
-﻿namespace QueryFramework.SqlServer.Abstractions
+﻿using CrossCutting.Data.Abstractions;
+
+namespace QueryFramework.SqlServer.Abstractions
 {
-    public interface IQueryProcessorSettings
+    public interface IQueryProcessorSettings : IDatabaseEntityRetrieverSettings
     {
-        string TableName { get; }
-        string Fields { get; }
-        string DefaultOrderBy { get; }
-        string DefaultWhere { get; }
         int? OverrideLimit { get; }
         bool ValidateFieldNames { get; }
         int InitialParameterNumber { get; }
