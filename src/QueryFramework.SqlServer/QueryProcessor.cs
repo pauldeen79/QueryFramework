@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Core;
+using CrossCutting.Data.Core.Commands;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
@@ -9,8 +9,8 @@ using QueryFramework.SqlServer.Extensions;
 
 namespace QueryFramework.SqlServer
 {
-    public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
-        where TQuery : ISingleEntityQuery
+    public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>, IPagedDatabaseCommandProvider<TQuery>
+        where TQuery : ISingleEntityQuery, new()
         where TResult : class
     {
         private readonly IDatabaseEntityRetriever<TResult> _retriever;
@@ -37,6 +37,18 @@ namespace QueryFramework.SqlServer
                                                              GenerateCommand(query, true),
                                                              query.Offset.GetValueOrDefault(),
                                                              query.Limit.GetValueOrDefault()));
+
+        IDatabaseCommand IDatabaseCommandProvider<TQuery>.Create(TQuery source, DatabaseOperation operation)
+            => GenerateCommand(source, false);
+
+        IDatabaseCommand IDatabaseCommandProvider.Create(DatabaseOperation operation)
+            => GenerateCommand(new TQuery(), false);
+
+        IPagedDatabaseCommand IPagedDatabaseCommandProvider<TQuery>.CreatePaged(TQuery source, DatabaseOperation operation, int offset, int pageSize)
+            => new PagedDatabaseCommand(GenerateCommand(source, false), GenerateCommand(source, true), offset, pageSize);
+
+        IPagedDatabaseCommand IPagedDatabaseCommandProvider.CreatePaged(DatabaseOperation operation, int offset, int pageSize)
+            => new PagedDatabaseCommand(GenerateCommand(new TQuery(), false), GenerateCommand(new TQuery(), true), offset, pageSize);
 
         private IDatabaseCommand GenerateCommand(TQuery query, bool countOnly)
             => _databaseCommandGenerator.Generate

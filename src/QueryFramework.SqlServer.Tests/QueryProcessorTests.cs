@@ -6,7 +6,8 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions.Queries;
+using QueryFramework.Abstractions;
+using QueryFramework.Core.Queries;
 using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
@@ -17,18 +18,18 @@ namespace QueryFramework.SqlServer.Tests
     public class QueryProcessorTests
     {
         private Mock<IDatabaseEntityRetriever<MyEntity>> RetrieverMock { get; }
-        private Mock<IDataReaderMapper<MyEntity>> MapperMock { get; }
+        private Mock<IDatabaseEntityMapper<MyEntity>> MapperMock { get; }
         private Mock<IQueryProcessorSettings> QueryProcessorSettingsMock { get; }
         private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
-        private QueryProcessor<ISingleEntityQuery, MyEntity> Sut
-            => new QueryProcessor<ISingleEntityQuery, MyEntity>(RetrieverMock.Object,
-                                                                QueryProcessorSettingsMock.Object,
-                                                                DatabaseCommandGeneratorMock.Object);
+        private QueryProcessor<SingleEntityQuery, MyEntity> Sut
+            => new QueryProcessor<SingleEntityQuery, MyEntity>(RetrieverMock.Object,
+                                                               QueryProcessorSettingsMock.Object,
+                                                               DatabaseCommandGeneratorMock.Object);
 
         public QueryProcessorTests()
         {
             RetrieverMock = new Mock<IDatabaseEntityRetriever<MyEntity>>();
-            MapperMock = new Mock<IDataReaderMapper<MyEntity>>();
+            MapperMock = new Mock<IDatabaseEntityMapper<MyEntity>>();
             MapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
             QueryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
@@ -42,7 +43,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindPaged(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindPaged(new SingleEntityQuery());
 
             // Assert
             actual.Should().HaveCount(1);
@@ -55,12 +56,10 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupSourceData(new[] { new MyEntity { Property = "Value" } }, totalRecordCount: 10);
-            var queryMock = new Mock<ISingleEntityQuery>();
-            queryMock.SetupGet(x => x.Limit)
-                     .Returns(1);
+            var query = new SingleEntityQuery(1, null, Enumerable.Empty<IQueryCondition>(), Enumerable.Empty<IQuerySortOrder>());
 
             // Act
-            var actual = Sut.FindPaged(queryMock.Object);
+            var actual = Sut.FindPaged(query);
 
             // Assert
             actual.Should().HaveCount(1);
@@ -75,7 +74,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindOne(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindOne(new SingleEntityQuery());
 
             // Assert
             actual.Should().NotBeNull();
@@ -92,7 +91,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindMany(new Mock<ISingleEntityQuery>().Object);
+            var actual = Sut.FindMany(new SingleEntityQuery());
 
             // Assert
             actual.Should().HaveCount(1);

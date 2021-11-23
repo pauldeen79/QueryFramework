@@ -8,21 +8,31 @@ namespace QueryFramework.Core.Queries
 {
     public record FieldSelectionQuery : IFieldSelectionQuery
     {
-        public FieldSelectionQuery(IEnumerable<IQueryCondition>? conditions = null,
-                                   IEnumerable<IQuerySortOrder>? orderByFields = null,
-                                   int? limit = null,
-                                   int? offset = null,
-                                   bool distinct = false,
-                                   bool getAllFields = false,
-                                   IEnumerable<IQueryExpression>? fields = null)
+        public FieldSelectionQuery() : this(null,
+                                            null,
+                                            false,
+                                            false,
+                                            Enumerable.Empty<IQueryCondition>(),
+                                            Enumerable.Empty<IQuerySortOrder>(),
+                                            Enumerable.Empty<IQueryExpression>())
+        {
+        }
+
+        public FieldSelectionQuery(int? limit,
+                                   int? offset,
+                                   bool distinct,
+                                   bool getAllFields,
+                                   IEnumerable<IQueryCondition> conditions,
+                                   IEnumerable<IQuerySortOrder> orderByFields,
+                                   IEnumerable<IQueryExpression> fields)
         {
             Limit = limit;
             Offset = offset;
             Distinct = distinct;
             GetAllFields = getAllFields;
-            Fields = new ValueCollection<IQueryExpression>(fields ?? Enumerable.Empty<IQueryExpression>());
-            Conditions = new ValueCollection<IQueryCondition>(conditions ?? Enumerable.Empty<IQueryCondition>());
-            OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields ?? Enumerable.Empty<IQuerySortOrder>());
+            Fields = new ValueCollection<IQueryExpression>(fields);
+            Conditions = new ValueCollection<IQueryCondition>(conditions);
+            OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields);
         }
 
         public int? Limit { get; }

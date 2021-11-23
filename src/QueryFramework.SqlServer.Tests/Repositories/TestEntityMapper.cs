@@ -7,7 +7,7 @@ using CrossCutting.Data.Sql.Extensions;
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class TestEntityMapper : IDataReaderMapper<TestEntity>
+    public class TestEntityMapper : IDatabaseEntityMapper<TestEntity>
     {
         public TestEntity Map(IDataReader reader)
         {
