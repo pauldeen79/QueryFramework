@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
@@ -15,26 +13,31 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     {
         private Mock<IDatabaseCommandProcessor<TestEntity>> CommandProcessorMock { get; }
         private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
-        private IQueryProcessor<ITestQuery, TestEntity> QueryProcessor { get; }
-        private IEnumerable<TestEntity> SourceData { get; set; } = Enumerable.Empty<TestEntity>();
+        private Mock<IPagedDatabaseCommandProvider<TestEntityIdentity>> IdentityDatabaseCommandProviderMock { get; }
+        private Mock<IDatabaseCommandProvider<TestEntity>> EntityDatabaseCommandProviderMock { get; }
+        private Mock<IPagedDatabaseCommandProvider<ITestQuery>> QueryDatabaseCommandProviderMock { get; }
+
         private TestRepository Sut => new TestRepository(CommandProcessorMock.Object,
                                                          RetrieverMock.Object,
-                                                         QueryProcessor);
+                                                         IdentityDatabaseCommandProviderMock.Object,
+                                                         EntityDatabaseCommandProviderMock.Object,
+                                                         QueryDatabaseCommandProviderMock.Object);
 
         public TestRepositoryTests()
         {
             CommandProcessorMock = new Mock<IDatabaseCommandProcessor<TestEntity>>();
             RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-            QueryProcessor = new InMemory.QueryProcessor<ITestQuery, TestEntity>(() => SourceData);
+            IdentityDatabaseCommandProviderMock = new Mock<IPagedDatabaseCommandProvider<TestEntityIdentity>>();
+            EntityDatabaseCommandProviderMock = new Mock<IDatabaseCommandProvider<TestEntity>>();
+            QueryDatabaseCommandProviderMock = new Mock<IPagedDatabaseCommandProvider<ITestQuery>>();
         }
 
         [Fact]
         public void Can_Add_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Insert))
-                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
-            SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
+            CommandProcessorMock.Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
+                                .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
             var entity = new TestEntity { Name = "Test" };
 
             // Act
@@ -52,9 +55,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Update_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Update))
-                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
-            SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
+            CommandProcessorMock.Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
+                                .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
             var entity = new TestEntity { Name = "Test" };
 
             // Act
@@ -72,8 +74,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Delete_Entity()
         {
             // Arrange
-            CommandProcessorMock.Setup(x => x.InvokeCommand(It.IsAny<TestEntity>(), DatabaseOperation.Delete))
-                                .Returns<TestEntity, DatabaseOperation>((x, _) => { x.Id = 2; return new DatabaseCommandResult<TestEntity>(x); });
+            CommandProcessorMock.Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
+                                .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 2; return new DatabaseCommandResult<TestEntity>(x); });
             var entity = new TestEntity { Id = 1, Name = "Test" };
 
             // Act
@@ -91,8 +93,8 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_Find_Entity()
         {
             // Arrange
-            SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
-            
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(new TestEntity { Id = 1, Name = "Test" });
+
             // Act
             var entity = Sut.Find(new TestEntityIdentity { Id = 1 });
 
@@ -109,7 +111,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_FindOne_Entity()
         {
             // Arrange
-            SourceData = new[] { new TestEntity { Id = 1, Name = "Test" } };
+            RetrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(new TestEntity { Id = 1, Name = "Test" });
 
             // Act
             var entity = Sut.FindOne(new Mock<ITestQuery>().Object);
@@ -127,11 +129,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_FindMany_Entities()
         {
             // Arrange
-            SourceData = new[]
+            RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(new[]
             {
                 new TestEntity { Id = 1, Name = "Test" },
                 new TestEntity { Id = 2, Name = "Test" }
-            };
+            });
 
             // Act
             var entities = Sut.FindMany(new Mock<ITestQuery>().Object);
@@ -146,11 +148,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public void Can_FindPaged_With_Query()
         {
             // Arrange
-            SourceData = new[]
+            RetrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>())).Returns(new PagedResult<TestEntity>(new[]
             {
                 new TestEntity { Id = 1, Name = "Test" },
                 new TestEntity { Id = 2, Name = "Test" }
-            };
+            }, 2, 0, 10));
 
             // Act
             var entities = Sut.FindPaged(new Mock<ITestQuery>().Object);

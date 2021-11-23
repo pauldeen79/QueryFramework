@@ -38,7 +38,7 @@ namespace QueryFramework.Core.Tests.Queries
             var fields = new[] { new QueryExpression("field") };
 
             // Act
-            var sut = new FieldSelectionQuery(conditions, orderByFields, limit, offset, distinct, getAllFields, fields);
+            var sut = new FieldSelectionQuery(limit, offset, distinct, getAllFields, conditions, orderByFields, fields);
 
             // Assert
             sut.Conditions.Should().BeEquivalentTo(conditions);

@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Queries;
+using QueryFramework.Core.Queries;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
-    public record TestQuery : Core.Queries.SingleEntityQuery, ITestQuery
+    [ExcludeFromCodeCoverage]
+    public record TestQuery : SingleEntityQuery, ITestQuery
     {
-        public TestQuery(IEnumerable<IQueryCondition>? conditions = null, IEnumerable<IQuerySortOrder>? orderByFields = null, int? limit = null, int? offset = null) : base(conditions, orderByFields, limit, offset)
+        public TestQuery()
         {
         }
 
-        public TestQuery(ISingleEntityQuery simpleEntityQuery) : this(simpleEntityQuery.Conditions, simpleEntityQuery.OrderByFields, simpleEntityQuery.Limit, simpleEntityQuery.Offset)
+        public TestQuery(int? limit, int? offset, IEnumerable<IQueryCondition> conditions, IEnumerable<IQuerySortOrder> orderByFields) : base(limit, offset, conditions, orderByFields)
         {
         }
     }

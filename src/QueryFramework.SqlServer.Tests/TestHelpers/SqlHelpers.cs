@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
@@ -18,7 +19,7 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             settingsMock.SetupGet(x => x.TableName)
                         .Returns(nameof(MyEntity));
             var fieldProvider = new DefaultQueryFieldProvider();
-            var query = new SingleEntityQuery(new[] { new QueryCondition(expression, QueryOperator.Equal, "test") });
+            var query = new SingleEntityQuery(null, null, new[] { new QueryCondition(expression, QueryOperator.Equal, "test") }, Enumerable.Empty<IQuerySortOrder>());
 
             // Act
             var actual = new DatabaseCommandGenerator(fieldProvider).Generate(query, settingsMock.Object, false).CommandText;
