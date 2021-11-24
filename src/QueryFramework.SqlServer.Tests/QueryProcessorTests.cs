@@ -9,14 +9,17 @@ using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries;
+using QueryFramework.Core.Queries.Builders;
+using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 
 namespace QueryFramework.SqlServer.Tests
 {
     [ExcludeFromCodeCoverage]
-    public class QueryProcessorTests : TestBase<QueryProcessor<SingleEntityQuery, MyEntity>>
+    public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, MyEntity>>
     {
         public QueryProcessorTests()
         {
@@ -66,7 +69,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindOne(new SingleEntityQuery());
+            var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo()).Build());
 
             // Assert
             actual.Should().NotBeNull();

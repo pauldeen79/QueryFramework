@@ -8,7 +8,7 @@ using QueryFramework.SqlServer.Abstractions;
 namespace QueryFramework.SqlServer
 {
     public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
-        where TQuery : ISingleEntityQuery, new()
+        where TQuery : ISingleEntityQuery
         where TResult : class
     {
         protected IDatabaseEntityRetriever<TResult> Retriever { get; }
