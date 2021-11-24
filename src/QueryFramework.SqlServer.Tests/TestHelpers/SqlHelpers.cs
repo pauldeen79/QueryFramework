@@ -23,7 +23,7 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             var query = new SingleEntityQuery(null, null, new[] { new QueryCondition(expression, QueryOperator.Equal, "test") }, Enumerable.Empty<IQuerySortOrder>());
 
             // Act
-            var actual = new QueryPagedDatabaseCommandGenerator<SingleEntityQuery>(fieldProvider, settingsMock.Object)
+            var actual = new QueryPagedDatabaseCommandProvider<SingleEntityQuery>(fieldProvider, settingsMock.Object)
                 .Create(query, DatabaseOperation.Select)
                 .CommandText;
 

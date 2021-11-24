@@ -8,13 +8,13 @@ using QueryFramework.SqlServer.Extensions;
 
 namespace QueryFramework.SqlServer
 {
-    public class QueryPagedDatabaseCommandGenerator<TQuery> : IPagedDatabaseCommandProvider<TQuery>
+    public class QueryPagedDatabaseCommandProvider<TQuery> : IPagedDatabaseCommandProvider<TQuery>
         where TQuery : ISingleEntityQuery, new()
     {
         private IQueryFieldProvider FieldProvider { get; }
         private IQueryProcessorSettings Settings { get; }
 
-        public QueryPagedDatabaseCommandGenerator(IQueryFieldProvider fieldProvider, IQueryProcessorSettings settings)
+        public QueryPagedDatabaseCommandProvider(IQueryFieldProvider fieldProvider, IQueryProcessorSettings settings)
         {
             FieldProvider = fieldProvider;
             Settings = settings;
@@ -41,7 +41,6 @@ namespace QueryFramework.SqlServer
                                             pageSize);
             
         }
-
 
         public IPagedDatabaseCommand CreatePaged(DatabaseOperation operation, int offset, int pageSize)
             => CreatePaged(new TQuery(), operation, offset, pageSize);
