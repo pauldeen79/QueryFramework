@@ -15,11 +15,11 @@ namespace QueryFramework.QueryParsers
         where TQueryBuilder : ISingleEntityQueryBuilder
         where TQueryExpressionBuilder : IQueryExpressionBuilder, new()
     {
-        private readonly Func<TQueryExpressionBuilder> _defaultFieldExpressionBuilderFactory;
+        private Func<TQueryExpressionBuilder> DefaultFieldExpressionBuilderFactory { get; }
 
         public SingleEntityQueryParser(Func<TQueryExpressionBuilder> defaultFieldExpressionBuilderFactory)
         {
-            _defaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
+            DefaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
         }
 
         public TQueryBuilder Parse(TQueryBuilder builder, string queryString)
@@ -101,9 +101,9 @@ namespace QueryFramework.QueryParsers
         }
 
         private IQueryExpressionBuilder GetField(string fieldName)
-            => _defaultFieldExpressionBuilderFactory == null
+            => DefaultFieldExpressionBuilderFactory == null
                 ? new TQueryExpressionBuilder().WithFieldName(fieldName)
-                : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
+                : DefaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
         private object? GetValue(QueryOperator queryOperator, object fieldValue)
             => queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
@@ -122,9 +122,9 @@ namespace QueryFramework.QueryParsers
                 })
                 .Select(item => new QueryConditionBuilder
                 {
-                    Field = _defaultFieldExpressionBuilderFactory == null
+                    Field = DefaultFieldExpressionBuilderFactory == null
                        ? new TQueryExpressionBuilder()
-                       : _defaultFieldExpressionBuilderFactory.Invoke(),
+                       : DefaultFieldExpressionBuilderFactory.Invoke(),
                     Combination = item.StartsWithPlusOrMinus
                        ? QueryCombination.And
                        : QueryCombination.Or,

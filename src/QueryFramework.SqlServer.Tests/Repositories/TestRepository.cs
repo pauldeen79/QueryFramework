@@ -9,7 +9,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     [ExcludeFromCodeCoverage]
     public class TestRepository : Repository<TestEntity, TestEntityIdentity>, ITestRepository
     {
-        private readonly IPagedDatabaseCommandProvider<ITestQuery> _queryDatabaseCommandProvider;
+        private IPagedDatabaseCommandProvider<ITestQuery> QueryDatabaseCommandProvider { get; }
 
         public TestRepository(IDatabaseCommandProcessor<TestEntity> databaseCommandProcessor,
                               IDatabaseEntityRetriever<TestEntity> entityRetriever,
@@ -18,17 +18,17 @@ namespace QueryFramework.SqlServer.Tests.Repositories
                               IPagedDatabaseCommandProvider<ITestQuery> queryDatabaseCommandProvider)
             : base(databaseCommandProcessor, entityRetriever, identityDatabaseCommandProvider, entityDatabaseCommandProvider)
         {
-            _queryDatabaseCommandProvider = queryDatabaseCommandProvider;
+            QueryDatabaseCommandProvider = queryDatabaseCommandProvider;
         }
 
         public TestEntity? FindOne(ITestQuery query)
-            => EntityRetriever.FindOne(_queryDatabaseCommandProvider.Create(query, DatabaseOperation.Select));
+            => EntityRetriever.FindOne(QueryDatabaseCommandProvider.Create(query, DatabaseOperation.Select));
 
         public IReadOnlyCollection<TestEntity> FindMany(ITestQuery query)
-            => EntityRetriever.FindMany(_queryDatabaseCommandProvider.Create(query, DatabaseOperation.Select));
+            => EntityRetriever.FindMany(QueryDatabaseCommandProvider.Create(query, DatabaseOperation.Select));
 
         public IPagedResult<TestEntity> FindPaged(ITestQuery query)
-            => EntityRetriever.FindPaged(_queryDatabaseCommandProvider.CreatePaged(query, DatabaseOperation.Select, query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault()));
+            => EntityRetriever.FindPaged(QueryDatabaseCommandProvider.CreatePaged(query, DatabaseOperation.Select, query.Offset.GetValueOrDefault(), query.Limit.GetValueOrDefault()));
 
         // Added as an example to work with Sql directly from the repository, in case query framework does not support the sql constructs you need
         public TestEntity? FindUsingCommand(TestEntityIdentity identity)

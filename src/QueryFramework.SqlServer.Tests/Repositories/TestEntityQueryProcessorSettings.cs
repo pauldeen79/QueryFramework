@@ -33,8 +33,11 @@ namespace QueryFramework.SqlServer.Tests.Repositories
 
         public int? OverrideLimit => -1;
 
+        public int? OverrideOffset => 0;
+
         public bool ValidateFieldNames => true;
 
         public int InitialParameterNumber => 0;
+
     }
 }

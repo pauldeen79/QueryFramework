@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
@@ -22,7 +23,9 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             var query = new SingleEntityQuery(null, null, new[] { new QueryCondition(expression, QueryOperator.Equal, "test") }, Enumerable.Empty<IQuerySortOrder>());
 
             // Act
-            var actual = new DatabaseCommandGenerator(fieldProvider).Generate(query, settingsMock.Object, false).CommandText;
+            var actual = new QueryPagedDatabaseCommandGenerator<SingleEntityQuery>(fieldProvider, settingsMock.Object)
+                .Create(query, DatabaseOperation.Select)
+                .CommandText;
 
             // Assert
             actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");

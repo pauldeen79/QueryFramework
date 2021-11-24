@@ -7,11 +7,11 @@ namespace QueryFramework.InMemory
     public class ExpressionEvaluator<T> : IExpressionEvaluator<T>
         where T : class
     {
-        private readonly IValueProvider _valueProvider;
+        private IValueProvider ValueProvider { get; }
 
         public ExpressionEvaluator(IValueProvider valueProvider)
         {
-            _valueProvider = valueProvider;
+            ValueProvider = valueProvider;
         }
 
         public object? GetValue(T item, IQueryExpression field)
@@ -25,14 +25,14 @@ namespace QueryFramework.InMemory
                 {
                     var split = parameters.Split(',');
                     var fieldName = split[0] == "{0}"
-                        ? _valueProvider.GetFieldValue(item, field.FieldName)
-                        : _valueProvider.GetFieldValue(item, split[0]);
+                        ? ValueProvider.GetFieldValue(item, field.FieldName)
+                        : ValueProvider.GetFieldValue(item, split[0]);
                     return function.Invoke(fieldName, split.Skip(1));
                 }
                 throw new ArgumentOutOfRangeException(nameof(field), $"Expression [{field.Expression}] is not supported");
             }
 
-            return _valueProvider.GetFieldValue(item, field.FieldName);
+            return ValueProvider.GetFieldValue(item, field.FieldName);
         }
 
         private static string GetFunctionName(string expression, out string parameter)

@@ -4,9 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
+using CrossCutting.Data.Core.Commands;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Queries;
 using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
@@ -20,7 +22,7 @@ namespace QueryFramework.SqlServer.Tests
         private Mock<IDatabaseEntityRetriever<MyEntity>> RetrieverMock { get; }
         private Mock<IDatabaseEntityMapper<MyEntity>> MapperMock { get; }
         private Mock<IQueryProcessorSettings> QueryProcessorSettingsMock { get; }
-        private Mock<IDatabaseCommandGenerator> DatabaseCommandGeneratorMock { get; }
+        private Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>> DatabaseCommandGeneratorMock { get; }
         private QueryProcessor<SingleEntityQuery, MyEntity> Sut
             => new QueryProcessor<SingleEntityQuery, MyEntity>(RetrieverMock.Object,
                                                                QueryProcessorSettingsMock.Object,
@@ -33,7 +35,12 @@ namespace QueryFramework.SqlServer.Tests
             MapperMock.Setup(x => x.Map(It.IsAny<IDataReader>()))
                       .Returns<IDataReader>(reader => new MyEntity { Property = reader.GetString(0) });
             QueryProcessorSettingsMock = new Mock<IQueryProcessorSettings>();
-            DatabaseCommandGeneratorMock = new Mock<IDatabaseCommandGenerator>();
+            DatabaseCommandGeneratorMock = new Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+            DatabaseCommandGeneratorMock.Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
+                                        .Returns(new PagedDatabaseCommand(new SqlTextCommand("SELECT ...", DatabaseOperation.Select),
+                                                                          new SqlTextCommand("SELECT COUNT(*)...", DatabaseOperation.Select),
+                                                                          0,
+                                                                          0));
         }
 
         [Fact]

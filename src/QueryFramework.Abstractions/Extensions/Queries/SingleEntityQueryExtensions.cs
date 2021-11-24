@@ -6,7 +6,8 @@ namespace QueryFramework.Abstractions.Extensions.Queries
 {
     public static class SingleEntityQueryExtensions
     {
-        public static ISingleEntityQuery Validate(this ISingleEntityQuery instance, bool validateFieldNames = true)
+        public static T Validate<T>(this T instance, bool validateFieldNames = true)
+            where T : ISingleEntityQuery
         {
             if (validateFieldNames && instance is IValidatableObject validatableQuery)
             {

@@ -11,12 +11,12 @@
         {
             var result = 0;
 
-            if (queryLimit.HasValue)
+            if (queryLimit.HasValue && queryLimit.Value >0)
             {
                 result = queryLimit.Value;
             }
 
-            if (overrideLimit.HasValue && ((overrideLimit.Value < result && overrideLimit.Value >= 0) || result == 0))
+            if (overrideLimit.HasValue && overrideLimit.Value > 0 && ((overrideLimit.Value < result && overrideLimit.Value >= 0) || result == 0))
             {
                 result = overrideLimit.Value;
             }
