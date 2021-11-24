@@ -11,7 +11,7 @@
         {
             var result = 0;
 
-            if (queryLimit.HasValue && queryLimit.Value >0)
+            if (queryLimit.HasValue && queryLimit.Value > 0)
             {
                 result = queryLimit.Value;
             }

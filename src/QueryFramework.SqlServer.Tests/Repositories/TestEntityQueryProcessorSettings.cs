@@ -8,9 +8,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     public class TestEntityQueryProcessorSettings : IQueryProcessorSettings
     {
         public string TableName => "TestEntity";
-
         public string Fields => "Field1, Field2, Field3";
-
         public string DefaultOrderBy
         {
             get
@@ -20,7 +18,6 @@ namespace QueryFramework.SqlServer.Tests.Repositories
                 return builder.ToString();
             }
         }
-
         public string DefaultWhere
         {
             get
@@ -30,14 +27,9 @@ namespace QueryFramework.SqlServer.Tests.Repositories
                 return builder.ToString();
             }
         }
-
-        public int? OverrideLimit => -1;
-
-        public int? OverrideOffset => 0;
-
+        public int? OverrideLimit => null;
+        public int? OverrideOffset => null;
         public bool ValidateFieldNames => true;
-
         public int InitialParameterNumber => 0;
-
     }
 }

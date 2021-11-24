@@ -133,7 +133,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                                bool countOnly)
         {
             if ((query.Offset == null || query.Offset.Value <= 0 || query.OrderByFields.Count == 0)
-                && ((query.Limit.HasValue && query.Limit.Value > 0) || (settings.OverrideLimit.HasValue && settings.OverrideLimit.Value > 0))
+                && ((query.Limit.HasValue && query.Limit.Value > 0) || (settings.OverrideLimit.HasValue && settings.OverrideLimit.Value >= 0))
                 && !countOnly)
             {
                 return instance.Append($"TOP {query.Limit.DetermineLimit(settings.OverrideLimit)} ");
@@ -396,6 +396,10 @@ namespace QueryFramework.SqlServer.Extensions
                 if (query.Limit.DetermineLimit(settings.OverrideLimit) > 0)
                 {
                     return instance.Append($") sq WHERE sq.sq_row_number BETWEEN {query.Offset.Value + 1} and {query.Offset.Value + query.Limit.DetermineLimit(settings.OverrideLimit)};");
+                }
+                else if (query.Limit.DetermineLimit(settings.OverrideLimit) == 0)
+                {
+                    return instance.Append($") sq WHERE sq.sq_row_number = 0;");
                 }
                 else
                 {

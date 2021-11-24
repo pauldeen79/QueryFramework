@@ -9,7 +9,7 @@ using QueryFramework.SqlServer.Extensions;
 namespace QueryFramework.SqlServer
 {
     public class QueryPagedDatabaseCommandGenerator<TQuery> : IPagedDatabaseCommandProvider<TQuery>
-            where TQuery : ISingleEntityQuery, new()
+        where TQuery : ISingleEntityQuery, new()
     {
         private IQueryFieldProvider FieldProvider { get; }
         private IQueryProcessorSettings Settings { get; }
@@ -50,10 +50,10 @@ namespace QueryFramework.SqlServer
                                                IFieldSelectionQuery? fieldSelectionQuery,
                                                IGroupingQuery? groupingQuery,
                                                int offset,
-                                               int pageSize,
+                                               int limit,
                                                bool countOnly)
         {
-            var settings = Settings.WithPageInfo(offset, pageSize);
+            var settings = Settings.WithPageInfo(limit, offset);
             return new DatabaseCommandBuilder()
                 .AppendPagingOuterQuery(source, settings, FieldProvider, countOnly)
                 .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)

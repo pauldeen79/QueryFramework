@@ -826,7 +826,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.AppendPagingSuffix(query, settingsMock.Object, false);
 
             // Assert
-            actual.Build().CommandText.Should().Be(") sq WHERE sq.sq_row_number > 10;");
+            actual.Build().CommandText.Should().Be(") sq WHERE sq.sq_row_number = 0;");
         }
 
         [Theory]

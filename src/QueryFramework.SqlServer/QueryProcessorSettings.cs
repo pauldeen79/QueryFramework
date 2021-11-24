@@ -18,7 +18,7 @@ namespace QueryFramework.SqlServer
                                       string defaultOrderBy = "",
                                       string defaultWhere = "",
                                       int? overrideLimit = null,
-                                      int? overideOffset = null,
+                                      int? overrideOffset = null,
                                       bool validateFieldNames = true)
         {
             TableName = tableName;
@@ -26,7 +26,7 @@ namespace QueryFramework.SqlServer
             DefaultOrderBy = defaultOrderBy;
             DefaultWhere = defaultWhere;
             OverrideLimit = overrideLimit;
-            OverrideOffset = overideOffset;
+            OverrideOffset = overrideOffset;
             ValidateFieldNames = validateFieldNames;
             InitialParameterNumber = 0;
         }
