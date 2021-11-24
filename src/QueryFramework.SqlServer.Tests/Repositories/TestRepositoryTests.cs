@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using AutoFixture;
 using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
@@ -90,68 +89,6 @@ namespace QueryFramework.SqlServer.Tests.Repositories
                 entity.Id.Should().Be(1);
                 entity.Name.Should().Be("Test");
             }
-        }
-
-        [Fact]
-        public void Can_FindOne_Entity()
-        {
-            // Arrange
-            Fixture.Freeze<Mock<IDatabaseEntityRetriever<TestEntity>>>()
-                .Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>()))
-                .Returns(new TestEntity { Id = 1, Name = "Test" });
-
-            // Act
-            var entity = Sut.FindOne(new Mock<ITestQuery>().Object);
-
-            // Assert
-            entity.Should().NotBeNull();
-            if (entity != null)
-            {
-                entity.Id.Should().Be(1);
-                entity.Name.Should().Be("Test");
-            }
-        }
-
-        [Fact]
-        public void Can_FindMany_Entities()
-        {
-            // Arrange
-            Fixture.Freeze<Mock<IDatabaseEntityRetriever<TestEntity>>>()
-                .Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
-                .Returns(new[]
-                {
-                    new TestEntity { Id = 1, Name = "Test" },
-                    new TestEntity { Id = 2, Name = "Test" }
-                });
-
-            // Act
-            var entities = Sut.FindMany(new Mock<ITestQuery>().Object);
-
-            // Assert
-            entities.Should().HaveCount(2);
-            entities.First().Id.Should().Be(1);
-            entities.Last().Id.Should().Be(2);
-        }
-
-        [Fact]
-        public void Can_FindPaged_Entities()
-        {
-            // Arrange
-            Fixture.Freeze<Mock<IDatabaseEntityRetriever<TestEntity>>>()
-                .Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>()))
-                .Returns(new PagedResult<TestEntity>(new[]
-                {
-                    new TestEntity { Id = 1, Name = "Test" },
-                    new TestEntity { Id = 2, Name = "Test" }
-                }, 2, 0, 10));
-
-            // Act
-            var entities = Sut.FindPaged(new Mock<ITestQuery>().Object);
-
-            // Assert
-            entities.Should().HaveCount(2);
-            entities.First().Id.Should().Be(1);
-            entities.Last().Id.Should().Be(2);
         }
 
         [Fact]

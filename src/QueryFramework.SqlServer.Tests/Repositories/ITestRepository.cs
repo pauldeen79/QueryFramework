@@ -3,7 +3,7 @@ using QueryFramework.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
-    public interface ITestRepository : IRepository<TestEntity, TestEntityIdentity>, IQueryProcessor<ITestQuery, TestEntity>
+    public interface ITestRepository : IRepository<TestEntity, TestEntityIdentity>
     {
     }
 }
