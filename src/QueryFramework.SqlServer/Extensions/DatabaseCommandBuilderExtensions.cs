@@ -20,13 +20,16 @@ namespace QueryFramework.SqlServer.Extensions
                                                                       IQueryProcessorSettings settings,
                                                                       IQueryFieldProvider fieldProvider,
                                                                       bool countOnly)
-            => query.Offset.HasValue && query.Offset.Value >= 0 && !countOnly
-                ? instance
-                    .Append("SELECT ")
-                    .AppendSelectFields(query, settings, fieldProvider, countOnly)
-                    .AppendFromClause()
-                    .Append("(")
-                : instance;
+        {
+            var offset = query.Offset.DetermineOffset(settings.OverrideOffset);
+            return offset.HasValue && offset.Value >= 0 && !countOnly
+                           ? instance
+                               .Append("SELECT ")
+                               .AppendSelectFields(query, settings, fieldProvider, countOnly)
+                               .AppendFromClause()
+                               .Append("(")
+                           : instance;
+        }
 
         internal static DatabaseCommandBuilder AppendSelectFields(this DatabaseCommandBuilder instance,
                                                                   ISingleEntityQuery query,
@@ -132,7 +135,8 @@ namespace QueryFramework.SqlServer.Extensions
                                                                IQueryProcessorSettings settings,
                                                                bool countOnly)
         {
-            if ((query.Offset == null || query.Offset.Value <= 0 || query.OrderByFields.Count == 0)
+            var offset = query.Offset.DetermineOffset(settings.OverrideOffset);
+            if ((offset == null || offset.Value <= 0)
                 && ((query.Limit.HasValue && query.Limit.Value > 0) || (settings.OverrideLimit.HasValue && settings.OverrideLimit.Value >= 0))
                 && !countOnly)
             {
@@ -157,8 +161,9 @@ namespace QueryFramework.SqlServer.Extensions
                                                                   IQueryFieldProvider fieldProvider,
                                                                   bool countOnly)
         {
-            if (query.Offset.HasValue
-                && query.Offset.Value >= 0
+            var offset = query.Offset.DetermineOffset(settings.OverrideOffset);
+            if (offset.HasValue
+                && offset.Value >= 0
                 && !countOnly)
             {
                 var orderByBuilder = new StringBuilder();
@@ -325,7 +330,8 @@ namespace QueryFramework.SqlServer.Extensions
                                                                    IQueryFieldProvider fieldProvider,
                                                                    bool countOnly)
         {
-            if (query.Offset.HasValue && query.Offset.Value >= 0)
+            var offset = query.Offset.DetermineOffset(settings.OverrideOffset);
+            if (offset.HasValue && offset.Value >= 0)
             {
                 //do not use order by (this will be taken care of by the row_number function)
                 return instance;
@@ -391,19 +397,21 @@ namespace QueryFramework.SqlServer.Extensions
                                                                   IQueryProcessorSettings settings,
                                                                   bool countOnly)
         {
-            if (query.Offset.HasValue && query.Offset.Value > 0 && !countOnly)
+            var offset = query.Offset.DetermineOffset(settings.OverrideOffset);
+            if (offset.HasValue && offset.Value > 0 && !countOnly)
             {
-                if (query.Limit.DetermineLimit(settings.OverrideLimit) > 0)
+                var limit = query.Limit.DetermineLimit(settings.OverrideLimit);
+                if (limit > 0)
                 {
-                    return instance.Append($") sq WHERE sq.sq_row_number BETWEEN {query.Offset.Value + 1} and {query.Offset.Value + query.Limit.DetermineLimit(settings.OverrideLimit)};");
+                    return instance.Append($") sq WHERE sq.sq_row_number BETWEEN {offset.Value + 1} and {offset.Value + limit};");
                 }
-                else if (query.Limit.DetermineLimit(settings.OverrideLimit) == 0)
+                else if (limit == 0)
                 {
                     return instance.Append($") sq WHERE sq.sq_row_number = 0;");
                 }
                 else
                 {
-                    return instance.Append($") sq WHERE sq.sq_row_number > {query.Offset.Value};");
+                    return instance.Append($") sq WHERE sq.sq_row_number > {offset.Value};");
                 }
             }
 

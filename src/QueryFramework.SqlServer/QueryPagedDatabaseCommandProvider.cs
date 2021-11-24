@@ -52,7 +52,7 @@ namespace QueryFramework.SqlServer
                                                int limit,
                                                bool countOnly)
         {
-            var settings = Settings.WithPageInfo(limit, offset);
+            var settings = Settings.WithPageInfo(offset, limit);
             return new DatabaseCommandBuilder()
                 .AppendPagingOuterQuery(source, settings, FieldProvider, countOnly)
                 .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)
