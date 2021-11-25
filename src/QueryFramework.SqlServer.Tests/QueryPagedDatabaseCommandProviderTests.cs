@@ -7,6 +7,7 @@ using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Queries;
 using QueryFramework.SqlServer.Abstractions;
@@ -15,31 +16,17 @@ using Xunit;
 namespace QueryFramework.SqlServer.Tests
 {
     [ExcludeFromCodeCoverage]
-    public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider<SingleEntityQuery>>
+    public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider<ISingleEntityQuery>>
     {
-        [Fact]
-        public void Create_Without_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
-        {
-            // Arrange
-            var mock = Fixture.Freeze<Mock<IQueryProcessorSettings>>();
-            mock.SetupGet(x => x.TableName).Returns("MyTable");
-
-            // Act
-            var actual = Sut.Create(DatabaseOperation.Select);
-
-            // Assert
-            actual.CommandText.Should().Be("SELECT * FROM MyTable");
-        }
-
         [Theory]
         [InlineData(DatabaseOperation.Delete)]
         [InlineData(DatabaseOperation.Insert)]
         [InlineData(DatabaseOperation.Unspecified)]
         [InlineData(DatabaseOperation.Update)]
-        public void Create_Without_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
+        public void Creat_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
         {
             // Act
-            Sut.Invoking(x => x.Create(operation))
+            Sut.Invoking(x => x.Create(new Mock<ISingleEntityQuery>().Object, operation))
                .Should().Throw<ArgumentOutOfRangeException>()
                .And.ParamName.Should().Be("operation");
         }
@@ -67,24 +54,6 @@ namespace QueryFramework.SqlServer.Tests
                 parameters.First().Key.Should().Be("p0");
                 parameters.First().Value.Should().Be("Value");
             }
-        }
-
-        [Fact]
-        public void CreatePaged_Without_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
-        {
-            // Arrange
-            const int limit = 10;
-            const int offset = 20;
-            var settingsMock = Fixture.Freeze<Mock<IQueryProcessorSettings>>();
-            settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-            settingsMock.SetupGet(x => x.OverrideLimit).Returns(limit);
-            settingsMock.SetupGet(x => x.OverrideOffset).Returns(offset);
-
-            // Act
-            var actual = Sut.CreatePaged(DatabaseOperation.Select, offset, limit);
-
-            // Assert
-            actual.DataCommand.CommandText.Should().Be("SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) as sq_row_number FROM MyTable) sq WHERE sq.sq_row_number BETWEEN 21 and 30;");
         }
 
         [Fact]

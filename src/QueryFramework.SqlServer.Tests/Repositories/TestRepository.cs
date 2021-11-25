@@ -11,8 +11,9 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         public TestRepository(IDatabaseCommandProcessor<TestEntity> databaseCommandProcessor,
                               IDatabaseEntityRetriever<TestEntity> entityRetriever,
                               IPagedDatabaseCommandProvider<TestEntityIdentity> identityDatabaseCommandProvider,
+                              IPagedDatabaseCommandProvider genericCommandProvider,
                               IDatabaseCommandProvider<TestEntity> entityDatabaseCommandProvider)
-            : base(databaseCommandProcessor, entityRetriever, identityDatabaseCommandProvider, entityDatabaseCommandProvider)
+            : base(databaseCommandProcessor, entityRetriever, identityDatabaseCommandProvider, genericCommandProvider, entityDatabaseCommandProvider)
         {
         }
 
