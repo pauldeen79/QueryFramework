@@ -7,7 +7,7 @@ using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
-using QueryFramework.Core.Extensions;
+using QueryFramework.QueryParsers.Extensions;
 
 namespace QueryFramework.QueryParsers
 {

@@ -14,8 +14,13 @@ namespace QueryFramework.Core.Extensions
         /// <param name="instance">The instance.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="expression">The expression.</param>
-        public static IQueryExpression With(this IQueryExpression instance, string fieldName = "", string? expression = null)
-            => new QueryExpression(fieldName == string.Empty ? instance.FieldName : fieldName, expression ?? GetRawExpression(instance));
+        public static IQueryExpression With(this IQueryExpression instance,
+                                            string fieldName = "",
+                                            string? expression = null)
+            => new QueryExpression(fieldName == string.Empty
+                                        ? instance.FieldName
+                                        : fieldName,
+                                   expression ?? GetRawExpression(instance));
 
         public static string? GetRawExpression(this IQueryExpression instance)
             => instance.Expression == instance.FieldName
@@ -26,13 +31,8 @@ namespace QueryFramework.Core.Extensions
             => s_single_word_function_regex.IsMatch(instance.GetRawExpression());
 
         public static IQueryExpressionBuilder ToBuilder(this IQueryExpression instance)
-        {
-            if (instance is ICustomQueryExpression customQueryExpression)
-            {
-                return customQueryExpression.CreateBuilder();
-            }
-
-            return new QueryExpressionBuilder(instance);
-        }
+            => instance is ICustomQueryExpression customQueryExpression
+                ? customQueryExpression.CreateBuilder()
+                : new QueryExpressionBuilder(instance);
     }
 }

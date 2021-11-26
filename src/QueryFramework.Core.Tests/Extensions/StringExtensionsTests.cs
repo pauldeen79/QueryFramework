@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Core.Extensions;
@@ -74,22 +73,6 @@ namespace QueryFramework.Core.Tests.Extensions
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesStartWith()
             => QueryConditionTest(x => x.DoesStartWith(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.StartsWith);
-
-        [Fact]
-        public void Can_SafeSplit_StringValue()
-        {
-            // Arrange
-            var input = "a,'b,c',d";
-
-            // Act
-            var actual = input.SafeSplit(',', '\'', '\'');
-
-            // Assert
-            actual.Should().HaveCount(3);
-            actual.ElementAt(0).Should().Be("a");
-            actual.ElementAt(1).Should().Be("b,c");
-            actual.ElementAt(2).Should().Be("d");
-        }
 
         private static void QueryConditionTest(Func<string, IQueryCondition> func, QueryOperator expectedOperator)
         {
