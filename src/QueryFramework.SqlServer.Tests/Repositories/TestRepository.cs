@@ -10,7 +10,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     {
         public TestRepository(IDatabaseCommandProcessor<TestEntity> commandProcessor,
                               IDatabaseEntityRetriever<TestEntity> entityRetriever,
-                              IPagedDatabaseCommandProvider<TestEntityIdentity> identitySelectCommandProvider,
+                              IDatabaseCommandProvider<TestEntityIdentity> identitySelectCommandProvider,
                               IPagedDatabaseCommandProvider pagedEntitySelectCommandProvider,
                               IDatabaseCommandProvider entitySelectCommandProvider,
                               IDatabaseCommandProvider<TestEntity> entityCommandProvider)
