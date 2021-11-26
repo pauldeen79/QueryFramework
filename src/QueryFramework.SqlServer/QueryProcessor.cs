@@ -11,9 +11,9 @@ namespace QueryFramework.SqlServer
         where TQuery : ISingleEntityQuery
         where TResult : class
     {
-        protected IDatabaseEntityRetriever<TResult> Retriever { get; }
-        protected IQueryProcessorSettings Settings { get; }
-        protected IPagedDatabaseCommandProvider<TQuery> DatabaseCommandProvider { get; }
+        private IDatabaseEntityRetriever<TResult> Retriever { get; }
+        private IQueryProcessorSettings Settings { get; }
+        private IPagedDatabaseCommandProvider<TQuery> DatabaseCommandProvider { get; }
 
         public QueryProcessor(IDatabaseEntityRetriever<TResult> retriever,
                               IQueryProcessorSettings settings,
@@ -36,13 +36,10 @@ namespace QueryFramework.SqlServer
         private IPagedDatabaseCommand GenerateCommand(TQuery query, int limit)
             => DatabaseCommandProvider.CreatePaged
             (
-                ProcessQuery(query.Validate(Settings.ValidateFieldNames)),
+                query.Validate(Settings.ValidateFieldNames),
                 DatabaseOperation.Select,
                 query.Offset.GetValueOrDefault(),
                 limit
             );
-
-        protected virtual TQuery ProcessQuery(TQuery query)
-            => query.ProcessDynamicQuery();
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CrossCutting.Data.Abstractions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
 
 namespace QueryFramework.InMemory
@@ -29,22 +28,18 @@ namespace QueryFramework.InMemory
         }
 
         public TResult FindOne(TQuery query)
-        {
-            var processedQuery = query.ProcessDynamicQuery();
-            return SourceDataDelegate.Invoke().FirstOrDefault(item => ItemIsValid(item, processedQuery.Conditions));
-        }
+            => SourceDataDelegate.Invoke().FirstOrDefault(item => ItemIsValid(item, query.Conditions));
 
         public IReadOnlyCollection<TResult> FindMany(TQuery query)
-        {
-            var processedQuery = query.ProcessDynamicQuery();
-            return SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, processedQuery.Conditions)).ToList();
-        }
+            => SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)).ToList();
 
         public IPagedResult<TResult> FindPaged(TQuery query)
         {
-            var processedQuery = query.ProcessDynamicQuery();
-            var filteredRecords = new List<TResult>(SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, processedQuery.Conditions)));
-            return new PagedResult<TResult>(GetPagedData(processedQuery, filteredRecords), filteredRecords.Count, processedQuery.Offset.GetValueOrDefault(), processedQuery.Limit.GetValueOrDefault());
+            var filteredRecords = new List<TResult>(SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)));
+            return new PagedResult<TResult>(GetPagedData(query, filteredRecords),
+                                            filteredRecords.Count,
+                                            query.Offset.GetValueOrDefault(),
+                                            query.Limit.GetValueOrDefault());
         }
 
         private IEnumerable<TResult> GetPagedData(TQuery query, List<TResult> filteredRecords)
