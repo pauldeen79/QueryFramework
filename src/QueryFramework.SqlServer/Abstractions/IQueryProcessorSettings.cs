@@ -2,10 +2,8 @@
 
 namespace QueryFramework.SqlServer.Abstractions
 {
-    public interface IQueryProcessorSettings : IDatabaseEntityRetrieverSettings
+    public interface IQueryProcessorSettings : IPagedDatabaseEntityRetrieverSettings
     {
-        int? OverrideLimit { get; }
-        int? OverrideOffset { get; }
         bool ValidateFieldNames { get; }
         int InitialParameterNumber { get; }
    }

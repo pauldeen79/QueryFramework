@@ -1,7 +1,7 @@
 ﻿using System;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Core.Builders;
 using CrossCutting.Data.Core.Commands;
+using CrossCutting.Data.Sql.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
@@ -32,36 +32,29 @@ namespace QueryFramework.SqlServer
 
             var fieldSelectionQuery = source as IFieldSelectionQuery;
             var groupingQuery = source as IGroupingQuery;
-            return new PagedDatabaseCommand(CreateCommand(source, fieldSelectionQuery, groupingQuery, offset, pageSize, false),
-                                            CreateCommand(source, fieldSelectionQuery, groupingQuery, offset, pageSize, true),
+            var parameterizedQuery = source as IParameterizedQuery;
+            return new PagedDatabaseCommand(CreateCommand(source, fieldSelectionQuery, groupingQuery, parameterizedQuery, false),
+                                            CreateCommand(source, fieldSelectionQuery, groupingQuery, parameterizedQuery, true),
                                             offset,
                                             pageSize);
-            
         }
 
         private IDatabaseCommand CreateCommand(TQuery source,
                                                IFieldSelectionQuery? fieldSelectionQuery,
                                                IGroupingQuery? groupingQuery,
-                                               int offset,
-                                               int limit,
+                                               IParameterizedQuery? parameterizedQuery,
                                                bool countOnly)
-        {
-            var settings = Settings.WithPageInfo(offset, limit);
-            return new DatabaseCommandBuilder()
-                .AppendPagingOuterQuery(source, settings, FieldProvider, countOnly)
-                .AppendSelectAndDistinctClause(fieldSelectionQuery, countOnly)
-                .AppendTopClause(source, settings, countOnly)
-                .AppendCountOrSelectFields(source, settings, FieldProvider, countOnly)
-                .AppendPagingPrefix(source, settings, FieldProvider, countOnly)
-                .AppendFromClause()
-                .AppendTableName(source, settings)
-                .AppendWhereClause(source, settings, FieldProvider, out int paramCounter)
-                .AppendGroupByClause(groupingQuery, settings, FieldProvider)
-                .AppendHavingClause(groupingQuery, settings, FieldProvider, ref paramCounter)
-                .AppendOrderByClause(source, settings, FieldProvider, countOnly)
-                .AppendPagingSuffix(source, settings, countOnly)
-                .AddQueryParameters(source)
-                .Build();
-        }
+            => new PagedSelectCommandBuilder()
+                .Select(source, Settings, FieldProvider, fieldSelectionQuery)
+                .Top(source, Settings)
+                .Offset(source)
+                .Distinct(fieldSelectionQuery)
+                .From(source, Settings)
+                .Where(source, Settings, FieldProvider, out int paramCounter)
+                .GroupBy(groupingQuery, Settings, FieldProvider)
+                .Having(groupingQuery, Settings, FieldProvider, ref paramCounter)
+                .OrderBy(source, Settings, FieldProvider, countOnly)
+                .WithParameters(parameterizedQuery)
+                .Build(countOnly);
     }
 }

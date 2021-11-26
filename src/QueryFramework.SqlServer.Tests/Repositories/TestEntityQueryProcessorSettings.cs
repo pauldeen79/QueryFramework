@@ -27,8 +27,7 @@ namespace QueryFramework.SqlServer.Tests.Repositories
                 return builder.ToString();
             }
         }
-        public int? OverrideLimit => null;
-        public int? OverrideOffset => null;
+        public int? OverridePageSize => null;
         public bool ValidateFieldNames => true;
         public int InitialParameterNumber => 0;
     }

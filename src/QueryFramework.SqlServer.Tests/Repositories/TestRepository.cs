@@ -8,12 +8,13 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     [ExcludeFromCodeCoverage]
     public class TestRepository : Repository<TestEntity, TestEntityIdentity>, ITestRepository
     {
-        public TestRepository(IDatabaseCommandProcessor<TestEntity> databaseCommandProcessor,
+        public TestRepository(IDatabaseCommandProcessor<TestEntity> commandProcessor,
                               IDatabaseEntityRetriever<TestEntity> entityRetriever,
-                              IPagedDatabaseCommandProvider<TestEntityIdentity> identityDatabaseCommandProvider,
-                              IPagedDatabaseCommandProvider genericCommandProvider,
-                              IDatabaseCommandProvider<TestEntity> entityDatabaseCommandProvider)
-            : base(databaseCommandProcessor, entityRetriever, identityDatabaseCommandProvider, genericCommandProvider, entityDatabaseCommandProvider)
+                              IPagedDatabaseCommandProvider<TestEntityIdentity> identitySelectCommandProvider,
+                              IPagedDatabaseCommandProvider pagedEntitySelectCommandProvider,
+                              IDatabaseCommandProvider entitySelectCommandProvider,
+                              IDatabaseCommandProvider<TestEntity> entityCommandProvider)
+            : base(commandProcessor, entityRetriever, identitySelectCommandProvider, pagedEntitySelectCommandProvider, entitySelectCommandProvider, entityCommandProvider)
         {
         }
 

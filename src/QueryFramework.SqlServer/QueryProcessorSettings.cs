@@ -8,8 +8,7 @@ namespace QueryFramework.SqlServer
         public string Fields { get; }
         public string DefaultOrderBy { get; }
         public string DefaultWhere { get; }
-        public int? OverrideLimit { get; }
-        public int? OverrideOffset { get; }
+        public int? OverridePageSize { get; }
         public bool ValidateFieldNames { get; }
         public int InitialParameterNumber { get; }
 
@@ -17,16 +16,14 @@ namespace QueryFramework.SqlServer
                                       string fields = "",
                                       string defaultOrderBy = "",
                                       string defaultWhere = "",
-                                      int? overrideLimit = null,
-                                      int? overrideOffset = null,
+                                      int? overridePageSize = null,
                                       bool validateFieldNames = true)
         {
             TableName = tableName;
             Fields = fields;
             DefaultOrderBy = defaultOrderBy;
             DefaultWhere = defaultWhere;
-            OverrideLimit = overrideLimit;
-            OverrideOffset = overrideOffset;
+            OverridePageSize = overridePageSize;
             ValidateFieldNames = validateFieldNames;
             InitialParameterNumber = 0;
         }
