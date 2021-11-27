@@ -129,7 +129,7 @@ namespace QueryFramework.SqlServer.Extensions
                 return instance;
             }
 
-            paramCounter = settings.InitialParameterNumber; //When parameters length = 2, this means 0 and 1. Then we have to start with 2.
+            paramCounter = 0;
 
             if (!string.IsNullOrEmpty(settings.DefaultWhere))
             {

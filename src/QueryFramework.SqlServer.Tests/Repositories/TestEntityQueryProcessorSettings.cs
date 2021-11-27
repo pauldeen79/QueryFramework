@@ -29,6 +29,5 @@ namespace QueryFramework.SqlServer.Tests.Repositories
         }
         public int? OverridePageSize => null;
         public bool ValidateFieldNames => true;
-        public int InitialParameterNumber => 0;
     }
 }

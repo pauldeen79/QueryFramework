@@ -10,7 +10,6 @@ namespace QueryFramework.SqlServer
         public string DefaultWhere { get; }
         public int? OverridePageSize { get; }
         public bool ValidateFieldNames { get; }
-        public int InitialParameterNumber { get; }
 
         public QueryProcessorSettings(string tableName = "",
                                       string fields = "",
@@ -25,7 +24,6 @@ namespace QueryFramework.SqlServer
             DefaultWhere = defaultWhere;
             OverridePageSize = overridePageSize;
             ValidateFieldNames = validateFieldNames;
-            InitialParameterNumber = 0;
         }
     }
 }
