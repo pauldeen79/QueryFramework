@@ -46,7 +46,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Select(query, settingsMock.Object, fieldProviderMock.Object, query);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT Field1, Field3 FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field3 FROM MyTable");
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Select(query, settingsMock.Object, fieldProviderMock.Object, query);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Select(query, settingsMock.Object, fieldProviderMock.Object, query);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Select(query, settingsMock.Object, fieldProviderMock.Object, query);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Select(query, settingsMock.Object, fieldProviderMock.Object, query);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Where(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Where(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
         }
 
         [Fact]
@@ -224,7 +224,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Where(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0");
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Where(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0 AND Field2 IS NOT NULL");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0 AND Field2 IS NOT NULL");
         }
 
         [Fact]
@@ -263,7 +263,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Where(query, settingsMock.Object, fieldProviderMock.Object, out _);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0 AND Field2 IS NOT NULL");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0 AND Field2 IS NOT NULL");
         }
 
         [Fact]
@@ -277,27 +277,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
-        }
-
-        [Fact]
-        public void OrderBy_Does_Not_Append_Anything_When_CountOnly_Is_Set_To_True()
-        {
-            // Arrange
-            var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
-            settingsMock.SetupGet(x => x.DefaultOrderBy).Returns("Ignored");
-            var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            Builder.From("MyTable");
-
-            // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, true);
-
-            // Assert
-            actual.Build(true).CommandText.Should().Be("SELECT COUNT(*) FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -310,10 +293,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -328,10 +311,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
         }
 
         [Fact]
@@ -346,10 +329,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field1 ASC, Field2 DESC");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field1 ASC, Field2 DESC");
         }
 
         [Fact]
@@ -363,10 +346,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
         }
 
         [Fact]
@@ -382,10 +365,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
         }
 
         [Fact]
@@ -402,10 +385,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false);
+            var actual = Builder.OrderBy(query, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable ORDER BY FieldA ASC");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY FieldA ASC");
         }
 
         [Fact]
@@ -418,7 +401,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act & Assert
-            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false))
+            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains unknown field [Field]");
         }
@@ -436,7 +419,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false))
+            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
@@ -454,7 +437,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(false);
 
             // Act & Assert
-            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object, false))
+            Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
         }
@@ -472,7 +455,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.GroupBy(null, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -488,7 +471,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -508,7 +491,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field");
         }
 
         [Fact]
@@ -528,7 +511,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field1, Field2");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field1, Field2");
         }
 
         [Fact]
@@ -550,7 +533,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable GROUP BY FieldA");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY FieldA");
         }
 
         [Fact]
@@ -614,7 +597,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Having(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable HAVING Field = @p0");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable HAVING Field = @p0");
         }
 
         [Fact]
@@ -639,7 +622,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Having(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable HAVING Field1 = @p0 AND Field2 = @p1");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable HAVING Field1 = @p0 AND Field2 = @p1");
         }
 
         [Fact]
@@ -655,7 +638,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Having(null, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Fact]
@@ -672,7 +655,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var actual = Builder.Having(queryMock.Object, settingsMock.Object, fieldProviderMock.Object, ref paramCounter);
 
             // Assert
-            actual.Build(false).CommandText.Should().Be("SELECT * FROM MyTable");
+            actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
         }
 
         [Theory]
@@ -703,11 +686,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             // Assert
             if (shouldAddCombination)
             {
-                Builder.Build(false).CommandText.Should().Be($"SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field > @p{paramCounter}");
+                Builder.Build().DataCommand.CommandText.Should().Be($"SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field > @p{paramCounter}");
             }
             else
             {
-                Builder.Build(false).CommandText.Should().Be($"SELECT * FROM MyTable WHERE Field > @p{paramCounter}");
+                Builder.Build().DataCommand.CommandText.Should().Be($"SELECT * FROM MyTable WHERE Field > @p{paramCounter}");
             }
             actual.Should().Be(paramCounter + 1);
         }
@@ -730,7 +713,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                                          Builder.Where);
 
             // Assert
-            Builder.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE (Field > @p0)");
+            Builder.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE (Field > @p0)");
         }
 
         [Fact]
@@ -753,7 +736,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                                          Builder.Where);
 
             // Assert
-            Builder.Build(false).CommandText.Should().Be("SELECT * FROM MyTable WHERE CustomField > @p0");
+            Builder.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE CustomField > @p0");
         }
 
         [Fact]
@@ -821,7 +804,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                                          Builder.Where);
 
             // Assert
-            Builder.Build(false).CommandText.Should().Be($"SELECT * FROM MyTable WHERE {expectedCommandText}");
+            Builder.Build().DataCommand.CommandText.Should().Be($"SELECT * FROM MyTable WHERE {expectedCommandText}");
         }
 
         [Theory]
@@ -852,7 +835,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                                          settingsMock.Object,
                                          fieldProviderMock.Object,
                                          Builder.Where);
-            var actual = Builder.Build(false);
+            var actual = Builder.Build().DataCommand;
 
             // Assert
             actual.CommandText.Should().Be($"SELECT * FROM MyTable WHERE {expectedCommandText}");

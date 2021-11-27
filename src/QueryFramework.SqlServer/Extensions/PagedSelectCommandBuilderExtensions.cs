@@ -223,17 +223,11 @@ namespace QueryFramework.SqlServer.Extensions
         internal static PagedSelectCommandBuilder OrderBy(this PagedSelectCommandBuilder instance,
                                                           ISingleEntityQuery query,
                                                           IQueryProcessorSettings settings,
-                                                          IQueryFieldProvider fieldProvider,
-                                                          bool countOnly)
+                                                          IQueryFieldProvider fieldProvider)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0)
             {
                 //do not use order by (this will be taken care of by the row_number function)
-                return instance;
-            }
-            else if (countOnly)
-            {
-                //do not use order by, only count the number of records
                 return instance;
             }
             else if (query.OrderByFields?.Any() == true

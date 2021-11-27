@@ -1,6 +1,5 @@
 ﻿using System;
 using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Core.Commands;
 using CrossCutting.Data.Sql.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.SqlServer.Abstractions;
@@ -33,18 +32,7 @@ namespace QueryFramework.SqlServer
             var fieldSelectionQuery = source as IFieldSelectionQuery;
             var groupingQuery = source as IGroupingQuery;
             var parameterizedQuery = source as IParameterizedQuery;
-            return new PagedDatabaseCommand(CreateCommand(source, fieldSelectionQuery, groupingQuery, parameterizedQuery, false),
-                                            CreateCommand(source, fieldSelectionQuery, groupingQuery, parameterizedQuery, true),
-                                            offset,
-                                            pageSize);
-        }
-
-        private IDatabaseCommand CreateCommand(TQuery source,
-                                               IFieldSelectionQuery? fieldSelectionQuery,
-                                               IGroupingQuery? groupingQuery,
-                                               IParameterizedQuery? parameterizedQuery,
-                                               bool countOnly)
-            => new PagedSelectCommandBuilder()
+            return new PagedSelectCommandBuilder()
                 .Select(source, Settings, FieldProvider, fieldSelectionQuery)
                 .Top(source, Settings)
                 .Offset(source)
@@ -53,8 +41,9 @@ namespace QueryFramework.SqlServer
                 .Where(source, Settings, FieldProvider, out int paramCounter)
                 .GroupBy(groupingQuery, Settings, FieldProvider)
                 .Having(groupingQuery, Settings, FieldProvider, ref paramCounter)
-                .OrderBy(source, Settings, FieldProvider, countOnly)
+                .OrderBy(source, Settings, FieldProvider)
                 .WithParameters(parameterizedQuery)
-                .Build(countOnly);
+                .Build();
+        }
     }
 }
