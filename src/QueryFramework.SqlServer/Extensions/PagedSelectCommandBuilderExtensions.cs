@@ -92,7 +92,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder Distinct(this PagedSelectCommandBuilder instance,
                                                            IFieldSelectionQuery? fieldSelectionQuery)
-            => instance.Distinct(fieldSelectionQuery?.Distinct == true);
+            => instance.DistinctValues(fieldSelectionQuery?.Distinct == true);
 
         internal static PagedSelectCommandBuilder Top(this PagedSelectCommandBuilder instance,
                                                       ISingleEntityQuery query,
@@ -100,15 +100,15 @@ namespace QueryFramework.SqlServer.Extensions
         {
             var limit = query.Limit.IfNotGreaterThan(settings.OverridePageSize);
 
-            return limit > 0 ?
-                instance.Top(limit)
+            return limit > 0 
+                ? instance.WithTop(limit)
                 : instance;
         }
 
         internal static PagedSelectCommandBuilder Offset(this PagedSelectCommandBuilder instance,
                                                          ISingleEntityQuery query)
             => query.Offset.GetValueOrDefault() > 0
-                ? instance.Offset(query.Offset.GetValueOrDefault())
+                ? instance.Skip(query.Offset.GetValueOrDefault())
                 : instance;
 
         internal static PagedSelectCommandBuilder From(this PagedSelectCommandBuilder instance,
