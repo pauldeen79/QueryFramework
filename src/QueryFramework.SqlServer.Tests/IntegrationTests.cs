@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Data.Abstractions;
+using CrossCutting.Data.Core;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
@@ -19,11 +20,10 @@ namespace QueryFramework.SqlServer.Tests
         public IntegrationTests()
         {
             RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-            var settings = new QueryProcessorSettings("MyTable");
+            var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
             Sut = new QueryProcessor<TestQuery, TestEntity>
             (
                 RetrieverMock.Object,
-                settings,
                 new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings)
             );
         }

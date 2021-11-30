@@ -15,7 +15,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
     public class SingleEntityQueryExtensionsTests
     {
         [Fact]
-        public void Validate_Validates_Instance_When_ValidateFieldNames_Is_True()
+        public void Validate_Validates_Instance()
         {
             // Arrange
             var sut = new SingleEntityQueryMock
@@ -24,23 +24,9 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Queries
             };
 
             // Act
-            sut.Invoking(x => x.Validate(true))
+            sut.Invoking(x => x.Validate())
                .Should().Throw<ValidationException>()
                .And.Message.Should().Be("kaboom");
-        }
-
-        [Fact]
-        public void Validate_Does_Not_Validate_Instance_When_ValidateFieldNames_Is_False()
-        {
-            // Arrange
-            var sut = new SingleEntityQueryMock
-            {
-                ValidationResultValue = new[] { new ValidationResult("kaboom") }
-            };
-
-            // Act
-            sut.Invoking(x => x.Validate(false))
-               .Should().NotThrow<ValidationException>();
         }
 
         [Fact]

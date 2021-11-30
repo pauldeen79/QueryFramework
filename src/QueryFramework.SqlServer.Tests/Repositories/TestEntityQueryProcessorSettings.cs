@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using CrossCutting.Data.Abstractions;
 using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class TestEntityQueryProcessorSettings : IQueryProcessorSettings
+    public class TestEntityQueryProcessorSettings : IPagedDatabaseEntityRetrieverSettings
     {
         public string TableName => "TestEntity";
         public string Fields => "Field1, Field2, Field3";
@@ -28,6 +29,5 @@ namespace QueryFramework.SqlServer.Tests.Repositories
             }
         }
         public int? OverridePageSize => null;
-        public bool ValidateFieldNames => true;
     }
 }

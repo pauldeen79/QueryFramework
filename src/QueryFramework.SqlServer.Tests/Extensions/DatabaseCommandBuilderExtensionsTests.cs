@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CrossCutting.Common;
+using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Builders;
 using FluentAssertions;
 using Moq;
@@ -34,12 +35,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                             .Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -54,7 +54,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -74,7 +74,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.Fields)
                                       .Returns(string.Empty);
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
@@ -96,12 +96,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                             .Returns<IEnumerable<string>>(input => input);
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(input => input);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -116,7 +115,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -138,9 +137,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
-            settingsMock.SetupGet(x => x.ValidateFieldNames)
-                        .Returns(true);
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
                              .Returns<IEnumerable<string>>(input => input);
@@ -160,12 +157,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>()))
-                             .Returns<IEnumerable<string>>(input => input);
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(false);
+            fieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(input => input);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(false);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
             Builder.Invoking(x => x.Select(query, settingsMock.Object, fieldProviderMock.Object, query))
@@ -178,7 +174,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             Builder.From("MyTable");
 
@@ -194,10 +190,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -212,12 +208,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.DefaultWhere)
                         .Returns("Field IS NOT NULL");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -234,10 +230,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value"))
                                                         .And("Field2".IsNotNull())
                                                         .Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -252,11 +248,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).And("Field2".IsNotNull()).Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.DefaultWhere).Returns("Field IS NOT NULL");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -271,7 +267,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Limit(10).Offset(20).Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.DefaultOrderBy).Returns("Ignored");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             Builder.From("MyTable");
@@ -288,7 +284,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             Builder.From("MyTable");
 
@@ -304,10 +300,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -322,10 +318,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field1").ThenByDescending("Field2").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -340,7 +336,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.DefaultOrderBy).Returns("Field ASC");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             Builder.From("MyTable");
@@ -357,11 +353,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.DefaultOrderBy).Returns("Ignored");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -376,7 +372,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x + "A");
@@ -396,8 +392,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
-            settingsMock.SetupGet(x => x.ValidateFieldNames).Returns(true);
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
             // Act & Assert
@@ -411,12 +406,12 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns(default(string));
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(false);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(false);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act & Assert
             Builder.Invoking(x => x.OrderBy(query, settingsMock.Object, fieldProviderMock.Object))
@@ -429,7 +424,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x);
@@ -446,7 +441,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void GroupBy_Does_Not_Append_Anything_When_GroupByFields_Is_Null()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             Builder.From("MyTable");
@@ -463,7 +458,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             Builder.From("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
 
@@ -481,11 +476,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             Builder.From("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
@@ -501,11 +496,11 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             Builder.From("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
             var actual = Builder.GroupBy(queryMock.Object, settingsMock.Object, fieldProviderMock.Object);
@@ -521,7 +516,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             Builder.From("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -543,8 +538,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
-            settingsMock.SetupGet(x => x.ValidateFieldNames).Returns(true);
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -565,7 +559,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.GroupByFields)
                      .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
@@ -586,10 +580,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             var queryMock = new Mock<IGroupingQuery>();
             queryMock.SetupGet(x => x.HavingFields)
                      .Returns(new ValueCollection<IQueryCondition>(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             int paramCounter = 0;
             Builder.From("MyTable");
 
@@ -611,10 +605,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                          new QueryCondition("Field1", QueryOperator.Equal, "value1"),
                          new QueryCondition("Field2", QueryOperator.Equal, "value2")
                      }));
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             int paramCounter = 0;
             Builder.From("MyTable");
 
@@ -629,7 +623,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Having_Does_Not_Append_Anything_When_HavingFields_Is_Null()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             int paramCounter = 0;
             Builder.From("MyTable");
@@ -646,7 +640,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             int paramCounter = 0;
             Builder.From("MyTable");
@@ -666,10 +660,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Adds_Combination_Conditionally_But_Always_Increases_ParamCountner_When_ParamCounter_Is(int paramCounter, bool shouldAddCombination)
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
             if (shouldAddCombination)
             {
@@ -699,10 +693,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Adds_Brackets_When_Necessary()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -720,7 +714,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Gets_CustomFieldName_When_Possible()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x == "Field" ? "CustomField" : x);
@@ -740,11 +734,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void AppendQueryCondition_Throws_On_Invalid_CustomFieldName_When_ValidateFieldNames_Is_Set_To_True()
+        public void AppendQueryCondition_Throws_On_Invalid_CustomFieldName()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
-            settingsMock.SetupGet(x => x.ValidateFieldNames).Returns(true);
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x == "Field" ? null : x);
@@ -766,10 +759,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Throws_On_Invalid_Expression_When_ExpressionValidationDelegate_Returns_False()
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(false);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(false);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -790,10 +783,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Fills_CommandText_Correctly_For_QueryOperator_Without_Value(QueryOperator queryOperator, string expectedCommandText)
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
@@ -823,10 +816,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void AppendQueryCondition_Fills_CommandText_And_Parameters_Correctly_For_QueryOperator_With_Value(QueryOperator queryOperator, string expectedCommandText)
         {
             // Arrange
-            var settingsMock = new Mock<IQueryProcessorSettings>();
+            var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             var fieldProviderMock = new Mock<IQueryFieldProvider>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(true);
+            fieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
