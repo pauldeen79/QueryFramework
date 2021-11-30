@@ -11,9 +11,9 @@ namespace QueryFramework.SqlServer
         where TQuery : ISingleEntityQuery
     {
         private IQueryFieldProvider FieldProvider { get; }
-        private IQueryProcessorSettings Settings { get; }
+        private IPagedDatabaseEntityRetrieverSettings Settings { get; }
 
-        public QueryPagedDatabaseCommandProvider(IQueryFieldProvider fieldProvider, IQueryProcessorSettings settings)
+        public QueryPagedDatabaseCommandProvider(IQueryFieldProvider fieldProvider, IPagedDatabaseEntityRetrieverSettings settings)
         {
             FieldProvider = fieldProvider;
             Settings = settings;

@@ -35,10 +35,11 @@ namespace QueryFramework.SqlServer.Tests
         public void Create_With_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
         {
             // Arrange
-            var settingsMock = Fixture.Freeze<Mock<IQueryProcessorSettings>>();
+            var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.Is<IQueryExpression>(x => x.FieldName == "Field"))).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
             var actual = Sut.Create(new SingleEntityQuery(null, null, new[] { new QueryCondition("Field", QueryOperator.Equal, "Value") }, Enumerable.Empty<IQuerySortOrder>()), DatabaseOperation.Select);
@@ -61,11 +62,12 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             const int pageSize = 10;
-            var settingsMock = Fixture.Freeze<Mock<IQueryProcessorSettings>>();
+            var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             settingsMock.SetupGet(x => x.OverridePageSize).Returns(pageSize);
             var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
             fieldProviderMock.Setup(x => x.ValidateExpression(It.Is<IQueryExpression>(x => x.FieldName == "Field"))).Returns(true);
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
             var actual = Sut.CreatePaged(new SingleEntityQuery(null, null, new[] { new QueryCondition("Field", QueryOperator.Equal, "Value") }, Enumerable.Empty<IQuerySortOrder>()), DatabaseOperation.Select, 0, pageSize);

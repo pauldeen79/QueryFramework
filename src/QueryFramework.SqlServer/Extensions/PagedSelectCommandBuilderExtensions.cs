@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CrossCutting.Common.Extensions;
+using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Builders;
 using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
@@ -18,15 +19,15 @@ namespace QueryFramework.SqlServer.Extensions
     {
         internal static PagedSelectCommandBuilder Select(this PagedSelectCommandBuilder instance,
                                                          ISingleEntityQuery query,
-                                                         IQueryProcessorSettings settings,
+                                                         IPagedDatabaseEntityRetrieverSettings settings,
                                                          IQueryFieldProvider fieldProvider,
                                                          IFieldSelectionQuery? fieldSelectionQuery)
             => fieldSelectionQuery?.GetAllFields != false
                 ? instance.AppendSelectFieldsForAllFields(settings, fieldProvider)
-                : instance.AppendSelectFieldsForSpecifiedFields(settings, fieldSelectionQuery, fieldProvider);
+                : instance.AppendSelectFieldsForSpecifiedFields(fieldSelectionQuery, fieldProvider);
 
         private static PagedSelectCommandBuilder AppendSelectFieldsForAllFields(this PagedSelectCommandBuilder instance,
-                                                                                IQueryProcessorSettings settings,
+                                                                                IPagedDatabaseEntityRetrieverSettings settings,
                                                                                 IQueryFieldProvider fieldProvider)
         {
             var allFields = fieldProvider.GetAllFields();
@@ -53,7 +54,6 @@ namespace QueryFramework.SqlServer.Extensions
         }
 
         private static PagedSelectCommandBuilder AppendSelectFieldsForSpecifiedFields(this PagedSelectCommandBuilder instance,
-                                                                                      IQueryProcessorSettings settings,
                                                                                       IFieldSelectionQuery fieldSelectionQuery,
                                                                                       IQueryFieldProvider fieldProvider)
         {
@@ -65,18 +65,14 @@ namespace QueryFramework.SqlServer.Extensions
                     instance.Select(", ");
                 }
 
-                var correctedExpression = expression;
                 var correctedFieldName = fieldProvider.GetDatabaseFieldName(expression.FieldName);
-                if (correctedFieldName == null && settings.ValidateFieldNames)
+                if (correctedFieldName == null)
                 {
                     throw new InvalidOperationException($"Query fields contains unknown field in expression [{expression}]");
                 }
 
-                if (correctedFieldName != null)
-                {
-                    //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
-                    correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
-                }
+                //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
+                var correctedExpression = new QueryExpression(correctedFieldName, expression.GetRawExpression());
 
                 if (!fieldProvider.ValidateExpression(correctedExpression))
                 {
@@ -96,7 +92,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder Top(this PagedSelectCommandBuilder instance,
                                                       ISingleEntityQuery query,
-                                                      IQueryProcessorSettings settings)
+                                                      IPagedDatabaseEntityRetrieverSettings settings)
         {
             var limit = query.Limit.IfNotGreaterThan(settings.OverridePageSize);
 
@@ -113,12 +109,12 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder From(this PagedSelectCommandBuilder instance,
                                                        ISingleEntityQuery query,
-                                                       IQueryProcessorSettings settings)
+                                                       IPagedDatabaseEntityRetrieverSettings settings)
             => instance.From(query.GetTableName(settings.TableName));
 
         internal static PagedSelectCommandBuilder Where(this PagedSelectCommandBuilder instance,
                                                         ISingleEntityQuery query,
-                                                        IQueryProcessorSettings settings,
+                                                        IPagedDatabaseEntityRetrieverSettings settings,
                                                         IQueryFieldProvider fieldProvider,
                                                         out int paramCounter)
         {
@@ -155,7 +151,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder GroupBy(this PagedSelectCommandBuilder instance,
                                                           IGroupingQuery? groupingQuery,
-                                                          IQueryProcessorSettings settings,
+                                                          IPagedDatabaseEntityRetrieverSettings settings,
                                                           IQueryFieldProvider fieldProvider)
         {
             if (groupingQuery?.GroupByFields?.Any() != true)
@@ -172,11 +168,11 @@ namespace QueryFramework.SqlServer.Extensions
                 }
 
                 var correctedFieldName = fieldProvider.GetDatabaseFieldName(groupBy.FieldName);
-                if (correctedFieldName == null && settings.ValidateFieldNames)
+                if (correctedFieldName == null)
                 {
                     throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
                 }
-                var corrected = new QueryExpression(correctedFieldName ?? groupBy.FieldName, groupBy.GetRawExpression());
+                var corrected = new QueryExpression(correctedFieldName, groupBy.GetRawExpression());
                 if (!fieldProvider.ValidateExpression(corrected))
                 {
                     throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected}]");
@@ -190,7 +186,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder Having(this PagedSelectCommandBuilder instance,
                                                          IGroupingQuery? groupingQuery,
-                                                         IQueryProcessorSettings settings,
+                                                         IPagedDatabaseEntityRetrieverSettings settings,
                                                          IQueryFieldProvider fieldProvider,
                                                          ref int paramCounter)
         {
@@ -222,7 +218,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder OrderBy(this PagedSelectCommandBuilder instance,
                                                           ISingleEntityQuery query,
-                                                          IQueryProcessorSettings settings,
+                                                          IPagedDatabaseEntityRetrieverSettings settings,
                                                           IQueryFieldProvider fieldProvider)
         {
             if (query.Offset.HasValue && query.Offset.Value >= 0)
@@ -243,7 +239,7 @@ namespace QueryFramework.SqlServer.Extensions
 
         private static PagedSelectCommandBuilder AppendOrderBy(this PagedSelectCommandBuilder instance,
                                                                IEnumerable<IQuerySortOrder> orderByFields,
-                                                               IQueryProcessorSettings settings,
+                                                               IPagedDatabaseEntityRetrieverSettings settings,
                                                                IQueryFieldProvider fieldProvider)
         {
             var fieldCounter = 0;
@@ -255,11 +251,11 @@ namespace QueryFramework.SqlServer.Extensions
                 }
 
                 var newFieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.Field.FieldName);
-                if (newFieldName == null && settings.ValidateFieldNames)
+                if (newFieldName == null)
                 {
                     throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
                 }
-                var newQuerySortOrder = new QuerySortOrder(newFieldName ?? querySortOrder.Field.FieldName, querySortOrder.Order);
+                var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.Order);
                 if (!fieldProvider.ValidateExpression(newQuerySortOrder.Field))
                 {
                     throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field}]");
@@ -294,7 +290,7 @@ namespace QueryFramework.SqlServer.Extensions
         internal static int AppendQueryCondition(this PagedSelectCommandBuilder instance,
                                                  int paramCounter,
                                                  IQueryCondition queryCondition,
-                                                 IQueryProcessorSettings settings,
+                                                 IPagedDatabaseEntityRetrieverSettings settings,
                                                  IQueryFieldProvider fieldProvider,
                                                  Func<string, PagedSelectCommandBuilder> actionDelegate)
         {
@@ -306,12 +302,12 @@ namespace QueryFramework.SqlServer.Extensions
             }
 
             var customFieldName = fieldProvider.GetDatabaseFieldName(queryCondition.Field.FieldName);
-            if (customFieldName == null && settings.ValidateFieldNames)
+            if (customFieldName == null)
             {
                 throw new InvalidOperationException($"Query conditions contains unknown field [{queryCondition.Field.FieldName}]");
             }
 
-            var field = queryCondition.Field.With(fieldName: customFieldName ?? queryCondition.Field.FieldName);
+            var field = queryCondition.Field.With(fieldName: customFieldName);
 
             if (!fieldProvider.ValidateExpression(field))
             {

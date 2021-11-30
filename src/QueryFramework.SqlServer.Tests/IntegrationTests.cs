@@ -19,11 +19,10 @@ namespace QueryFramework.SqlServer.Tests
         public IntegrationTests()
         {
             RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-            var settings = new QueryProcessorSettings("MyTable");
+            var settings = new PagedDatabaseEntityRetrieverSettings("MyTable");
             Sut = new QueryProcessor<TestQuery, TestEntity>
             (
                 RetrieverMock.Object,
-                settings,
                 new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings)
             );
         }

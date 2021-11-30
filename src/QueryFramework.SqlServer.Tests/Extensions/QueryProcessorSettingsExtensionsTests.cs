@@ -19,7 +19,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void WithDefaultTableName_Returns_Correct_Result(string input, string expectedOutput)
         {
             // Arrange
-            var sut = new QueryProcessorSettings(input);
+            var sut = new PagedDatabaseEntityRetrieverSettings(input);
 
             // Act
             var actual = sut.WithDefaultTableName(EntityTypeName);
