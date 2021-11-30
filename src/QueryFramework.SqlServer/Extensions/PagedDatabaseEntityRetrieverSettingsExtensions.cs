@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Data.Abstractions;
+using CrossCutting.Data.Core;
 
 namespace QueryFramework.SqlServer.Extensions
 {

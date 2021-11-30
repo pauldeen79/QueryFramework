@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using CrossCutting.Data.Core;
 using FluentAssertions;
 using QueryFramework.SqlServer.Extensions;
 using Xunit;
@@ -19,7 +20,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void WithDefaultTableName_Returns_Correct_Result(string input, string expectedOutput)
         {
             // Arrange
-            var sut = new PagedDatabaseEntityRetrieverSettings(input);
+            var sut = new PagedDatabaseEntityRetrieverSettings(input, "", "", "", null);
 
             // Act
             var actual = sut.WithDefaultTableName(EntityTypeName);
