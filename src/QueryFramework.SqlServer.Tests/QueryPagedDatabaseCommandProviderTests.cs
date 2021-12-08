@@ -23,7 +23,7 @@ namespace QueryFramework.SqlServer.Tests
         [InlineData(DatabaseOperation.Insert)]
         [InlineData(DatabaseOperation.Unspecified)]
         [InlineData(DatabaseOperation.Update)]
-        public void Creat_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
+        public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
         {
             // Act
             Sut.Invoking(x => x.Create(new Mock<ISingleEntityQuery>().Object, operation))
