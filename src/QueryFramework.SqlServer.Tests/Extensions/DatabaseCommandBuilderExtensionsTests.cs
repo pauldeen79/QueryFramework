@@ -82,6 +82,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns<IEnumerable<string>>(input => input);
             fieldProviderMock.Setup(x => x.GetAllFields())
                              .Returns(new[] { "Field1", "Field2", "Field3" });
+            fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
+                             .Returns<string>(x => x);
             Builder.From("MyTable");
 
             // Act
