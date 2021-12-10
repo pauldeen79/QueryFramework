@@ -9,62 +9,61 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
     [ExcludeFromCodeCoverage]
     public class QueryParameterBuilderExtensionsTests
     {
+        private Mock<IQueryParameterBuilder> Sut { get; }
+
+        public QueryParameterBuilderExtensionsTests()
+        {
+            Sut = new Mock<IQueryParameterBuilder>();
+        }
+
         [Fact]
         public void Clear_Clears_All_Properties()
         {
             // Arrange
-            var sut = new Mock<IQueryParameterBuilder>();
-            sut.SetupSet(x => x.Value = It.IsAny<object>()).Verifiable();
+            Sut.SetupSet(x => x.Value = It.IsAny<object>()).Verifiable();
 
             // Act
-            sut.Object.Clear();
+            Sut.Object.Clear();
 
             // Assert
-            sut.VerifySet(x => x.Name = string.Empty, Times.Once);
-            sut.VerifySet(x => x.Value = It.IsAny<object>());
+            Sut.VerifySet(x => x.Name = string.Empty, Times.Once);
+            Sut.VerifySet(x => x.Value = It.IsAny<object>());
         }
 
         [Fact]
         public void Update_Updates_All_Properties()
         {
             // Arrange
-            var sut = new Mock<IQueryParameterBuilder>();
             var updateMock = new Mock<IQueryParameter>();
             updateMock.SetupGet(x => x.Name).Returns("name");
             updateMock.SetupGet(x => x.Value).Returns("value");
 
             // Act
-            sut.Object.Update(updateMock.Object);
+            Sut.Object.Update(updateMock.Object);
 
             // Assert
-            sut.VerifySet(x => x.Name = "name", Times.Once);
-            sut.VerifySet(x => x.Value = "value", Times.Once);
+            Sut.VerifySet(x => x.Name = "name", Times.Once);
+            Sut.VerifySet(x => x.Value = "value", Times.Once);
         }
 
         [Fact]
         public void WithName_Updates_OpenBracket()
         {
-            // Arrange
-            var sut = new Mock<IQueryParameterBuilder>();
-
             // Act
-            sut.Object.WithName("name");
+            Sut.Object.WithName("name");
 
             // Assert
-            sut.VerifySet(x => x.Name = "name", Times.Once);
+            Sut.VerifySet(x => x.Name = "name", Times.Once);
         }
 
         [Fact]
         public void WithValue_Updates_OpenBracket()
         {
-            // Arrange
-            var sut = new Mock<IQueryParameterBuilder>();
-
             // Act
-            sut.Object.WithValue("value");
+            Sut.Object.WithValue("value");
 
             // Assert
-            sut.VerifySet(x => x.Value = "value", Times.Once);
+            Sut.VerifySet(x => x.Value = "value", Times.Once);
         }
     }
 }
