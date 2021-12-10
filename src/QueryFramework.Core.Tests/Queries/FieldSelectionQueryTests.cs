@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Core.Queries;
@@ -48,6 +51,16 @@ namespace QueryFramework.Core.Tests.Queries
             sut.Limit.Should().Be(limit);
             sut.Offset.Should().Be(offset);
             sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        }
+
+        [Fact]
+        public void Constructing_FieldSelectionQuery_With_ValidationError_Leads_To_Exception()
+        {
+            // Arrange
+            var action = new Action(() => _ = new SingleEntityQuery(null, null, new[] { new QueryCondition("field", QueryOperator.Equal, openBracket: true) }, Enumerable.Empty<IQuerySortOrder>()));
+
+            // Act
+            action.Should().Throw<ValidationException>();
         }
     }
 }

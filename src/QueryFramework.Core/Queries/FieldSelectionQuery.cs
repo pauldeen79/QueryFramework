@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using CrossCutting.Common;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
+using QueryFramework.Core.Extensions;
 
 namespace QueryFramework.Core.Queries
 {
-    public record FieldSelectionQuery : IFieldSelectionQuery
+    public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
     {
         public FieldSelectionQuery() : this(null,
                                             null,
@@ -33,6 +35,7 @@ namespace QueryFramework.Core.Queries
             Fields = new ValueCollection<IQueryExpression>(fields);
             Conditions = new ValueCollection<IQueryCondition>(conditions);
             OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields);
+            Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
         }
 
         public int? Limit { get; }
@@ -42,5 +45,8 @@ namespace QueryFramework.Core.Queries
         public ValueCollection<IQueryExpression> Fields { get; }
         public ValueCollection<IQueryCondition> Conditions { get; }
         public ValueCollection<IQuerySortOrder> OrderByFields { get; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            => this.ValidateQuery();
     }
 }
