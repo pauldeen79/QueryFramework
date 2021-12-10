@@ -38,7 +38,7 @@ namespace QueryFramework.SqlServer.Extensions
             else
             {
                 var paramCounter = 0;
-                foreach (var fieldName in allFields.Select(x => fieldProvider.GetDatabaseFieldName(x)).Where(x => x != null).OfType<string>())
+                foreach (var fieldName in allFields.Select(x => fieldProvider.GetDatabaseFieldName(x)).OfType<string>())
                 {
                     if (paramCounter > 0)
                     {
