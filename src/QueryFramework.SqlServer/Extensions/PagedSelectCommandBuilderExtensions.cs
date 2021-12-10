@@ -37,17 +37,7 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else
             {
-                var paramCounter = 0;
-                foreach (var fieldName in allFields.Select(x => fieldProvider.GetDatabaseFieldName(x)).OfType<string>())
-                {
-                    if (paramCounter > 0)
-                    {
-                        instance.Select(", ");
-                    }
-
-                    instance.Select(fieldName);
-                    paramCounter++;
-                }
+                instance.Select(string.Join(", ", allFields.Select(x => fieldProvider.GetDatabaseFieldName(x)).OfType<string>()));
             }
 
             return instance;
@@ -242,30 +232,27 @@ namespace QueryFramework.SqlServer.Extensions
                                                                IPagedDatabaseEntityRetrieverSettings settings,
                                                                IQueryFieldProvider fieldProvider)
         {
-            var fieldCounter = 0;
-            foreach (var querySortOrder in orderByFields)
+            foreach (var querySortOrder in orderByFields.Select((field, index) => new { SortOrder = field, Index = index }))
             {
-                if (fieldCounter > 0)
+                if (querySortOrder.Index > 0)
                 {
                     instance.OrderBy(", ");
                 }
 
-                var newFieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.Field.FieldName);
+                var newFieldName = fieldProvider.GetDatabaseFieldName(querySortOrder.SortOrder.Field.FieldName);
                 if (newFieldName == null)
                 {
-                    throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.Field.FieldName));
+                    throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
                 }
-                var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.Order);
+                var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.SortOrder.Order);
                 if (!fieldProvider.ValidateExpression(newQuerySortOrder.Field))
                 {
                     throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field}]");
                 }
                 instance.OrderBy($"{newQuerySortOrder.Field.Expression} {newQuerySortOrder.ToSql()}");
-
-                fieldCounter++;
             }
 
-            if (fieldCounter == 0 && !string.IsNullOrEmpty(settings.DefaultOrderBy))
+            if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
             {
                 instance.OrderBy(settings.DefaultOrderBy);
             }
@@ -319,8 +306,7 @@ namespace QueryFramework.SqlServer.Extensions
                                             QueryOperator.EndsWith,
                                             QueryOperator.NotEndsWith,
                                             QueryOperator.StartsWith,
-                                            QueryOperator.NotStartsWith)
-               )
+                                            QueryOperator.NotStartsWith))
             {
                 builder.Append(queryCondition.Operator.ToNot());
 
