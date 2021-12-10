@@ -31,7 +31,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Select_Skips_SkipFields()
+        public void Select_Skips_Fields_That_Are_Returned_As_Null_In_GetDatabaseFieldName()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
@@ -50,7 +50,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Select_Uses_Star_When_Fields_Is_Empty_And_GetAllFieldsDelegate_Returns_Null_And_SelectAll_Is_True()
+        public void Select_Uses_Star_When_Fields_Is_Empty_And_GetAllFields_Returns_Null_And_SelectAll_Is_True()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
@@ -70,7 +70,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Select_Uses_GetAllFieldsDelegate_When_Provided()
+        public void Select_Uses_GetAllFields_When_Provided()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().SelectAll().Build();
@@ -135,7 +135,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Select_Throws_When_GetFieldDelegate_Returns_Null()
+        public void Select_Throws_When_GetDatabaseFieldName_Returns_Null()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
@@ -155,7 +155,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Select_Throws_When_ExpressionValidationDelegate_Returns_False()
+        public void Select_Throws_When_ValidateExpression_Returns_False()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
@@ -370,7 +370,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void OrderBy_Appends_Single_OrderBy_Clause_With_GetFieldNameDelegate()
+        public void OrderBy_Appends_Single_OrderBy_Clause_With_GetDatabaseFieldName()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
@@ -390,7 +390,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void OrderBy_Throws_When_GetFieldNameDelegate_Returns_Null()
+        public void OrderBy_Throws_When_GetDatabaseFieldName_Returns_Null()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
@@ -404,7 +404,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void OrderBy_Throws_When_ExpressionValidationDelegate_Returns_False_And_GetFieldName_Returns_Null()
+        public void OrderBy_Throws_When_ValidateExpression_Returns_False_And_GetFieldName_Returns_Null()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
@@ -422,7 +422,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void OrderBy_Throws_When_ExpressionValidationDelegate_Returns_False_And_GetFieldName_Returns_NonNullValue()
+        public void OrderBy_Throws_When_ValidateExpression_Returns_False_And_GetFieldName_Returns_NonNullValue()
         {
             // Arrange
             var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
@@ -512,7 +512,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void GroupBy_Appends_GroupBy_Clause_With_GetFieldNameDelegate()
+        public void GroupBy_Appends_GroupBy_Clause_With_GetDatabaseFieldName()
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
@@ -534,7 +534,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void GroupBy_Throws_When_GetFieldNameDelegate_Returns_Null()
+        public void GroupBy_Throws_When_GetDatabaseFieldName_Returns_Null()
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
@@ -555,7 +555,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void GroupBy_Throws_When_ExpressionValidationDelegate_Returns_False()
+        public void GroupBy_Throws_When_ValidateExpression_Returns_False()
         {
             // Arrange
             var queryMock = new Mock<IGroupingQuery>();
@@ -758,7 +758,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void AppendQueryCondition_Throws_On_Invalid_Expression_When_ExpressionValidationDelegate_Returns_False()
+        public void AppendQueryCondition_Throws_On_Invalid_Expression_When_ValidateExpression_Returns_False()
         {
             // Arrange
             var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
