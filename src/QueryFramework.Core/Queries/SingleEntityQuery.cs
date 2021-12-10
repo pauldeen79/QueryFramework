@@ -34,7 +34,7 @@ namespace QueryFramework.Core.Queries
         public ValueCollection<IQueryCondition> Conditions { get; }
         public ValueCollection<IQuerySortOrder> OrderByFields { get; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
             => this.ValidateQuery();
     }
 }
