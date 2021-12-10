@@ -46,7 +46,7 @@ namespace QueryFramework.InMemory
         {
             IEnumerable<TResult> result = filteredRecords;
 
-            if (query.OrderByFields?.Any() == true)
+            if (query.OrderByFields.Any())
             {
                 result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, ValueRetriever));
             }
@@ -66,7 +66,7 @@ namespace QueryFramework.InMemory
         private bool ItemIsValid(TResult item, IReadOnlyCollection<IQueryCondition> conditions)
         {
             var builder = new StringBuilder();
-            foreach (var condition in conditions ?? Enumerable.Empty<IQueryCondition>())
+            foreach (var condition in conditions)
             {
                 if (builder.Length > 0)
                 {

@@ -673,21 +673,6 @@ namespace QueryFramework.InMemory.Tests
             actual.First().Property.Should().Be("B ");
         }
 
-        [Fact]
-        public void Query_With_Null_Properties_Results_In_Same_Result_As_Input()
-        {
-            // Arrange
-            var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
-            var sut = CreateSut(items);
-            var query = new Mock<ISingleEntityQuery>().Object;
-
-            // Act
-            var actual = sut.FindMany(query);
-
-            // Assert
-            actual.Should().BeEquivalentTo(items);
-        }
-
         private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
             => new QueryProcessor<ISingleEntityQuery, MyClass>(() => items, new ExpressionEvaluator<MyClass>(new ValueProvider()));
 

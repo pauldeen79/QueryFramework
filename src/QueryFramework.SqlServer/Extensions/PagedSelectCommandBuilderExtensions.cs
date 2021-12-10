@@ -108,8 +108,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                         IQueryFieldProvider fieldProvider,
                                                         out int paramCounter)
         {
-            if ((query.Conditions?.Any() != true)
-                && string.IsNullOrEmpty(settings.DefaultWhere))
+            if (!query.Conditions.Any() && string.IsNullOrEmpty(settings.DefaultWhere))
             {
                 paramCounter = 0;
                 return instance;
@@ -122,7 +121,7 @@ namespace QueryFramework.SqlServer.Extensions
                 instance.Where(settings.DefaultWhere);
             }
 
-            foreach (var queryCondition in query.Conditions ?? Enumerable.Empty<IQueryCondition>())
+            foreach (var queryCondition in query.Conditions)
             {
                 paramCounter = instance.AppendQueryCondition
                 (
@@ -216,10 +215,9 @@ namespace QueryFramework.SqlServer.Extensions
                 //do not use order by (this will be taken care of by the row_number function)
                 return instance;
             }
-            else if (query.OrderByFields?.Any() == true
-                || !string.IsNullOrEmpty(settings.DefaultOrderBy))
+            else if (query.OrderByFields.Any() || !string.IsNullOrEmpty(settings.DefaultOrderBy))
             {
-                return instance.AppendOrderBy(query.OrderByFields ?? Enumerable.Empty<IQuerySortOrder>(), settings, fieldProvider);
+                return instance.AppendOrderBy(query.OrderByFields, settings, fieldProvider);
             }
             else
             {
