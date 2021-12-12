@@ -57,6 +57,13 @@ namespace QueryFramework.Core.Tests.Extensions
         [Theory]
         [InlineData("Trim(FieldName)", true)]
         [InlineData("Trim(GO; DROP TABLE MyTable; GO;--)", false)]
+        [InlineData("TRUNCATE TABLE MyTable", false)]
+        [InlineData("DELETE FROM MyTable", false)]
+        [InlineData("INSERT INTO MyTable", false)]
+        [InlineData("UPDATE MyTable", false)]
+        [InlineData("MERGE MyTable", false)]
+        [InlineData("ALTER TABLE MyTable", false)]
+        [InlineData("CREATE TABLE MyTable", false)]
         public void IsSingleWordFunction_Returns_Correct_Result(string inputExpression, bool expectedResult)
         {
             // Arrange
@@ -64,6 +71,29 @@ namespace QueryFramework.Core.Tests.Extensions
 
             // Act
             var actual = sut.IsSingleWordFunction();
+
+            // Assert
+            actual.Should().Be(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("Trim({0})", true)]
+        [InlineData("Left(Trim({0}), 1)", true)]
+        [InlineData("Trim(GO; DROP TABLE MyTable; GO;--)", false)]
+        [InlineData("TRUNCATE TABLE MyTable", false)]
+        [InlineData("DELETE FROM MyTable", false)]
+        [InlineData("INSERT INTO MyTable", false)]
+        [InlineData("UPDATE MyTable", false)]
+        [InlineData("MERGE MyTable", false)]
+        [InlineData("ALTER TABLE MyTable", false)]
+        [InlineData("CREATE TABLE MyTable", false)]
+        public void IsSafeFunction_Returns_Correct_Result(string inputExpression, bool expectedResult)
+        {
+            // Arrange
+            var sut = new QueryExpression("field", inputExpression);
+
+            // Act
+            var actual = sut.IsSafeFunction();
 
             // Assert
             actual.Should().Be(expectedResult);
