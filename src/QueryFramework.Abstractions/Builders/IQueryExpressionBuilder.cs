@@ -2,8 +2,8 @@
 {
     public interface IQueryExpressionBuilder
     {
-        string? Expression { get; set; }
         string FieldName { get; set; }
+        IQueryExpressionFunction? Function { get; set; }
 
         IQueryExpression Build();
     }

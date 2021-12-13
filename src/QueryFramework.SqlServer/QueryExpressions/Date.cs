@@ -22,6 +22,20 @@ namespace QueryFramework.SqlServer.QueryExpressions
 
         /// <summary>Gets the expression.</summary>
         /// <value>The expression.</value>
-        public string Expression => "'" + _value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+        public IQueryExpressionFunction? Function => new DateFunction(_value);
+
+        private sealed class DateFunction : IQueryExpressionFunction
+        {
+            private readonly DateTime _value;
+
+            public DateFunction(DateTime value)
+            {
+                _value = value;
+            }
+
+            public string Expression => "'" + _value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+
+            public IQueryExpressionFunction? InnerFunction => null;
+        }
     }
 }

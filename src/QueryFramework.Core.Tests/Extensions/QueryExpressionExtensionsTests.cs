@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
 using QueryFramework.Core.Builders;
@@ -15,13 +16,15 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_With_ExtensionMethod_To_Modify_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("field", "expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            var sut = new QueryExpression("field", function);
+            var newFunction = new Mock<IQueryExpressionFunction>().Object;
 
             // Act
-            var actual = sut.With("newname", "newexpression");
+            var actual = sut.With("newname", newFunction);
 
             // Assert
-            actual.Expression.Should().Be("newexpression");
+            actual.Function.Should().BeSameAs(newFunction);
             actual.FieldName.Should().Be("newname");
         }
 
@@ -29,74 +32,15 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_With_ExtensionMethod_With_DefaultValues_To_Create_Instance_With_Same_Values()
         {
             // Arrange
-            var sut = new QueryExpression("field", "expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            var sut = new QueryExpression("field", function);
 
             // Act
             var actual = sut.With(string.Empty, null);
 
             // Assert
-            actual.Expression.Should().Be(sut.Expression);
+            actual.Function.Should().Be(sut.Function);
             actual.FieldName.Should().Be(sut.FieldName);
-        }
-
-        [Theory]
-        [InlineData("field", null)]
-        [InlineData("expression", "expression")]
-        public void GetRawExpression_Return_Correct_Result(string inputExpression, string expectedOutputExpression)
-        {
-            // Arrange
-            var sut = new QueryExpression("field", inputExpression);
-
-            // Act
-            var actual = sut.GetRawExpression();
-
-            // Assert
-            actual.Should().Be(expectedOutputExpression);
-        }
-
-        [Theory]
-        [InlineData("Trim(FieldName)", true)]
-        [InlineData("Trim(GO; DROP TABLE MyTable; GO;--)", false)]
-        [InlineData("TRUNCATE TABLE MyTable", false)]
-        [InlineData("DELETE FROM MyTable", false)]
-        [InlineData("INSERT INTO MyTable", false)]
-        [InlineData("UPDATE MyTable", false)]
-        [InlineData("MERGE MyTable", false)]
-        [InlineData("ALTER TABLE MyTable", false)]
-        [InlineData("CREATE TABLE MyTable", false)]
-        public void IsSingleWordFunction_Returns_Correct_Result(string inputExpression, bool expectedResult)
-        {
-            // Arrange
-            var sut = new QueryExpression("field", inputExpression);
-
-            // Act
-            var actual = sut.IsSingleWordFunction();
-
-            // Assert
-            actual.Should().Be(expectedResult);
-        }
-
-        [Theory]
-        [InlineData("Trim({0})", true)]
-        [InlineData("Left(Trim({0}), 1)", true)]
-        [InlineData("Trim(GO; DROP TABLE MyTable; GO;--)", false)]
-        [InlineData("TRUNCATE TABLE MyTable", false)]
-        [InlineData("DELETE FROM MyTable", false)]
-        [InlineData("INSERT INTO MyTable", false)]
-        [InlineData("UPDATE MyTable", false)]
-        [InlineData("MERGE MyTable", false)]
-        [InlineData("ALTER TABLE MyTable", false)]
-        [InlineData("CREATE TABLE MyTable", false)]
-        public void IsSafeFunction_Returns_Correct_Result(string inputExpression, bool expectedResult)
-        {
-            // Arrange
-            var sut = new QueryExpression("field", inputExpression);
-
-            // Act
-            var actual = sut.IsSafeFunction();
-
-            // Assert
-            actual.Should().Be(expectedResult);
         }
 
         [Fact]
@@ -129,14 +73,14 @@ namespace QueryFramework.Core.Tests.Extensions
         private class QueryExpressionMock : ICustomQueryExpression
         {
             public string FieldName { get; set; } = "";
-            public string Expression { get; set; } = "";
+            public IQueryExpressionFunction? Function { get; set; }
 
             public IQueryExpressionBuilder CreateBuilder()
             {
                 return new QueryExpressionBuilderMock
                 {
                     FieldName = FieldName,
-                    Expression = Expression
+                    Function = Function
                 };
             }
         }
@@ -144,7 +88,7 @@ namespace QueryFramework.Core.Tests.Extensions
         [ExcludeFromCodeCoverage]
         private class QueryExpressionBuilderMock : IQueryExpressionBuilder
         {
-            public string? Expression { get; set; }
+            public IQueryExpressionFunction? Function { get; set; }
             public string FieldName { get; set; } = "";
 
             public IQueryExpression Build()
@@ -152,7 +96,7 @@ namespace QueryFramework.Core.Tests.Extensions
                 return new QueryExpressionMock
                 {
                     FieldName = FieldName,
-                    Expression = Expression ?? FieldName
+                    Function = Function
                 };
             }
         }

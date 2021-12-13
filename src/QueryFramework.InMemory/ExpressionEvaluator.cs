@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Extensions;
 
 namespace QueryFramework.InMemory
 {
@@ -16,11 +17,9 @@ namespace QueryFramework.InMemory
 
         public object? GetValue(T item, IQueryExpression field)
         {
-            if (field.Expression != field.FieldName)
+            if (field.Function != null)
             {
-                var functionName = GetFunctionName(field is IExpressionContainer c
-                    ? c.SourceExpression ?? string.Empty
-                    : field.Expression, out var parameters);
+                var functionName = GetFunctionName(field.Function.Expression, out var parameters);
                 if (Functions.Items.TryGetValue(functionName, out var function))
                 {
                     var split = parameters.Split(',');
@@ -29,7 +28,7 @@ namespace QueryFramework.InMemory
                         : ValueProvider.GetFieldValue(item, split[0]);
                     return function.Invoke(fieldName, split.Skip(1));
                 }
-                throw new ArgumentOutOfRangeException(nameof(field), $"Expression [{field.Expression}] is not supported");
+                throw new ArgumentOutOfRangeException(nameof(field), $"Function [{field.GetExpression()}] is not supported");
             }
 
             return ValueProvider.GetFieldValue(item, field.FieldName);

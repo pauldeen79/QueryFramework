@@ -1,25 +1,26 @@
-﻿using QueryFramework.Abstractions;
+﻿using System;
+using QueryFramework.Abstractions;
 
 namespace QueryFramework.Core
 {
-    public sealed record QueryExpression : IQueryExpression, IExpressionContainer
+    public sealed record QueryExpression : IQueryExpression
     {
-        private readonly string? _expression;
-
-        public QueryExpression(string fieldName, string? expression = null)
+        public QueryExpression(string fieldName, IQueryExpressionFunction? function = null)
         {
+            if (string.IsNullOrWhiteSpace(fieldName))
+            {
+                throw new ArgumentException("FieldName must have at leat one non-space character", nameof(fieldName));
+            }
             FieldName = fieldName;
-            _expression = expression;
+            Function = function;
         }
 
         public string FieldName { get; }
 
-        public string Expression => _expression == null
+        public IQueryExpressionFunction? Function { get; }
+
+        public override string ToString() => Function == null
             ? FieldName
-            : string.Format(_expression, FieldName);
-
-        string? IExpressionContainer.SourceExpression => _expression;
-
-        public override string ToString() => Expression;
+            : Function.Expression;
     }
 }

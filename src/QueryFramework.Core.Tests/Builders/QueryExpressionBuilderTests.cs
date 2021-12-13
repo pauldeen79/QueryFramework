@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Moq;
+using QueryFramework.Abstractions;
 using QueryFramework.Core.Builders;
 using Xunit;
 
@@ -12,9 +14,10 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryExpression_From_Builder()
         {
             // Arrange
+            var function = new Mock<IQueryExpressionFunction>().Object;
             var sut = new QueryExpressionBuilder
             {
-                Expression = "expression",
+                Function = function,
                 FieldName = "fieldname"
             };
 
@@ -22,7 +25,7 @@ namespace QueryFramework.Core.Tests.Builders
             var actual = sut.Build();
 
             // Assert
-            actual.Expression.Should().Be(sut.Expression);
+            actual.Function.Should().BeSameAs(sut.Function);
             actual.FieldName.Should().Be(sut.FieldName);
         }
 
@@ -30,9 +33,10 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryExpressionBuilder_From_QueryExpression()
         {
             // Arrange
+            var function = new Mock<IQueryExpressionFunction>().Object;
             var input = new QueryExpression
             (
-                expression: "expression",
+                function: function,
                 fieldName: "fieldname"
             );
 
@@ -40,7 +44,7 @@ namespace QueryFramework.Core.Tests.Builders
             var actual = new QueryExpressionBuilder(input);
 
             // Assert
-            actual.Expression.Should().Be(input.Expression);
+            actual.Function.Should().BeSameAs(input.Function);
             actual.FieldName.Should().Be(input.FieldName);
         }
 
@@ -48,10 +52,11 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryExpressionBuilder_From_Values()
         {
             // Act
-            var actual = new QueryExpressionBuilder(expression: "expression", fieldName: "fieldname");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            var actual = new QueryExpressionBuilder(function: function, fieldName: "fieldname");
 
             // Assert
-            actual.Expression.Should().Be("expression");
+            actual.Function.Should().BeSameAs(function);
             actual.FieldName.Should().Be("fieldname");
         }
     }

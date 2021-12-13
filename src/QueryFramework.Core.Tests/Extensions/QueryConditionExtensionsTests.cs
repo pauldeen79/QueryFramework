@@ -170,7 +170,7 @@ namespace QueryFramework.Core.Tests.Extensions
         {
             public bool OpenBracket { get; set; }
             public bool CloseBracket { get; set; }
-            public IQueryExpression Field { get; set; } = new QueryExpression(string.Empty);
+            public IQueryExpression Field { get; set; } = new QueryExpression("Field");
 
             public QueryOperator Operator { get; set; }
 
