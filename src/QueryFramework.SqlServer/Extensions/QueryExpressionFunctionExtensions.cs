@@ -20,8 +20,7 @@ namespace QueryFramework.SqlServer.Extensions
             new SumFunctionParser(),
             new TrimFunctionParser(),
             new UpperFunctionParser(),
-            new YearFunctionParser(),
-            new DateFunctionParser()
+            new YearFunctionParser()
         };
 
         public static string GetSqlExpression(this IQueryExpressionFunction function)
