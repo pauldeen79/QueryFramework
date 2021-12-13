@@ -8,6 +8,7 @@ using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Functions;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
@@ -53,19 +54,20 @@ namespace QueryFramework.InMemory.Tests
         }
 
         [Fact]
-        public void Unsupported_Expression_Throws_On_FindPaged()
+        public void Unsupported_Function_Throws_On_FindPaged()
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
             var sut = CreateSut(items);
+            var functionMock = new Mock<IQueryExpressionFunction>();
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "UNKNOWN({0})").IsEqualTo("something"))
+                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("something"))
                 .Build();
 
             // Act & Assert
             sut.Invoking(x => x.FindPaged(query))
                .Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().StartWith("Expression [UNKNOWN(Property)] is not supported");
+               .And.Message.Should().StartWith("Function [IQueryExpressionFunctionProxy] is not supported");
         }
 
         [Fact]
@@ -572,7 +574,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "LEN({0})").IsEqualTo(2))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LengthFunction()).IsEqualTo(2))
                 .Build();
 
             // Act
@@ -590,7 +592,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "LEFT({0},1)").IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LeftFunction(1)).IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -608,7 +610,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "RIGHT({0},1)").IsEqualTo("2"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new RightFunction(1)).IsEqualTo("2"))
                 .Build();
 
             // Act
@@ -626,7 +628,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "b" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "UPPER({0})").IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new UpperFunction()).IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -644,7 +646,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "LOWER({0})").IsEqualTo("b"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LowerFunction()).IsEqualTo("b"))
                 .Build();
 
             // Act
@@ -662,7 +664,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B " } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), "TRIM({0})").IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new TrimFunction()).IsEqualTo("B"))
                 .Build();
 
             // Act

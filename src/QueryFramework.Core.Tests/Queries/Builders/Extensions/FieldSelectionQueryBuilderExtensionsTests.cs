@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
+using Moq;
+using QueryFramework.Abstractions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
@@ -15,15 +17,16 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         public void Can_Use_Select_With_QueryExpressionBuilder_To_Add_Field()
         {
             // Arrange
+            var function = new Mock<IQueryExpressionFunction>().Object;
             var sut = new FieldSelectionQueryBuilder();
 
             // Act
-            var actual = sut.Select(new QueryExpressionBuilder("FieldName", "Expression"));
+            var actual = sut.Select(new QueryExpressionBuilder("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().Be("Expression");
+            actual.Fields.First().Function.Should().BeSameAs(function);
             actual.Distinct.Should().BeFalse();
         }
 
@@ -32,14 +35,15 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder();
+            var function = new Mock<IQueryExpressionFunction>().Object;
 
             // Act
-            var actual = sut.Select(new QueryExpression("FieldName", "Expression"));
+            var actual = sut.Select(new QueryExpression("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().Be("Expression");
+            actual.Fields.First().Function.Should().BeSameAs(function);
             actual.Distinct.Should().BeFalse();
         }
 
@@ -55,7 +59,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().BeNull();
+            actual.Fields.First().Function.Should().BeNull();
             actual.Distinct.Should().BeFalse();
         }
 
@@ -71,9 +75,9 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
             // Assert
             actual.Fields.Should().HaveCount(2);
             actual.Fields.ElementAt(0).FieldName.Should().Be("FieldName1");
-            actual.Fields.ElementAt(0).Expression.Should().BeNull();
+            actual.Fields.ElementAt(0).Function.Should().BeNull();
             actual.Fields.ElementAt(1).FieldName.Should().Be("FieldName2");
-            actual.Fields.ElementAt(1).Expression.Should().BeNull();
+            actual.Fields.ElementAt(1).Function.Should().BeNull();
             actual.Distinct.Should().BeFalse();
         }
 
@@ -96,14 +100,15 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder();
+            var function = new Mock<IQueryExpressionFunction>().Object;
 
             // Act
-            var actual = sut.SelectDistinct(new QueryExpressionBuilder("FieldName", "Expression"));
+            var actual = sut.SelectDistinct(new QueryExpressionBuilder("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().Be("Expression");
+            actual.Fields.First().Function.Should().BeSameAs(function);
             actual.Distinct.Should().BeTrue();
         }
 
@@ -112,14 +117,15 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder();
+            var function = new Mock<IQueryExpressionFunction>().Object;
 
             // Act
-            var actual = sut.SelectDistinct(new QueryExpression("FieldName", "Expression"));
+            var actual = sut.SelectDistinct(new QueryExpression("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().Be("Expression");
+            actual.Fields.First().Function.Should().BeSameAs(function);
             actual.Distinct.Should().BeTrue();
         }
 
@@ -135,7 +141,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Expression.Should().BeNull();
+            actual.Fields.First().Function.Should().BeNull();
             actual.Distinct.Should().BeTrue();
         }
 
@@ -151,9 +157,9 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
             // Assert
             actual.Fields.Should().HaveCount(2);
             actual.Fields.ElementAt(0).FieldName.Should().Be("FieldName1");
-            actual.Fields.ElementAt(0).Expression.Should().BeNull();
+            actual.Fields.ElementAt(0).Function.Should().BeNull();
             actual.Fields.ElementAt(1).FieldName.Should().Be("FieldName2");
-            actual.Fields.ElementAt(1).Expression.Should().BeNull();
+            actual.Fields.ElementAt(1).Function.Should().BeNull();
             actual.Distinct.Should().BeTrue();
         }
 

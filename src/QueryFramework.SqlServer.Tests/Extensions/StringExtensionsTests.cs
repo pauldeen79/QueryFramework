@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using QueryFramework.SqlServer.Extensions;
+using QueryFramework.Core.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 

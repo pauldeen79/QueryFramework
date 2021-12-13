@@ -23,7 +23,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             Sut.Object.Clear();
 
             // Assert
-            Sut.VerifySet(x => x.Expression = default, Times.Once);
+            Sut.VerifySet(x => x.Function = default, Times.Once);
             Sut.VerifySet(x => x.FieldName = string.Empty, Times.Once);
         }
 
@@ -32,14 +32,15 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         {
             // Arrange
             var updateMock = new Mock<IQueryExpression>();
-            updateMock.SetupGet(x => x.Expression).Returns("expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            updateMock.SetupGet(x => x.Function).Returns(function);
             updateMock.SetupGet(x => x.FieldName).Returns("fieldname");
 
             // Act
             Sut.Object.Update(updateMock.Object);
 
             // Assert
-            Sut.VerifySet(x => x.Expression = "expression", Times.Once);
+            Sut.VerifySet(x => x.Function = function, Times.Once);
             Sut.VerifySet(x => x.FieldName = "fieldname", Times.Once);
         }
 
@@ -47,10 +48,11 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         public void WithExpression_Updates_OpenBracket()
         {
             // Act
-            Sut.Object.WithExpression("expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            Sut.Object.WithFunction(function);
 
             // Assert
-            Sut.VerifySet(x => x.Expression = "expression", Times.Once);
+            Sut.VerifySet(x => x.Function = function, Times.Once);
         }
 
         [Fact]

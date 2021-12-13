@@ -28,7 +28,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             // Assert
             Sut.VerifySet(x => x.CloseBracket = default, Times.Once);
             Sut.VerifySet(x => x.Combination = default, Times.Once);
-            FieldMock.VerifySet(x => x.Expression = default, Times.Once);
+            FieldMock.VerifySet(x => x.Function = default, Times.Once);
             FieldMock.VerifySet(x => x.FieldName = string.Empty, Times.Once);
             Sut.VerifySet(x => x.OpenBracket = default, Times.Once);
             Sut.VerifySet(x => x.Operator = default, Times.Once);
@@ -41,13 +41,14 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             // Arrange
             var updateMock = new Mock<IQueryCondition>();
             var updateFieldMock = new Mock<IQueryExpression>();
+            var function = new Mock<IQueryExpressionFunction>().Object;
             updateMock.SetupGet(x => x.Field).Returns(updateFieldMock.Object);
             updateMock.SetupGet(x => x.CloseBracket).Returns(true);
             updateMock.SetupGet(x => x.Combination).Returns(QueryCombination.Or);
             updateMock.SetupGet(x => x.OpenBracket).Returns(true);
             updateMock.SetupGet(x => x.Operator).Returns(QueryOperator.Greater);
             updateMock.SetupGet(x => x.Value).Returns(12345);
-            updateFieldMock.SetupGet(x => x.Expression).Returns("expression");
+            updateFieldMock.SetupGet(x => x.Function).Returns(function);
             updateFieldMock.SetupGet(x => x.FieldName).Returns("fieldname");
 
             // Act
@@ -56,7 +57,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
             // Assert
             Sut.VerifySet(x => x.CloseBracket = true, Times.Once);
             Sut.VerifySet(x => x.Combination = QueryCombination.Or, Times.Once);
-            FieldMock.VerifySet(x => x.Expression = "expression", Times.Once);
+            FieldMock.VerifySet(x => x.Function = function, Times.Once);
             FieldMock.VerifySet(x => x.FieldName = "fieldname", Times.Once);
             Sut.VerifySet(x => x.OpenBracket = true, Times.Once);
             Sut.VerifySet(x => x.Operator = QueryOperator.Greater, Times.Once);
@@ -88,7 +89,8 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         {
             // Arrange
             var updateFieldBuilderMock = new Mock<IQueryExpressionBuilder>();
-            updateFieldBuilderMock.SetupGet(x => x.Expression).Returns("expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            updateFieldBuilderMock.SetupGet(x => x.Function).Returns(function);
             updateFieldBuilderMock.SetupGet(x => x.FieldName).Returns("fieldname");
 
             // Act
@@ -103,14 +105,15 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         {
             // Arrange
             var updateFieldMock = new Mock<IQueryExpression>();
-            updateFieldMock.SetupGet(x => x.Expression).Returns("expression");
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            updateFieldMock.SetupGet(x => x.Function).Returns(function);
             updateFieldMock.SetupGet(x => x.FieldName).Returns("fieldname");
 
             // Act
             Sut.Object.WithField(updateFieldMock.Object);
 
             // Assert
-            FieldMock.VerifySet(x => x.Expression = "expression", Times.Once);
+            FieldMock.VerifySet(x => x.Function = function, Times.Once);
             FieldMock.VerifySet(x => x.FieldName = "fieldname", Times.Once);
         }
 

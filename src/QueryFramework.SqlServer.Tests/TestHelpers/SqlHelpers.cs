@@ -4,8 +4,11 @@ using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.Core;
-using QueryFramework.Core.Queries;
+using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Queries;
+using QueryFramework.Core.Builders;
+using QueryFramework.Core.Queries.Builders;
+using QueryFramework.Core.Queries.Builders.Extensions;
 
 namespace QueryFramework.SqlServer.Tests.TestHelpers
 {
@@ -19,10 +22,16 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
             settingsMock.SetupGet(x => x.TableName)
                         .Returns(nameof(MyEntity));
             var fieldProvider = new DefaultQueryFieldProvider();
-            var query = new SingleEntityQuery(null, null, new[] { new QueryCondition(expression, QueryOperator.Equal, "test") }, Enumerable.Empty<IQuerySortOrder>());
+            var query = new SingleEntityQueryBuilder().Where
+            (
+                new QueryConditionBuilder()
+                    .WithField(expression)
+                    .WithOperator(QueryOperator.Equal)
+                    .WithValue("test")
+            ).Build();
 
             // Act
-            var actual = new QueryPagedDatabaseCommandProvider<SingleEntityQuery>(fieldProvider, settingsMock.Object)
+            var actual = new QueryPagedDatabaseCommandProvider<ISingleEntityQuery>(fieldProvider, settingsMock.Object)
                 .Create(query, DatabaseOperation.Select)
                 .CommandText;
 

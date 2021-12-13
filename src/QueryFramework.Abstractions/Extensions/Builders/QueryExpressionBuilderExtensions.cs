@@ -7,19 +7,17 @@ namespace QueryFramework.Abstractions.Extensions.Builders
         public static IQueryExpressionBuilder Clear(this IQueryExpressionBuilder instance)
         {
             instance.FieldName = string.Empty;
-            instance.Expression = null;
+            instance.Function = null;
             return instance;
         }
         public static IQueryExpressionBuilder Update(this IQueryExpressionBuilder instance, IQueryExpression source)
         {
             instance.FieldName = string.Empty;
-            instance.Expression = null;
+            instance.Function = null;
             if (source != null)
             {
                 instance.FieldName = source.FieldName;
-                instance.Expression = !(source is IExpressionContainer expressionContainer)
-                    ? source.Expression
-                    : expressionContainer.SourceExpression;
+                instance.Function = source.Function;
             }
             return instance;
         }
@@ -28,9 +26,9 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.FieldName = fieldName;
             return instance;
         }
-        public static IQueryExpressionBuilder WithExpression(this IQueryExpressionBuilder instance, string? expression)
+        public static IQueryExpressionBuilder WithFunction(this IQueryExpressionBuilder instance, IQueryExpressionFunction? function)
         {
-            instance.Expression = expression;
+            instance.Function = function;
             return instance;
         }
     }

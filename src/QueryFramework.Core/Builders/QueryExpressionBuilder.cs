@@ -6,10 +6,10 @@ namespace QueryFramework.Core.Builders
     public class QueryExpressionBuilder : IQueryExpressionBuilder
     {
         public string FieldName { get; set; }
-        public string? Expression { get; set; }
+        public IQueryExpressionFunction? Function { get; set; }
         public IQueryExpression Build()
         {
-            return new QueryExpression(FieldName, Expression);
+            return new QueryExpression(FieldName, Function);
         }
         public QueryExpressionBuilder() : this(null)
         {
@@ -19,20 +19,18 @@ namespace QueryFramework.Core.Builders
             if (source != null)
             {
                 FieldName = source.FieldName;
-                Expression = !(source is IExpressionContainer expressionContainer)
-                    ? source.Expression
-                    : expressionContainer.SourceExpression;
+                Function = source.Function;
             }
             else
             {
                 FieldName = string.Empty;
-                Expression = null;
+                Function = null;
             }
         }
-        public QueryExpressionBuilder(string fieldName, string? expression = null)
+        public QueryExpressionBuilder(string fieldName, IQueryExpressionFunction? function = null)
         {
             FieldName = fieldName;
-            Expression = expression;
+            Function = function;
         }
     }
 }

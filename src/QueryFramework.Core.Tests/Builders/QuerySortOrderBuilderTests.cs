@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Core.Builders;
 using Xunit;
@@ -13,9 +14,10 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QuerySortOrder_From_Builder()
         {
             // Arrange
+            var function = new Mock<IQueryExpressionFunction>().Object;
             var sut = new QuerySortOrderBuilder
             {
-                Field = new QueryExpressionBuilder(fieldName: "fieldname", expression: "expression"),
+                Field = new QueryExpressionBuilder(fieldName: "fieldname", function: function),
                 Order = QuerySortOrderDirection.Descending
             };
 
@@ -24,7 +26,7 @@ namespace QueryFramework.Core.Tests.Builders
 
             // Assert
             actual.Field.FieldName.Should().Be(sut.Field.FieldName);
-            actual.Field.Expression.Should().Be(sut.Field.Expression);
+            actual.Field.Function.Should().BeSameAs(sut.Field.Function);
             actual.Order.Should().Be(sut.Order);
         }
 
@@ -32,9 +34,10 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QuerySortOrderBuilder_From_QuerySortOrder()
         {
             // Arrange
+            var function = new Mock<IQueryExpressionFunction>().Object;
             var input = new QuerySortOrder
             (
-                expression: new QueryExpression(fieldName: "fieldname", expression: "expression"),
+                expression: new QueryExpression(fieldName: "fieldname", function: function),
                 order: QuerySortOrderDirection.Descending
             );
 
@@ -42,7 +45,7 @@ namespace QueryFramework.Core.Tests.Builders
             var actual = new QuerySortOrderBuilder(input);
 
             // Assert
-            actual.Field.Expression.Should().Be(input.Field.Expression);
+            actual.Field.Function.Should().BeSameAs(input.Field.Function);
             actual.Field.FieldName.Should().Be(input.Field.FieldName);
             actual.Order.Should().Be(input.Order);
         }
@@ -51,10 +54,12 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QuerySortOrderBuilder_From_Values()
         {
             // Act
-            var actual = new QuerySortOrderBuilder(expression: new QueryExpression(fieldName: "fieldname", expression: "expression"), order: QuerySortOrderDirection.Descending);
+            var function = new Mock<IQueryExpressionFunction>().Object;
+            var actual = new QuerySortOrderBuilder(expression: new QueryExpression(fieldName: "fieldname", function: function),
+                                                   order: QuerySortOrderDirection.Descending);
 
             // Assert
-            actual.Field.Expression.Should().Be("expression");
+            actual.Field.Function.Should().BeSameAs(function);
             actual.Field.FieldName.Should().Be("fieldname");
             actual.Order.Should().Be(QuerySortOrderDirection.Descending);
         }

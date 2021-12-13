@@ -11,6 +11,7 @@ using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Functions;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Abstractions;
@@ -614,7 +615,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.Invoking(x => x.AppendQueryCondition(0,
-                                                         new QueryCondition(new QueryExpression("Field", "SUM({0})"), QueryOperator.Greater, "value"),
+                                                         new QueryCondition(new QueryExpression("Field", new SumFunction()), QueryOperator.Greater, "value"),
                                                          SettingsMock.Object,
                                                          FieldProviderMock.Object,
                                                          Builder.Where))

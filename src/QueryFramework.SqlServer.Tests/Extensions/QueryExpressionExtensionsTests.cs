@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using QueryFramework.Core;
-using QueryFramework.SqlServer.Extensions;
+using QueryFramework.Core.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 
@@ -184,13 +184,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Year_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Coalesce(new QueryExpression("Field", "TODAY()"));
+            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
 
             // Act
             var actual = sut.Year();
 
             // Assert
-            SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(COALESCE(Field, TODAY()))");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(COALESCE(Field1, Field2))");
         }
 
         [Fact]
@@ -210,13 +210,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Month_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Coalesce(new QueryExpression("Field", "TODAY()"));
+            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
 
             // Act
             var actual = sut.Month();
 
             // Assert
-            SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(COALESCE(Field, TODAY()))");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(COALESCE(Field1, Field2))");
         }
 
         [Fact]
@@ -236,13 +236,13 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Day_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Coalesce(new QueryExpression("Field", "TODAY()"));
+            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
 
             // Act
             var actual = sut.Day();
 
             // Assert
-            SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(COALESCE(Field, TODAY()))");
+            SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(COALESCE(Field1, Field2))");
         }
 
         [Fact]
@@ -285,7 +285,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void Can_Nest_Multiple_Coalesce_Funcions()
+        public void Can_Nest_Multiple_Coalesce_Functions()
         {
             // Arrange
             var sut = new QueryExpression("Field1").Coalesce("Field2");

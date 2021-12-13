@@ -35,13 +35,13 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             }
             return instance;
         }
-        public static T WithOpenBracket<T>(this T instance, bool openBracket)
+        public static T WithOpenBracket<T>(this T instance, bool openBracket = true)
             where T : IQueryConditionBuilder
         {
             instance.OpenBracket = openBracket;
             return instance;
         }
-        public static T WithCloseBracket<T>(this T instance, bool closeBracket)
+        public static T WithCloseBracket<T>(this T instance, bool closeBracket = true)
             where T : IQueryConditionBuilder
         {
             instance.CloseBracket = closeBracket;
