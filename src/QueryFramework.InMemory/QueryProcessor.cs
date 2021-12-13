@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CrossCutting.Data.Abstractions;
+using CrossCutting.Data.Core;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 
