@@ -57,7 +57,7 @@ namespace QueryFramework.Core.Tests.Queries
         public void Constructing_FieldSelectionQuery_With_ValidationError_Leads_To_Exception()
         {
             // Arrange
-            var action = new Action(() => _ = new SingleEntityQuery(null, null, new[] { new QueryCondition("field", QueryOperator.Equal, openBracket: true) }, Enumerable.Empty<IQuerySortOrder>()));
+            var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, new[] { new QueryCondition("field", QueryOperator.Equal, openBracket: true) }, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IQueryExpression>()));
 
             // Act
             action.Should().Throw<ValidationException>();

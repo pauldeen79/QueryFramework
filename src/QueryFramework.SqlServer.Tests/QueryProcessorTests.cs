@@ -7,7 +7,6 @@ using CrossCutting.Data.Core;
 using CrossCutting.Data.Core.Commands;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries;
@@ -24,11 +23,11 @@ namespace QueryFramework.SqlServer.Tests
         public QueryProcessorTests()
         {
             Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>()
-                .Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new PagedDatabaseCommand(new SqlTextCommand("SELECT ...", DatabaseOperation.Select),
-                                                  new SqlTextCommand("SELECT COUNT(*)...", DatabaseOperation.Select),
-                                                  0,
-                                                  0));
+                   .Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
+                   .Returns(new PagedDatabaseCommand(new SqlTextCommand("SELECT ...", DatabaseOperation.Select),
+                                                     new SqlTextCommand("SELECT COUNT(*)...", DatabaseOperation.Select),
+                                                     0,
+                                                     0));
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace QueryFramework.SqlServer.Tests
         {
             // Arrange
             SetupSourceData(new[] { new MyEntity { Property = "Value" } }, totalRecordCount: 10);
-            var query = new SingleEntityQuery(1, null, Enumerable.Empty<IQueryCondition>(), Enumerable.Empty<IQuerySortOrder>());
+            var query = new SingleEntityQueryBuilder().Take(1).Build();
 
             // Act
             var actual = Sut.FindPaged(query);
@@ -103,10 +102,7 @@ namespace QueryFramework.SqlServer.Tests
 
             // For FindPaged
             retrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>()))
-                                      .Returns<IPagedDatabaseCommand>(command => CreatePagedResult(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
+                                      .Returns<IPagedDatabaseCommand>(command => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
         }
-
-        private IPagedResult<MyEntity> CreatePagedResult(IEnumerable<MyEntity> data, int totalRecordCount, int offset, int pageSize)
-            => new PagedResult<MyEntity>(data, totalRecordCount, offset, pageSize);
     }
 }

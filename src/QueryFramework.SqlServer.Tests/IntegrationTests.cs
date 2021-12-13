@@ -4,8 +4,9 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Core;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions;
-using QueryFramework.Core;
+using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Queries.Builders;
+using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Tests.Repositories;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace QueryFramework.SqlServer.Tests
         public void Can_Query_Filtered_Records()
         {
             // Arrange
-            var query = new TestQuery(null, null, new[] { new QueryCondition("Name", QueryOperator.Equal, "Test") }, Enumerable.Empty<IQuerySortOrder>());
+            var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).Build());
             var expectedResult = new[] { new TestEntity(), new TestEntity() };
             RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
                          .Returns(expectedResult);

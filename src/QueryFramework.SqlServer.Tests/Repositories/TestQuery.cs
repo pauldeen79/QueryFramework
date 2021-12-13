@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Queries;
 
 namespace QueryFramework.SqlServer.Tests.Repositories
@@ -9,6 +10,10 @@ namespace QueryFramework.SqlServer.Tests.Repositories
     public record TestQuery : SingleEntityQuery, ITestQuery
     {
         public TestQuery()
+        {
+        }
+
+        public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Conditions, source.OrderByFields)
         {
         }
 

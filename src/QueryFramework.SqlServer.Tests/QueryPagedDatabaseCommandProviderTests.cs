@@ -8,8 +8,9 @@ using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core;
-using QueryFramework.Core.Queries;
+using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Queries.Builders;
+using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Abstractions;
 using Xunit;
 
@@ -42,7 +43,7 @@ namespace QueryFramework.SqlServer.Tests
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
-            var actual = Sut.Create(new SingleEntityQuery(null, null, new[] { new QueryCondition("Field", QueryOperator.Equal, "Value") }, Enumerable.Empty<IQuerySortOrder>()), DatabaseOperation.Select);
+            var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(), DatabaseOperation.Select);
 
             // Assert
             actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
@@ -70,7 +71,7 @@ namespace QueryFramework.SqlServer.Tests
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
-            var actual = Sut.CreatePaged(new SingleEntityQuery(null, null, new[] { new QueryCondition("Field", QueryOperator.Equal, "Value") }, Enumerable.Empty<IQuerySortOrder>()), DatabaseOperation.Select, 0, pageSize);
+            var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(), DatabaseOperation.Select, 0, pageSize);
 
             // Assert
             actual.DataCommand.CommandText.Should().Be("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");
