@@ -2,7 +2,6 @@
 {
     public interface IQueryExpressionFunction
     {
-        string Expression { get; }
         IQueryExpressionFunction? InnerFunction { get; }
     }
 }

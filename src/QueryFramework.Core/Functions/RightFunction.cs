@@ -1,7 +1,6 @@
 ﻿using QueryFramework.Abstractions;
-using QueryFramework.SqlServer.Extensions;
 
-namespace QueryFramework.SqlServer.Functions
+namespace QueryFramework.Core.Functions
 {
     public record RightFunction : IQueryExpressionFunction
     {
@@ -12,8 +11,6 @@ namespace QueryFramework.SqlServer.Functions
             Length = length;
             InnerFunction = innerFunction;
         }
-
-        public string Expression => InnerFunction.GetExpression($"RIGHT({{0}}, {Length})");
 
         public int Length { get; }
         public IQueryExpressionFunction? InnerFunction { get; }

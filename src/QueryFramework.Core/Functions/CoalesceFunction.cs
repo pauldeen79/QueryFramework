@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions;
-using QueryFramework.SqlServer.Extensions;
 
-namespace QueryFramework.SqlServer.Functions
+namespace QueryFramework.Core.Functions
 {
     public record CoalesceFunction : IQueryExpression, IQueryExpressionFunction
     {
@@ -23,13 +21,6 @@ namespace QueryFramework.SqlServer.Functions
         public CoalesceFunction(string fieldName, IQueryExpressionFunction? innerFunction, IEnumerable<IQueryExpression> innerExpressions) : this(fieldName, innerFunction, innerExpressions.ToArray())
         {
         }
-
-        public string Expression => InnerFunction.GetExpression($"COALESCE({FieldNameAsString()}{InnerExpressionsAsString()})");
-
-        private string InnerExpressionsAsString() => string.Join(", ", InnerExpressions.Select(x => x.GetExpression()));
-        private string FieldNameAsString() => string.IsNullOrWhiteSpace(FieldName)
-            ? string.Empty
-            : "{0}, ";
 
         public IQueryExpressionFunction? InnerFunction { get; }
 

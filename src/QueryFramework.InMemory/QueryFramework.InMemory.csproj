@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
+    <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
   </ItemGroup>
 
 </Project>

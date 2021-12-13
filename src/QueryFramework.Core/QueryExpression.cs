@@ -21,6 +21,6 @@ namespace QueryFramework.Core
 
         public override string ToString() => Function == null
             ? FieldName
-            : Function.Expression;
+            : $"[{Function.GetType().Name}({FieldName})]";
     }
 }

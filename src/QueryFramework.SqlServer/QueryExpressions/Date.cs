@@ -1,5 +1,6 @@
 ﻿using System;
 using QueryFramework.Abstractions;
+using QueryFramework.SqlServer.Functions;
 
 namespace QueryFramework.SqlServer.QueryExpressions
 {
@@ -24,18 +25,5 @@ namespace QueryFramework.SqlServer.QueryExpressions
         /// <value>The expression.</value>
         public IQueryExpressionFunction? Function => new DateFunction(_value);
 
-        private sealed class DateFunction : IQueryExpressionFunction
-        {
-            private readonly DateTime _value;
-
-            public DateFunction(DateTime value)
-            {
-                _value = value;
-            }
-
-            public string Expression => "'" + _value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-
-            public IQueryExpressionFunction? InnerFunction => null;
-        }
     }
 }

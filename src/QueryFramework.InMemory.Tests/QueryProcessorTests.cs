@@ -8,6 +8,7 @@ using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Functions;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
@@ -59,7 +60,6 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
             var sut = CreateSut(items);
             var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("UNKNOWN({0})");
             var query = new SingleEntityQueryBuilder()
                 .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("something"))
                 .Build();
@@ -67,7 +67,7 @@ namespace QueryFramework.InMemory.Tests
             // Act & Assert
             sut.Invoking(x => x.FindPaged(query))
                .Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().StartWith("Function [UNKNOWN(Property)] is not supported");
+               .And.Message.Should().StartWith("Function [IQueryExpressionFunctionProxy] is not supported");
         }
 
         [Fact]
@@ -572,11 +572,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("LEN({0})");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo(2))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LengthFunction()).IsEqualTo(2))
                 .Build();
 
             // Act
@@ -592,11 +590,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("LEFT({0},1)");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LeftFunction(1)).IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -612,11 +608,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("RIGHT({0},1)");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("2"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new RightFunction(1)).IsEqualTo("2"))
                 .Build();
 
             // Act
@@ -632,11 +626,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "b" } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("UPPER({0})");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new UpperFunction()).IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -652,11 +644,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("LOWER({0})");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("b"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new LowerFunction()).IsEqualTo("b"))
                 .Build();
 
             // Act
@@ -672,11 +662,9 @@ namespace QueryFramework.InMemory.Tests
         {
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B " } };
-            var functionMock = new Mock<IQueryExpressionFunction>();
-            functionMock.SetupGet(x => x.Expression).Returns("TRIM({0})");
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpression(nameof(MyClass.Property), functionMock.Object).IsEqualTo("B"))
+                .Where(new QueryExpression(nameof(MyClass.Property), new TrimFunction()).IsEqualTo("B"))
                 .Build();
 
             // Act

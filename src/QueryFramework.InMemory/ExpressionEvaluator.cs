@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions;
+using QueryFramework.Core.Functions;
 
 namespace QueryFramework.InMemory
 {
@@ -19,7 +20,7 @@ namespace QueryFramework.InMemory
         {
             if (field.Function != null)
             {
-                var functionName = GetFunctionName(field.Function.Expression, out var parameters);
+                var functionName = GetFunctionName(field.Function, out var parameters);
                 if (Functions.Items.TryGetValue(functionName, out var function))
                 {
                     var split = parameters.Split(',');
@@ -28,29 +29,50 @@ namespace QueryFramework.InMemory
                         : ValueProvider.GetFieldValue(item, split[0]);
                     return function.Invoke(fieldName, split.Skip(1));
                 }
-                throw new ArgumentOutOfRangeException(nameof(field), $"Function [{field.GetExpression()}] is not supported");
+                throw new ArgumentOutOfRangeException(nameof(field), $"Function [{field.Function.GetType().Name}] is not supported");
             }
 
             return ValueProvider.GetFieldValue(item, field.FieldName);
         }
 
-        private static string GetFunctionName(string expression, out string parameter)
+        private static string GetFunctionName(IQueryExpressionFunction function, out string parameter)
         {
-            var closeIndex = expression.IndexOf(")");
-            parameter = string.Empty;
-            if (closeIndex == -1)
+            parameter = "{0}";
+
+            if (function is LengthFunction)
             {
-                return string.Empty;
+                return "LEN";
             }
 
-            var openIndex = expression.LastIndexOf("(", closeIndex);
-            if (openIndex == -1)
+            if (function is LeftFunction l)
             {
-                return string.Empty;
+                parameter = "{0}," + l.Length.ToString(CultureInfo.InvariantCulture);
+                return "LEFT";
             }
 
-            parameter = expression.Substring(openIndex + 1, closeIndex - openIndex - 1);
-            return expression.Substring(0, openIndex);
+            if (function is RightFunction r)
+            {
+                parameter = "{0}," + r.Length.ToString(CultureInfo.InvariantCulture);
+                return "RIGHT";
+            }
+
+            if (function is UpperFunction)
+            {
+                return "UPPER";
+            }
+
+            if (function is LowerFunction)
+            {
+                return "LOWER";
+            }
+
+            if (function is TrimFunction)
+            {
+                return "TRIM";
+            }
+
+            // unknown, let the calling function handle this
+            return string.Empty;
         }
     }
 }

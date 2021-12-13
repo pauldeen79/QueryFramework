@@ -67,10 +67,10 @@ namespace QueryFramework.SqlServer.Extensions
 
                 if (!fieldProvider.ValidateExpression(correctedExpression))
                 {
-                    throw new InvalidOperationException($"Query fields contains invalid expression [{expression.GetExpression()}]");
+                    throw new InvalidOperationException($"Query fields contains invalid expression [{expression.GetSqlExpression()}]");
                 }
 
-                instance.Select(correctedExpression.GetExpression());
+                instance.Select(correctedExpression.GetSqlExpression());
                 paramCounter++;
             }
 
@@ -165,9 +165,9 @@ namespace QueryFramework.SqlServer.Extensions
                 var corrected = new QueryExpression(correctedFieldName, groupBy.Function);
                 if (!fieldProvider.ValidateExpression(corrected))
                 {
-                    throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected.GetExpression()}]");
+                    throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected.GetSqlExpression()}]");
                 }
-                instance.GroupBy(corrected.GetExpression());
+                instance.GroupBy(corrected.GetSqlExpression());
                 fieldCounter++;
             }
 
@@ -246,9 +246,9 @@ namespace QueryFramework.SqlServer.Extensions
                 var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.SortOrder.Order);
                 if (!fieldProvider.ValidateExpression(newQuerySortOrder.Field))
                 {
-                    throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field.GetExpression()}]");
+                    throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field.GetSqlExpression()}]");
                 }
-                instance.OrderBy($"{newQuerySortOrder.Field.GetExpression()} {newQuerySortOrder.ToSql()}");
+                instance.OrderBy($"{newQuerySortOrder.Field.GetSqlExpression()} {newQuerySortOrder.ToSql()}");
             }
 
             if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
@@ -297,7 +297,7 @@ namespace QueryFramework.SqlServer.Extensions
 
             if (!fieldProvider.ValidateExpression(field))
             {
-                throw new InvalidOperationException($"Query conditions contains invalid expression [{field.GetExpression()}]");
+                throw new InvalidOperationException($"Query conditions contains invalid expression [{field.GetSqlExpression()}]");
             }
 
             if (!queryCondition.Operator.In(QueryOperator.Contains,
@@ -314,7 +314,7 @@ namespace QueryFramework.SqlServer.Extensions
                     builder.Append("COALESCE(");
                 }
 
-                builder.Append(field.GetExpression());
+                builder.Append(field.GetSqlExpression());
 
                 if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
                 {
@@ -361,32 +361,32 @@ namespace QueryFramework.SqlServer.Extensions
             }
             else if (queryCondition.Operator == QueryOperator.Contains)
             {
-                builder.Append($"CHARINDEX({paramName}, {field.GetExpression()}) > 0");
+                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) > 0");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotContains)
             {
-                builder.Append($"CHARINDEX({paramName}, {field.GetExpression()}) = 0");
+                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) = 0");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.StartsWith)
             {
-                builder.Append($"LEFT({field.GetExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
+                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotStartsWith)
             {
-                builder.Append($"LEFT({field.GetExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
+                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.EndsWith)
             {
-                builder.Append($"RIGHT({field.GetExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
+                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else if (queryCondition.Operator == QueryOperator.NotEndsWith)
             {
-                builder.Append($"RIGHT({field.GetExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
+                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
             else
