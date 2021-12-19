@@ -11,7 +11,6 @@ using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Extensions;
-using QueryFramework.Core.Functions;
 using QueryFramework.Core.Queries.Builders;
 using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Abstractions;
@@ -35,25 +34,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             SettingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
             SettingsMock.SetupGet(x => x.Fields).Returns(string.Empty);
             FieldProviderMock = new Mock<IQueryFieldProvider>();
-            FieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(input => input);
-            FieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(true);
             FieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             QueryMock = new Mock<IGroupingQuery>();
-        }
-
-        [Fact]
-        public void Select_Skips_Fields_That_Are_Returned_As_Null_In_GetDatabaseFieldName()
-        {
-            // Arrange
-            var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            FieldProviderMock.Setup(x => x.GetSelectFields(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(input => input.Where(x => x != "Field2"));
-            Builder.From("MyTable");
-
-            // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
-
-            // Assert
-            actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field3 FROM MyTable");
         }
 
         [Fact]
@@ -130,19 +112,6 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.Invoking(x => x.Select(query, SettingsMock.Object, FieldProviderMock.Object, query))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
-        }
-
-        [Fact]
-        public void Select_Throws_When_ValidateExpression_Returns_False()
-        {
-            // Arrange
-            var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-            FieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(false);
-
-            // Act
-            Builder.Invoking(x => x.Select(query, SettingsMock.Object, FieldProviderMock.Object, query))
-                   .Should().Throw<InvalidOperationException>()
-                   .And.Message.Should().StartWith("Query fields contains invalid expression [Field1]");
         }
 
         [Fact]
@@ -336,20 +305,6 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         }
 
         [Fact]
-        public void OrderBy_Throws_When_ValidateExpression_Returns_False_And_GetFieldName_Returns_NonNullValue()
-        {
-            // Arrange
-            var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
-            FieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(false);
-
-            // Act & Assert
-            Builder.Invoking(x => x.OrderBy(query, SettingsMock.Object, FieldProviderMock.Object))
-                   .Should().Throw<InvalidOperationException>()
-                   .And.Message.Should().StartWith("Query order by fields contains invalid expression [Field]");
-        }
-
-        [Fact]
         public void GroupBy_Does_Not_Append_Anything_When_GroupByFields_Is_Null()
         {
             // Arrange
@@ -437,22 +392,6 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.Invoking(x => x.GroupBy(QueryMock.Object, SettingsMock.Object, FieldProviderMock.Object))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
-        }
-
-        [Fact]
-        public void GroupBy_Throws_When_ValidateExpression_Returns_False()
-        {
-            // Arrange
-            QueryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
-            SettingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-            FieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>()))
-                             .Returns(false);
-
-            // Act & Assert
-            Builder.Invoking(x => x.GroupBy(QueryMock.Object, SettingsMock.Object, FieldProviderMock.Object))
-                   .Should().Throw<InvalidOperationException>()
-                   .And.Message.Should().StartWith("Query group by fields contains invalid expression [Field]");
         }
 
         [Fact]
@@ -604,23 +543,6 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                                                          Builder.Where))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query conditions contains unknown field [Field]");
-        }
-
-        [Fact]
-        public void AppendQueryCondition_Throws_On_Invalid_Expression_When_ValidateExpression_Returns_False()
-        {
-            // Arrange
-            FieldProviderMock.Setup(x => x.ValidateExpression(It.IsAny<IQueryExpression>())).Returns(false);
-            Builder.From("MyTable");
-
-            // Act
-            Builder.Invoking(x => x.AppendQueryCondition(0,
-                                                         new QueryCondition(new QueryExpression("Field", new SumFunction()), QueryOperator.Greater, "value"),
-                                                         SettingsMock.Object,
-                                                         FieldProviderMock.Object,
-                                                         Builder.Where))
-                   .Should().Throw<InvalidOperationException>()
-                   .And.Message.Should().StartWith("Query conditions contains invalid expression [SUM(Field)]");
         }
 
         [Theory]

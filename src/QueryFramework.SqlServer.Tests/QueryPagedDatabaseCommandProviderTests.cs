@@ -6,7 +6,6 @@ using AutoFixture;
 using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
@@ -39,7 +38,6 @@ namespace QueryFramework.SqlServer.Tests
             var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.Is<IQueryExpression>(x => x.FieldName == "Field"))).Returns(true);
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act
@@ -67,7 +65,6 @@ namespace QueryFramework.SqlServer.Tests
             settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             settingsMock.SetupGet(x => x.OverridePageSize).Returns(pageSize);
             var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
-            fieldProviderMock.Setup(x => x.ValidateExpression(It.Is<IQueryExpression>(x => x.FieldName == "Field"))).Returns(true);
             fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
             // Act

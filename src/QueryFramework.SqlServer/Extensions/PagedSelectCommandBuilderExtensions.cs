@@ -7,7 +7,6 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Builders;
 using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Extensions.Queries;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
@@ -49,7 +48,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                                                       IQueryFieldProvider fieldProvider)
         {
             var paramCounter = 0;
-            foreach (var expression in fieldSelectionQuery.GetSelectFields(fieldProvider))
+            foreach (var expression in fieldSelectionQuery.Fields)
             {
                 if (paramCounter > 0)
                 {
@@ -64,11 +63,6 @@ namespace QueryFramework.SqlServer.Extensions
 
                 //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
                 var correctedExpression = new QueryExpression(correctedFieldName, expression.Function);
-
-                if (!fieldProvider.ValidateExpression(correctedExpression))
-                {
-                    throw new InvalidOperationException($"Query fields contains invalid expression [{expression.GetSqlExpression()}]");
-                }
 
                 instance.Select(correctedExpression.GetSqlExpression());
                 paramCounter++;
@@ -163,10 +157,6 @@ namespace QueryFramework.SqlServer.Extensions
                     throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
                 }
                 var corrected = new QueryExpression(correctedFieldName, groupBy.Function);
-                if (!fieldProvider.ValidateExpression(corrected))
-                {
-                    throw new InvalidOperationException($"Query group by fields contains invalid expression [{corrected.GetSqlExpression()}]");
-                }
                 instance.GroupBy(corrected.GetSqlExpression());
                 fieldCounter++;
             }
@@ -244,10 +234,6 @@ namespace QueryFramework.SqlServer.Extensions
                     throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
                 }
                 var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.SortOrder.Order);
-                if (!fieldProvider.ValidateExpression(newQuerySortOrder.Field))
-                {
-                    throw new InvalidOperationException($"Query order by fields contains invalid expression [{newQuerySortOrder.Field.GetSqlExpression()}]");
-                }
                 instance.OrderBy($"{newQuerySortOrder.Field.GetSqlExpression()} {newQuerySortOrder.ToSql()}");
             }
 
@@ -294,11 +280,6 @@ namespace QueryFramework.SqlServer.Extensions
             }
 
             var field = queryCondition.Field.With(fieldName: customFieldName);
-
-            if (!fieldProvider.ValidateExpression(field))
-            {
-                throw new InvalidOperationException($"Query conditions contains invalid expression [{field.GetSqlExpression()}]");
-            }
 
             if (!queryCondition.Operator.In(QueryOperator.Contains,
                                             QueryOperator.NotContains,
