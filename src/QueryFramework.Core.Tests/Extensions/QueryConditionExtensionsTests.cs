@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using CrossCutting.Common.Extensions;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
@@ -76,72 +77,72 @@ namespace QueryFramework.Core.Tests.Extensions
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesContain()
-            => QueryConditionTest(x => x.DoesContain(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.Contains);
+            => AssertQueryCondition(x => x.DoesContain("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.Contains);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesEndWith()
-            => QueryConditionTest(x => x.DoesEndWith(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.EndsWith);
+            => AssertQueryCondition(x => x.DoesEndWith("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.EndsWith);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsEqualTo()
-            => QueryConditionTest(x => x.IsEqualTo(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.Equal);
+            => AssertQueryCondition(x => x.IsEqualTo("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.Equal);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsGreaterOrEqualThan()
-            => QueryConditionTest(x => x.IsGreaterOrEqualThan(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.GreaterOrEqual);
+            => AssertQueryCondition(x => x.IsGreaterOrEqualThan("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.GreaterOrEqual);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsGreaterThan()
-            => QueryConditionTest(x => x.IsGreaterThan(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.Greater);
+            => AssertQueryCondition(x => x.IsGreaterThan("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.Greater);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsNotNullOrEmpty()
-            => QueryConditionTest(x => x.IsNotNullOrEmpty(openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.IsNotNullOrEmpty);
+            => AssertQueryCondition(x => x.IsNotNullOrEmpty().Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.IsNotNullOrEmpty);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsNotNull()
-            => QueryConditionTest(x => x.IsNotNull(openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.IsNotNull);
+            => AssertQueryCondition(x => x.IsNotNull().Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.IsNotNull);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsNullOrEmpty()
-            => QueryConditionTest(x => x.IsNullOrEmpty(openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.IsNullOrEmpty);
+            => AssertQueryCondition(x => x.IsNullOrEmpty().Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.IsNullOrEmpty);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsNull()
-            => QueryConditionTest(x => x.IsNull(openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.IsNull);
+            => AssertQueryCondition(x => x.IsNull().Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.IsNull);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsLowerOrEqualThan()
-            => QueryConditionTest(x => x.IsLowerOrEqualThan(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.LowerOrEqual);
+            => AssertQueryCondition(x => x.IsLowerOrEqualThan("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.LowerOrEqual);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsLowerThan()
-            => QueryConditionTest(x => x.IsLowerThan(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.Lower);
+            => AssertQueryCondition(x => x.IsLowerThan("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.Lower);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesNotContain()
-            => QueryConditionTest(x => x.DoesNotContain(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.NotContains);
+            => AssertQueryCondition(x => x.DoesNotContain("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.NotContains);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesNotEndWith()
-            => QueryConditionTest(x => x.DoesNotEndWith(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.NotEndsWith);
+            => AssertQueryCondition(x => x.DoesNotEndWith("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.NotEndsWith);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_IsNotEqualTo()
-            => QueryConditionTest(x => x.IsNotEqualTo(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.NotEqual);
+            => AssertQueryCondition(x => x.IsNotEqualTo("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.NotEqual);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesNotStartWith()
-            => QueryConditionTest(x => x.DoesNotStartWith(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.NotStartsWith);
+            => AssertQueryCondition(x => x.DoesNotStartWith("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.NotStartsWith);
 
         [Fact]
         public void Can_Create_QueryCondition_Using_DoesStartWith()
-            => QueryConditionTest(x => x.DoesStartWith(value: "value", openBracket: true, closeBracket: true, combination: QueryCombination.Or), QueryOperator.StartsWith);
+            => AssertQueryCondition(x => x.DoesStartWith("value").Chain(x => { x.OpenBracket = true; x.CloseBracket = true; x.Combination = QueryCombination.Or; }), QueryOperator.StartsWith);
 
-        private static void QueryConditionTest(Func<IQueryExpression, IQueryCondition> func, QueryOperator expectedOperator)
+        private static void AssertQueryCondition(Func<QueryExpressionBuilder, QueryConditionBuilder> func, QueryOperator expectedOperator)
         {
             // Arrange
-            var queryExpression = new QueryExpression("fieldname");
+            var queryExpression = new QueryExpressionBuilder { FieldName = "fieldName" };
 
             // Act
             var actual = func(queryExpression);
