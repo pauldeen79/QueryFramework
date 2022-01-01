@@ -31,23 +31,6 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         }
 
         [Fact]
-        public void Can_Use_Select_With_QueryExpression_To_Add_Field()
-        {
-            // Arrange
-            var sut = new FieldSelectionQueryBuilder();
-            var function = new Mock<IQueryExpressionFunction>().Object;
-
-            // Act
-            var actual = sut.Select(new QueryExpression("FieldName", function));
-
-            // Assert
-            actual.Fields.Should().HaveCount(1);
-            actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
-            actual.Distinct.Should().BeFalse();
-        }
-
-        [Fact]
         public void Can_Use_Select_With_FieldName_String_To_Add_Field()
         {
             // Arrange
@@ -104,23 +87,6 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
 
             // Act
             var actual = sut.SelectDistinct(new QueryExpressionBuilder("FieldName", function));
-
-            // Assert
-            actual.Fields.Should().HaveCount(1);
-            actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
-            actual.Distinct.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Can_Use_SelectDistinct_With_QueryExpression_To_Add_Field()
-        {
-            // Arrange
-            var sut = new FieldSelectionQueryBuilder();
-            var function = new Mock<IQueryExpressionFunction>().Object;
-
-            // Act
-            var actual = sut.SelectDistinct(new QueryExpression("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);

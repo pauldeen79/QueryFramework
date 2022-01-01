@@ -163,25 +163,6 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
         }
 
         [Fact]
-        public void Can_Use_OrderBy_With_QueryExpressions_To_Add_OrderByClauses()
-        {
-            // Arrange
-            var sut = new SingleEntityQueryBuilder();
-
-            // Act
-            var actual = sut.OrderBy(new QueryExpression("Field1"), new QueryExpression("Field2"), new QueryExpression("Field3"));
-
-            // Assert
-            actual.OrderByFields.Should().HaveCount(3);
-            actual.OrderByFields.ElementAt(0).Field.FieldName.Should().Be("Field1");
-            actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-            actual.OrderByFields.ElementAt(1).Field.FieldName.Should().Be("Field2");
-            actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-            actual.OrderByFields.ElementAt(2).Field.FieldName.Should().Be("Field3");
-            actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        }
-
-        [Fact]
         public void Can_Use_OrderBy_With_QueryExpressionBuilders_To_Add_OrderByClauses()
         {
             // Arrange

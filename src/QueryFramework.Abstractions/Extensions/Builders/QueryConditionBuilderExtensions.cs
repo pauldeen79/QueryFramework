@@ -22,7 +22,6 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.Field = field;
             return instance;
         }
-
         public static T WithField<T>(this T instance, string field)
             where T : IQueryConditionBuilder
         {
