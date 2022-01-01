@@ -17,36 +17,6 @@ namespace QueryFramework.Abstractions.Tests.Extensions.Builders
         }
 
         [Fact]
-        public void Clear_Clears_All_Properties()
-        {
-            // Arrange
-            Sut.SetupSet(x => x.Value = It.IsAny<object>()).Verifiable();
-
-            // Act
-            Sut.Object.Clear();
-
-            // Assert
-            Sut.VerifySet(x => x.Name = string.Empty, Times.Once);
-            Sut.VerifySet(x => x.Value = It.IsAny<object>());
-        }
-
-        [Fact]
-        public void Update_Updates_All_Properties()
-        {
-            // Arrange
-            var updateMock = new Mock<IQueryParameter>();
-            updateMock.SetupGet(x => x.Name).Returns("name");
-            updateMock.SetupGet(x => x.Value).Returns("value");
-
-            // Act
-            Sut.Object.Update(updateMock.Object);
-
-            // Assert
-            Sut.VerifySet(x => x.Name = "name", Times.Once);
-            Sut.VerifySet(x => x.Value = "value", Times.Once);
-        }
-
-        [Fact]
         public void WithName_Updates_OpenBracket()
         {
             // Act

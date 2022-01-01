@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Queries.Builders;
 using Xunit;
@@ -29,7 +30,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         public void Can_Construct_SingleEntityQueryBuilder_With_Custom_Values()
         {
             // Arrange
-            var conditions = new[] { new QueryConditionBuilder("field", QueryOperator.Equal, "value") };
+            var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
             var orderByFields = new[] { new QuerySortOrderBuilder("field") };
             var limit = 1;
             var offset = 2;
@@ -54,7 +55,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         public void Can_Build_Entity_From_Builder()
         {
             // Arrange
-            var conditions = new[] { new QueryConditionBuilder("field", QueryOperator.Equal, "value") };
+            var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
             var orderByFields = new[] { new QuerySortOrderBuilder("field") };
             var limit = 1;
             var offset = 2;

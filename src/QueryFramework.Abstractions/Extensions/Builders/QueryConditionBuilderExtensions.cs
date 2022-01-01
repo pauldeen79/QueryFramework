@@ -4,37 +4,6 @@ namespace QueryFramework.Abstractions.Extensions.Builders
 {
     public static class QueryConditionBuilderExtensions
     {
-        public static T Clear<T>(this T instance)
-            where T : IQueryConditionBuilder
-        {
-            instance.OpenBracket = default;
-            instance.CloseBracket = default;
-            instance.Field.Clear();
-            instance.Operator = default;
-            instance.Value = default;
-            instance.Combination = default;
-            return instance;
-        }
-        public static T Update<T>(this T instance, IQueryCondition source)
-            where T : IQueryConditionBuilder
-        {
-            instance.OpenBracket = default;
-            instance.CloseBracket = default;
-            instance.Field.Clear();
-            instance.Operator = default;
-            instance.Value = default;
-            instance.Combination = default;
-            if (source != null)
-            {
-                instance.OpenBracket = source.OpenBracket;
-                instance.CloseBracket = source.CloseBracket;
-                instance.Field.Update(source.Field);
-                instance.Operator = source.Operator;
-                instance.Value = source.Value;
-                instance.Combination = source.Combination;
-            }
-            return instance;
-        }
         public static T WithOpenBracket<T>(this T instance, bool openBracket = true)
             where T : IQueryConditionBuilder
         {
@@ -53,12 +22,7 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.Field = field;
             return instance;
         }
-        public static T WithField<T>(this T instance, IQueryExpression field)
-            where T : IQueryConditionBuilder
-        {
-            instance.Field.Update(field);
-            return instance;
-        }
+
         public static T WithField<T>(this T instance, string field)
             where T : IQueryConditionBuilder
         {
@@ -71,7 +35,7 @@ namespace QueryFramework.Abstractions.Extensions.Builders
             instance.Operator = @operator;
             return instance;
         }
-        public static T WithValue<T>(this T instance, object value)
+        public static T WithValue<T>(this T instance, object? value)
             where T : IQueryConditionBuilder
         {
             instance.Value = value;

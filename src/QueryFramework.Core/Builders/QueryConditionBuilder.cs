@@ -1,7 +1,5 @@
 ﻿using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
-using QueryFramework.Core.Extensions;
 
 namespace QueryFramework.Core.Builders
 {
@@ -17,46 +15,19 @@ namespace QueryFramework.Core.Builders
         {
             return new QueryCondition(Field.Build(), Operator, Value, OpenBracket, CloseBracket, Combination);
         }
-        public QueryConditionBuilder(IQueryCondition? source = null)
+        public QueryConditionBuilder()
         {
             Field = new QueryExpressionBuilder();
-            if (source != null)
-            {
-                OpenBracket = source.OpenBracket;
-                CloseBracket = source.CloseBracket;
-                Field.Update(source.Field);
-                Operator = source.Operator;
-                Value = source.Value;
-                Combination = source.Combination;
-            }
         }
-        public QueryConditionBuilder(IQueryExpression expression,
-                                     QueryOperator queryOperator,
-                                     object? value = null,
-                                     bool openBracket = false,
-                                     bool closeBracket = false,
-                                     QueryCombination combination = QueryCombination.And)
+        public QueryConditionBuilder(IQueryCondition source) : this()
         {
-            Field = expression.ToBuilder();
-            Operator = queryOperator;
-            Value = value;
-            OpenBracket = openBracket;
-            CloseBracket = closeBracket;
-            Combination = combination;
-        }
-        public QueryConditionBuilder(string fieldName,
-                                     QueryOperator queryOperator,
-                                     object? value = null,
-                                     bool openBracket = false,
-                                     bool closeBracket = false,
-                                     QueryCombination combination = QueryCombination.And)
-        {
-            Field = new QueryExpressionBuilder(new QueryExpression(fieldName));
-            Operator = queryOperator;
-            Value = value;
-            OpenBracket = openBracket;
-            CloseBracket = closeBracket;
-            Combination = combination;
+            OpenBracket = source.OpenBracket;
+            CloseBracket = source.CloseBracket;
+            Field.FieldName = source.Field.FieldName;
+            Field.Function = source.Field.Function;
+            Operator = source.Operator;
+            Value = source.Value;
+            Combination = source.Combination;
         }
     }
 }

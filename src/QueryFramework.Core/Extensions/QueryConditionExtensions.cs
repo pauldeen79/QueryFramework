@@ -36,7 +36,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the Contains query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder DoesContain(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesContain(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -47,7 +47,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the EndsWith query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder DoesEndWith(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesEndWith(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -58,7 +58,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the Equals query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder IsEqualTo(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder IsEqualTo(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -69,7 +69,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the GreaterOrEqualThan query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder IsGreaterOrEqualThan(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder IsGreaterOrEqualThan(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -80,7 +80,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the GreaterThan query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder IsGreaterThan(this QueryExpressionBuilder instance, object? value = null)
+        public static IQueryConditionBuilder IsGreaterThan(this IQueryExpressionBuilder instance, object? value = null)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -90,7 +90,7 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Creates a query expression with the IsNotNull query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
-        public static QueryConditionBuilder IsNotNull(this QueryExpressionBuilder instance)
+        public static IQueryConditionBuilder IsNotNull(this IQueryExpressionBuilder instance)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -99,7 +99,7 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Creates a query expression with the IsNotNullOrEmpty query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
-        public static QueryConditionBuilder IsNotNullOrEmpty(this QueryExpressionBuilder instance)
+        public static IQueryConditionBuilder IsNotNullOrEmpty(this IQueryExpressionBuilder instance)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -108,7 +108,7 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Creates a query expression with the IsNull query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
-        public static QueryConditionBuilder IsNull(this QueryExpressionBuilder instance)
+        public static IQueryConditionBuilder IsNull(this IQueryExpressionBuilder instance)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -117,7 +117,7 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Creates a query expression with the IsNullOrEmpty query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
-        public static QueryConditionBuilder IsNullOrEmpty(this QueryExpressionBuilder instance)
+        public static IQueryConditionBuilder IsNullOrEmpty(this IQueryExpressionBuilder instance)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -127,7 +127,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the LowerOrEqualThan query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder IsLowerOrEqualThan(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder IsLowerOrEqualThan(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -138,7 +138,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the LowerTHan query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder IsLowerThan(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder IsLowerThan(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -149,7 +149,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the NotContains query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder DoesNotContain(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesNotContain(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -163,7 +163,7 @@ namespace QueryFramework.Core.Extensions
         /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
         /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
         /// <param name="combination">The combination.</param>
-        public static QueryConditionBuilder DoesNotEndWith(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesNotEndWith(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -177,7 +177,7 @@ namespace QueryFramework.Core.Extensions
         /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
         /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
         /// <param name="combination">The combination.</param>
-        public static QueryConditionBuilder IsNotEqualTo(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder IsNotEqualTo(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -188,7 +188,7 @@ namespace QueryFramework.Core.Extensions
         /// <summary>Creates a query expression with the NotStartsWith query operator, using the specified values.</summary>
         /// <param name="instance">The query expression builder instance.</param>
         /// <param name="value">The value.</param>
-        public static QueryConditionBuilder DoesNotStartWith(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesNotStartWith(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,
@@ -202,7 +202,7 @@ namespace QueryFramework.Core.Extensions
         /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
         /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
         /// <param name="combination">The combination.</param>
-        public static QueryConditionBuilder DoesStartWith(this QueryExpressionBuilder instance, object? value)
+        public static IQueryConditionBuilder DoesStartWith(this IQueryExpressionBuilder instance, object? value)
             => new QueryConditionBuilder()
             {
                 Field = instance,

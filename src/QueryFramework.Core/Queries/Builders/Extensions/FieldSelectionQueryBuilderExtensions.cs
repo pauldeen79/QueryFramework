@@ -104,6 +104,10 @@ namespace QueryFramework.Core.Queries.Builders.Extensions
             where T : IFieldSelectionQueryBuilder
         {
             instance.GetAllFields = getAllFields;
+            if (getAllFields)
+            {
+                instance.Fields.Clear();
+            }
             return instance;
         }
 

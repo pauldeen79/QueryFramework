@@ -4,6 +4,7 @@ using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Builders;
@@ -15,7 +16,7 @@ namespace QueryFramework.SqlServer.Tests.TestHelpers
     [ExcludeFromCodeCoverage]
     internal static class SqlHelpers
     {
-        internal static void ExpressionSqlShouldBe(IQueryExpression expression, string expectedSqlForExpression)
+        internal static void ExpressionSqlShouldBe(IQueryExpressionBuilder expression, string expectedSqlForExpression)
         {
             // Arrange
             var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();

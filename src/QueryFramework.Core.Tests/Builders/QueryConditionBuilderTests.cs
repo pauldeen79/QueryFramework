@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Core.Builders;
 using Xunit;
 
@@ -71,12 +72,12 @@ namespace QueryFramework.Core.Tests.Builders
         {
             // Act
             var function = new Mock<IQueryExpressionFunction>().Object;
-            var actual = new QueryConditionBuilder(closeBracket: true,
-                                                   combination: QueryCombination.Or,
-                                                   expression: new QueryExpression(function: function, fieldName: "fieldname"),
-                                                   openBracket: true,
-                                                   queryOperator: QueryOperator.Contains,
-                                                   value: "value");
+            var actual = new QueryConditionBuilder().WithCloseBracket()
+                                                    .WithCombination(QueryCombination.Or)
+                                                    .WithField(new QueryExpressionBuilder().WithFunction(function).WithFieldName("fieldname"))
+                                                    .WithOpenBracket()
+                                                    .WithOperator(QueryOperator.Contains)
+                                                    .WithValue("value");
 
             // Assert
             actual.CloseBracket.Should().Be(true);
@@ -92,12 +93,12 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryConditionBuilder_From_Values_Without_Expression()
         {
             // Act
-            var actual = new QueryConditionBuilder(closeBracket: true,
-                                                   combination: QueryCombination.Or,
-                                                   fieldName: "fieldname",
-                                                   openBracket: true,
-                                                   queryOperator: QueryOperator.Contains,
-                                                   value: "value");
+            var actual = new QueryConditionBuilder().WithCloseBracket()
+                                                    .WithCombination(QueryCombination.Or)
+                                                    .WithField("fieldname")
+                                                    .WithOpenBracket()
+                                                    .WithOperator(QueryOperator.Contains)
+                                                    .WithValue("value");
 
             // Assert
             actual.CloseBracket.Should().Be(true);

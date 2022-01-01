@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using QueryFramework.Core;
+using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
+using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 
@@ -15,7 +17,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Len_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Len();
@@ -28,7 +30,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Len_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Len();
@@ -41,7 +43,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Trim_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Trim();
@@ -54,7 +56,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Trim_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Upper();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Upper();
 
             // Act
             var actual = sut.Trim();
@@ -67,7 +69,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Upper_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Upper();
@@ -80,7 +82,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Upper_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Upper();
@@ -93,7 +95,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Lower_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Lower();
@@ -106,7 +108,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Lower_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Lower();
@@ -119,7 +121,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Left_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Left(2);
@@ -132,7 +134,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Left_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Left(2);
@@ -145,7 +147,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Right_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Right(2);
@@ -158,7 +160,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Right_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Right(2);
@@ -171,7 +173,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Year_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Year();
@@ -184,7 +186,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Year_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
+            var sut = new QueryExpressionBuilder().WithFieldName("Field1").Coalesce(new QueryExpressionBuilder().WithFieldName("Field2"));
 
             // Act
             var actual = sut.Year();
@@ -197,7 +199,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Month_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Month();
@@ -210,7 +212,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Month_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
+            var sut = new QueryExpressionBuilder().WithFieldName("Field1").Coalesce(new QueryExpressionBuilder().WithFieldName("Field2"));
 
             // Act
             var actual = sut.Month();
@@ -223,7 +225,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Day_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Day();
@@ -236,7 +238,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Day_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field1").Coalesce(new QueryExpression("Field2"));
+            var sut = new QueryExpressionBuilder().WithFieldName("Field1").Coalesce("Field2");
 
             // Act
             var actual = sut.Day();
@@ -249,7 +251,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Coalesce_Function_On_Basic_QueryExpression_With_FieldName()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Coalesce("default");
@@ -262,10 +264,10 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Coalesce_Function_On_Basic_QueryExpression_With_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
-            var actual = sut.Coalesce(new QueryExpression("default"));
+            var actual = sut.Coalesce(new QueryExpressionBuilder().WithFieldName("default"));
 
             // Assert
             SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
@@ -275,7 +277,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Coalesce_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Coalesce("default");
@@ -288,7 +290,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Nest_Multiple_Coalesce_Functions()
         {
             // Arrange
-            var sut = new QueryExpression("Field1").Coalesce("Field2");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field1").Coalesce("Field2");
 
             // Act
             var actual = sut.Coalesce("Field3");
@@ -301,7 +303,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Count_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Count();
@@ -314,7 +316,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Count_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Count();
@@ -327,7 +329,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Sum_Function_On_Basic_QueryExpression()
         {
             // Arrange
-            var sut = new QueryExpression("Field");
+            var sut = new QueryExpressionBuilder().WithFieldName("Field");
 
             // Act
             var actual = sut.Sum();
@@ -340,7 +342,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         public void Can_Use_Sum_Function_On_QueryExpression_With_Existing_Expression()
         {
             // Arrange
-            var sut = new QueryExpression("Field").Trim();
+            var sut = new QueryExpressionBuilder().WithFieldName("Field").Trim();
 
             // Act
             var actual = sut.Sum();

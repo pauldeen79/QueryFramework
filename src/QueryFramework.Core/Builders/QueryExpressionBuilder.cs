@@ -11,23 +11,25 @@ namespace QueryFramework.Core.Builders
         {
             return new QueryExpression(FieldName, Function);
         }
-        public QueryExpressionBuilder() : this(null)
+        public QueryExpressionBuilder()
+        {
+            FieldName = string.Empty;
+            Function = null;
+        }
+        public QueryExpressionBuilder(IQueryExpression source)
+        {
+            var customQueryExpression = source as ICustomQueryExpression;
+            FieldName = customQueryExpression == null
+                ? source.FieldName
+                : customQueryExpression.FieldName;
+            Function = customQueryExpression == null
+                ? source.Function
+                : customQueryExpression.Function;
+        }
+        public QueryExpressionBuilder(string fieldName) : this(fieldName, null)
         {
         }
-        public QueryExpressionBuilder(IQueryExpression? source)
-        {
-            if (source != null)
-            {
-                FieldName = source.FieldName;
-                Function = source.Function;
-            }
-            else
-            {
-                FieldName = string.Empty;
-                Function = null;
-            }
-        }
-        public QueryExpressionBuilder(string fieldName, IQueryExpressionFunction? function = null)
+        public QueryExpressionBuilder(string fieldName, IQueryExpressionFunction? function)
         {
             FieldName = fieldName;
             Function = function;

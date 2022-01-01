@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
 using QueryFramework.Core.Builders;
@@ -12,37 +11,6 @@ namespace QueryFramework.Core.Tests.Extensions
     [ExcludeFromCodeCoverage]
     public class QueryExpressionExtensionsTests
     {
-        [Fact]
-        public void Can_Use_With_ExtensionMethod_To_Modify_QueryExpression()
-        {
-            // Arrange
-            var function = new Mock<IQueryExpressionFunction>().Object;
-            var sut = new QueryExpression("field", function);
-            var newFunction = new Mock<IQueryExpressionFunction>().Object;
-
-            // Act
-            var actual = sut.With("newname", newFunction);
-
-            // Assert
-            actual.Function.Should().BeSameAs(newFunction);
-            actual.FieldName.Should().Be("newname");
-        }
-
-        [Fact]
-        public void Can_Use_With_ExtensionMethod_With_DefaultValues_To_Create_Instance_With_Same_Values()
-        {
-            // Arrange
-            var function = new Mock<IQueryExpressionFunction>().Object;
-            var sut = new QueryExpression("field", function);
-
-            // Act
-            var actual = sut.With(string.Empty, null);
-
-            // Assert
-            actual.Function.Should().Be(sut.Function);
-            actual.FieldName.Should().Be(sut.FieldName);
-        }
-
         [Fact]
         public void ToBuilder_Returns_CustomBuilder_When_Available()
         {

@@ -68,7 +68,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo()).Build());
+            var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
 
             // Assert
             actual.Should().NotBeNull();

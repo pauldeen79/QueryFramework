@@ -1,6 +1,5 @@
 ﻿using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
 using QueryFramework.Core.Extensions;
 
 namespace QueryFramework.Core.Builders
@@ -13,21 +12,29 @@ namespace QueryFramework.Core.Builders
         {
             return new QuerySortOrder(Field.Build(), Order);
         }
-        public QuerySortOrderBuilder(IQuerySortOrder? source = null)
+        public QuerySortOrderBuilder()
         {
             Field = new QueryExpressionBuilder();
-            if (source != null)
-            {
-                Field.Update(source.Field);
-                Order = source.Order;
-            }
         }
-        public QuerySortOrderBuilder(IQueryExpression expression, QuerySortOrderDirection order = QuerySortOrderDirection.Ascending)
+        public QuerySortOrderBuilder(IQuerySortOrder source)
+        {
+            Field = new QueryExpressionBuilder();
+            Field.FieldName = source.Field.FieldName;
+            Field.Function = source.Field.Function;
+            Order = source.Order;
+        }
+        public QuerySortOrderBuilder(IQueryExpression expression) : this(expression, QuerySortOrderDirection.Ascending)
+        {
+        }
+        public QuerySortOrderBuilder(IQueryExpression expression, QuerySortOrderDirection order)
         {
             Field = expression.ToBuilder();
             Order = order;
         }
-        public QuerySortOrderBuilder(string fieldName, QuerySortOrderDirection order = QuerySortOrderDirection.Ascending)
+        public QuerySortOrderBuilder(string fieldName) : this(fieldName, QuerySortOrderDirection.Ascending)
+        {
+        }
+        public QuerySortOrderBuilder(string fieldName, QuerySortOrderDirection order)
         {
             Field = new QueryExpressionBuilder(fieldName);
             Order = order;
