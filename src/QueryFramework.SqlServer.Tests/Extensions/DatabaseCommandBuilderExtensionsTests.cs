@@ -12,7 +12,6 @@ using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Abstractions;
 using QueryFramework.SqlServer.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;

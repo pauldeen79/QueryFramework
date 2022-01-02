@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
 namespace QueryFramework.Core.Tests.Extensions

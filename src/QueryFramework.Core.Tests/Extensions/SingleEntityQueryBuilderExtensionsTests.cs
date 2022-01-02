@@ -2,13 +2,13 @@
 using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
-namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
+namespace QueryFramework.Core.Tests.Extensions
 {
     [ExcludeFromCodeCoverage]
     public class SingleEntityQueryBuilderExtensionsTests

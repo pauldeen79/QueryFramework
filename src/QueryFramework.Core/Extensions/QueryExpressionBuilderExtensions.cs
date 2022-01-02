@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Functions;
 
-namespace QueryFramework.Core.Queries.Builders.Extensions
+namespace QueryFramework.Core.Extensions
 {
     public static class QueryExpressionBuilderExtensions
     {

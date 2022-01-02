@@ -3,7 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Queries.Builders;
 using Xunit;

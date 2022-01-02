@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Moq;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using Xunit;
 
-namespace QueryFramework.Abstractions.Tests.Extensions.Builders
+namespace QueryFramework.Abstractions.Tests.Extensions
 {
     [ExcludeFromCodeCoverage]
     public class QueryConditionBuilderExtensionsTests

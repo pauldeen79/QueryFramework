@@ -4,11 +4,11 @@ using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
-namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
+namespace QueryFramework.Core.Tests.Extensions
 {
     [ExcludeFromCodeCoverage]
     public class FieldSelectionQueryBuilderExtensionsTests

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
 using Xunit;

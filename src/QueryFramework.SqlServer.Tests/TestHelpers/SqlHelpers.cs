@@ -5,11 +5,11 @@ using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 
 namespace QueryFramework.SqlServer.Tests.TestHelpers
 {

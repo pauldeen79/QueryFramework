@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 

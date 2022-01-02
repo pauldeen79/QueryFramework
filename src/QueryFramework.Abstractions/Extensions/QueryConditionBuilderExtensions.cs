@@ -1,6 +1,6 @@
 ﻿using QueryFramework.Abstractions.Builders;
 
-namespace QueryFramework.Abstractions.Extensions.Builders
+namespace QueryFramework.Abstractions.Extensions
 {
     public static class QueryConditionBuilderExtensions
     {

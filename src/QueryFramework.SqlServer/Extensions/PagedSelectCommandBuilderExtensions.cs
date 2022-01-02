@@ -7,7 +7,7 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Builders;
 using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Queries;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
 using QueryFramework.SqlServer.Abstractions;

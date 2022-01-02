@@ -3,7 +3,7 @@ using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
 
-namespace QueryFramework.Core.Queries.Builders.Extensions
+namespace QueryFramework.Core.Extensions
 {
     public static class FieldSelectionQueryBuilderExtensions
     {

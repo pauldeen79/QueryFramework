@@ -9,7 +9,6 @@ using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Functions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
 namespace QueryFramework.InMemory.Tests
