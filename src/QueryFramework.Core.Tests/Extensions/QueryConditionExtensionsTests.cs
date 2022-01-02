@@ -50,32 +50,6 @@ namespace QueryFramework.Core.Tests.Extensions
         }
 
         [Fact]
-        public void Can_Get_CustomBuilder_Using_GetBuilder()
-        {
-            // Arrange
-            var sut = new QueryConditionMock();
-
-            // Act
-            var actual = sut.GetBuilder();
-
-            // Assert
-            actual.Should().BeOfType<QueryConditionBuilderMock>();
-        }
-
-        [Fact]
-        public void Can_Get_DefaultBuilder_Using_GetBuilder()
-        {
-            // Arrange
-            var sut = new QueryCondition("field", QueryOperator.Contains, "value", false, false, QueryCombination.And);
-
-            // Act
-            var actual = sut.GetBuilder();
-
-            // Assert
-            actual.Should().BeOfType<QueryConditionBuilder>();
-        }
-
-        [Fact]
         public void Can_Create_QueryCondition_Using_DoesContain()
             => AssertQueryCondition(x => x.DoesContain("value").WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or), QueryOperator.Contains);
 
@@ -164,59 +138,6 @@ namespace QueryFramework.Core.Tests.Extensions
             actual.CloseBracket.Should().BeTrue();
             actual.Combination.Should().Be(QueryCombination.Or);
             actual.Operator.Should().Be(expectedOperator);
-        }
-
-        [ExcludeFromCodeCoverage]
-        private class QueryConditionMock : ICustomQueryCondition
-        {
-            public bool OpenBracket { get; set; }
-            public bool CloseBracket { get; set; }
-            public IQueryExpression Field { get; set; } = new QueryExpression("Field");
-
-            public QueryOperator Operator { get; set; }
-
-            public object? Value { get; set; }
-
-            public QueryCombination Combination { get; set; }
-
-            public IQueryConditionBuilder CreateBuilder()
-            {
-                return new QueryConditionBuilderMock();
-            }
-
-            public IQueryCondition With(bool? openBracket, bool? closeBracket, QueryCombination? combination)
-            {
-                return new QueryConditionMock
-                {
-                    OpenBracket = openBracket ?? OpenBracket,
-                    CloseBracket = closeBracket ?? CloseBracket,
-                    Combination = combination ?? Combination
-                };
-            }
-        }
-
-        [ExcludeFromCodeCoverage]
-        private class QueryConditionBuilderMock : IQueryConditionBuilder
-        {
-            public bool CloseBracket { get; set; }
-            public QueryCombination Combination { get; set; }
-            public IQueryExpressionBuilder Field { get; set; } = new QueryExpressionBuilder();
-            public bool OpenBracket { get; set; }
-            public QueryOperator Operator { get; set; }
-            public object? Value { get; set; }
-
-            public IQueryCondition Build()
-            {
-                return new QueryConditionMock
-                {
-                    CloseBracket = CloseBracket,
-                    Combination = Combination,
-                    Field = Field.Build(),
-                    OpenBracket = OpenBracket,
-                    Operator = Operator,
-                    Value = Value
-                };
-            }
         }
     }
 }

@@ -172,7 +172,8 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Gets the first non-null value of the specified expressions.</summary>
         public static IQueryExpressionBuilder Coalesce(this string fieldName, params IQueryExpression[] innerExpressions)
-            => new CoalesceFunctionBuilder().WithFieldName(fieldName).AddInnerExpressions(innerExpressions.Select(x => x.ToBuilder()));
+            => new CoalesceFunctionBuilder().WithFieldName(fieldName)
+                                            .AddInnerExpressions(innerExpressions.Select(x => new QueryExpressionBuilder(x)));
 
         /// <summary>Gets the first non-null value of the specified fields.</summary>
         public static IQueryExpressionBuilder Coalesce(this string fieldName, params string[] innerFieldNames)

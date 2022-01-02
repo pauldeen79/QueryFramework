@@ -15,15 +15,8 @@ namespace QueryFramework.Core.Builders
         {
             FieldName = string.Empty;
         }
-        public QueryExpressionBuilder(IQueryExpression source)
+        public QueryExpressionBuilder(IQueryExpression source) : this(source.FieldName, source.Function)
         {
-            var customQueryExpression = source as ICustomQueryExpression;
-            FieldName = customQueryExpression == null
-                ? source.FieldName
-                : customQueryExpression.FieldName;
-            Function = customQueryExpression == null
-                ? source.Function
-                : customQueryExpression.Function;
         }
         public QueryExpressionBuilder(string fieldName) : this(fieldName, null)
         {

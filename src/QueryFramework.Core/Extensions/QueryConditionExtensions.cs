@@ -15,22 +15,15 @@ namespace QueryFramework.Core.Extensions
                                            bool? openBracket = null,
                                            bool? closeBracket = null,
                                            QueryCombination? combination = null)
-            => instance is ICustomQueryCondition cqc
-                ? cqc.With(openBracket, closeBracket, combination)
-                : new QueryCondition
-                (
-                    instance.Field,
-                    instance.Operator,
-                    instance.Value,
-                    openBracket ?? instance.OpenBracket,
-                    closeBracket ?? instance.CloseBracket,
-                    combination ?? instance.Combination
-                );
-
-        public static IQueryConditionBuilder GetBuilder(this IQueryCondition instance)
-            => instance is ICustomQueryCondition custom
-                ? custom.CreateBuilder()
-                : new QueryConditionBuilder(instance);
+            => new QueryCondition
+            (
+                instance.Field,
+                instance.Operator,
+                instance.Value,
+                openBracket ?? instance.OpenBracket,
+                closeBracket ?? instance.CloseBracket,
+                combination ?? instance.Combination
+            );
 
         #region Generated code
         /// <summary>Creates a query expression with the Contains query operator, using the specified values.</summary>
