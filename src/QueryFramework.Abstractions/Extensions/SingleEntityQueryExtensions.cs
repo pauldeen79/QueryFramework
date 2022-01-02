@@ -2,7 +2,7 @@
 using CrossCutting.Common.Extensions;
 using QueryFramework.Abstractions.Queries;
 
-namespace QueryFramework.Abstractions.Extensions.Queries
+namespace QueryFramework.Abstractions.Extensions
 {
     public static class SingleEntityQueryExtensions
     {

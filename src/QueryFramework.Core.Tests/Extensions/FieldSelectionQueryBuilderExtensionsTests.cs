@@ -4,11 +4,11 @@ using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
-namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
+namespace QueryFramework.Core.Tests.Extensions
 {
     [ExcludeFromCodeCoverage]
     public class FieldSelectionQueryBuilderExtensionsTests
@@ -22,23 +22,6 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
 
             // Act
             var actual = sut.Select(new QueryExpressionBuilder("FieldName", function));
-
-            // Assert
-            actual.Fields.Should().HaveCount(1);
-            actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
-            actual.Distinct.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Can_Use_Select_With_QueryExpression_To_Add_Field()
-        {
-            // Arrange
-            var sut = new FieldSelectionQueryBuilder();
-            var function = new Mock<IQueryExpressionFunction>().Object;
-
-            // Act
-            var actual = sut.Select(new QueryExpression("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
@@ -104,23 +87,6 @@ namespace QueryFramework.Core.Tests.Queries.Builders.Extensions
 
             // Act
             var actual = sut.SelectDistinct(new QueryExpressionBuilder("FieldName", function));
-
-            // Assert
-            actual.Fields.Should().HaveCount(1);
-            actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
-            actual.Distinct.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Can_Use_SelectDistinct_With_QueryExpression_To_Add_Field()
-        {
-            // Arrange
-            var sut = new FieldSelectionQueryBuilder();
-            var function = new Mock<IQueryExpressionFunction>().Object;
-
-            // Act
-            var actual = sut.SelectDistinct(new QueryExpression("FieldName", function));
 
             // Assert
             actual.Fields.Should().HaveCount(1);

@@ -11,7 +11,6 @@ using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Tests.TestHelpers;
 using Xunit;
 
@@ -68,7 +67,7 @@ namespace QueryFramework.SqlServer.Tests
             SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
             // Act
-            var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo()).Build());
+            var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
 
             // Assert
             actual.Should().NotBeNull();

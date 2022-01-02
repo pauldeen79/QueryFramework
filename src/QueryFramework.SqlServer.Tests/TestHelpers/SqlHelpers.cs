@@ -4,18 +4,19 @@ using CrossCutting.Data.Abstractions;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Builders;
+using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 
 namespace QueryFramework.SqlServer.Tests.TestHelpers
 {
     [ExcludeFromCodeCoverage]
     internal static class SqlHelpers
     {
-        internal static void ExpressionSqlShouldBe(IQueryExpression expression, string expectedSqlForExpression)
+        internal static void ExpressionSqlShouldBe(IQueryExpressionBuilder expression, string expectedSqlForExpression)
         {
             // Arrange
             var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();

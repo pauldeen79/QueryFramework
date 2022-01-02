@@ -7,10 +7,9 @@ using CrossCutting.Data.Abstractions;
 using CrossCutting.Data.Sql.Builders;
 using CrossCutting.Data.Sql.Extensions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Queries;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core;
-using QueryFramework.Core.Extensions;
 using QueryFramework.SqlServer.Abstractions;
 
 namespace QueryFramework.SqlServer.Extensions
@@ -279,7 +278,7 @@ namespace QueryFramework.SqlServer.Extensions
                 throw new InvalidOperationException($"Query conditions contains unknown field [{queryCondition.Field.FieldName}]");
             }
 
-            var field = queryCondition.Field.With(fieldName: customFieldName);
+            var field = new QueryExpression(customFieldName, queryCondition.Field.Function);
 
             if (!queryCondition.Operator.In(QueryOperator.Contains,
                                             QueryOperator.NotContains,

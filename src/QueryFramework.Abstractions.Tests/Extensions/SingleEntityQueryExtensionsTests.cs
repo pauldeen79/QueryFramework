@@ -5,11 +5,11 @@ using System.Linq;
 using CrossCutting.Common;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions.Extensions.Queries;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 using Xunit;
 
-namespace QueryFramework.Abstractions.Tests.Extensions.Queries
+namespace QueryFramework.Abstractions.Tests.Extensions
 {
     [ExcludeFromCodeCoverage]
     public class SingleEntityQueryExtensionsTests

@@ -9,7 +9,6 @@ using Moq;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using QueryFramework.SqlServer.Abstractions;
 using Xunit;
 

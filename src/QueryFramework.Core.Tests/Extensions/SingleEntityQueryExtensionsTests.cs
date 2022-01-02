@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
-using QueryFramework.Core.Queries.Builders.Extensions;
 using Xunit;
 
 namespace QueryFramework.Core.Tests.Extensions
@@ -17,7 +17,7 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Too_Many_CloseBrackets_Leads_To_ValidationError()
         {
             // Arrange
-            var action = new Action(() => _ = new SingleEntityQueryBuilder().Where("Field".DoesContain("Value", closeBracket: true)).Build());
+            var action = new Action(() => _ = new SingleEntityQueryBuilder().Where("Field".DoesContain("Value").WithCloseBracket()).Build());
 
             // Act
             var validationException = action.Should().Throw<ValidationException>().Which;
@@ -30,7 +30,7 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Missing_CloseBrackets_Leads_To_ValidationError()
         {
             // Arrange
-            var action = new Action(() => _ = new SingleEntityQueryBuilder().Where("Field".DoesContain("Value", openBracket: true)).Build());
+            var action = new Action(() => _ = new SingleEntityQueryBuilder().Where("Field".DoesContain("Value").WithOpenBracket()).Build());
 
             // Act
             var validationException = action.Should().Throw<ValidationException>().Which;

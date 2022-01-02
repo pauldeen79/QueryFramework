@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CrossCutting.Data.Abstractions;
 using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Extensions.Queries;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries;
 
 namespace QueryFramework.SqlServer
