@@ -16,10 +16,8 @@ namespace QueryFramework.Core.Builders
             Name = string.Empty;
             Value = new object();
         }
-        public QueryParameterBuilder(IQueryParameter source)
+        public QueryParameterBuilder(IQueryParameter source) : this(source.Name, source.Value)
         {
-            Name = source.Name;
-            Value = source.Value;
         }
         public QueryParameterBuilder(string name, object value)
         {

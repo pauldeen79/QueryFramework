@@ -21,7 +21,6 @@ namespace QueryFramework.Core.Queries.Builders
             Fields = new List<IQueryExpressionBuilder>();
             Conditions = new List<IQueryConditionBuilder>();
             OrderByFields = new List<IQuerySortOrderBuilder>();
-            GetAllFields = false;
         }
 
         public IFieldSelectionQuery Build()

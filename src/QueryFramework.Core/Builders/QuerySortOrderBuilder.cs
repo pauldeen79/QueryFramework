@@ -1,6 +1,5 @@
 ﻿using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Core.Extensions;
 
 namespace QueryFramework.Core.Builders
 {
@@ -26,17 +25,18 @@ namespace QueryFramework.Core.Builders
         public QuerySortOrderBuilder(IQueryExpression expression) : this(expression, QuerySortOrderDirection.Ascending)
         {
         }
-        public QuerySortOrderBuilder(IQueryExpression expression, QuerySortOrderDirection order)
+        public QuerySortOrderBuilder(IQueryExpression expression, QuerySortOrderDirection order) : this(expression.FieldName, expression.Function, order)
         {
-            Field = expression.ToBuilder();
-            Order = order;
         }
         public QuerySortOrderBuilder(string fieldName) : this(fieldName, QuerySortOrderDirection.Ascending)
         {
         }
-        public QuerySortOrderBuilder(string fieldName, QuerySortOrderDirection order)
+        public QuerySortOrderBuilder(string fieldName, QuerySortOrderDirection order) : this(fieldName, null, order)
         {
-            Field = new QueryExpressionBuilder(fieldName);
+        }
+        public QuerySortOrderBuilder(string fieldName, IQueryExpressionFunction? function, QuerySortOrderDirection order)
+        {
+            Field = new QueryExpressionBuilder(fieldName, function);
             Order = order;
         }
     }

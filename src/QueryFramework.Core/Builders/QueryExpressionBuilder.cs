@@ -14,7 +14,6 @@ namespace QueryFramework.Core.Builders
         public QueryExpressionBuilder()
         {
             FieldName = string.Empty;
-            Function = null;
         }
         public QueryExpressionBuilder(IQueryExpression source)
         {
