@@ -323,55 +323,28 @@ namespace QueryFramework.SqlServer.Extensions
                                                    string paramName,
                                                    StringBuilder builder)
         {
-            if (queryCondition.Operator == QueryOperator.IsNull)
+            var sqlToAppend = queryCondition.Operator switch
             {
-                builder.Append(" IS NULL");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNotNull)
+                QueryOperator.IsNull => " IS NULL",
+                QueryOperator.IsNotNull => " IS NOT NULL",
+                QueryOperator.IsNullOrEmpty => " = ''",
+                QueryOperator.IsNotNullOrEmpty => " <> ''",
+                QueryOperator.Contains => $"CHARINDEX({paramName}, {field.GetSqlExpression()}) > 0",
+                QueryOperator.NotContains => $"CHARINDEX({paramName}, {field.GetSqlExpression()}) = 0",
+                QueryOperator.StartsWith => $"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
+                QueryOperator.NotStartsWith => $"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
+                QueryOperator.EndsWith => $"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
+                QueryOperator.NotEndsWith => $"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
+                _ => $" {queryCondition.Operator.ToSql()} {paramName}"
+            };
+
+            builder.Append(sqlToAppend);
+
+            if (!queryCondition.Operator.In(QueryOperator.IsNull,
+                                            QueryOperator.IsNotNull,
+                                            QueryOperator.IsNullOrEmpty,
+                                            QueryOperator.IsNotNullOrEmpty))
             {
-                builder.Append(" IS NOT NULL");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNullOrEmpty)
-            {
-                builder.Append(" = ''");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNotNullOrEmpty)
-            {
-                builder.Append(" <> ''");
-            }
-            else if (queryCondition.Operator == QueryOperator.Contains)
-            {
-                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) > 0");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotContains)
-            {
-                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) = 0");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.StartsWith)
-            {
-                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotStartsWith)
-            {
-                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.EndsWith)
-            {
-                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotEndsWith)
-            {
-                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else
-            {
-                builder.Append($" {queryCondition.Operator.ToSql()} {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
         }
