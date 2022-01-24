@@ -14,42 +14,6 @@ namespace QueryFramework.Core.Tests.Extensions
     public class QueryConditionExtensionsTests
     {
         [Fact]
-        public void Can_Use_With_ExtensionMethod_To_Modify_QueryCondition()
-        {
-            // Arrange
-            var sut = new QueryCondition("field", QueryOperator.Contains, "value", false, false, QueryCombination.And);
-
-            // Act
-            var actual = sut.With(true, true, QueryCombination.Or);
-
-            // Assert
-            actual.Field.Should().Be(sut.Field);
-            actual.Operator.Should().Be(sut.Operator);
-            actual.Value.Should().Be(sut.Value);
-            actual.OpenBracket.Should().BeTrue();
-            actual.CloseBracket.Should().BeTrue();
-            actual.Combination.Should().Be(QueryCombination.Or);
-        }
-
-        [Fact]
-        public void Can_Use_With_ExtensionMethod_With_DefaultValues_To_Create_Instance_With_Same_Values()
-        {
-            // Arrange
-            var sut = new QueryCondition("field", QueryOperator.Contains, "value", false, false, QueryCombination.And);
-
-            // Act
-            var actual = sut.With(null, null, null);
-
-            // Assert
-            actual.Field.Should().Be(sut.Field);
-            actual.Operator.Should().Be(sut.Operator);
-            actual.Value.Should().Be(sut.Value);
-            actual.OpenBracket.Should().Be(sut.OpenBracket);
-            actual.CloseBracket.Should().Be(sut.CloseBracket);
-            actual.Combination.Should().Be(sut.Combination);
-        }
-
-        [Fact]
         public void Can_Create_QueryCondition_Using_DoesContain()
             => AssertQueryCondition(x => x.DoesContain("value").WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or), QueryOperator.Contains);
 
