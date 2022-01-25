@@ -345,13 +345,15 @@ namespace QueryFramework.SqlServer.Extensions
                                                        int paramCounter,
                                                        IQueryCondition queryCondition)
         {
-            if (!(queryCondition.Value is IQueryParameterValue))
+            if (queryCondition.Value is IQueryParameterValue)
             {
-                instance.AppendParameter(string.Format("p{0}", paramCounter),
-                                         queryCondition.Value is KeyValuePair<string, object> keyValuePair
-                                             ? keyValuePair.Value
-                                             : queryCondition.Value ?? new object());
+                return;
             }
+
+            instance.AppendParameter(string.Format("p{0}", paramCounter),
+                                     queryCondition.Value is KeyValuePair<string, object> keyValuePair
+                                         ? keyValuePair.Value
+                                         : queryCondition.Value ?? new object());
         }
 
         private static string GetQueryParameterName(int paramCounter, object? value)
