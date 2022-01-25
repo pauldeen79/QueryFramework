@@ -17,7 +17,6 @@ namespace QueryFramework.SqlServer.Extensions
     internal static class PagedSelectCommandBuilderExtensions
     {
         internal static PagedSelectCommandBuilder Select(this PagedSelectCommandBuilder instance,
-                                                         ISingleEntityQuery query,
                                                          IPagedDatabaseEntityRetrieverSettings settings,
                                                          IQueryFieldProvider fieldProvider,
                                                          IFieldSelectionQuery? fieldSelectionQuery)

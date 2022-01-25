@@ -47,7 +47,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
@@ -63,7 +63,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
@@ -77,7 +77,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
@@ -93,7 +93,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
@@ -108,7 +108,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(default(string));
 
             // Act
-            Builder.Invoking(x => x.Select(query, SettingsMock.Object, FieldProviderMock.Object, query))
+            Builder.Invoking(x => x.Select(SettingsMock.Object, FieldProviderMock.Object, query))
                    .Should().Throw<InvalidOperationException>()
                    .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
         }
