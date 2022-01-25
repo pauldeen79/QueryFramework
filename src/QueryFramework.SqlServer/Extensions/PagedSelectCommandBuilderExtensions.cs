@@ -246,17 +246,9 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder WithParameters(this PagedSelectCommandBuilder instance,
                                                                  IParameterizedQuery? parameterizedQuery)
-        {
-            if (parameterizedQuery != null)
-            {
-                foreach (var parameter in parameterizedQuery.Parameters)
-                {
-                    instance.AppendParameter(parameter.Name, parameter.Value);
-                }
-            }
-
-            return instance;
-        }
+            => parameterizedQuery == null
+                ? instance
+                : parameterizedQuery.Parameters.Aggregate(instance, (acc, parameter) => acc.AppendParameter(parameter.Name, parameter.Value));
 
         internal static int AppendQueryCondition(this PagedSelectCommandBuilder instance,
                                                  int paramCounter,
