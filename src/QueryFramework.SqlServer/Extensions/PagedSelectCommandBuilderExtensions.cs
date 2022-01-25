@@ -20,7 +20,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                          IPagedDatabaseEntityRetrieverSettings settings,
                                                          IQueryFieldProvider fieldProvider,
                                                          IFieldSelectionQuery? fieldSelectionQuery)
-            => fieldSelectionQuery?.GetAllFields != false
+            => fieldSelectionQuery == null || fieldSelectionQuery.GetAllFields
                 ? instance.AppendSelectFieldsForAllFields(settings, fieldProvider)
                 : instance.AppendSelectFieldsForSpecifiedFields(fieldSelectionQuery, fieldProvider);
 
@@ -136,7 +136,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                           IPagedDatabaseEntityRetrieverSettings settings,
                                                           IQueryFieldProvider fieldProvider)
         {
-            if (groupingQuery?.GroupByFields?.Any() != true)
+            if (groupingQuery == null || !groupingQuery.GroupByFields.Any())
             {
                 return instance;
             }
@@ -168,7 +168,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                          IQueryFieldProvider fieldProvider,
                                                          ref int paramCounter)
         {
-            if (groupingQuery?.HavingFields?.Any() != true)
+            if (groupingQuery == null || !groupingQuery.HavingFields.Any())
             {
                 return instance;
             }

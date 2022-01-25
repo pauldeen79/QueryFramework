@@ -35,6 +35,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             FieldProviderMock = new Mock<IQueryFieldProvider>();
             FieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             QueryMock = new Mock<IGroupingQuery>();
+            QueryMock.SetupGet(x => x.GroupByFields).Returns(new ValueCollection<IQueryExpression>());
+            QueryMock.SetupGet(x => x.HavingFields).Returns(new ValueCollection<IQueryCondition>());
         }
 
         [Fact]
