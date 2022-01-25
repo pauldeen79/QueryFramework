@@ -11,16 +11,11 @@ namespace QueryFramework.SqlServer.Extensions
         /// <param name="instance">The instance.</param>
         /// <exception cref="ArgumentOutOfRangeException">instance</exception>
         public static string ToSql(this QueryCombination instance)
-        {
-            switch (instance)
+            => instance switch
             {
-                case QueryCombination.And:
-                    return "AND";
-                case QueryCombination.Or:
-                    return "OR";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(instance), $"Invalid query combination: {instance}");
-            }
-        }
+                QueryCombination.And => "AND",
+                QueryCombination.Or => "OR",
+                _ => throw new ArgumentOutOfRangeException(nameof(instance), $"Invalid query combination: {instance}"),
+            };
     }
 }

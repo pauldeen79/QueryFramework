@@ -15,25 +15,16 @@ namespace QueryFramework.SqlServer.Extensions
         /// Note that only a sub set is supported. For some constructs, you have to use LIKE/LEFT/RIGHT/CHARINDEX and implement this yourself.
         /// </remarks>
         public static string ToSql(this QueryOperator instance)
-        {
-            switch (instance)
+            => instance switch
             {
-                case QueryOperator.Equal:
-                    return "=";
-                case QueryOperator.GreaterOrEqual:
-                    return ">=";
-                case QueryOperator.Greater:
-                    return ">";
-                case QueryOperator.LowerOrEqual:
-                    return "<=";
-                case QueryOperator.Lower:
-                    return "<";
-                case QueryOperator.NotEqual:
-                    return "<>";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(instance), $"Unsupported query operator: {instance}");
-            }
-        }
+                QueryOperator.Equal => "=",
+                QueryOperator.GreaterOrEqual => ">=",
+                QueryOperator.Greater => ">",
+                QueryOperator.LowerOrEqual => "<=",
+                QueryOperator.Lower => "<",
+                QueryOperator.NotEqual => "<>",
+                _ => throw new ArgumentOutOfRangeException(nameof(instance), $"Unsupported query operator: {instance}"),
+            };
 
         /// <summary>
         /// Creates a NOT keyword when the operator is negative.
