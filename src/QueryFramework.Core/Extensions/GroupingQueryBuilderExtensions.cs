@@ -16,7 +16,7 @@ namespace QueryFramework.Core.Extensions
 
         public static T GroupBy<T>(this T instance, params string[] additionalFieldNames)
             where T : IGroupingQueryBuilder
-            => instance.GroupBy(additionalFieldNames.Select(s => new QueryExpressionBuilder(s)).ToArray());
+            => instance.GroupBy(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
 
         public static T Having<T>(this T instance, params IQueryConditionBuilder[] additionalFieldNames)
             where T : IGroupingQueryBuilder

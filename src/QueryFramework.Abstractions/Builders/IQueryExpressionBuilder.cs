@@ -3,7 +3,7 @@
     public interface IQueryExpressionBuilder
     {
         string FieldName { get; set; }
-        IQueryExpressionFunction? Function { get; set; }
+        IQueryExpressionFunctionBuilder? Function { get; set; }
 
         IQueryExpression Build();
     }

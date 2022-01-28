@@ -15,7 +15,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = null };
             var other = new MyClass { Property = null };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -34,7 +34,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = null };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -53,7 +53,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = null };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -72,7 +72,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "b" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -89,7 +89,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -106,7 +106,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -123,7 +123,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -140,7 +140,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -157,7 +157,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -174,7 +174,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -191,7 +191,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "a" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -208,7 +208,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -225,7 +225,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -242,7 +242,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 
@@ -259,7 +259,7 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var data = new MyClass { Property = "a" };
             var other = new MyClass { Property = "b" };
-            var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property)) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
             var valueRetriever = new ExpressionEvaluator<MyClass>(new ValueProvider());
             var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
 

@@ -17,7 +17,7 @@ namespace QueryFramework.Core.Extensions
 
         public static T Select<T>(this T instance, params string[] additionalFieldNames)
             where T : IFieldSelectionQueryBuilder
-            => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder(s)).ToArray());
+            => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
 
         public static T SelectAll<T>(this T instance)
             where T : IFieldSelectionQueryBuilder
@@ -40,7 +40,7 @@ namespace QueryFramework.Core.Extensions
         where T : IFieldSelectionQueryBuilder
         {
             instance.Distinct = true;
-            return instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder(s)).ToArray());
+            return instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
         }
 
         public static T GetAllFields<T>(this T instance, bool getAllFields = true)

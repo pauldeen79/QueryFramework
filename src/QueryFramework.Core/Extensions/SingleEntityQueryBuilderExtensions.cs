@@ -57,23 +57,23 @@ namespace QueryFramework.Core.Extensions
 
         public static T OrderBy<T>(this T instance, params string[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase
-            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(s)).ToArray());
+            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithField(s)).ToArray());
 
         public static T OrderBy<T>(this T instance, params IQueryExpressionBuilder[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase
-                => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(s.Build())).ToArray());
+                => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Ascending))).ToArray());
 
         public static T OrderByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase
-            => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(so.Field.Build(), QuerySortOrderDirection.Descending)).ToArray());
+            => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(new QuerySortOrder(so.Field.Build(), QuerySortOrderDirection.Descending))).ToArray());
 
         public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase
-            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(s, QuerySortOrderDirection.Descending)).ToArray());
+            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(new QueryExpression(s, null), QuerySortOrderDirection.Descending))).ToArray());
 
         public static T OrderByDescending<T>(this T instance, params IQueryExpressionBuilder[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase
-            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(s.Build(), QuerySortOrderDirection.Descending)).ToArray());
+            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Descending))).ToArray());
 
         public static T ThenBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
             where T : ISingleEntityQueryBuilderBase

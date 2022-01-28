@@ -32,13 +32,13 @@ namespace QueryFramework.Core.Tests.Queries
         public void Can_Construct_FieldSelectionQuery_With_Custom_Values()
         {
             // Arrange
-            var conditions = new[] { new QueryCondition("field", QueryOperator.Equal, "value") };
-            var orderByFields = new[] { new QuerySortOrder("field") };
+            var conditions = new[] { new QueryCondition(false, false, new QueryExpression("field", null), QueryOperator.Equal, "value", QueryCombination.And) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression("field", null), QuerySortOrderDirection.Ascending) };
             var limit = 1;
             var offset = 2;
             var distinct = true;
             var getAllFields = true;
-            var fields = new[] { new QueryExpression("field") };
+            var fields = new[] { new QueryExpression("field", null) };
 
             // Act
             var sut = new FieldSelectionQuery(limit, offset, distinct, getAllFields, conditions, orderByFields, fields);
@@ -57,7 +57,7 @@ namespace QueryFramework.Core.Tests.Queries
         public void Constructing_FieldSelectionQuery_With_ValidationError_Leads_To_Exception()
         {
             // Arrange
-            var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, new[] { new QueryCondition("field", QueryOperator.Equal, openBracket: true) }, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IQueryExpression>()));
+            var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, new[] { new QueryCondition(true, false, new QueryExpression("field", null), QueryOperator.Equal, null, QueryCombination.And) }, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IQueryExpression>()));
 
             // Act
             action.Should().Throw<ValidationException>();

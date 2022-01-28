@@ -1,0 +1,19 @@
+﻿using System.Linq;
+using TextTemplateTransformationFramework.Runtime.CodeGeneration;
+
+namespace QueryFramework.CodeGeneration.CodeGenerationProviders
+{
+    public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
+    {
+        public override string Path => "QueryFramework.Core\\Builders";
+
+        public override string DefaultFileName => "Builders.generated.cs";
+
+        public override bool RecurseOnDeleteGeneratedFiles => false;
+
+        public override object CreateModel()
+            => GetImmutableBuilderClasses(GetModels().Where(x => x.Name != "IQueryExpressionFunction").ToArray(),
+                                          "QueryFramework.Core",
+                                          "QueryFramework.Core.Builders");
+    }
+}

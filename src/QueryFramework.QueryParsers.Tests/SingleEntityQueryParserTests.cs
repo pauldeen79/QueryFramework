@@ -243,6 +243,6 @@ namespace QueryFramework.QueryParsers.Tests
         }
 
         private static SingleEntityQueryParser<ISingleEntityQueryBuilder, QueryExpressionBuilder> CreateSut()
-            => new(() => new QueryExpressionBuilder("PrefilledField"));
+            => new(() => new QueryExpressionBuilder().WithFieldName("PrefilledField"));
     }
 }

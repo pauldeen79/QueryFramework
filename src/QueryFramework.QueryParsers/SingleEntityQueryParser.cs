@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.QueryParsers.Extensions;
 
 namespace QueryFramework.QueryParsers

@@ -231,7 +231,7 @@ namespace QueryFramework.SqlServer.Extensions
                 {
                     throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
                 }
-                var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.SortOrder.Order);
+                var newQuerySortOrder = new QuerySortOrder(new QueryExpression(newFieldName, null), querySortOrder.SortOrder.Order);
                 instance.OrderBy($"{newQuerySortOrder.Field.GetSqlExpression()} {newQuerySortOrder.ToSql()}");
             }
 
