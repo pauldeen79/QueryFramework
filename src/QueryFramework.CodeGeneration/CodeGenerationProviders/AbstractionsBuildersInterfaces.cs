@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using CrossCutting.Common.Extensions;
 using ModelFramework.Objects.Extensions;
 using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 
@@ -25,6 +26,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                       .WithPartial()
                       .WithNamespace("QueryFramework.Abstractions.Builders")
                       .WithName($"I{x.Name}")
+                      .Chain(x => x.Methods.RemoveAll(y => y.Static))
                       .Build()
             )
             .ToArray();

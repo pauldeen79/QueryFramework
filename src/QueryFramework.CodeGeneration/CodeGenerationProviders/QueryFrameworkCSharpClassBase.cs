@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CrossCutting.Common;
 using ModelFramework.CodeGeneration.CodeGenerationProviders;
 using ModelFramework.Common;
@@ -65,6 +67,22 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                         property.SetDefaultValueForBuilderClassConstructor(new Literal("true"));
                     }
                 }
+            }
+        }
+
+        protected override IEnumerable<ClassMethodBuilder> CreateExtraOverloads(IClass c)
+        {
+            if (c.Properties.Any(p => p.Name == "Field"))
+            {
+                yield return new ClassMethodBuilder()
+                    .WithName("WithField")
+                    .WithStatic()
+                    .WithExtensionMethod()
+                    .WithTypeName($"{c.Name}Builder")
+                    .AddParameter("instance", $"{c.Name}Builder")
+                    .AddParameter("fieldName", typeof(string))
+                    .AddLiteralCodeStatements("instance.Field.FieldName = fieldName;",
+                                              "return instance;");
             }
         }
 

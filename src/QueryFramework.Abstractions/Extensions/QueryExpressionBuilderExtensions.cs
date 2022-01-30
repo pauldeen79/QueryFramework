@@ -3,7 +3,7 @@ using QueryFramework.Abstractions.Builders;
 
 namespace QueryFramework.Abstractions.Extensions
 {
-    public static class QueryExpressionBuilderExtensions
+    public static partial class QueryExpressionBuilderExtensions
     {
         public static T WithFieldName<T>(this T instance, string fieldName)
             where T : IQueryExpressionBuilder

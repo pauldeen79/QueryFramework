@@ -2,7 +2,7 @@
 
 namespace QueryFramework.Abstractions.Extensions
 {
-    public static class QueryConditionBuilderExtensions
+    public static partial class QueryConditionBuilderExtensions
     {
         public static T WithOpenBracket<T>(this T instance, bool openBracket = true)
             where T : IQueryConditionBuilder

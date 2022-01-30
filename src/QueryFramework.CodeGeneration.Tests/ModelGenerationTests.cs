@@ -58,6 +58,7 @@ namespace QueryFramework.CodeGeneration.Tests
         {
             Verify(GenerateCode.For<AbstractionsInterfaces>(Settings));
             Verify(GenerateCode.For<AbstractionsBuildersInterfaces>(Settings));
+            Verify(GenerateCode.For<AbstractionsExtensionsBuilders>(Settings));
             Verify(GenerateCode.For<CoreRecords>(Settings));
             Verify(GenerateCode.For<CoreBuilders>(Settings));
         }
