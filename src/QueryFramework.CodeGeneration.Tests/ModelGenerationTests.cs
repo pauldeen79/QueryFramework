@@ -57,6 +57,7 @@ namespace QueryFramework.CodeGeneration.Tests
         public void Can_Generate_Records_From_Model()
         {
             Verify(GenerateCode.For<AbstractionsInterfaces>(Settings));
+            Verify(GenerateCode.For<AbstractionsBuildersInterfaces>(Settings));
             Verify(GenerateCode.For<CoreRecords>(Settings));
             Verify(GenerateCode.For<CoreBuilders>(Settings));
         }
