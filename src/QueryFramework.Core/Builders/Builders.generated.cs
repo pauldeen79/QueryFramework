@@ -58,42 +58,6 @@ namespace QueryFramework.Core.Builders
             return new QueryFramework.Core.QueryCondition(OpenBracket, CloseBracket, Field.Build(), Operator, Value, Combination);
         }
 
-        public QueryConditionBuilder WithOpenBracket(bool openBracket = true)
-        {
-            OpenBracket = openBracket;
-            return this;
-        }
-
-        public QueryConditionBuilder WithCloseBracket(bool closeBracket = true)
-        {
-            CloseBracket = closeBracket;
-            return this;
-        }
-
-        public QueryConditionBuilder WithField(QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
-        {
-            Field = field;
-            return this;
-        }
-
-        public QueryConditionBuilder WithOperator(QueryFramework.Abstractions.QueryOperator @operator)
-        {
-            Operator = @operator;
-            return this;
-        }
-
-        public QueryConditionBuilder WithValue(object? value)
-        {
-            Value = value;
-            return this;
-        }
-
-        public QueryConditionBuilder WithCombination(QueryFramework.Abstractions.QueryCombination combination)
-        {
-            Combination = combination;
-            return this;
-        }
-
         public QueryConditionBuilder()
         {
             OpenBracket = default;
@@ -135,18 +99,6 @@ namespace QueryFramework.Core.Builders
             return new QueryFramework.Core.QueryExpression(FieldName, Function?.Build());
         }
 
-        public QueryExpressionBuilder WithFieldName(string fieldName)
-        {
-            FieldName = fieldName;
-            return this;
-        }
-
-        public QueryExpressionBuilder WithFunction(QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? function)
-        {
-            Function = function;
-            return this;
-        }
-
         public QueryExpressionBuilder()
         {
             FieldName = string.Empty;
@@ -180,18 +132,6 @@ namespace QueryFramework.Core.Builders
             return new QueryFramework.Core.QueryParameter(Name, Value);
         }
 
-        public QueryParameterBuilder WithName(string name)
-        {
-            Name = name;
-            return this;
-        }
-
-        public QueryParameterBuilder WithValue(object value)
-        {
-            Value = value;
-            return this;
-        }
-
         public QueryParameterBuilder()
         {
             Name = string.Empty;
@@ -218,12 +158,6 @@ namespace QueryFramework.Core.Builders
         public QueryFramework.Abstractions.IQueryParameterValue Build()
         {
             return new QueryFramework.Core.QueryParameterValue(Name);
-        }
-
-        public QueryParameterValueBuilder WithName(string name)
-        {
-            Name = name;
-            return this;
         }
 
         public QueryParameterValueBuilder()
@@ -256,18 +190,6 @@ namespace QueryFramework.Core.Builders
         public QueryFramework.Abstractions.IQuerySortOrder Build()
         {
             return new QueryFramework.Core.QuerySortOrder(Field.Build(), Order);
-        }
-
-        public QuerySortOrderBuilder WithField(QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
-        {
-            Field = field;
-            return this;
-        }
-
-        public QuerySortOrderBuilder WithOrder(QueryFramework.Abstractions.QuerySortOrderDirection order)
-        {
-            Order = order;
-            return this;
         }
 
         public QuerySortOrderBuilder()

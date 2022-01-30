@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using CrossCutting.Common.Extensions;
+using ModelFramework.Objects.Builders;
 using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 
 namespace QueryFramework.CodeGeneration.CodeGenerationProviders
@@ -12,9 +14,14 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
         public override bool RecurseOnDeleteGeneratedFiles => false;
 
         public override object CreateModel()
-            => GetImmutableBuilderClasses(GetModels().Where(x => x.Name != "IQueryExpressionFunction").ToArray(),
-                                          "QueryFramework.Core",
-                                          "QueryFramework.Core.Builders",
-                                          "QueryFramework.Abstractions.Builders.I{0}");
+            => GetImmutableBuilderClasses
+            (
+                GetModels().Where(x => x.Name != "IQueryExpressionFunction").ToArray(),
+                "QueryFramework.Core",
+                "QueryFramework.Core.Builders",
+                "QueryFramework.Abstractions.Builders.I{0}"
+            )
+            .Select(x => new ClassBuilder(x).Chain(y => y.Methods.RemoveAll(y => y.Name != "Build")).Build())
+            .ToArray();
     }
 }

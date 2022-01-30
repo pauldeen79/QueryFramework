@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
