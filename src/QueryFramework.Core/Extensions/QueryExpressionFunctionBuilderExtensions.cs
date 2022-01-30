@@ -8,9 +8,5 @@ namespace QueryFramework.Core.Extensions
         public static T WithInnerFunction<T>(this T instance, IQueryExpressionBuilder currentExpression)
             where T : IQueryExpressionFunctionBuilder
             => instance.Chain(x => x.InnerFunction = currentExpression.GetFunction()?.ToBuilder());
-
-        public static T WithInnerFunction<T>(this T instance, IQueryExpressionFunctionBuilder? queryExpressionFunctionBuilder)
-            where T : IQueryExpressionFunctionBuilder
-            => instance.Chain(x => x.InnerFunction = queryExpressionFunctionBuilder);
     }
 }

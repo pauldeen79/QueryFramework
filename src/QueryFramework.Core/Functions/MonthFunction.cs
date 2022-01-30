@@ -1,5 +1,6 @@
 ﻿using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Extensions;
 
 namespace QueryFramework.Core.Functions

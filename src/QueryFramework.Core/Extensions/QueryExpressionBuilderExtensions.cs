@@ -9,14 +9,6 @@ namespace QueryFramework.Core.Extensions
 {
     public static class QueryExpressionBuilderExtensions
     {
-        public static T WithFieldName<T>(this T instance, string fieldName)
-            where T : IQueryExpressionBuilder
-            => instance.Chain(x => x.FieldName = fieldName);
-
-        public static T WithFunction<T>(this T instance, IQueryExpressionFunctionBuilder? function)
-            where T : IQueryExpressionBuilder
-            => instance.Chain(x => x.Function = function);
-
         public static IQueryExpressionFunction? GetFunction(this IQueryExpressionBuilder instance)
             => instance.Build() as IQueryExpressionFunction ?? instance?.Function?.Build();
 
