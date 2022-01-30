@@ -155,7 +155,7 @@ namespace QueryFramework.Core.Builders
         public QueryExpressionBuilder(QueryFramework.Abstractions.IQueryExpression source)
         {
             FieldName = source.FieldName;
-            Function = source.Function?.ToBuilder();
+            Function = source.Function == null ? null : source.Function.ToBuilder();
         }
     }
 #nullable restore

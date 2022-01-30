@@ -5,11 +5,11 @@ using CsharpExpressionDumper.Abstractions;
 using CsharpExpressionDumper.Core.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using ModelFramework.CodeGeneration.ObjectHandlerPropertyFilters;
 using ModelFramework.Objects.Extensions;
 using ModelFramework.Objects.Settings;
 //using QueryFramework.Abstractions;
 using QueryFramework.CodeGeneration.CodeGenerationProviders;
-using QueryFramework.CodeGeneration.ObjectHandlerPropertyFilters;
 using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 using Xunit;
 
@@ -25,7 +25,7 @@ namespace QueryFramework.CodeGeneration.Tests
             dryRun: true
         );
 
-        // Bootstrap test that generates c# code for the model used in code generation :)
+        ////Bootstrap test that generates c# code for the model used in code generation :)
         //[Fact]
         //public void Can_Generate_Model_For_Abstractions()
         //{

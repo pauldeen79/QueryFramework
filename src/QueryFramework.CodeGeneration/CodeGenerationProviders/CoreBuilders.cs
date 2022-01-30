@@ -14,6 +14,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
         public override object CreateModel()
             => GetImmutableBuilderClasses(GetModels().Where(x => x.Name != "IQueryExpressionFunction").ToArray(),
                                           "QueryFramework.Core",
-                                          "QueryFramework.Core.Builders");
+                                          "QueryFramework.Core.Builders",
+                                          "QueryFramework.Abstractions.Builders.I{0}");
     }
 }
