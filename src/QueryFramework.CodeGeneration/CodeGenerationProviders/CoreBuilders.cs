@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using CrossCutting.Common.Extensions;
-using ModelFramework.Objects.Builders;
 using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 
 namespace QueryFramework.CodeGeneration.CodeGenerationProviders
@@ -21,7 +19,6 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                 "QueryFramework.Core.Builders",
                 "QueryFramework.Abstractions.Builders.I{0}"
             )
-            .Select(x => new ClassBuilder(x).Chain(y => y.Methods.RemoveAll(y => y.Name != "Build")).Build())
             .ToArray();
     }
 }

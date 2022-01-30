@@ -15,6 +15,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
         protected override bool CreateCodeGenerationHeader => true;
         protected override bool EnableNullableContext => true;
         protected override Type RecordCollectionType => typeof(ValueCollection<>);
+        protected override string SetMethodNameFormatString => string.Empty;
 
         protected override string FormatInstanceTypeName(ITypeBase instance, bool forCreate)
         {
