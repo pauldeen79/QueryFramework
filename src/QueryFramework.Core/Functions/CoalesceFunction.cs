@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CrossCutting.Common.Extensions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Core.Builders;
 
 namespace QueryFramework.Core.Functions
 {
@@ -35,18 +37,25 @@ namespace QueryFramework.Core.Functions
         public string FieldName { get; }
 
         public IQueryExpressionFunction? Function => this;
+
+        public IQueryExpressionFunctionBuilder ToBuilder()
+            => new CoalesceFunctionBuilder
+            {
+                FieldName = FieldName,
+                InnerFunction = InnerFunction?.ToBuilder(),
+                InnerExpressions = InnerExpressions.Select(x => new QueryExpressionBuilder(x)).Cast<IQueryExpressionBuilder>().ToList()
+            };
     }
 
-    public class CoalesceFunctionBuilder : IQueryExpressionBuilder
+    public class CoalesceFunctionBuilder : IQueryExpressionBuilder, IQueryExpressionFunctionBuilder
     {
         public string FieldName { get; set; }
-        public IQueryExpressionFunction? Function { get; set; }
+        public IQueryExpressionFunctionBuilder? Function { get; set; }
         public List<IQueryExpressionBuilder> InnerExpressions { get; set; }
+        public IQueryExpressionFunctionBuilder? InnerFunction { get; set; }
 
         public IQueryExpression Build()
-        {
-            return new CoalesceFunction(FieldName, Function, InnerExpressions.Select(x => x.Build()));
-        }
+            => new CoalesceFunction(FieldName, Function?.Build(), InnerExpressions.Select(x => x.Build()));
 
         public CoalesceFunctionBuilder()
         {
@@ -55,27 +64,18 @@ namespace QueryFramework.Core.Functions
         }
 
         public CoalesceFunctionBuilder WithFieldName(string fieldName)
-        {
-            FieldName = fieldName;
-            return this;
-        }
+            => this.Chain(x => x.FieldName = fieldName);
 
-        public CoalesceFunctionBuilder WithFunction(IQueryExpressionFunction? function)
-        {
-            Function = function;
-            return this;
-        }
+        public CoalesceFunctionBuilder WithFunction(IQueryExpressionFunctionBuilder? function)
+            => this.Chain(x => x.Function = function);
 
         public CoalesceFunctionBuilder AddInnerExpressions(params IQueryExpressionBuilder[] innerExpressions)
-        {
-            InnerExpressions.AddRange(innerExpressions);
-            return this;
-        }
+            => this.Chain(x => x.InnerExpressions.AddRange(innerExpressions));
 
         public CoalesceFunctionBuilder AddInnerExpressions(IEnumerable<IQueryExpressionBuilder> innerExpressions)
-        {
-            InnerExpressions.AddRange(innerExpressions);
-            return this;
-        }
+            => this.Chain(x => x.InnerExpressions.AddRange(innerExpressions));
+
+        IQueryExpressionFunction IQueryExpressionFunctionBuilder.Build()
+            => new CoalesceFunction(FieldName, Function?.Build(), InnerExpressions.Select(x => x.Build()));
     }
 }

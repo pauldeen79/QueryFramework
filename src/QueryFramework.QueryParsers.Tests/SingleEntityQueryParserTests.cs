@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Queries.Builders;
@@ -243,6 +244,6 @@ namespace QueryFramework.QueryParsers.Tests
         }
 
         private static SingleEntityQueryParser<ISingleEntityQueryBuilder, QueryExpressionBuilder> CreateSut()
-            => new(() => new QueryExpressionBuilder("PrefilledField"));
+            => new(() => new QueryExpressionBuilder().WithFieldName("PrefilledField"));
     }
 }

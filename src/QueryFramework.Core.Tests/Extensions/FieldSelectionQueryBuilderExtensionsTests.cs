@@ -2,7 +2,8 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
 using QueryFramework.Core.Queries.Builders;
@@ -17,16 +18,16 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_Select_With_QueryExpressionBuilder_To_Add_Field()
         {
             // Arrange
-            var function = new Mock<IQueryExpressionFunction>().Object;
+            var functionBuilder = new Mock<IQueryExpressionFunctionBuilder>().Object;
             var sut = new FieldSelectionQueryBuilder();
 
             // Act
-            var actual = sut.Select(new QueryExpressionBuilder("FieldName", function));
+            var actual = sut.Select(new QueryExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
+            actual.Fields.First().Function.Should().NotBeNull();
             actual.Distinct.Should().BeFalse();
         }
 
@@ -83,15 +84,15 @@ namespace QueryFramework.Core.Tests.Extensions
         {
             // Arrange
             var sut = new FieldSelectionQueryBuilder();
-            var function = new Mock<IQueryExpressionFunction>().Object;
+            var functionBuilder = new Mock<IQueryExpressionFunctionBuilder>().Object;
 
             // Act
-            var actual = sut.SelectDistinct(new QueryExpressionBuilder("FieldName", function));
+            var actual = sut.SelectDistinct(new QueryExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
 
             // Assert
             actual.Fields.Should().HaveCount(1);
             actual.Fields.First().FieldName.Should().Be("FieldName");
-            actual.Fields.First().Function.Should().BeSameAs(function);
+            actual.Fields.First().Function.Should().NotBeNull();
             actual.Distinct.Should().BeTrue();
         }
 

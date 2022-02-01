@@ -22,8 +22,8 @@ namespace QueryFramework.Abstractions.Extensions
         }
 
         public static string GetTableName(this ISingleEntityQuery instance, string tableName)
-            => instance is IDataObjectNameQuery asdoq && !string.IsNullOrEmpty(asdoq.DataObjectName)
-                ? asdoq.DataObjectName
+            => instance is IDataObjectNameQuery dataObjectNameQuery && !string.IsNullOrEmpty(dataObjectNameQuery.DataObjectName)
+                ? dataObjectNameQuery.DataObjectName
                 : tableName;
     }
 }

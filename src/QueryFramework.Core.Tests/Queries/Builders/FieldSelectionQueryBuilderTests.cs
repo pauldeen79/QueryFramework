@@ -34,12 +34,12 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         {
             // Arrange
             var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-            var orderByFields = new[] { new QuerySortOrderBuilder("field") };
+            var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
             var limit = 1;
             var offset = 2;
             var distinct = true;
             var getAllFields = true;
-            var fields = new[] { new QueryExpressionBuilder("field") };
+            var fields = new[] { new QueryExpressionBuilder().WithFieldName("field") };
 
             // Act
             var sut = new FieldSelectionQueryBuilder
@@ -68,12 +68,12 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         {
             // Arrange
             var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-            var orderByFields = new[] { new QuerySortOrderBuilder("field") };
+            var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
             var limit = 1;
             var offset = 2;
             var distinct = true;
             var getAllFields = true;
-            var fields = new[] { new QueryExpressionBuilder("field") };
+            var fields = new[] { new QueryExpressionBuilder().WithFieldName("field") };
             var sut = new FieldSelectionQueryBuilder
             {
                 Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),

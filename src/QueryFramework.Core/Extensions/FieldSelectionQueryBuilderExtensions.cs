@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using QueryFramework.Abstractions.Builders;
+using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
 
@@ -7,14 +8,6 @@ namespace QueryFramework.Core.Extensions
 {
     public static class FieldSelectionQueryBuilderExtensions
     {
-        /// <summary>
-        /// Adds select fields.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="additionalFieldNames">Select fields to add.</param>
-        /// <returns>
-        /// The FieldSelectionQuery instance.
-        /// </returns>
         public static T Select<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
             where T : IFieldSelectionQueryBuilder
         {
@@ -23,17 +16,9 @@ namespace QueryFramework.Core.Extensions
             return instance;
         }
 
-        /// <summary>
-        /// Adds select fields.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="additionalFieldNames">Select fields to add.</param>
-        /// <returns>
-        /// The FieldSelectionQuery instance.
-        /// </returns>
         public static T Select<T>(this T instance, params string[] additionalFieldNames)
             where T : IFieldSelectionQueryBuilder
-            => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder(s)).ToArray());
+            => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
 
         public static T SelectAll<T>(this T instance)
             where T : IFieldSelectionQueryBuilder
@@ -43,14 +28,6 @@ namespace QueryFramework.Core.Extensions
             return instance;
         }
 
-        /// <summary>
-        /// Adds distinct select fields.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="additionalFieldNames">Select fields to add.</param>
-        /// <returns>
-        /// The FieldSelectionQuery instance.
-        /// </returns>
         public static T SelectDistinct<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
             where T : IFieldSelectionQueryBuilder
         {
@@ -60,19 +37,11 @@ namespace QueryFramework.Core.Extensions
             return instance;
         }
 
-        /// <summary>
-        /// Adds distinct select fields.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="additionalFieldNames">Select fields to add.</param>
-        /// <returns>
-        /// The FieldSelectionQuery instance.
-        /// </returns>
         public static T SelectDistinct<T>(this T instance, params string[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
         {
             instance.Distinct = true;
-            return instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder(s)).ToArray());
+            return instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
         }
 
         public static T GetAllFields<T>(this T instance, bool getAllFields = true)

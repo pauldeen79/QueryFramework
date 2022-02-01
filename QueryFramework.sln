@@ -28,6 +28,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers.Tests", "src\QueryFramework.QueryParsers.Tests\QueryFramework.QueryParsers.Tests.csproj", "{54E5B259-1A4D-4C7A-8D10-3B200DA05344}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryFramework.CodeGeneration", "src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj", "{F9518DA0-5879-4722-AEBF-6504197B0375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryFramework.CodeGeneration.Tests", "src\QueryFramework.CodeGeneration.Tests\QueryFramework.CodeGeneration.Tests.csproj", "{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54E5B259-1A4D-4C7A-8D10-3B200DA05344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9518DA0-5879-4722-AEBF-6504197B0375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9518DA0-5879-4722-AEBF-6504197B0375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9518DA0-5879-4722-AEBF-6504197B0375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9518DA0-5879-4722-AEBF-6504197B0375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

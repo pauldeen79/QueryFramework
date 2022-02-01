@@ -10,7 +10,7 @@ namespace QueryFramework.Core.Extensions
     public static class StringExtensions
     {
         #region Generated Code
-        /// <summary>Creates a query expression with the Contains query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the Contains query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesContain(this string fieldName, object? value)
@@ -18,7 +18,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.Contains)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the EndsWith query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the EndsWith query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesEndWith(this string fieldName, object? value)
@@ -26,7 +26,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.EndsWith)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the Equal query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the Equal query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsEqualTo(this string fieldName, object? value)
@@ -34,7 +34,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.Equal)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the GreterOrEqualThan query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the GreterOrEqualThan query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsGreaterOrEqualThan(this string fieldName, object? value)
@@ -42,7 +42,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.GreaterOrEqual)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the GreaterThan query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the GreaterThan query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsGreaterThan(this string fieldName, object? value)
@@ -50,31 +50,31 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.Greater)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the IsNotNull query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsNotNull query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         public static IQueryConditionBuilder IsNotNull(this string fieldName)
             => new QueryConditionBuilder().WithField(fieldName)
                                           .WithOperator(QueryOperator.IsNotNull);
 
-        /// <summary>Creates a query expression with the IsNotNullOrEmpty query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsNotNullOrEmpty query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         public static IQueryConditionBuilder IsNotNullOrEmpty(this string fieldName)
             => new QueryConditionBuilder().WithField(fieldName)
                                           .WithOperator(QueryOperator.IsNotNullOrEmpty);
 
-        /// <summary>Creates a query expression with the IsNull query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsNull query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         public static IQueryConditionBuilder IsNull(this string fieldName)
             => new QueryConditionBuilder().WithField(fieldName)
                                           .WithOperator(QueryOperator.IsNull);
 
-        /// <summary>Creates a query expression with the IsNullOrEmpty query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsNullOrEmpty query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         public static IQueryConditionBuilder IsNullOrEmpty(this string fieldName)
             => new QueryConditionBuilder().WithField(fieldName)
                                           .WithOperator(QueryOperator.IsNullOrEmpty);
 
-        /// <summary>Creates a query expression with the IsLowerOrEqualThan query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsLowerOrEqualThan query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsLowerOrEqualThan(this string fieldName, object? value)
@@ -82,7 +82,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.LowerOrEqual)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the IsLowerThan query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the IsLowerThan query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsLowerThan(this string fieldName, object? value)
@@ -90,7 +90,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.Lower)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the NotContains query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the NotContains query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesNotContain(this string fieldName, object? value)
@@ -98,7 +98,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.NotContains)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the NotEndsWith query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the NotEndsWith query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesNotEndWith(this string fieldName, object? value)
@@ -106,7 +106,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.NotEndsWith)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the NotEqual query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the NotEqual query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder IsNotEqualTo(this string fieldName, object? value)
@@ -114,7 +114,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.NotEqual)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the NotStartsWith query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the NotStartsWith query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesNotStartWith(this string fieldName, object? value)
@@ -122,7 +122,7 @@ namespace QueryFramework.Core.Extensions
                                           .WithOperator(QueryOperator.NotStartsWith)
                                           .WithValue(value);
 
-        /// <summary>Creates a query expression with the StartsWith query operator, using the specified values.</summary>
+        /// <summary>Creates a query condition builder with the StartsWith query operator, using the specified values.</summary>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="value">The value.</param>
         public static IQueryConditionBuilder DoesStartWith(this string fieldName, object? value)
@@ -134,41 +134,41 @@ namespace QueryFramework.Core.Extensions
         #region Built-in functions
         /// <summary>Gets the length of this field.</summary>
         public static IQueryExpressionBuilder Len(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LengthFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LengthFunctionBuilder());
 
         /// <summary>Trims the value of this field.</summary>
         public static IQueryExpressionBuilder SqlTrim(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new TrimFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new TrimFunctionBuilder());
 
         /// <summary>Gets the upper-cased value of this field.</summary>
         public static IQueryExpressionBuilder Upper(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new UpperFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new UpperFunctionBuilder());
 
         /// <summary>Gets the lower-cased value of this field.</summary>
         public static IQueryExpressionBuilder Lower(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LowerFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LowerFunctionBuilder());
 
         /// <summary>Gets the left part of this expression.</summary>
         /// <param name="length">Number of positions</param>
         public static IQueryExpressionBuilder Left(this string fieldName, int length)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LeftFunction(length));
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new LeftFunctionBuilder().WithLength(length));
 
         /// <summary>Gets the right part of this expression.</summary>
         /// <param name="length">Number of positions</param>
         public static IQueryExpressionBuilder Right(this string fieldName, int length)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new RightFunction(length));
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new RightFunctionBuilder().WithLength(length));
 
         /// <summary>Gets the year of this date field.</summary>
         public static IQueryExpressionBuilder Year(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new YearFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new YearFunctionBuilder());
 
         /// <summary>Gets the month of this date field.</summary>
         public static IQueryExpressionBuilder Month(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new MonthFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new MonthFunctionBuilder());
 
         /// <summary>Gets the day of this date expression.</summary>
         public static IQueryExpressionBuilder Day(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new DayFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new DayFunctionBuilder());
 
         /// <summary>Gets the first non-null value of the specified expressions.</summary>
         public static IQueryExpressionBuilder Coalesce(this string fieldName, params IQueryExpression[] innerExpressions)
@@ -177,15 +177,15 @@ namespace QueryFramework.Core.Extensions
 
         /// <summary>Gets the first non-null value of the specified fields.</summary>
         public static IQueryExpressionBuilder Coalesce(this string fieldName, params string[] innerFieldNames)
-            => Coalesce(fieldName, innerFieldNames.Select(innerFieldName => new QueryExpression(innerFieldName)).ToArray());
+            => Coalesce(fieldName, innerFieldNames.Select(innerFieldName => new QueryExpression(innerFieldName, null)).ToArray());
 
         /// <summary>Gets the count of this field.</summary>
         public static IQueryExpressionBuilder Count(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new CountFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new CountFunctionBuilder());
 
         /// <summary>Gets the sum of this field.</summary>
         public static IQueryExpressionBuilder Sum(this string fieldName)
-            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new SumFunction());
+            => new QueryExpressionBuilder().WithFieldName(fieldName).WithFunction(new SumFunctionBuilder());
         #endregion
     }
 }

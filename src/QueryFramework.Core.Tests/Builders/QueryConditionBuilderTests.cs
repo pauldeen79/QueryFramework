@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Core.Builders;
 using Xunit;
@@ -16,11 +17,13 @@ namespace QueryFramework.Core.Tests.Builders
         {
             // Arrange
             var function = new Mock<IQueryExpressionFunction>().Object;
+            var functionBuilderMock = new Mock<IQueryExpressionFunctionBuilder>();
+            functionBuilderMock.Setup(x => x.Build()).Returns(function);
             var sut = new QueryConditionBuilder
             {
                 CloseBracket = true,
                 Combination = QueryCombination.Or,
-                Field = new QueryExpressionBuilder { Function = function, FieldName = "fieldname" },
+                Field = new QueryExpressionBuilder { Function = functionBuilderMock.Object, FieldName = "fieldname" },
                 OpenBracket = true,
                 Operator = QueryOperator.Contains,
                 Value = "value"
@@ -32,7 +35,7 @@ namespace QueryFramework.Core.Tests.Builders
             // Assert
             actual.CloseBracket.Should().Be(sut.CloseBracket);
             actual.Combination.Should().Be(sut.Combination);
-            actual.Field.Function.Should().Be(sut.Field.Function);
+            actual.Field.Function.Should().Be(function);
             actual.Field.FieldName.Should().Be(sut.Field.FieldName);
             actual.OpenBracket.Should().Be(sut.OpenBracket);
             actual.Operator.Should().Be(sut.Operator);
@@ -43,14 +46,15 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryConditionBuilder_From_QueryCondition()
         {
             // Arrange
-            var function = new Mock<IQueryExpressionFunction>().Object;
+            var functionMock = new Mock<IQueryExpressionFunction>();
+            functionMock.Setup(x => x.ToBuilder()).Returns(new Mock<IQueryExpressionFunctionBuilder>().Object);
             var input = new QueryCondition
             (
                 closeBracket: true,
                 combination: QueryCombination.Or,
-                field: new QueryExpression(function: function, fieldName: "fieldname"),
+                field: new QueryExpression(function: functionMock.Object, fieldName: "fieldname"),
                 openBracket: true,
-                queryOperator: QueryOperator.Contains,
+                @operator: QueryOperator.Contains,
                 value: "value"
             );
 
@@ -60,7 +64,9 @@ namespace QueryFramework.Core.Tests.Builders
             // Assert
             actual.CloseBracket.Should().Be(input.CloseBracket);
             actual.Combination.Should().Be(input.Combination);
-            actual.Field.Function.Should().Be(input.Field.Function);
+            actual.Field.Function.Should().NotBeNull();
+            actual.Field.Function?.Should().NotBeNull();
+            actual.Field.Function?.InnerFunction.Should().BeNull();
             actual.Field.FieldName.Should().Be(input.Field.FieldName);
             actual.OpenBracket.Should().Be(input.OpenBracket);
             actual.Operator.Should().Be(input.Operator);
@@ -71,7 +77,7 @@ namespace QueryFramework.Core.Tests.Builders
         public void Can_Create_QueryConditionBuilder_From_Values_With_Expression()
         {
             // Act
-            var function = new Mock<IQueryExpressionFunction>().Object;
+            var function = new Mock<IQueryExpressionFunctionBuilder>().Object;
             var actual = new QueryConditionBuilder().WithCloseBracket()
                                                     .WithCombination(QueryCombination.Or)
                                                     .WithField(new QueryExpressionBuilder().WithFunction(function).WithFieldName("fieldname"))

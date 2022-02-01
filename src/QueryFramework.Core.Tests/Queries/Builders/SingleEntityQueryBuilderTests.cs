@@ -31,7 +31,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         {
             // Arrange
             var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-            var orderByFields = new[] { new QuerySortOrderBuilder("field") };
+            var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
             var limit = 1;
             var offset = 2;
 
@@ -56,7 +56,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
         {
             // Arrange
             var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-            var orderByFields = new[] { new QuerySortOrderBuilder("field") };
+            var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
             var limit = 1;
             var offset = 2;
             var sut = new SingleEntityQueryBuilder

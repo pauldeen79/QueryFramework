@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CrossCutting.Common.Extensions;
 using FluentAssertions;
 using QueryFramework.Abstractions;
 using QueryFramework.Abstractions.Extensions;
@@ -169,7 +170,9 @@ namespace QueryFramework.Core.Tests.Extensions
             var sut = new SingleEntityQueryBuilder();
 
             // Act
-            var actual = sut.OrderBy(new QueryExpressionBuilder("Field1"), new QueryExpressionBuilder("Field2"), new QueryExpressionBuilder("Field3"));
+            var actual = sut.OrderBy(new QueryExpressionBuilder().WithFieldName("Field1"),
+                                     new QueryExpressionBuilder().WithFieldName("Field2"),
+                                     new QueryExpressionBuilder().WithFieldName("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -188,7 +191,9 @@ namespace QueryFramework.Core.Tests.Extensions
             var sut = new SingleEntityQueryBuilder();
 
             // Act
-            var actual = sut.OrderBy(new QuerySortOrderBuilder("Field1"), new QuerySortOrderBuilder("Field2"), new QuerySortOrderBuilder("Field3", QuerySortOrderDirection.Descending));
+            var actual = sut.OrderBy(new QuerySortOrderBuilder().WithField("Field1"),
+                                     new QuerySortOrderBuilder().WithField("Field2"),
+                                     new QuerySortOrderBuilder().WithField("Field3").WithOrder(QuerySortOrderDirection.Descending));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -226,7 +231,9 @@ namespace QueryFramework.Core.Tests.Extensions
             var sut = new SingleEntityQueryBuilder();
 
             // Act
-            var actual = sut.OrderByDescending(new QueryExpressionBuilder("Field1"), new QueryExpressionBuilder("Field2"), new QueryExpressionBuilder("Field3"));
+            var actual = sut.OrderByDescending(new QueryExpressionBuilder().WithFieldName("Field1"),
+                                               new QueryExpressionBuilder().WithFieldName("Field2"),
+                                               new QueryExpressionBuilder().WithFieldName("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -245,7 +252,9 @@ namespace QueryFramework.Core.Tests.Extensions
             var sut = new SingleEntityQueryBuilder();
 
             // Act
-            var actual = sut.OrderByDescending(new QuerySortOrderBuilder("Field1"), new QuerySortOrderBuilder("Field2"), new QuerySortOrderBuilder("Field3"));
+            var actual = sut.OrderByDescending(new QuerySortOrderBuilder().WithField("Field1"),
+                                               new QuerySortOrderBuilder().WithField("Field2"),
+                                               new QuerySortOrderBuilder().WithField("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -280,10 +289,11 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_ThenBy_With_QueryExpressionBuilders_To_Add_OrderByClauses()
         {
             // Arrange
-            var sut = new SingleEntityQueryBuilder().OrderBy(new QueryExpressionBuilder("Field1"));
+            var sut = new SingleEntityQueryBuilder().OrderBy(new QueryExpressionBuilder().WithFieldName("Field1"));
 
             // Act
-            var actual = sut.ThenBy(new QueryExpressionBuilder("Field2"), new QueryExpressionBuilder("Field3"));
+            var actual = sut.ThenBy(new QueryExpressionBuilder().WithFieldName("Field2"),
+                                    new QueryExpressionBuilder().WithFieldName("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -299,10 +309,11 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_ThenBy_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
         {
             // Arrange
-            var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder("Field1"));
+            var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder().WithField("Field1"));
 
             // Act
-            var actual = sut.ThenBy(new QuerySortOrderBuilder("Field2"), new QuerySortOrderBuilder("Field3", QuerySortOrderDirection.Descending));
+            var actual = sut.ThenBy(new QuerySortOrderBuilder().WithField("Field2"),
+                                    new QuerySortOrderBuilder().WithField("Field3").WithOrder(QuerySortOrderDirection.Descending));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -337,10 +348,11 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_ThenByDescending_With_QueryExpressionBuilders_To_Add_OrderByClauses()
         {
             // Arrange
-            var sut = new SingleEntityQueryBuilder().OrderByDescending(new QueryExpressionBuilder("Field1")).ThenBy(new QueryExpressionBuilder("Field2"));
+            var sut = new SingleEntityQueryBuilder().OrderByDescending(new QueryExpressionBuilder().WithFieldName("Field1"))
+                                                    .ThenBy(new QueryExpressionBuilder().WithFieldName("Field2"));
 
             // Act
-            var actual = sut.ThenByDescending(new QueryExpressionBuilder("Field3"));
+            var actual = sut.ThenByDescending(new QueryExpressionBuilder().WithFieldName("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);
@@ -356,10 +368,11 @@ namespace QueryFramework.Core.Tests.Extensions
         public void Can_Use_ThenByDescending_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
         {
             // Arrange
-            var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder("Field1"), new QuerySortOrderBuilder("Field2"));
+            var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder().WithField("Field1"),
+                                                             new QuerySortOrderBuilder().WithField("Field2"));
 
             // Act
-            var actual = sut.ThenByDescending(new QuerySortOrderBuilder("Field3"));
+            var actual = sut.ThenByDescending(new QuerySortOrderBuilder().WithField("Field3"));
 
             // Assert
             actual.OrderByFields.Should().HaveCount(3);

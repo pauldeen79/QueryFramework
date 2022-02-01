@@ -17,11 +17,10 @@ namespace QueryFramework.SqlServer.Extensions
     internal static class PagedSelectCommandBuilderExtensions
     {
         internal static PagedSelectCommandBuilder Select(this PagedSelectCommandBuilder instance,
-                                                         ISingleEntityQuery query,
                                                          IPagedDatabaseEntityRetrieverSettings settings,
                                                          IQueryFieldProvider fieldProvider,
                                                          IFieldSelectionQuery? fieldSelectionQuery)
-            => fieldSelectionQuery?.GetAllFields != false
+            => fieldSelectionQuery == null || fieldSelectionQuery.GetAllFields
                 ? instance.AppendSelectFieldsForAllFields(settings, fieldProvider)
                 : instance.AppendSelectFieldsForSpecifiedFields(fieldSelectionQuery, fieldProvider);
 
@@ -137,7 +136,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                           IPagedDatabaseEntityRetrieverSettings settings,
                                                           IQueryFieldProvider fieldProvider)
         {
-            if (groupingQuery?.GroupByFields?.Any() != true)
+            if (groupingQuery == null || !groupingQuery.GroupByFields.Any())
             {
                 return instance;
             }
@@ -169,7 +168,7 @@ namespace QueryFramework.SqlServer.Extensions
                                                          IQueryFieldProvider fieldProvider,
                                                          ref int paramCounter)
         {
-            if (groupingQuery?.HavingFields?.Any() != true)
+            if (groupingQuery == null || !groupingQuery.HavingFields.Any())
             {
                 return instance;
             }
@@ -232,7 +231,7 @@ namespace QueryFramework.SqlServer.Extensions
                 {
                     throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
                 }
-                var newQuerySortOrder = new QuerySortOrder(newFieldName, querySortOrder.SortOrder.Order);
+                var newQuerySortOrder = new QuerySortOrder(new QueryExpression(newFieldName, null), querySortOrder.SortOrder.Order);
                 instance.OrderBy($"{newQuerySortOrder.Field.GetSqlExpression()} {newQuerySortOrder.ToSql()}");
             }
 
@@ -246,17 +245,9 @@ namespace QueryFramework.SqlServer.Extensions
 
         internal static PagedSelectCommandBuilder WithParameters(this PagedSelectCommandBuilder instance,
                                                                  IParameterizedQuery? parameterizedQuery)
-        {
-            if (parameterizedQuery != null)
-            {
-                foreach (var parameter in parameterizedQuery.Parameters)
-                {
-                    instance.AppendParameter(parameter.Name, parameter.Value);
-                }
-            }
-
-            return instance;
-        }
+            => parameterizedQuery == null
+                ? instance
+                : parameterizedQuery.Parameters.Aggregate(instance, (acc, parameter) => acc.AppendParameter(parameter.Name, parameter.Value));
 
         internal static int AppendQueryCondition(this PagedSelectCommandBuilder instance,
                                                  int paramCounter,
@@ -323,55 +314,28 @@ namespace QueryFramework.SqlServer.Extensions
                                                    string paramName,
                                                    StringBuilder builder)
         {
-            if (queryCondition.Operator == QueryOperator.IsNull)
+            var sqlToAppend = queryCondition.Operator switch
             {
-                builder.Append(" IS NULL");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNotNull)
+                QueryOperator.IsNull => " IS NULL",
+                QueryOperator.IsNotNull => " IS NOT NULL",
+                QueryOperator.IsNullOrEmpty => " = ''",
+                QueryOperator.IsNotNullOrEmpty => " <> ''",
+                QueryOperator.Contains => $"CHARINDEX({paramName}, {field.GetSqlExpression()}) > 0",
+                QueryOperator.NotContains => $"CHARINDEX({paramName}, {field.GetSqlExpression()}) = 0",
+                QueryOperator.StartsWith => $"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
+                QueryOperator.NotStartsWith => $"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
+                QueryOperator.EndsWith => $"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
+                QueryOperator.NotEndsWith => $"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
+                _ => $" {queryCondition.Operator.ToSql()} {paramName}"
+            };
+
+            builder.Append(sqlToAppend);
+
+            if (!queryCondition.Operator.In(QueryOperator.IsNull,
+                                            QueryOperator.IsNotNull,
+                                            QueryOperator.IsNullOrEmpty,
+                                            QueryOperator.IsNotNullOrEmpty))
             {
-                builder.Append(" IS NOT NULL");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNullOrEmpty)
-            {
-                builder.Append(" = ''");
-            }
-            else if (queryCondition.Operator == QueryOperator.IsNotNullOrEmpty)
-            {
-                builder.Append(" <> ''");
-            }
-            else if (queryCondition.Operator == QueryOperator.Contains)
-            {
-                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) > 0");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotContains)
-            {
-                builder.Append($"CHARINDEX({paramName}, {field.GetSqlExpression()}) = 0");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.StartsWith)
-            {
-                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotStartsWith)
-            {
-                builder.Append($"LEFT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.EndsWith)
-            {
-                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else if (queryCondition.Operator == QueryOperator.NotEndsWith)
-            {
-                builder.Append($"RIGHT({field.GetSqlExpression()}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}");
-                AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-            }
-            else
-            {
-                builder.Append($" {queryCondition.Operator.ToSql()} {paramName}");
                 AppendParameterIfNecessary(instance, paramCounter, queryCondition);
             }
         }
@@ -380,13 +344,15 @@ namespace QueryFramework.SqlServer.Extensions
                                                        int paramCounter,
                                                        IQueryCondition queryCondition)
         {
-            if (!(queryCondition.Value is IQueryParameterValue))
+            if (queryCondition.Value is IQueryParameterValue)
             {
-                instance.AppendParameter(string.Format("p{0}", paramCounter),
-                                         queryCondition.Value is KeyValuePair<string, object> keyValuePair
-                                             ? keyValuePair.Value
-                                             : queryCondition.Value ?? new object());
+                return;
             }
+
+            instance.AppendParameter(string.Format("p{0}", paramCounter),
+                                     queryCondition.Value is KeyValuePair<string, object> keyValuePair
+                                         ? keyValuePair.Value
+                                         : queryCondition.Value ?? new object());
         }
 
         private static string GetQueryParameterName(int paramCounter, object? value)

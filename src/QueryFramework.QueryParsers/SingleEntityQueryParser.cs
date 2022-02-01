@@ -7,6 +7,7 @@ using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Extensions;
 using QueryFramework.Abstractions.Queries.Builders;
 using QueryFramework.Core.Builders;
+using QueryFramework.Core.Extensions;
 using QueryFramework.QueryParsers.Extensions;
 
 namespace QueryFramework.QueryParsers
@@ -120,25 +121,31 @@ namespace QueryFramework.QueryParsers
                     StartsWithPlusOrMinus = x.StartsWith("+") || x.StartsWith("-"),
                     StartsWithMinus = x.StartsWith("-")
                 })
-                .Select(item => new QueryConditionBuilder
-                {
-                    Field = DefaultFieldExpressionBuilderFactory == null
-                       ? new TQueryExpressionBuilder()
-                       : DefaultFieldExpressionBuilderFactory.Invoke(),
-                    Combination = item.StartsWithPlusOrMinus
-                       ? QueryCombination.And
-                       : QueryCombination.Or,
-                    Value = item.StartsWithPlusOrMinus
-                       ? item.Value.Substring(1)
-                       : item.Value,
-                    Operator = item.StartsWithMinus
-                       ? QueryOperator.NotContains
-                       : QueryOperator.Contains,
-                    OpenBracket = item.Index == 0,
-                    CloseBracket = item.Index == items.Length - 1
-                })
-                .Cast<IQueryConditionBuilder>()
+                .Select(item => CreateQueryCondition(item.Index,
+                                                     item.Value,
+                                                     item.StartsWithPlusOrMinus,
+                                                     item.StartsWithMinus,
+                                                     items.Length))
                 .ToList();
+
+        private IQueryConditionBuilder CreateQueryCondition(int index, string value, bool startsWithPlusOrMinus, bool startsWithMinus, int itemsLength)
+            => new QueryConditionBuilder
+            {
+                Field = DefaultFieldExpressionBuilderFactory == null
+                           ? new TQueryExpressionBuilder()
+                           : DefaultFieldExpressionBuilderFactory.Invoke(),
+                Combination = startsWithPlusOrMinus
+                           ? QueryCombination.And
+                           : QueryCombination.Or,
+                Value = startsWithPlusOrMinus
+                           ? value.Substring(1)
+                           : value,
+                Operator = startsWithMinus
+                           ? QueryOperator.NotContains
+                           : QueryOperator.Contains,
+                OpenBracket = index == 0,
+                CloseBracket = index == itemsLength - 1
+            };
 
         private static QueryCombination? GetQueryCombination(string combination)
             => combination.ToUpper(CultureInfo.InvariantCulture) switch

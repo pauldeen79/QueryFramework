@@ -35,6 +35,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             FieldProviderMock = new Mock<IQueryFieldProvider>();
             FieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
             QueryMock = new Mock<IGroupingQuery>();
+            QueryMock.SetupGet(x => x.GroupByFields).Returns(new ValueCollection<IQueryExpression>());
+            QueryMock.SetupGet(x => x.HavingFields).Returns(new ValueCollection<IQueryCondition>());
         }
 
         [Fact]
@@ -47,7 +49,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
@@ -63,7 +65,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
@@ -77,7 +79,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
@@ -93,7 +95,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             Builder.From("MyTable");
 
             // Act
-            var actual = Builder.Select(query, SettingsMock.Object, FieldProviderMock.Object, query);
+            var actual = Builder.Select(SettingsMock.Object, FieldProviderMock.Object, query);
 
             // Assert
             actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
@@ -108,9 +110,9 @@ namespace QueryFramework.SqlServer.Tests.Extensions
                              .Returns(default(string));
 
             // Act
-            Builder.Invoking(x => x.Select(query, SettingsMock.Object, FieldProviderMock.Object, query))
+            Builder.Invoking(x => x.Select(SettingsMock.Object, FieldProviderMock.Object, query))
                    .Should().Throw<InvalidOperationException>()
-                   .And.Message.Should().StartWith("Query fields contains unknown field in expression [Field1]");
+                   .And.Message.Should().StartWith("Query fields contains unknown field in expression [QueryExpression { FieldName = Field1, Function =  }]");
         }
 
         [Fact]
@@ -335,7 +337,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             QueryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field", null) }));
             Builder.From("MyTable");
 
             // Act
@@ -350,7 +352,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             QueryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field1"), new QueryExpression("Field2") }));
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field1", null),
+                                                                            new QueryExpression("Field2", null) }));
             Builder.From("MyTable");
 
             // Act
@@ -365,7 +368,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             QueryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field", null) }));
             Builder.From("MyTable");
             FieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns<string>(x => x + "A");
@@ -382,7 +385,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             QueryMock.SetupGet(x => x.GroupByFields)
-                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field") }));
+                     .Returns(new ValueCollection<IQueryExpression>(new[] { new QueryExpression("Field", null) }));
             SettingsMock.SetupGet(x => x.TableName).Returns("MyTable");
             FieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                              .Returns(default(string));
@@ -398,7 +401,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
         {
             // Arrange
             QueryMock.SetupGet(x => x.HavingFields)
-                     .Returns(new ValueCollection<IQueryCondition>(new[] { new QueryCondition("Field", QueryOperator.Equal, "value") }));
+                     .Returns(new ValueCollection<IQueryCondition>(new[] { new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Equal, "value", QueryCombination.And) }));
             int paramCounter = 0;
             Builder.From("MyTable");
 
@@ -416,8 +419,8 @@ namespace QueryFramework.SqlServer.Tests.Extensions
             QueryMock.SetupGet(x => x.HavingFields)
                      .Returns(new ValueCollection<IQueryCondition>(new[]
                      {
-                         new QueryCondition("Field1", QueryOperator.Equal, "value1"),
-                         new QueryCondition("Field2", QueryOperator.Equal, "value2")
+                         new QueryCondition(false, false, new QueryExpression("Field1", null), QueryOperator.Equal, "value1", QueryCombination.And),
+                         new QueryCondition(false, false, new QueryExpression("Field2", null), QueryOperator.Equal, "value2", QueryCombination.And)
                      }));
             int paramCounter = 0;
             Builder.From("MyTable");
@@ -473,7 +476,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             var actual = Builder.AppendQueryCondition(paramCounter,
-                                                      new QueryCondition("Field", QueryOperator.Greater, "value"),
+                                                      new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Greater, "value", QueryCombination.And),
                                                       SettingsMock.Object,
                                                       FieldProviderMock.Object,
                                                       Builder.Where);
@@ -498,7 +501,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.AppendQueryCondition(0,
-                                         new QueryCondition("Field", QueryOperator.Greater, "value", true, true),
+                                         new QueryCondition(true, true, new QueryExpression("Field", null), QueryOperator.Greater, "value", QueryCombination.And),
                                          SettingsMock.Object,
                                          FieldProviderMock.Object,
                                          Builder.Where);
@@ -517,7 +520,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.AppendQueryCondition(0,
-                                         new QueryCondition("Field", QueryOperator.Greater, "value"),
+                                         new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Greater, "value", QueryCombination.And),
                                          SettingsMock.Object,
                                          FieldProviderMock.Object,
                                          Builder.Where);
@@ -536,7 +539,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.Invoking(x => x.AppendQueryCondition(0,
-                                                         new QueryCondition("Field", QueryOperator.Greater, "value"),
+                                                         new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Greater, "value", QueryCombination.And),
                                                          SettingsMock.Object,
                                                          FieldProviderMock.Object,
                                                          Builder.Where))
@@ -556,7 +559,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.AppendQueryCondition(0,
-                                         new QueryCondition("Field", queryOperator),
+                                         new QueryCondition(false, false, new QueryExpression("Field", null), queryOperator, null, QueryCombination.And),
                                          SettingsMock.Object,
                                          FieldProviderMock.Object,
                                          Builder.Where);
@@ -585,7 +588,7 @@ namespace QueryFramework.SqlServer.Tests.Extensions
 
             // Act
             Builder.AppendQueryCondition(0,
-                                         new QueryCondition("Field", queryOperator, "test"),
+                                         new QueryCondition(false, false, new QueryExpression("Field", null), queryOperator, "test", QueryCombination.And),
                                          SettingsMock.Object,
                                          FieldProviderMock.Object,
                                          Builder.Where);

@@ -33,7 +33,7 @@ namespace QueryFramework.SqlServer
             var groupingQuery = source as IGroupingQuery;
             var parameterizedQuery = source as IParameterizedQuery;
             return new PagedSelectCommandBuilder()
-                .Select(source, Settings, FieldProvider, fieldSelectionQuery)
+                .Select(Settings, FieldProvider, fieldSelectionQuery)
                 .Top(source, Settings)
                 .Offset(source)
                 .Distinct(fieldSelectionQuery)

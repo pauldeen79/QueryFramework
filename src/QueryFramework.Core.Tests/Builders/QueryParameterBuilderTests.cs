@@ -43,16 +43,5 @@ namespace QueryFramework.Core.Tests.Builders
             actual.Name.Should().Be(input.Name);
             actual.Value.Should().Be(input.Value);
         }
-
-        [Fact]
-        public void Can_Create_QueryParameterBuilder_From_Values()
-        {
-            // Act
-            var actual = new QueryParameterBuilder(name: "name", value: "value");
-
-            // Assert
-            actual.Name.Should().Be("name");
-            actual.Value.Should().Be("value");
-        }
     }
 }

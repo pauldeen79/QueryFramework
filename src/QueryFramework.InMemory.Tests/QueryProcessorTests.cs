@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using QueryFramework.Abstractions;
+using QueryFramework.Abstractions.Builders;
 using QueryFramework.Abstractions.Queries;
 using QueryFramework.Core.Builders;
 using QueryFramework.Core.Extensions;
@@ -57,9 +58,10 @@ namespace QueryFramework.InMemory.Tests
             // Arrange
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
             var sut = CreateSut(items);
-            var functionMock = new Mock<IQueryExpressionFunction>();
+            var functionBuilderMock = new Mock<IQueryExpressionFunctionBuilder>();
+            functionBuilderMock.Setup(x => x.Build()).Returns(new Mock<IQueryExpressionFunction>().Object);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder() { FieldName = nameof(MyClass.Property), Function = functionMock.Object }.IsEqualTo("something"))
+                .Where(new QueryExpressionBuilder() { FieldName = nameof(MyClass.Property), Function = functionBuilderMock.Object }.IsEqualTo("something"))
                 .Build();
 
             // Act & Assert
@@ -572,7 +574,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LengthFunction() }.IsEqualTo(2))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LengthFunctionBuilder() }.IsEqualTo(2))
                 .Build();
 
             // Act
@@ -590,7 +592,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LeftFunction(1) }.IsEqualTo("B"))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LeftFunctionBuilder().WithLength(1) }.IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -608,7 +610,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new RightFunction(1) }.IsEqualTo("2"))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new RightFunctionBuilder().WithLength(1) }.IsEqualTo("2"))
                 .Build();
 
             // Act
@@ -626,7 +628,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "b" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new UpperFunction() }.IsEqualTo("B"))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new UpperFunctionBuilder() }.IsEqualTo("B"))
                 .Build();
 
             // Act
@@ -644,7 +646,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LowerFunction() }.IsEqualTo("b"))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LowerFunctionBuilder() }.IsEqualTo("b"))
                 .Build();
 
             // Act
@@ -662,7 +664,7 @@ namespace QueryFramework.InMemory.Tests
             var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B " } };
             var sut = CreateSut(items);
             var query = new SingleEntityQueryBuilder()
-                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new TrimFunction() }.IsEqualTo("B"))
+                .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new TrimFunctionBuilder() }.IsEqualTo("B"))
                 .Build();
 
             // Act

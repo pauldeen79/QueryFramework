@@ -29,8 +29,8 @@ namespace QueryFramework.Core.Tests.Queries
         public void Can_Construct_SingleEntityQuery_With_Custom_Values()
         {
             // Arrange
-            var conditions = new[] { new QueryCondition("field", Abstractions.QueryOperator.Equal, "value") };
-            var orderByFields = new[] { new QuerySortOrder("field") };
+            var conditions = new[] { new QueryCondition(false, false, new QueryExpression("field", null), QueryOperator.Equal, "value", QueryCombination.And) };
+            var orderByFields = new[] { new QuerySortOrder(new QueryExpression("field", null), QuerySortOrderDirection.Ascending) };
             var limit = 1;
             var offset = 2;
 
@@ -48,7 +48,7 @@ namespace QueryFramework.Core.Tests.Queries
         public void Constructing_SingleEntityQuery_With_ValidationError_Leads_To_Exception()
         {
             // Arrange
-            var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, new[] { new QueryCondition("field", QueryOperator.Equal, openBracket: true) }, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IQueryExpression>()));
+            var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, new[] { new QueryCondition(true, false, new QueryExpression("field", null), QueryOperator.Equal, null, QueryCombination.And) }, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IQueryExpression>()));
 
             // Act
             action.Should().Throw<ValidationException>();
@@ -58,8 +58,8 @@ namespace QueryFramework.Core.Tests.Queries
         public void Can_Compare_SingleEntityQuery_With_Equal_Values()
         {
             // Arrange
-            var q1 = new SingleEntityQuery(5, 64, new[] { new QueryCondition("Field", Abstractions.QueryOperator.Equal, "A") }, Enumerable.Empty<IQuerySortOrder>());
-            var q2 = new SingleEntityQuery(5, 64, new[] { new QueryCondition("Field", Abstractions.QueryOperator.Equal, "A") }, Enumerable.Empty<IQuerySortOrder>());
+            var q1 = new SingleEntityQuery(5, 64, new[] { new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Equal, "A", QueryCombination.And) }, Enumerable.Empty<IQuerySortOrder>());
+            var q2 = new SingleEntityQuery(5, 64, new[] { new QueryCondition(false, false, new QueryExpression("Field", null), QueryOperator.Equal, "A", QueryCombination.And) }, Enumerable.Empty<IQuerySortOrder>());
 
             // Act
             var actual = q1.Equals(q2);

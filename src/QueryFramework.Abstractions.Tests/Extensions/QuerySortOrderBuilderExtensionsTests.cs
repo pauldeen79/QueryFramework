@@ -34,7 +34,7 @@ namespace QueryFramework.Abstractions.Tests.Extensions
         {
             // Arrange
             var updateFieldBuilderMock = new Mock<IQueryExpressionBuilder>();
-            var function = new Mock<IQueryExpressionFunction>().Object;
+            var function = new Mock<IQueryExpressionFunctionBuilder>().Object;
             updateFieldBuilderMock.SetupGet(x => x.Function).Returns(function);
             updateFieldBuilderMock.SetupGet(x => x.FieldName).Returns("fieldname");
 
