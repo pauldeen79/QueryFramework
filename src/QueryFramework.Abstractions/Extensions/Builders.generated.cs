@@ -17,43 +17,50 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QueryConditionBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithOpenBracket(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, bool openBracket = true)
+        public static T WithOpenBracket<T>(this T instance, bool openBracket = true)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.OpenBracket = openBracket;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithCloseBracket(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, bool closeBracket = true)
+        public static T WithCloseBracket<T>(this T instance, bool closeBracket = true)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.CloseBracket = closeBracket;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithField(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
+        public static T WithField<T>(this T instance, QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.Field = field;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithOperator(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, QueryFramework.Abstractions.QueryOperator @operator)
+        public static T WithOperator<T>(this T instance, QueryFramework.Abstractions.QueryOperator @operator)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.Operator = @operator;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithValue(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, object? value)
+        public static T WithValue<T>(this T instance, object? value)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.Value = value;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithCombination(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, QueryFramework.Abstractions.QueryCombination combination)
+        public static T WithCombination<T>(this T instance, QueryFramework.Abstractions.QueryCombination combination)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.Combination = combination;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryConditionBuilder WithField(this QueryFramework.Abstractions.Builders.IQueryConditionBuilder instance, string fieldName)
+        public static T WithField<T>(this T instance, string fieldName)
+            where T : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
         {
             instance.Field.FieldName = fieldName;
             return instance;
@@ -64,13 +71,15 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QueryExpressionBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQueryExpressionBuilder WithFieldName(this QueryFramework.Abstractions.Builders.IQueryExpressionBuilder instance, string fieldName)
+        public static T WithFieldName<T>(this T instance, string fieldName)
+            where T : QueryFramework.Abstractions.Builders.IQueryExpressionBuilder
         {
             instance.FieldName = fieldName;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryExpressionBuilder WithFunction(this QueryFramework.Abstractions.Builders.IQueryExpressionBuilder instance, QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? function)
+        public static T WithFunction<T>(this T instance, QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? function)
+            where T : QueryFramework.Abstractions.Builders.IQueryExpressionBuilder
         {
             instance.Function = function;
             return instance;
@@ -81,7 +90,8 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QueryExpressionFunctionBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder WithInnerFunction(this QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder instance, QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? innerFunction)
+        public static T WithInnerFunction<T>(this T instance, QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? innerFunction)
+            where T : QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder
         {
             instance.InnerFunction = innerFunction;
             return instance;
@@ -92,13 +102,15 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QueryParameterBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQueryParameterBuilder WithName(this QueryFramework.Abstractions.Builders.IQueryParameterBuilder instance, string name)
+        public static T WithName<T>(this T instance, string name)
+            where T : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
         {
             instance.Name = name;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQueryParameterBuilder WithValue(this QueryFramework.Abstractions.Builders.IQueryParameterBuilder instance, object value)
+        public static T WithValue<T>(this T instance, object value)
+            where T : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
         {
             instance.Value = value;
             return instance;
@@ -109,7 +121,8 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QueryParameterValueBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQueryParameterValueBuilder WithName(this QueryFramework.Abstractions.Builders.IQueryParameterValueBuilder instance, string name)
+        public static T WithName<T>(this T instance, string name)
+            where T : QueryFramework.Abstractions.Builders.IQueryParameterValueBuilder
         {
             instance.Name = name;
             return instance;
@@ -120,19 +133,22 @@ namespace QueryFramework.Abstractions.Extensions
 #nullable enable
     public static partial class QuerySortOrderBuilderExtensions
     {
-        public static QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder WithField(this QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder instance, QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
+        public static T WithField<T>(this T instance, QueryFramework.Abstractions.Builders.IQueryExpressionBuilder field)
+            where T : QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder
         {
             instance.Field = field;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder WithOrder(this QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder instance, QueryFramework.Abstractions.QuerySortOrderDirection order)
+        public static T WithOrder<T>(this T instance, QueryFramework.Abstractions.QuerySortOrderDirection order)
+            where T : QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder
         {
             instance.Order = order;
             return instance;
         }
 
-        public static QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder WithField(this QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder instance, string fieldName)
+        public static T WithField<T>(this T instance, string fieldName)
+            where T : QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder
         {
             instance.Field.FieldName = fieldName;
             return instance;

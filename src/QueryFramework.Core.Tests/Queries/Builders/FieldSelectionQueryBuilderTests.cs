@@ -45,7 +45,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
             var sut = new FieldSelectionQueryBuilder
             {
                 Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
-                OrderByFields = orderByFields.ToList(),
+                OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
                 Limit = limit,
                 Offset = offset,
                 Distinct = distinct,
@@ -77,7 +77,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
             var sut = new FieldSelectionQueryBuilder
             {
                 Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
-                OrderByFields = orderByFields.ToList(),
+                OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
                 Limit = limit,
                 Offset = offset,
                 Distinct = distinct,

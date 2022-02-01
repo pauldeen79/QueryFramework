@@ -39,7 +39,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
             var sut = new SingleEntityQueryBuilder
             {
                 Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
-                OrderByFields = orderByFields.ToList(),
+                OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
                 Limit = limit,
                 Offset = offset
             };
@@ -62,7 +62,7 @@ namespace QueryFramework.Core.Tests.Queries.Builders
             var sut = new SingleEntityQueryBuilder
             {
                 Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
-                OrderByFields = orderByFields.ToList(),
+                OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
                 Limit = limit,
                 Offset = offset
             };

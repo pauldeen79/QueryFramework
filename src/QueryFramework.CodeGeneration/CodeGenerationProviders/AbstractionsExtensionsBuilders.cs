@@ -26,9 +26,15 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
             (
                 x => new ClassBuilder(x)
                       .WithNamespace("QueryFramework.Abstractions.Extensions")
-                      .Chain(x => x.Methods.ForEach(y => y.WithTypeName($"QueryFramework.Abstractions.Builders.I{y.TypeName}")
-                                                          .Chain(z => z.Parameters.First().WithTypeName(z.TypeName))
-                      ))
+                      .Chain
+                      (
+                        x => x.Methods.ForEach(y => y.AddGenericTypeArguments("T").AddGenericTypeArgumentConstraints($"where T : QueryFramework.Abstractions.Builders.I{y.TypeName}"))
+                      )
+                      .Chain
+                      (
+                        x => x.Methods.ForEach(y => y.WithTypeName("T")
+                                                     .Chain(z => z.Parameters.First().WithTypeName(z.TypeName)))
+                      )
                       .Build()
             ).ToArray();
     }
