@@ -1,9 +1,6 @@
-﻿using QueryFramework.Abstractions.Builders;
+﻿namespace QueryFramework.Abstractions;
 
-namespace QueryFramework.Abstractions
+public partial interface IQueryExpressionFunction
 {
-    public partial interface IQueryExpressionFunction
-    {
-        IQueryExpressionFunctionBuilder ToBuilder();
-    }
+    IQueryExpressionFunctionBuilder ToBuilder();
 }

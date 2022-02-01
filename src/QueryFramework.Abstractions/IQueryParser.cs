@@ -1,9 +1,6 @@
-﻿using QueryFramework.Abstractions.Queries.Builders;
+﻿namespace QueryFramework.Abstractions;
 
-namespace QueryFramework.Abstractions
+public interface IQueryParser<T> where T : ISingleEntityQueryBuilderBase
 {
-    public interface IQueryParser<T> where T : ISingleEntityQueryBuilderBase
-    {
-        T Parse(T builder, string queryString);
-    }
+    T Parse(T builder, string queryString);
 }

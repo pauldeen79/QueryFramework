@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
 
-namespace QueryFramework.SqlServer.Tests.TestHelpers
+public class MyEntity
 {
-    [ExcludeFromCodeCoverage]
-    public class MyEntity
-    {
-        public string? Property { get; set; }
-    }
+    public string? Property { get; set; }
 }

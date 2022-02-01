@@ -1,8 +1,7 @@
-﻿namespace QueryFramework.Abstractions
+﻿namespace QueryFramework.Abstractions;
+
+public enum QuerySortOrderDirection
 {
-    public enum QuerySortOrderDirection
-    {
-        Ascending = 0,
-        Descending = 1
-    }
+    Ascending = 0,
+    Descending = 1
 }

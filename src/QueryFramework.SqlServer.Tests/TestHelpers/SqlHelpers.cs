@@ -1,19 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using CrossCutting.Data.Abstractions;
-using FluentAssertions;
-using Moq;
-using QueryFramework.Abstractions;
-using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions;
-using QueryFramework.Abstractions.Queries;
-using QueryFramework.Core.Builders;
-using QueryFramework.Core.Extensions;
-using QueryFramework.Core.Queries.Builders;
+﻿using QueryFramework.Abstractions.Builders;
 
 namespace QueryFramework.SqlServer.Tests.TestHelpers
 {
-    [ExcludeFromCodeCoverage]
     internal static class SqlHelpers
     {
         internal static void ExpressionSqlShouldBe(IQueryExpressionBuilder expression, string expectedSqlForExpression)

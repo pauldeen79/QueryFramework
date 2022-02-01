@@ -1,21 +1,16 @@
-﻿using QueryFramework.Abstractions;
-using QueryFramework.Core.Functions;
-using QueryFramework.SqlServer.Abstractions;
+﻿namespace QueryFramework.SqlServer.FunctionParsers;
 
-namespace QueryFramework.SqlServer.FunctionParsers
+public class CountFunctionFunctionParser : IFunctionParser
 {
-    public class CountFunctionFunctionParser : IFunctionParser
+    public bool TryParse(IQueryExpressionFunction function, out string sqlExpression)
     {
-        public bool TryParse(IQueryExpressionFunction function, out string sqlExpression)
+        if (function is CountFunction f)
         {
-            if (function is CountFunction f)
-            {
-                sqlExpression = "COUNT({0})";
-                return true;
-            }
-
-            sqlExpression = string.Empty;
-            return false;
+            sqlExpression = "COUNT({0})";
+            return true;
         }
+
+        sqlExpression = string.Empty;
+        return false;
     }
 }
