@@ -1,12 +1,9 @@
-﻿using CrossCutting.Common;
+﻿namespace QueryFramework.Abstractions.Queries;
 
-namespace QueryFramework.Abstractions.Queries
+public interface ISingleEntityQuery
 {
-    public interface ISingleEntityQuery
-    {
-        int? Limit { get; }
-        int? Offset { get; }
-        ValueCollection<IQueryCondition> Conditions { get; }
-        ValueCollection<IQuerySortOrder> OrderByFields { get; }
-    }
+    int? Limit { get; }
+    int? Offset { get; }
+    ValueCollection<IQueryCondition> Conditions { get; }
+    ValueCollection<IQuerySortOrder> OrderByFields { get; }
 }

@@ -1,33 +1,26 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using CrossCutting.Data.Abstractions;
-using QueryFramework.SqlServer.Abstractions;
+﻿namespace QueryFramework.SqlServer.Tests.Repositories;
 
-namespace QueryFramework.SqlServer.Tests.Repositories
+public class TestEntityQueryProcessorSettings : IPagedDatabaseEntityRetrieverSettings
 {
-    [ExcludeFromCodeCoverage]
-    public class TestEntityQueryProcessorSettings : IPagedDatabaseEntityRetrieverSettings
+    public string TableName => "TestEntity";
+    public string Fields => "Field1, Field2, Field3";
+    public string DefaultOrderBy
     {
-        public string TableName => "TestEntity";
-        public string Fields => "Field1, Field2, Field3";
-        public string DefaultOrderBy
+        get
         {
-            get
-            {
-                var builder = new StringBuilder();
-                builder.Append("[Name]");
-                return builder.ToString();
-            }
+            var builder = new StringBuilder();
+            builder.Append("[Name]");
+            return builder.ToString();
         }
-        public string DefaultWhere
-        {
-            get
-            {
-                var builder = new StringBuilder();
-
-                return builder.ToString();
-            }
-        }
-        public int? OverridePageSize => null;
     }
+    public string DefaultWhere
+    {
+        get
+        {
+            var builder = new StringBuilder();
+
+            return builder.ToString();
+        }
+    }
+    public int? OverridePageSize => null;
 }

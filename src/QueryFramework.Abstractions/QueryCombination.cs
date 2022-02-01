@@ -1,8 +1,7 @@
-﻿namespace QueryFramework.Abstractions
+﻿namespace QueryFramework.Abstractions;
+
+public enum QueryCombination
 {
-    public enum QueryCombination
-    {
-        And = 0,
-        Or = 1
-    }
+    And = 0,
+    Or = 1
 }

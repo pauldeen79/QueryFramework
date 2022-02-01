@@ -1,12 +1,9 @@
-﻿using QueryFramework.Abstractions;
+﻿namespace QueryFramework.SqlServer.Extensions;
 
-namespace QueryFramework.SqlServer.Extensions
+public static class QueryExpressionExtensions
 {
-    public static class QueryExpressionExtensions
-    {
-        public static string GetSqlExpression(this IQueryExpression expression)
-            => expression.Function == null
-                ? expression.FieldName
-                : expression.Function.GetSqlExpression().Replace("{0}", expression.FieldName);
-    }
+    public static string GetSqlExpression(this IQueryExpression expression)
+        => expression.Function == null
+            ? expression.FieldName
+            : expression.Function.GetSqlExpression().Replace("{0}", expression.FieldName);
 }

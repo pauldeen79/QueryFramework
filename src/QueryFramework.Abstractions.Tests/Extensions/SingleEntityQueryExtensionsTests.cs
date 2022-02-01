@@ -1,89 +1,75 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using CrossCutting.Common;
-using FluentAssertions;
-using Moq;
-using QueryFramework.Abstractions.Extensions;
-using QueryFramework.Abstractions.Queries;
-using Xunit;
+﻿namespace QueryFramework.Abstractions.Tests.Extensions;
 
-namespace QueryFramework.Abstractions.Tests.Extensions
+public class SingleEntityQueryExtensionsTests
 {
-    [ExcludeFromCodeCoverage]
-    public class SingleEntityQueryExtensionsTests
+    [Fact]
+    public void Validate_Validates_Instance()
     {
-        [Fact]
-        public void Validate_Validates_Instance()
+        // Arrange
+        var sut = new SingleEntityQueryMock
         {
-            // Arrange
-            var sut = new SingleEntityQueryMock
-            {
-                ValidationResultValue = new[] { new ValidationResult("kaboom") }
-            };
+            ValidationResultValue = new[] { new ValidationResult("kaboom") }
+        };
 
-            // Act
-            sut.Invoking(x => x.Validate())
-               .Should().Throw<ValidationException>()
-               .And.Message.Should().Be("kaboom");
-        }
+        // Act
+        sut.Invoking(x => x.Validate())
+           .Should().Throw<ValidationException>()
+           .And.Message.Should().Be("kaboom");
+    }
 
-        [Fact]
-        public void GetTableName_Returns_DataObjectName_When_Available_And_Filled()
-        {
-            // Arrange
-            var sut = new Mock<IDataObjectNameQuery>();
-            sut.SetupGet(x => x.DataObjectName).Returns("custom");
+    [Fact]
+    public void GetTableName_Returns_DataObjectName_When_Available_And_Filled()
+    {
+        // Arrange
+        var sut = new Mock<IDataObjectNameQuery>();
+        sut.SetupGet(x => x.DataObjectName).Returns("custom");
 
-            // Act
-            var actual = sut.Object.GetTableName("default");
+        // Act
+        var actual = sut.Object.GetTableName("default");
 
-            // Assert
-            actual.Should().Be("custom");
-        }
+        // Assert
+        actual.Should().Be("custom");
+    }
 
-        [Fact]
-        public void GetTableName_Returns_TableName_When_DataObjectName_Is_Available_And_Not_Filled()
-        {
-            // Arrange
-            var sut = new Mock<IDataObjectNameQuery>();
-            sut.SetupGet(x => x.DataObjectName).Returns(string.Empty);
+    [Fact]
+    public void GetTableName_Returns_TableName_When_DataObjectName_Is_Available_And_Not_Filled()
+    {
+        // Arrange
+        var sut = new Mock<IDataObjectNameQuery>();
+        sut.SetupGet(x => x.DataObjectName).Returns(string.Empty);
 
-            // Act
-            var actual = sut.Object.GetTableName("default");
+        // Act
+        var actual = sut.Object.GetTableName("default");
 
-            // Assert
-            actual.Should().Be("default");
-        }
+        // Assert
+        actual.Should().Be("default");
+    }
 
-        [Fact]
-        public void GetTableName_Returns_TableName_When_DataObjectName_Is_Not_Available()
-        {
-            // Arrange
-            var sut = new Mock<ISingleEntityQuery>();
+    [Fact]
+    public void GetTableName_Returns_TableName_When_DataObjectName_Is_Not_Available()
+    {
+        // Arrange
+        var sut = new Mock<ISingleEntityQuery>();
 
-            // Act
-            var actual = sut.Object.GetTableName("default");
+        // Act
+        var actual = sut.Object.GetTableName("default");
 
-            // Assert
-            actual.Should().Be("default");
-        }
+        // Assert
+        actual.Should().Be("default");
+    }
 
-        [ExcludeFromCodeCoverage]
-        private class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
-        {
-            public int? Limit { get; set; }
+    private class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
+    {
+        public int? Limit { get; set; }
 
-            public int? Offset { get; set; }
+        public int? Offset { get; set; }
 
-            public ValueCollection<IQueryCondition> Conditions { get; set; } = new ValueCollection<IQueryCondition>();
+        public ValueCollection<IQueryCondition> Conditions { get; set; } = new ValueCollection<IQueryCondition>();
 
-            public ValueCollection<IQuerySortOrder> OrderByFields { get; set; } = new ValueCollection<IQuerySortOrder>();
+        public ValueCollection<IQuerySortOrder> OrderByFields { get; set; } = new ValueCollection<IQuerySortOrder>();
 
-            public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
+        public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
 
-            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => ValidationResultValue;
-        }
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => ValidationResultValue;
     }
 }

@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace QueryFramework.SqlServer.Tests.Repositories;
 
-namespace QueryFramework.SqlServer.Tests.Repositories
+public class TestEntityIdentity
 {
-    [ExcludeFromCodeCoverage]
-    public class TestEntityIdentity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

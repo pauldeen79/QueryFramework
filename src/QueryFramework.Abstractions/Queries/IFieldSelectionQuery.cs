@@ -1,11 +1,8 @@
-﻿using CrossCutting.Common;
+﻿namespace QueryFramework.Abstractions.Queries;
 
-namespace QueryFramework.Abstractions.Queries
+public interface IFieldSelectionQuery : ISingleEntityQuery
 {
-    public interface IFieldSelectionQuery : ISingleEntityQuery
-    {
-        bool Distinct { get; }
-        bool GetAllFields { get; }
-        ValueCollection<IQueryExpression> Fields { get; }
-    }
+    bool Distinct { get; }
+    bool GetAllFields { get; }
+    ValueCollection<IQueryExpression> Fields { get; }
 }

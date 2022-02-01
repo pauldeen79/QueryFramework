@@ -1,65 +1,59 @@
-﻿using System.Linq;
-using QueryFramework.Abstractions.Builders;
-using QueryFramework.Abstractions.Extensions;
-using QueryFramework.Abstractions.Queries.Builders;
-using QueryFramework.Core.Builders;
+﻿namespace QueryFramework.Core.Extensions;
 
-namespace QueryFramework.Core.Extensions
+public static class FieldSelectionQueryBuilderExtensions
 {
-    public static class FieldSelectionQueryBuilderExtensions
-    {
-        public static T Select<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
-            where T : IFieldSelectionQueryBuilder
-        {
-            instance.GetAllFields = false;
-            instance.Fields.AddRange(additionalFieldNames);
-            return instance;
-        }
-
-        public static T Select<T>(this T instance, params string[] additionalFieldNames)
-            where T : IFieldSelectionQueryBuilder
-            => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
-
-        public static T SelectAll<T>(this T instance)
-            where T : IFieldSelectionQueryBuilder
-        {
-            instance.GetAllFields = true;
-            instance.Fields.Clear();
-            return instance;
-        }
-
-        public static T SelectDistinct<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
-            where T : IFieldSelectionQueryBuilder
-        {
-            instance.Distinct = true;
-            instance.GetAllFields = false;
-            instance.Fields.AddRange(additionalFieldNames);
-            return instance;
-        }
-
-        public static T SelectDistinct<T>(this T instance, params string[] additionalFieldNames)
+    public static T Select<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
-        {
-            instance.Distinct = true;
-            return instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)).ToArray());
-        }
-
-        public static T GetAllFields<T>(this T instance, bool getAllFields = true)
-            where T : IFieldSelectionQueryBuilder
-        {
-            instance.GetAllFields = getAllFields;
-            if (getAllFields)
-            {
-                instance.Fields.Clear();
-            }
-            return instance;
-        }
-
-        public static T Distinct<T>(this T instance, bool distinct = true)
-            where T : IFieldSelectionQueryBuilder
-        {
-            instance.Distinct = distinct;
-            return instance;
-        }
+    {
+        instance.GetAllFields = false;
+        instance.Fields.AddRange(additionalFieldNames);
+        return instance;
     }
+
+    public static T Select<T>(this T instance, IEnumerable<IQueryExpressionBuilder> additionalFieldNames)
+        where T : IFieldSelectionQueryBuilder
+        => instance.Select(additionalFieldNames.ToArray());
+
+    public static T Select<T>(this T instance, params string[] additionalFieldNames)
+        where T : IFieldSelectionQueryBuilder
+        => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)));
+
+    public static T SelectAll<T>(this T instance)
+        where T : IFieldSelectionQueryBuilder
+    {
+        instance.GetAllFields = true;
+        instance.Fields.Clear();
+        return instance;
+    }
+
+    public static T SelectDistinct<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
+        where T : IFieldSelectionQueryBuilder
+    {
+        instance.Distinct = true;
+        instance.GetAllFields = false;
+        instance.Fields.AddRange(additionalFieldNames);
+        return instance;
+    }
+
+    public static T SelectDistinct<T>(this T instance, params string[] additionalFieldNames)
+    where T : IFieldSelectionQueryBuilder
+    {
+        instance.Distinct = true;
+        return instance.Select(additionalFieldNames);
+    }
+
+    public static T GetAllFields<T>(this T instance, bool getAllFields = true)
+        where T : IFieldSelectionQueryBuilder
+    {
+        instance.GetAllFields = getAllFields;
+        if (getAllFields)
+        {
+            instance.Fields.Clear();
+        }
+        return instance;
+    }
+
+    public static T Distinct<T>(this T instance, bool distinct = true)
+        where T : IFieldSelectionQueryBuilder
+        => instance.Chain(x => x.Distinct = distinct);
 }

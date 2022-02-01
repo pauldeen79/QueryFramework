@@ -1,23 +1,15 @@
-﻿using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using CrossCutting.Data.Abstractions;
-using CrossCutting.Data.Sql.Extensions;
+﻿namespace QueryFramework.SqlServer.Tests.Repositories;
 
-namespace QueryFramework.SqlServer.Tests.Repositories
+public class TestEntityMapper : IDatabaseEntityMapper<TestEntity>
 {
-    [ExcludeFromCodeCoverage]
-    public class TestEntityMapper : IDatabaseEntityMapper<TestEntity>
+    public TestEntity Map(IDataReader reader)
     {
-        public TestEntity Map(IDataReader reader)
+        var instance = new TestEntity
         {
-            var instance = new TestEntity
-            {
-                Id = reader.GetInt32("Id"),
-                Name = reader.GetString("Name")
-            };
+            Id = reader.GetInt32("Id"),
+            Name = reader.GetString("Name")
+        };
 
-            return instance;
-        }
+        return instance;
     }
 }

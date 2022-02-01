@@ -1,32 +1,24 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CrossCutting.Data.Core;
-using FluentAssertions;
-using QueryFramework.SqlServer.Extensions;
-using Xunit;
+﻿namespace QueryFramework.SqlServer.Tests.Extensions;
 
-namespace QueryFramework.SqlServer.Tests.Extensions
+public class QueryProcessorSettingsExtensionsTests
 {
-    [ExcludeFromCodeCoverage]
-    public class QueryProcessorSettingsExtensionsTests
+    private const string EntityTypeName = "MyTestEntity";
+
+    [Theory]
+    [InlineData(null, EntityTypeName)]
+    [InlineData("", EntityTypeName)]
+    [InlineData("A", "A")]
+    [InlineData("other value", "other value")]
+    [InlineData(" ", " ")]
+    public void WithDefaultTableName_Returns_Correct_Result(string input, string expectedOutput)
     {
-        private const string EntityTypeName = "MyTestEntity";
+        // Arrange
+        var sut = new PagedDatabaseEntityRetrieverSettings(input, "", "", "", null);
 
-        [Theory]
-        [InlineData(null, EntityTypeName)]
-        [InlineData("", EntityTypeName)]
-        [InlineData("A", "A")]
-        [InlineData("other value", "other value")]
-        [InlineData(" ", " ")]
-        public void WithDefaultTableName_Returns_Correct_Result(string input, string expectedOutput)
-        {
-            // Arrange
-            var sut = new PagedDatabaseEntityRetrieverSettings(input, "", "", "", null);
+        // Act
+        var actual = sut.WithDefaultTableName(EntityTypeName);
 
-            // Act
-            var actual = sut.WithDefaultTableName(EntityTypeName);
-
-            // Assert
-            actual.TableName.Should().Be(expectedOutput);
-        }
+        // Assert
+        actual.TableName.Should().Be(expectedOutput);
     }
 }

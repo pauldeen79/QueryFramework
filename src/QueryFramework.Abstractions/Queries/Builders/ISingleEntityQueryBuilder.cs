@@ -1,7 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Queries.Builders
+﻿namespace QueryFramework.Abstractions.Queries.Builders;
+
+public interface ISingleEntityQueryBuilder : ISingleEntityQueryBuilderBase
 {
-    public interface ISingleEntityQueryBuilder : ISingleEntityQueryBuilderBase
-    {
-        ISingleEntityQuery Build();
-    }
+    ISingleEntityQuery Build();
 }

@@ -1,21 +1,16 @@
-﻿using QueryFramework.Abstractions;
-using QueryFramework.Core.Functions;
-using QueryFramework.SqlServer.Abstractions;
+﻿namespace QueryFramework.SqlServer.FunctionParsers;
 
-namespace QueryFramework.SqlServer.FunctionParsers
+public class LeftFunctionParser : IFunctionParser
 {
-    public class LeftFunctionParser : IFunctionParser
+    public bool TryParse(IQueryExpressionFunction function, out string sqlExpression)
     {
-        public bool TryParse(IQueryExpressionFunction function, out string sqlExpression)
+        if (function is LeftFunction f)
         {
-            if (function is LeftFunction f)
-            {
-                sqlExpression = $"LEFT({{0}}, {f.Length})";
-                return true;
-            }
-
-            sqlExpression = string.Empty;
-            return false;
+            sqlExpression = $"LEFT({{0}}, {f.Length})";
+            return true;
         }
+
+        sqlExpression = string.Empty;
+        return false;
     }
 }

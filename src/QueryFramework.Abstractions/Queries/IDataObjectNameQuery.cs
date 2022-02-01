@@ -1,7 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Queries
+﻿namespace QueryFramework.Abstractions.Queries;
+
+public interface IDataObjectNameQuery : ISingleEntityQuery
 {
-    public interface IDataObjectNameQuery : ISingleEntityQuery
-    {
-        string DataObjectName { get; }
-    }
+    string DataObjectName { get; }
 }
