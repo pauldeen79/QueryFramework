@@ -11,7 +11,7 @@ public class TrimFunctionParser : IFunctionParser
         }
 
         functionResult = value == null
-            ? 0
+            ? string.Empty
             : value.ToString().Trim();
         return true;
     }

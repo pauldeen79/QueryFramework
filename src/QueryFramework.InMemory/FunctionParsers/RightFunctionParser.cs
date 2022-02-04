@@ -13,7 +13,9 @@ public class RightFunctionParser : IFunctionParser
         var stringValue = value == null
             ? string.Empty
             : value.ToString();
-        functionResult = stringValue.Substring(stringValue.Length - f.Length);
+        functionResult = f.Length <= stringValue.Length
+            ? stringValue.Substring(stringValue.Length - f.Length)
+            : stringValue;
         return true;
     }
 }

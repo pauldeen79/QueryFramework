@@ -11,7 +11,7 @@ public class UpperFunctionParser : IFunctionParser
         }
 
         functionResult = value == null
-            ? 0
+            ? string.Empty
             : value.ToString().ToUpperInvariant();
         return true;
     }

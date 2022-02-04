@@ -11,7 +11,7 @@ public class LowerFunctionParser : IFunctionParser
         }
 
         functionResult = value == null
-            ? 0
+            ? string.Empty
             : value.ToString().ToLowerInvariant();
         return true;
     }
