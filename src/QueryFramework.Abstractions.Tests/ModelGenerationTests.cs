@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration.Tests;
+﻿namespace QueryFramework.Abstractions.Tests;
 
 public class ModelGenerationTests
 {
@@ -10,13 +10,9 @@ public class ModelGenerationTests
     );
 
     [Fact]
-    public void Can_Generate_Everything()
+    public void Can_Generate_Records_From_Model()
     {
-        Verify(GenerateCode.For<AbstractionsInterfaces>(Settings));
-        Verify(GenerateCode.For<AbstractionsBuildersInterfaces>(Settings));
-        Verify(GenerateCode.For<AbstractionsExtensionsBuilders>(Settings));
-        Verify(GenerateCode.For<CoreRecords>(Settings));
-        Verify(GenerateCode.For<CoreBuilders>(Settings));
+        Verify(GenerateCode.For<AbstractionsInterfacesModels>(Settings));
     }
 
     private void Verify(GenerateCode generatedCode)

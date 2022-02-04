@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsharpExpressionDumper.Core" Version="1.2.1" />
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.19" />
   </ItemGroup>
 
