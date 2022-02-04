@@ -1,10 +1,10 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class QueryExpressionEvaluator : IQueryExpressionEvaluator
+public class DefaultQueryExpressionEvaluator : IQueryExpressionEvaluator
 {
     private readonly IEnumerable<IFunctionParser> _functionParsers;
 
-    public QueryExpressionEvaluator(IEnumerable<IFunctionParser> functionParsers)
+    public DefaultQueryExpressionEvaluator(IEnumerable<IFunctionParser> functionParsers)
         => _functionParsers = functionParsers;
 
     public string GetSqlExpression(IQueryExpression expression)

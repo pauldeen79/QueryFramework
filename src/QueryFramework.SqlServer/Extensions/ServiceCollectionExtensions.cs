@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IDatabaseCommandProvider<TQuery>, QueryDatabaseCommandProvider<TQuery>>()
             .AddSingleton<IPagedDatabaseCommandProvider<TQuery>, QueryPagedDatabaseCommandProvider<TQuery>>()
             .AddSingleton<IQueryFieldProvider, DefaultQueryFieldProvider>()
-            .AddSingleton<IQueryExpressionEvaluator, QueryExpressionEvaluator>()
+            .AddSingleton<IQueryExpressionEvaluator, DefaultQueryExpressionEvaluator>()
             .AddSingleton<IFunctionParser, CoalesceFunctionParser>()
             .AddSingleton<IFunctionParser, CountFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, DayFunctionFunctionParser>()

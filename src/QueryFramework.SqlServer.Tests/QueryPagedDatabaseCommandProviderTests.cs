@@ -7,7 +7,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Use real query expression evaluator
         var evaluatorMock = Fixture.Freeze<Mock<IQueryExpressionEvaluator>>();
         evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IQueryExpression>()))
-                     .Returns<IQueryExpression>(x => new QueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+                     .Returns<IQueryExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
     }
 
     [Theory]

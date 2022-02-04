@@ -7,7 +7,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         // Use real query expression evaluator
         var evaluatorMock = Fixture.Freeze<Mock<IQueryExpressionEvaluator>>();
         evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IQueryExpression>()))
-                     .Returns<IQueryExpression>(x => new QueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+                     .Returns<IQueryExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
         // Use real paged database command provider
         var pagedProviderMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
         pagedProviderMock.Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), It.IsAny<DatabaseOperation>(), It.IsAny<int>(), It.IsAny<int>()))

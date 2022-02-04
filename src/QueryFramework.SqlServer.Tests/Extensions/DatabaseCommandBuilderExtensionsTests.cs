@@ -21,7 +21,7 @@ public class DatabaseCommandBuilderExtensionsTests
         EvaluatorMock = new Mock<IQueryExpressionEvaluator>();
         // Use real query expression evaluator
         EvaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IQueryExpression>()))
-                     .Returns<IQueryExpression>(x => new QueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+                     .Returns<IQueryExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
     }
 
     [Fact]
