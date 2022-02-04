@@ -6,7 +6,7 @@ public class ServiceCollectionExtensionsTests
     public void All_Dependencies_Can_Be_Resolved()
     {
         // Act
-        var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkInMemory<ISingleEntityQuery>()
+        var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkInMemory()
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
 
         // Assert

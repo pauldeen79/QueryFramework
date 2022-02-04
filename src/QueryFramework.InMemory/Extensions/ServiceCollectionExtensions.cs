@@ -2,8 +2,7 @@
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddQueryFrameworkInMemory<TQuery>(this IServiceCollection serviceCollection)
-        where TQuery : ISingleEntityQuery
+    public static IServiceCollection AddQueryFrameworkInMemory(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IExpressionEvaluator, DefaultExpressionEvaluator>()
             .AddSingleton<IValueProvider, DefaultValueProvider>()

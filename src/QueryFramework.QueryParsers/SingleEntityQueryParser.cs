@@ -4,12 +4,10 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     where TQueryBuilder : ISingleEntityQueryBuilder
     where TQueryExpressionBuilder : IQueryExpressionBuilder, new()
 {
-    private Func<TQueryExpressionBuilder> _defaultFieldExpressionBuilderFactory;
+    private readonly Func<TQueryExpressionBuilder> _defaultFieldExpressionBuilderFactory;
 
     public SingleEntityQueryParser(Func<TQueryExpressionBuilder> defaultFieldExpressionBuilderFactory)
-    {
-        _defaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
-    }
+        => _defaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
 
     public TQueryBuilder Parse(TQueryBuilder builder, string queryString)
     {
