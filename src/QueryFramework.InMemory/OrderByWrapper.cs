@@ -5,7 +5,7 @@ internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquat
 {
     public OrderByWrapper(T wrappedItem,
                           IReadOnlyCollection<IQuerySortOrder> orderByFields,
-                          IExpressionEvaluator<T> valueRetriever)
+                          IExpressionEvaluator valueRetriever)
     {
         WrappedItem = wrappedItem;
         OrderByFields = orderByFields;
@@ -14,7 +14,7 @@ internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquat
 
     public T WrappedItem { get; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
-    public IExpressionEvaluator<T> ValueRetriever { get; }
+    public IExpressionEvaluator ValueRetriever { get; }
 
     public int CompareTo(OrderByWrapper<T> other)
     {

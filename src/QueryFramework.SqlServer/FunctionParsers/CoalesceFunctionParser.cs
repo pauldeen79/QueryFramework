@@ -2,11 +2,11 @@
 
 public class CoalesceFunctionParser : IFunctionParser
 {
-    public bool TryParse(IQueryExpressionFunction function, out string sqlExpression)
+    public bool TryParse(IQueryExpressionFunction function, IQueryExpressionEvaluator evaluator, out string sqlExpression)
     {
         if (function is CoalesceFunction f)
         {
-            sqlExpression = $"COALESCE({FieldNameAsString(f)}{InnerExpressionsAsString(f)})";
+            sqlExpression = $"COALESCE({FieldNameAsString(f)}{InnerExpressionsAsString(f, evaluator)})";
             return true;
         }
 
@@ -14,8 +14,8 @@ public class CoalesceFunctionParser : IFunctionParser
         return false;
     }
 
-    private static string InnerExpressionsAsString(CoalesceFunction instance)
-        => string.Join(", ", instance.InnerExpressions.Select(x => x.GetSqlExpression()));
+    private string InnerExpressionsAsString(CoalesceFunction instance, IQueryExpressionEvaluator evaluator)
+        => string.Join(", ", instance.InnerExpressions.Select(x => evaluator.GetSqlExpression(x)));
 
     private static string FieldNameAsString(CoalesceFunction instance)
         => string.IsNullOrWhiteSpace(instance.FieldName)

@@ -2,6 +2,14 @@
 
 public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider<ISingleEntityQuery>>
 {
+    public QueryPagedDatabaseCommandProviderTests()
+    {
+        // Use real query expression evaluator
+        var evaluatorMock = Fixture.Freeze<Mock<IQueryExpressionEvaluator>>();
+        evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IQueryExpression>()))
+                     .Returns<IQueryExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+    }
+
     [Theory]
     [InlineData(DatabaseOperation.Delete)]
     [InlineData(DatabaseOperation.Insert)]
@@ -10,7 +18,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.Create(new Mock<ISingleEntityQuery>().Object, operation))
+        Sut.Invoking(x => x.CreatePaged(new Mock<ISingleEntityQuery>().Object, operation, 0, 0))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.ParamName.Should().Be("operation");
     }
@@ -25,7 +33,10 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
         // Act
-        var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(), DatabaseOperation.Select);
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+                                     DatabaseOperation.Select,
+                                     0,
+                                     0).DataCommand;
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
@@ -52,7 +63,10 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(), DatabaseOperation.Select, 0, pageSize);
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+                                     DatabaseOperation.Select,
+                                     0,
+                                     pageSize);
 
         // Assert
         actual.DataCommand.CommandText.Should().Be("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");

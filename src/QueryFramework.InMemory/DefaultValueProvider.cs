@@ -1,14 +1,9 @@
 ﻿namespace QueryFramework.InMemory;
 
-internal class ValueProvider : IValueProvider
+public class DefaultValueProvider : IValueProvider
 {
-    public object? GetFieldValue(object? item, string fieldName)
+    public object? GetFieldValue(object item, string fieldName)
     {
-        if (item == null)
-        {
-            return null;
-        }
-
         var type = item.GetType();
         var property = type.GetProperty(fieldName);
 

@@ -2,17 +2,19 @@
 
 public class IntegrationTests
 {
-    private QueryProcessor<TestQuery, TestEntity> Sut { get; }
-    public Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
+    private readonly QueryProcessor<TestQuery, TestEntity> _sut;
+    private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
+    private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
 
     public IntegrationTests()
     {
-        RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
+        _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
+        _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-        Sut = new QueryProcessor<TestQuery, TestEntity>
+        _sut = new QueryProcessor<TestQuery, TestEntity>
         (
-            RetrieverMock.Object,
-            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings)
+            _retrieverMock.Object,
+            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings, _evaluatorMock.Object)
         );
     }
 
@@ -22,11 +24,11 @@ public class IntegrationTests
         // Arrange
         var query = new TestQuery();
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
-                     .Returns(expectedResult);
+        _retrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
+                      .Returns(expectedResult);
 
         // Act
-        var actual = Sut.FindMany(query);
+        var actual = _sut.FindMany(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
@@ -38,11 +40,11 @@ public class IntegrationTests
         // Arrange
         var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).Build());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        RetrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
-                     .Returns(expectedResult);
+        _retrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
+                      .Returns(expectedResult);
 
         // Act
-        var actual = Sut.FindMany(query);
+        var actual = _sut.FindMany(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);

@@ -4,30 +4,24 @@ public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
     where TQuery : ISingleEntityQuery
     where TResult : class
 {
-    private Func<IEnumerable<TResult>> SourceDataDelegate { get; }
-    private IExpressionEvaluator<TResult> ValueRetriever { get; }
+    private readonly Func<IEnumerable<TResult>> _sourceDataDelegate;
+    private readonly IExpressionEvaluator _valueRetriever;
 
-    public QueryProcessor(Func<IEnumerable<TResult>> sourceDataDelegate,
-                          IExpressionEvaluator<TResult> valueRetriever)
+    public QueryProcessor(Func<IEnumerable<TResult>> sourceDataDelegate, IExpressionEvaluator valueRetriever)
     {
-        SourceDataDelegate = sourceDataDelegate;
-        ValueRetriever = valueRetriever;
-    }
-
-    public QueryProcessor(Func<IEnumerable<TResult>> sourceDataDelegate)
-        : this(sourceDataDelegate, new ExpressionEvaluator<TResult>(new ValueProvider()))
-    {
+        _sourceDataDelegate = sourceDataDelegate;
+        _valueRetriever = valueRetriever;
     }
 
     public TResult FindOne(TQuery query)
-        => SourceDataDelegate.Invoke().FirstOrDefault(item => ItemIsValid(item, query.Conditions));
+        => _sourceDataDelegate.Invoke().FirstOrDefault(item => ItemIsValid(item, query.Conditions));
 
     public IReadOnlyCollection<TResult> FindMany(TQuery query)
-        => SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)).ToList();
+        => _sourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)).ToList();
 
     public IPagedResult<TResult> FindPaged(TQuery query)
     {
-        var filteredRecords = new List<TResult>(SourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)));
+        var filteredRecords = new List<TResult>(_sourceDataDelegate.Invoke().Where(item => ItemIsValid(item, query.Conditions)));
         return new PagedResult<TResult>(GetPagedData(query, filteredRecords),
                                         filteredRecords.Count,
                                         query.Offset.GetValueOrDefault(),
@@ -40,7 +34,7 @@ public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
 
         if (query.OrderByFields.Any())
         {
-            result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, ValueRetriever));
+            result = result.OrderBy(x => new OrderByWrapper<TResult>(x, query.OrderByFields, _valueRetriever));
         }
 
         if (query.Offset != null)
@@ -65,7 +59,7 @@ public class QueryProcessor<TQuery, TResult> : IQueryProcessor<TQuery, TResult>
                 builder.Append(condition.Combination == QueryCombination.And ? "&" : "|");
             }
 
-            var value = ValueRetriever.GetValue(item, condition.Field);
+            var value = _valueRetriever.GetValue(item, condition.Field);
             var prefix = condition.OpenBracket ? "(" : string.Empty;
             var suffix = condition.CloseBracket ? ")" : string.Empty;
             var result = Evaluate(condition, value);
