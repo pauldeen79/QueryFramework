@@ -10,12 +10,14 @@ public class DefaultQueryExpressionEvaluator : IQueryExpressionEvaluator
     public string GetSqlExpression(IQueryExpression expression)
         => expression.Function == null
             ? expression.FieldName
-            : GetSqlExpression(expression.Function, _functionParsers).Replace("{0}", expression.FieldName);
+            : GetSqlExpression(expression.Function, _functionParsers, nameof(expression)).Replace("{0}", expression.FieldName);
 
-    private string GetSqlExpression(IQueryExpressionFunction function, IEnumerable<IFunctionParser> functionParsers)
+    private string GetSqlExpression(IQueryExpressionFunction function,
+                                    IEnumerable<IFunctionParser> functionParsers,
+                                    string paramName)
     {
         var inner = function.InnerFunction != null
-            ? GetSqlExpression(function.InnerFunction, functionParsers)
+            ? GetSqlExpression(function.InnerFunction, functionParsers, paramName)
             : string.Empty;
 
         foreach (var parser in functionParsers)
@@ -26,7 +28,7 @@ public class DefaultQueryExpressionEvaluator : IQueryExpressionEvaluator
             }
         }
 
-        throw new ArgumentException($"Unsupported function: {function.GetType().Name}", nameof(function));
+        throw new ArgumentException($"Unsupported function: {function.GetType().Name}", paramName);
     }
 
     private static string Combine(string sqlExpression, string inner)
