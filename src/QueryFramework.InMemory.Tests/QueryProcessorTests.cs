@@ -570,109 +570,11 @@ public class QueryProcessorTests
         actual.First().Property.Should().Be("A2");
     }
 
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_Left_Expression()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LeftFunctionBuilder().WithLength(1) }.IsEqualTo("B"))
-            .Build();
-
-        // Act
-        var actual = sut.FindPaged(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("B23");
-    }
-
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_Right_Expression()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new RightFunctionBuilder().WithLength(1) }.IsEqualTo("2"))
-            .Build();
-
-        // Act
-        var actual = sut.FindPaged(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("A2");
-    }
-
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_Upper_Expression()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "b" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new UpperFunctionBuilder() }.IsEqualTo("B"))
-            .Build();
-
-        // Act
-        var actual = sut.FindPaged(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("b");
-    }
-
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_Lower_Expression()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new LowerFunctionBuilder() }.IsEqualTo("b"))
-            .Build();
-
-        // Act
-        var actual = sut.FindPaged(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("B");
-    }
-
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_Trim_Expression()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B " } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new QueryExpressionBuilder { FieldName = nameof(MyClass.Property), Function = new TrimFunctionBuilder() }.IsEqualTo("B"))
-            .Build();
-
-        // Act
-        var actual = sut.FindPaged(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("B ");
-    }
-
     private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
         => new QueryProcessor<ISingleEntityQuery, MyClass>
         (
             () => items,
-            new DefaultExpressionEvaluator(new DefaultValueProvider(), new IFunctionParser[]
-            {
-                new LengthFunctionParser(),
-                new LeftFunctionParser(),
-                new RightFunctionParser(),
-                new UpperFunctionParser(),
-                new LowerFunctionParser(),
-                new TrimFunctionParser()
-            })
+            new DefaultExpressionEvaluator(new DefaultValueProvider(), new IFunctionParser[] { new LengthFunctionParser() })
         );
 
     public class MyClass
