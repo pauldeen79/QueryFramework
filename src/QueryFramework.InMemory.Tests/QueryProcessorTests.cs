@@ -661,9 +661,19 @@ public class QueryProcessorTests
     }
 
     private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
-        => new QueryProcessor<ISingleEntityQuery, MyClass>(() => items, new ExpressionEvaluator<MyClass>(new ValueProvider()));
-
-    // Expressions: coalesce?
+        => new QueryProcessor<ISingleEntityQuery, MyClass>
+        (
+            () => items,
+            new DefaultExpressionEvaluator(new DefaultValueProvider(), new IFunctionParser[]
+            {
+                new LengthFunctionParser(),
+                new LeftFunctionParser(),
+                new RightFunctionParser(),
+                new UpperFunctionParser(),
+                new LowerFunctionParser(),
+                new TrimFunctionParser()
+            })
+        );
 
     public class MyClass
     {

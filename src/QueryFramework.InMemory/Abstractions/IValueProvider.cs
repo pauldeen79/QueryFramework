@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.InMemory;
+﻿namespace QueryFramework.InMemory.Abstractions;
 
 public interface IValueProvider
 {

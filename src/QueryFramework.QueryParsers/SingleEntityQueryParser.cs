@@ -4,11 +4,11 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     where TQueryBuilder : ISingleEntityQueryBuilder
     where TQueryExpressionBuilder : IQueryExpressionBuilder, new()
 {
-    private Func<TQueryExpressionBuilder> DefaultFieldExpressionBuilderFactory { get; }
+    private Func<TQueryExpressionBuilder> _defaultFieldExpressionBuilderFactory;
 
     public SingleEntityQueryParser(Func<TQueryExpressionBuilder> defaultFieldExpressionBuilderFactory)
     {
-        DefaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
+        _defaultFieldExpressionBuilderFactory = defaultFieldExpressionBuilderFactory;
     }
 
     public TQueryBuilder Parse(TQueryBuilder builder, string queryString)
@@ -90,9 +90,9 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     }
 
     private IQueryExpressionBuilder GetField(string fieldName)
-        => DefaultFieldExpressionBuilderFactory == null
+        => _defaultFieldExpressionBuilderFactory == null
             ? new TQueryExpressionBuilder().WithFieldName(fieldName)
-            : DefaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
+            : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
     private object? GetValue(QueryOperator queryOperator, object fieldValue)
         => queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
@@ -119,9 +119,9 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     private IQueryConditionBuilder CreateQueryCondition(int index, string value, bool startsWithPlusOrMinus, bool startsWithMinus, int itemsLength)
         => new QueryConditionBuilder
         {
-            Field = DefaultFieldExpressionBuilderFactory == null
+            Field = _defaultFieldExpressionBuilderFactory == null
                        ? new TQueryExpressionBuilder()
-                       : DefaultFieldExpressionBuilderFactory.Invoke(),
+                       : _defaultFieldExpressionBuilderFactory.Invoke(),
             Combination = startsWithPlusOrMinus
                        ? QueryCombination.And
                        : QueryCombination.Or,
