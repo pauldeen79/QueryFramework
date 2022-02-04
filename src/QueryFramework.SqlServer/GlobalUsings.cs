@@ -8,6 +8,7 @@ global using CrossCutting.Data.Abstractions;
 global using CrossCutting.Data.Core;
 global using CrossCutting.Data.Sql.Builders;
 global using CrossCutting.Data.Sql.Extensions;
+global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.Abstractions.Queries;

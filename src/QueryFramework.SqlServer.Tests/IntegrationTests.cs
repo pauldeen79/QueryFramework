@@ -3,16 +3,18 @@
 public class IntegrationTests
 {
     private QueryProcessor<TestQuery, TestEntity> Sut { get; }
-    public Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
+    private Mock<IDatabaseEntityRetriever<TestEntity>> RetrieverMock { get; }
+    private Mock<IQueryExpressionEvaluator> EvaluatorMock { get; }
 
     public IntegrationTests()
     {
         RetrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
+        EvaluatorMock = new Mock<IQueryExpressionEvaluator>();
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
         Sut = new QueryProcessor<TestQuery, TestEntity>
         (
             RetrieverMock.Object,
-            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings)
+            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings, EvaluatorMock.Object)
         );
     }
 
