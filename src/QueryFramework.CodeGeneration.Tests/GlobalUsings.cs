@@ -1,14 +1,6 @@
 ﻿global using System.IO;
-global using System.Linq;
 global using CrossCutting.Common.Extensions;
-global using CsharpExpressionDumper.Abstractions;
-global using CsharpExpressionDumper.Core.Extensions;
 global using FluentAssertions;
-global using Microsoft.Extensions.DependencyInjection;
-global using ModelFramework.CodeGeneration.ObjectHandlerPropertyFilters;
-global using ModelFramework.Objects.Extensions;
-global using ModelFramework.Objects.Settings;
-//using QueryFramework.Abstractions;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
 global using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 global using Xunit;

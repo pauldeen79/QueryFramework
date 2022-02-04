@@ -31,5 +31,6 @@ public class AbstractionsExtensionsBuilders : QueryFrameworkCSharpClassBase, ICo
                                                  .Chain(z => z.Parameters.First().WithTypeName(z.TypeName)))
                   )
                   .Build()
-        ).ToArray();
+        )
+        .ToArray();
 }

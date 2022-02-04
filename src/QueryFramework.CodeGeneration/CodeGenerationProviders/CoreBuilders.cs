@@ -15,6 +15,7 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvid
             "QueryFramework.Core",
             "QueryFramework.Core.Builders",
             "QueryFramework.Abstractions.Builders.I{0}"
-        ).Select(x => new ClassBuilder(x).Chain(y => y.Methods.RemoveAll(z => z.Static)).Build())
+        )
+        .Select(x => new ClassBuilder(x).Chain(y => y.Methods.RemoveAll(z => z.Static)).Build())
         .ToArray();
 }
