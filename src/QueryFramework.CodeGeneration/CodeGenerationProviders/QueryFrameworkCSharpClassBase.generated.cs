@@ -7,6 +7,8 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
+using ModelFramework.Objects.Builders;
+using ModelFramework.Objects.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

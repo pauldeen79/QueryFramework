@@ -17,6 +17,7 @@ namespace QueryFramework.Abstractions.Tests.CodeGenerationProviders
                     .WithNamespace("QueryFramework.CodeGeneration.CodeGenerationProviders")
                     .WithName("QueryFrameworkCSharpClassBase")
                     .WithPartial()
+                    .AddUsings(_namespacesToAbbreviate)
                     .AddMethods(new ClassMethodBuilder()
                         .WithName("GetModels")
                         .WithProtected()
@@ -27,13 +28,15 @@ namespace QueryFramework.Abstractions.Tests.CodeGenerationProviders
             .Select(x => x.Build())
             .ToArray();
 
+        private static readonly string[] _namespacesToAbbreviate = new[]
+        {
+            "System.Collections.Generic",
+            "ModelFramework.Objects.Builders",
+            "ModelFramework.Objects.Contracts"
+        };
+
         private string CreateCode()
         {
-            var namespacesToAbbreviate = new[]
-            {
-                "System.Collections.Generic",
-                "ModelFramework.Objects.Builders"
-            };
             var models = new[]
             {
                 typeof(IQueryCondition),
@@ -48,7 +51,7 @@ namespace QueryFramework.Abstractions.Tests.CodeGenerationProviders
                 .AddCsharpExpressionDumper
                 (
                     x => x.AddSingleton<IObjectHandlerPropertyFilter, SkipDefaultValuesForModelFramework>()
-                          .AddSingleton<ITypeNameFormatter>(new SkipNamespacesTypeNameFormatter(namespacesToAbbreviate))
+                          .AddSingleton<ITypeNameFormatter>(new SkipNamespacesTypeNameFormatter(_namespacesToAbbreviate))
                 )
                 .BuildServiceProvider();
             var dumper = serviceProvider.GetRequiredService<ICsharpExpressionDumper>();
