@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Abstractions.Tests.CodeGenerationProviders;
 
-public class AbstractionsInterfacesModels : QueryFrameworkCodeGenerationCSharpClassBase
+public class AbstractionsInterfacesModels : CSharpExpressionDumperClassBase
 {
     public override string Path => "QueryFramework.CodeGeneration\\CodeGenerationProviders";
 
@@ -24,4 +24,8 @@ public class AbstractionsInterfacesModels : QueryFrameworkCodeGenerationCSharpCl
         typeof(IQueryParameterValue),
         typeof(IQuerySortOrder)
     };
+
+    protected override string Namespace => "QueryFramework.CodeGeneration.CodeGenerationProviders";
+
+    protected override string ClassName => "QueryFrameworkCSharpClassBase";
 }

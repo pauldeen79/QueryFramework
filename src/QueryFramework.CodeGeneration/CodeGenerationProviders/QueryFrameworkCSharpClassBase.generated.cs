@@ -19,7 +19,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
 #nullable enable
     public partial class QueryFrameworkCSharpClassBase
     {
-        protected static ModelFramework.Objects.Contracts.ITypeBase[] GetModels()
+        protected static ITypeBase[] GetModels()
         {
             return new[]
             {
