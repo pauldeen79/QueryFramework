@@ -45,7 +45,7 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
             }
             else if (typeName.Contains("Collection<System.String"))
             {
-                property.AddMetadata(ModelFramework.Objects.MetadataNames.CustomBuilderMethodParameterExpression, $"new {typeof(ValueCollection<string>).FullName?.FixTypeName()}({{0}})");
+                property.AddMetadata(ModelFramework.Objects.MetadataNames.CustomBuilderMethodParameterExpression, $"new {typeof(ValueCollection<string>).FullName.FixTypeName()}({{0}})");
             }
             else if (typeName.IsBooleanTypeName() || typeName.IsNullableBooleanTypeName())
             {
