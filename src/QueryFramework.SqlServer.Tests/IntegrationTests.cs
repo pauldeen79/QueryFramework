@@ -1,21 +1,30 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class IntegrationTests
+public sealed class IntegrationTests : IDisposable
 {
-    private readonly QueryProcessor<TestEntity> _sut;
+    private readonly ServiceProvider _serviceProvider;
+    private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();
     private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
     private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
+    private readonly Mock<IDatabaseEntityRetrieverProvider> _databaseEntityRetrieverProviderMock;
 
     public IntegrationTests()
     {
         _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
         _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
+        _databaseEntityRetrieverProviderMock = new Mock<IDatabaseEntityRetrieverProvider>();
+        _databaseEntityRetrieverProviderMock.Setup(x => x.GetRetriever<TestEntity>())
+                                            .Returns(_retrieverMock.Object);
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-        _sut = new QueryProcessor<TestEntity>
-        (
-            _retrieverMock.Object,
-            new QueryPagedDatabaseCommandProvider<ISingleEntityQuery>(new DefaultQueryFieldProvider(), settings, _evaluatorMock.Object)
-        );
+
+        _serviceProvider = new ServiceCollection()
+            .AddQueryFrameworkSqlServer()
+            .AddQueryFrameworkSqlServer<ISingleEntityQuery>()
+            .AddSingleton(_retrieverMock.Object)
+            .AddSingleton(_evaluatorMock.Object)
+            .AddSingleton(_databaseEntityRetrieverProviderMock.Object)
+            .AddSingleton<IPagedDatabaseEntityRetrieverSettings>(settings)
+            .BuildServiceProvider();
     }
 
     [Fact]
@@ -28,7 +37,7 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany<TestEntity>(query);
+        var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
@@ -44,9 +53,11 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany<TestEntity>(query);
+        var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
     }
+
+    public void Dispose() => _serviceProvider.Dispose();
 }

@@ -9,7 +9,9 @@ public class ServiceCollectionExtensionsTests
         var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
 
         // Act
-        var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkSqlServer<ISingleEntityQuery>()
+        var action = new Action(() => _ = new ServiceCollection()
+            .AddQueryFrameworkSqlServer()
+            .AddQueryFrameworkSqlServer<ISingleEntityQuery>()
             .AddSingleton(settingsMock.Object)
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
 

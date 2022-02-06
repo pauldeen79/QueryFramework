@@ -1,29 +1,28 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class QueryProcessor<TResult> : IQueryProcessor
-    where TResult : class
+public class QueryProcessor : IQueryProcessor
 {
-    private readonly IDatabaseEntityRetriever<TResult> _retriever;
+    private readonly IEnumerable<IDatabaseEntityRetrieverProvider> _databaseEntityRetrieverProviders;
     private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _databaseCommandProvider;
 
-    public QueryProcessor(IDatabaseEntityRetriever<TResult> retriever,
+    public QueryProcessor(IEnumerable<IDatabaseEntityRetrieverProvider> databaseEntityRetrieverProviders,
                           IPagedDatabaseCommandProvider<ISingleEntityQuery> databaseCommandProvider)
     {
-        _retriever = retriever;
+        _databaseEntityRetrieverProviders = databaseEntityRetrieverProviders;
         _databaseCommandProvider = databaseCommandProvider;
     }
 
     public IReadOnlyCollection<T> FindMany<T>(ISingleEntityQuery query)
         where T : class
-        => (IReadOnlyCollection<T>)_retriever.FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
+        => GetRetriever<T>().FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
 
     public T? FindOne<T>(ISingleEntityQuery query)
         where T : class
-        => _retriever.FindOne(GenerateCommand(query, 1).DataCommand) as T;
+        => GetRetriever<T>().FindOne(GenerateCommand(query, 1).DataCommand) as T;
 
     public IPagedResult<T> FindPaged<T>(ISingleEntityQuery query)
         where T : class
-        => (IPagedResult<T>)_retriever.FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
+        => GetRetriever<T>().FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
 
     private IPagedDatabaseCommand GenerateCommand(ISingleEntityQuery query, int limit)
         => _databaseCommandProvider.CreatePaged
@@ -33,4 +32,11 @@ public class QueryProcessor<TResult> : IQueryProcessor
             query.Offset.GetValueOrDefault(),
             limit
         );
+
+    private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>()
+        where TResult : class
+        => _databaseEntityRetrieverProviders
+            .Select(x => x.GetRetriever<TResult>())
+            .FirstOrDefault(x => x != null)
+                ?? throw new InvalidOperationException($"Data type {typeof(TResult).FullName} does not have a database entity retriever provider");
 }
