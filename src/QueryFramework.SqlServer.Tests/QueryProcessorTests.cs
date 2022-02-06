@@ -71,7 +71,33 @@ public class QueryProcessorTests : TestBase<QueryProcessor>
         actual.First().Property.Should().Be("Value");
     }
 
-    private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
+    [Fact]
+    public void FindOne_Throws_When_No_EntityRetrieverProvider_Returns_True()
+    {
+        // Arrange
+        SetupSourceData(Enumerable.Empty<MyEntity>(), providerResult: false);
+
+        // Act & Assert
+        Sut.Invoking(x => x.FindOne<MyEntity>(new SingleEntityQuery()))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data type [QueryFramework.SqlServer.Tests.TestHelpers.MyEntity] does not have a database entity retriever provider");
+    }
+
+    [Fact]
+    public void FindOne_Throws_When_EntityRetrieverProvider_Returns_True_And_Null_Result()
+    {
+        // Arrange
+        SetupSourceData(Enumerable.Empty<MyEntity>(), providerResult: true, resultValueDelegate: new Func<IDatabaseEntityRetriever<MyEntity>?>(() => null));
+
+        // Act & Assert
+        Sut.Invoking(x => x.FindOne<MyEntity>(new SingleEntityQuery()))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Database entity retriever provider of type [QueryFramework.SqlServer.Tests.TestHelpers.MyEntity] provided an empty result");
+    }
+    private void SetupSourceData(IEnumerable<MyEntity> data,
+                                 int? totalRecordCount = null,
+                                 bool providerResult = true,
+                                 Func<IDatabaseEntityRetriever<MyEntity>?>? resultValueDelegate = null)
     {
         var retrieverMock = Fixture.Freeze<Mock<IDatabaseEntityRetriever<MyEntity>>>();
 
@@ -84,9 +110,11 @@ public class QueryProcessorTests : TestBase<QueryProcessor>
                                   .Returns<IPagedDatabaseCommand>(command => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
 
         // Hook up the database entity retriever to the SQL Database processor
-        var result = retrieverMock.Object;
+        var result = resultValueDelegate == null
+            ? retrieverMock.Object
+            : resultValueDelegate.Invoke();
         Fixture.Freeze<Mock<IDatabaseEntityRetrieverProvider>>()
                .Setup(x => x.TryCreate(out result))
-               .Returns(true);
+               .Returns(providerResult);
     }
 }

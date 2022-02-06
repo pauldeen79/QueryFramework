@@ -662,6 +662,21 @@ public sealed class QueryProcessorTests : IDisposable
            .WithMessage("Data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
     }
 
+    [Fact]
+    public void FindOne_On_InMemoryList_With_DataProvider_That_Returns_Null_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder().Build();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = true;
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindOne<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] provided an empty result");
+    }
+
     private IQueryProcessor CreateSut(MyClass[] items)
     {
         var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
