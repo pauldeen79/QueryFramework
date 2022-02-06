@@ -44,5 +44,5 @@ public class QueryProcessor : IQueryProcessor
         => _dataProviders
             .Select(x => x.GetData<TResult>(query))
             .FirstOrDefault(x => x != null)
-            ?? throw new InvalidOperationException($"Data type {typeof(TResult).FullName} does not have a data provider");
+            ?? throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a data provider");
 }
