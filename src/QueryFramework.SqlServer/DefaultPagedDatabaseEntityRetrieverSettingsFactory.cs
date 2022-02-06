@@ -2,7 +2,7 @@
 
 public class DefaultPagedDatabaseEntityRetrieverSettingsFactory : IPagedDatabaseEntityRetrieverSettingsFactory
 {
-    private IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> _providers;
+    private readonly IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> _providers;
 
     public DefaultPagedDatabaseEntityRetrieverSettingsFactory(IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> providers)
         => _providers = providers;
