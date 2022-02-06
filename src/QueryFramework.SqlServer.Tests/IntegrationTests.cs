@@ -2,7 +2,7 @@
 
 public class IntegrationTests
 {
-    private readonly QueryProcessor<TestQuery, TestEntity> _sut;
+    private readonly QueryProcessor<TestEntity> _sut;
     private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
     private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
 
@@ -11,10 +11,10 @@ public class IntegrationTests
         _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
         _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-        _sut = new QueryProcessor<TestQuery, TestEntity>
+        _sut = new QueryProcessor<TestEntity>
         (
             _retrieverMock.Object,
-            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings, _evaluatorMock.Object)
+            new QueryPagedDatabaseCommandProvider<ISingleEntityQuery>(new DefaultQueryFieldProvider(), settings, _evaluatorMock.Object)
         );
     }
 
@@ -28,7 +28,7 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany(query);
+        var actual = _sut.FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
@@ -44,7 +44,7 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany(query);
+        var actual = _sut.FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);

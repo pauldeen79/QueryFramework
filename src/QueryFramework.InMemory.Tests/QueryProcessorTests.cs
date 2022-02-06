@@ -1,7 +1,18 @@
-﻿namespace QueryFramework.InMemory.Tests;
+﻿using System.Collections;
 
-public class QueryProcessorTests
+namespace QueryFramework.InMemory.Tests;
+
+public sealed class QueryProcessorTests : IDisposable
 {
+    private readonly ServiceProvider _serviceProvider;
+    private Func<IEnumerable> _sourceDataDelegate = new Func<IEnumerable>(() => Array.Empty<object>());
+
+    public QueryProcessorTests()
+        => _serviceProvider = new ServiceCollection()
+            .AddQueryFrameworkInMemory()
+            .AddTransient<IQueryProcessor>(x => new QueryProcessor(_sourceDataDelegate, x.GetRequiredService<IConditionEvaluator>(), x.GetRequiredService<IPaginator>()))
+            .BuildServiceProvider();
+
     [Fact]
     public void Unsupported_Query_Operator_Throws_On_FindPAged()
     {
@@ -16,7 +27,7 @@ public class QueryProcessorTests
             }).Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Unsupported query operator: 99");
     }
@@ -32,7 +43,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Fieldname [UnknownField] is not found on type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass]");
     }
@@ -50,7 +61,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Function [IQueryExpressionFunctionProxy] is not supported");
     }
@@ -64,11 +75,11 @@ public class QueryProcessorTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        var actual = sut.FindOne(query);
+        var actual = sut.FindOne<MyClass>(query);
 
         // Assert
         actual.Should().NotBeNull();
-        actual.Property.Should().Be("A");
+        actual?.Property.Should().Be("A");
     }
 
     [Fact]
@@ -80,7 +91,7 @@ public class QueryProcessorTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        var actual = sut.FindMany(query);
+        var actual = sut.FindMany<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -97,7 +108,7 @@ public class QueryProcessorTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -116,7 +127,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -135,7 +146,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -155,7 +166,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -172,7 +183,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -190,7 +201,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -208,7 +219,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -226,7 +237,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -244,7 +255,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -262,7 +273,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -280,7 +291,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -298,7 +309,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -316,7 +327,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -333,7 +344,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -352,7 +363,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -369,7 +380,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -388,7 +399,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -406,7 +417,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -424,7 +435,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -442,7 +453,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -460,7 +471,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -479,7 +490,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -497,7 +508,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -517,7 +528,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -543,7 +554,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -563,19 +574,20 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
         actual.First().Property.Should().Be("A2");
     }
 
-    private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
-        => new QueryProcessor<ISingleEntityQuery, MyClass>
-        (
-            () => items,
-            new DefaultExpressionEvaluator(new DefaultValueProvider(), new IFunctionParser[] { new LengthFunctionParser() })
-        );
+    private IQueryProcessor CreateSut(MyClass[] items)
+    {
+        _sourceDataDelegate = new Func<IEnumerable>(() => items);
+        return _serviceProvider.GetRequiredService<IQueryProcessor>();
+    }
+
+    public void Dispose() => _serviceProvider.Dispose();
 
     public class MyClass
     {

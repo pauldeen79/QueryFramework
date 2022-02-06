@@ -1,0 +1,12 @@
+﻿global using System;
+global using System.IO;
+global using System.Linq;
+global using FluentAssertions;
+global using Microsoft.Extensions.DependencyInjection;
+global using QueryFramework.Abstractions;
+global using QueryFramework.Core.Extensions;
+global using QueryFramework.Core.Queries.Builders;
+global using QueryFramework.FileSystemSearch.Entities;
+global using QueryFramework.FileSystemSearch.Extensions;
+global using QueryFramework.FileSystemSearch.Queries;
+global using Xunit;

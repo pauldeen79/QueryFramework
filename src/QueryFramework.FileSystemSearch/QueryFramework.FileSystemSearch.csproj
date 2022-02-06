@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
+    <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
+    <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>

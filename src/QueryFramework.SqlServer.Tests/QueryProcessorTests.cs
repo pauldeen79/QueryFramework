@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, MyEntity>>
+public class QueryProcessorTests : TestBase<QueryProcessor<MyEntity>>
 {
     public QueryProcessorTests()
     {
@@ -19,7 +19,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindPaged(new SingleEntityQuery());
+        var actual = Sut.FindPaged<MyEntity>(new SingleEntityQuery());
 
         // Assert
         actual.Should().HaveCount(1);
@@ -35,7 +35,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         var query = new SingleEntityQueryBuilder().Take(1).Build();
 
         // Act
-        var actual = Sut.FindPaged(query);
+        var actual = Sut.FindPaged<MyEntity>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -50,14 +50,11 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
+        var actual = Sut.FindOne<MyEntity>(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
 
         // Assert
         actual.Should().NotBeNull();
-        if (actual != null)
-        {
-            actual.Property.Should().Be("Value");
-        }
+        actual?.Property.Should().Be("Value");
     }
 
     [Fact]
@@ -67,7 +64,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindMany(new SingleEntityQuery());
+        var actual = Sut.FindMany<MyEntity>(new SingleEntityQuery());
 
         // Assert
         actual.Should().HaveCount(1);
