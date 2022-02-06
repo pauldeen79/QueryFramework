@@ -2,6 +2,6 @@
 
 public interface IDataProvider
 {
-    IEnumerable<TResult>? GetData<TResult>(ISingleEntityQuery query)
+    bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result)
         where TResult : class;
 }

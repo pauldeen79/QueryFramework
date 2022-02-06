@@ -3,12 +3,12 @@
 public sealed class QueryProcessorTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private readonly Mock<IDataProvider> _dataProviderMock = new Mock<IDataProvider>();
+    private readonly DataProviderMock _dataProviderMock = new DataProviderMock();
 
     public QueryProcessorTests()
         => _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkInMemory()
-            .AddSingleton(_dataProviderMock.Object)
+            .AddSingleton<IDataProvider>(_dataProviderMock)
             .BuildServiceProvider();
 
     [Fact]
@@ -622,8 +622,8 @@ public sealed class QueryProcessorTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder().Build();
-        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
-                         .Returns(default(IEnumerable<MyClass>));
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
 
         // Act & Assert
@@ -637,8 +637,8 @@ public sealed class QueryProcessorTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder().Build();
-        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
-                         .Returns(default(IEnumerable<MyClass>));
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
 
         // Act & Assert
@@ -652,8 +652,8 @@ public sealed class QueryProcessorTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder().Build();
-        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
-                         .Returns(default(IEnumerable<MyClass>));
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
 
         // Act & Assert
@@ -665,8 +665,8 @@ public sealed class QueryProcessorTests : IDisposable
     private IQueryProcessor CreateSut(MyClass[] items)
     {
         var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
-        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
-                         .Returns<ISingleEntityQuery>(query => items.Where(item => conditionEvaluator.IsItemValid(item, query.Conditions)));
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(query => items.Where(item => conditionEvaluator.IsItemValid(item, query.Conditions)));
+        _dataProviderMock.ReturnValue = true;
         return _serviceProvider.GetRequiredService<IQueryProcessor>();
     }
 

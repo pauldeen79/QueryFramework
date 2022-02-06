@@ -35,8 +35,16 @@ public class QueryProcessor : IQueryProcessor
 
     private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>()
         where TResult : class
-        => _databaseEntityRetrieverProviders
-            .Select(x => x.GetRetriever<TResult>())
-            .FirstOrDefault(x => x != null)
-                ?? throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a database entity retriever provider");
+    {
+        foreach (var provider in _databaseEntityRetrieverProviders)
+        {
+            var success = provider.TryCreate<TResult>(out var result);
+            if (success)
+            {
+                return result ?? throw new InvalidOperationException($"Database entity retriever provider of type [{typeof(TResult).FullName}] provided an empty result");
+            }
+        }
+
+        throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a database entity retriever provider");
+    }
 }

@@ -1,4 +1,5 @@
 ﻿global using System;
+global using System.Collections;
 global using System.Collections.Generic;
 global using System.Linq;
 global using FluentAssertions;
@@ -15,4 +16,5 @@ global using QueryFramework.Core.Queries.Builders;
 global using QueryFramework.InMemory.Abstractions;
 global using QueryFramework.InMemory.Extensions;
 global using QueryFramework.InMemory.FunctionParsers;
+global using QueryFramework.InMemory.Tests.TestHelpers;
 global using Xunit;

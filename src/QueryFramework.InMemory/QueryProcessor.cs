@@ -41,8 +41,16 @@ public class QueryProcessor : IQueryProcessor
 
     private IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query)
         where TResult : class
-        => _dataProviders
-            .Select(x => x.GetData<TResult>(query))
-            .FirstOrDefault(x => x != null)
-            ?? throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a data provider");
+    {
+        foreach (var provider in _dataProviders)
+        {
+            var success = provider.TryGetData<TResult>(query, out var result);
+            if (success)
+            {
+                return result ?? throw new InvalidOperationException($"Data provider of type [{typeof(TResult).FullName}] provided an empty result");
+            }
+        }
+
+        throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a data provider");
+    }
 }

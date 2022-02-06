@@ -7,10 +7,11 @@ public class FileSystemDataProviderTests
     {
         // Act
         var actual = new FileSystemDataProvider(new Mock<IConditionEvaluator>().Object)
-            .GetData<FileData>(new SingleEntityQueryBuilder().Build());
+            .TryGetData<FileData>(new SingleEntityQueryBuilder().Build(), out var result);
 
         // Assert
-        actual.Should().BeNull();
+        actual.Should().BeFalse();
+        result.Should().BeNull();
     }
 
     [Fact]
@@ -18,9 +19,10 @@ public class FileSystemDataProviderTests
     {
         // Act
         var actual = new FileSystemDataProvider(new Mock<IConditionEvaluator>().Object)
-            .GetData<object>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly));
+            .TryGetData<object>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
-        actual.Should().BeNull();
+        actual.Should().BeFalse();
+        result.Should().BeNull();
     }
 }

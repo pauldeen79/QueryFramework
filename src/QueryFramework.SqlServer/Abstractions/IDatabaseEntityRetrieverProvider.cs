@@ -2,5 +2,5 @@
 
 public interface IDatabaseEntityRetrieverProvider
 {
-    IDatabaseEntityRetriever<TResult>? GetRetriever<TResult>() where TResult : class;
+    bool TryCreate<TResult>(out IDatabaseEntityRetriever<TResult>? result) where TResult : class;
 }

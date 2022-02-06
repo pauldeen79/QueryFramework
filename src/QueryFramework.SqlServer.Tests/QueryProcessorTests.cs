@@ -84,8 +84,9 @@ public class QueryProcessorTests : TestBase<QueryProcessor>
                                   .Returns<IPagedDatabaseCommand>(command => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
 
         // Hook up the database entity retriever to the SQL Database processor
+        var result = retrieverMock.Object;
         Fixture.Freeze<Mock<IDatabaseEntityRetrieverProvider>>()
-               .Setup(x => x.GetRetriever<MyEntity>())
-               .Returns(retrieverMock.Object);
+               .Setup(x => x.TryCreate(out result))
+               .Returns(true);
     }
 }

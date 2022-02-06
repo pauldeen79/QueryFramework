@@ -23,22 +23,20 @@ public class FileSystemDataProvider : IDataProvider
 
     public FileSystemDataProvider(IConditionEvaluator conditionEvaluator) => _conditionEvaluator = conditionEvaluator;
     
-    public IEnumerable<TResult>? GetData<TResult>(ISingleEntityQuery query) where TResult : class
+    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
         if (fileSystemQuery == null)
         {
-#pragma warning disable S1168 // Empty arrays and collections should be returned instead of null
-            return null;
-#pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
+            result = default;
+            return false;
         }
 
         if (!typeof(FileData).IsAssignableFrom(typeof(TResult))
             && !typeof(LineData).IsAssignableFrom(typeof(TResult)))
         {
-#pragma warning disable S1168 // Empty arrays and collections should be returned instead of null
-            return null;
-#pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
+            result = default;
+            return false;
         }
 
         var fileDataConditions = query.Conditions.Where(x => _fileDataFields.Contains(x.Field.FieldName)).ToArray();
@@ -49,13 +47,15 @@ public class FileSystemDataProvider : IDataProvider
 
         if (typeof(FileData).IsAssignableFrom(typeof(TResult)))
         {
-            return fileData.Cast<TResult>();
+            result = fileData.Cast<TResult>();
+            return true;
         }
 
         var lineDataConditions = query.Conditions.Where(x => _lineDataFields.Contains(x.Field.FieldName)).ToArray();
-        return fileData
+        result = fileData
             .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, x)))
             .Where(x => _conditionEvaluator.IsItemValid(x, lineDataConditions))
             .Cast<TResult>();
+        return true;
     }
 }
