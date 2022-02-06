@@ -29,6 +29,9 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Arrange
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
         settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
+        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
+        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                           .Returns(settingsMock.Object);
         var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
         fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 
@@ -59,6 +62,9 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
         settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
         settingsMock.SetupGet(x => x.OverridePageSize).Returns(pageSize);
+        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
+        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                           .Returns(settingsMock.Object);
         var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
         fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
 

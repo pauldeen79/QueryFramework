@@ -7,6 +7,7 @@ public sealed class IntegrationTests : IDisposable
     private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
     private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
     private readonly Mock<IDatabaseEntityRetrieverProvider> _databaseEntityRetrieverProviderMock;
+    private readonly Mock<IPagedDatabaseEntityRetrieverSettingsProvider> _settingsProviderMock;
 
     public IntegrationTests()
     {
@@ -16,13 +17,16 @@ public sealed class IntegrationTests : IDisposable
         _databaseEntityRetrieverProviderMock.Setup(x => x.GetRetriever<TestEntity>())
                                             .Returns(_retrieverMock.Object);
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-
+        _settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
+        IPagedDatabaseEntityRetrieverSettings? result = settings;
+        _settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
+                             .Returns(true);
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(_retrieverMock.Object)
             .AddSingleton(_evaluatorMock.Object)
             .AddSingleton(_databaseEntityRetrieverProviderMock.Object)
-            .AddSingleton<IPagedDatabaseEntityRetrieverSettings>(settings)
+            .AddSingleton(_settingsProviderMock.Object)
             .BuildServiceProvider();
     }
 

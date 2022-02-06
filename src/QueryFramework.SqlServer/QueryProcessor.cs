@@ -38,5 +38,5 @@ public class QueryProcessor : IQueryProcessor
         => _databaseEntityRetrieverProviders
             .Select(x => x.GetRetriever<TResult>())
             .FirstOrDefault(x => x != null)
-                ?? throw new InvalidOperationException($"Data type {typeof(TResult).FullName} does not have a database entity retriever provider");
+                ?? throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a database entity retriever provider");
 }

@@ -8,6 +8,10 @@ internal static class SqlHelpers
         var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
         settingsMock.SetupGet(x => x.TableName)
                     .Returns(nameof(MyEntity));
+        var settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
+        var settings = settingsMock.Object;
+        settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out settings))
+                            .Returns(true);
         var query = new SingleEntityQueryBuilder().Where
         (
             new QueryConditionBuilder()
@@ -17,7 +21,7 @@ internal static class SqlHelpers
         ).Build();
         var serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
-            .AddSingleton(settingsMock.Object)
+            .AddSingleton(settingsProviderMock.Object)
             .BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();
 

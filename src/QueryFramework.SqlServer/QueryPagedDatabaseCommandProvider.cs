@@ -3,15 +3,15 @@
 public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<ISingleEntityQuery>
 {
     private readonly IQueryFieldProvider _fieldProvider;
-    private readonly IPagedDatabaseEntityRetrieverSettings _settings;
+    private readonly IPagedDatabaseEntityRetrieverSettingsFactory _settingsFactory;
     private readonly IQueryExpressionEvaluator _evaluator;
 
     public QueryPagedDatabaseCommandProvider(IQueryFieldProvider fieldProvider,
-                                             IPagedDatabaseEntityRetrieverSettings settings,
+                                             IPagedDatabaseEntityRetrieverSettingsFactory settingsFactory,
                                              IQueryExpressionEvaluator evaluator)
     {
         _fieldProvider = fieldProvider;
-        _settings = settings;
+        _settingsFactory = settingsFactory;
         _evaluator = evaluator;
     }
 
@@ -25,16 +25,17 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
         var fieldSelectionQuery = source as IFieldSelectionQuery;
         var groupingQuery = source as IGroupingQuery;
         var parameterizedQuery = source as IParameterizedQuery;
+        var settings = _settingsFactory.Create(source);
         return new PagedSelectCommandBuilder()
-            .Select(_settings, _fieldProvider, fieldSelectionQuery, _evaluator)
-            .Top(source, _settings)
+            .Select(settings, _fieldProvider, fieldSelectionQuery, _evaluator)
+            .Top(source, settings)
             .Offset(source)
             .Distinct(fieldSelectionQuery)
-            .From(source, _settings)
-            .Where(source, _settings, _fieldProvider, _evaluator, out int paramCounter)
-            .GroupBy(groupingQuery, _settings, _fieldProvider, _evaluator)
-            .Having(groupingQuery, _settings, _fieldProvider, _evaluator, ref paramCounter)
-            .OrderBy(source, _settings, _fieldProvider, _evaluator)
+            .From(source, settings)
+            .Where(source, settings, _fieldProvider, _evaluator, out int paramCounter)
+            .GroupBy(groupingQuery, settings, _fieldProvider, _evaluator)
+            .Having(groupingQuery, settings, _fieldProvider, _evaluator, ref paramCounter)
+            .OrderBy(source, settings, _fieldProvider, _evaluator)
             .WithParameters(parameterizedQuery)
             .Build();
     }
