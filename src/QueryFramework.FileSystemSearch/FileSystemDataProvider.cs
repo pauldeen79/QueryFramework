@@ -1,16 +1,7 @@
 ﻿namespace QueryFramework.FileSystemSearch;
 
-public class QueryProcessor : IQueryProcessor
+public class FileSystemDataProvider : IDataProvider
 {
-    private readonly IConditionEvaluator _conditionEvaluator;
-    private readonly IPaginator _paginator;
-
-    public QueryProcessor(IConditionEvaluator conditionEvaluator, IPaginator paginator)
-    {
-        _conditionEvaluator = conditionEvaluator;
-        _paginator = paginator;
-    }
-
     private static readonly string[] _fileDataFields = new[]
     {
         nameof(FileData.Contents),
@@ -28,44 +19,22 @@ public class QueryProcessor : IQueryProcessor
         nameof(LineData.LineNumber)
     };
 
-    public IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query) where TResult : class
-        => _paginator.GetPagedData
-        (
-            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
-            GetData<TResult>(query)
-        ).ToList();
+    private readonly IConditionEvaluator _conditionEvaluator;
 
-    public TResult? FindOne<TResult>(ISingleEntityQuery query) where TResult : class
-        => _paginator.GetPagedData
-        (
-            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
-            GetData<TResult>(query)
-        ).FirstOrDefault();
-
-    public IPagedResult<TResult> FindPaged<TResult>(ISingleEntityQuery query) where TResult : class
-    {
-        var filteredRecords = GetData<TResult>(query).ToArray();
-        return new PagedResult<TResult>
-        (
-            _paginator.GetPagedData(query, filteredRecords),
-            filteredRecords.Length,
-            query.Offset.GetValueOrDefault(),
-            query.Limit.GetValueOrDefault()
-        );
-    }
-
-    private IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query) where TResult : class
+    public FileSystemDataProvider(IConditionEvaluator conditionEvaluator) => _conditionEvaluator = conditionEvaluator;
+    
+    public IEnumerable<TResult>? GetData<TResult>(ISingleEntityQuery query) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
         if (fileSystemQuery == null)
         {
-            throw new ArgumentException($"Query is not of type {nameof(IFileSystemQuery)}", nameof(query));
+            return null;
         }
 
         if (!typeof(FileData).IsAssignableFrom(typeof(TResult))
             && !typeof(LineData).IsAssignableFrom(typeof(TResult)))
         {
-            throw new InvalidOperationException($"Result type should be {nameof(FileData)} or {nameof(LineData)}");
+            return null;
         }
 
         var fileDataConditions = query.Conditions.Where(x => _fileDataFields.Contains(x.Field.FieldName)).ToArray();

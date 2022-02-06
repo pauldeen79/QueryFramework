@@ -1,16 +1,14 @@
-﻿using System.Collections;
-
-namespace QueryFramework.InMemory.Tests;
+﻿namespace QueryFramework.InMemory.Tests;
 
 public sealed class QueryProcessorTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private Func<IEnumerable> _sourceDataDelegate = new Func<IEnumerable>(() => Array.Empty<object>());
+    private readonly Mock<IDataProvider> _dataProviderMock = new Mock<IDataProvider>();
 
     public QueryProcessorTests()
         => _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkInMemory()
-            .AddTransient<IQueryProcessor>(x => new QueryProcessor(_sourceDataDelegate, x.GetRequiredService<IConditionEvaluator>(), x.GetRequiredService<IPaginator>()))
+            .AddSingleton(_dataProviderMock.Object)
             .BuildServiceProvider();
 
     [Fact]
@@ -538,6 +536,44 @@ public sealed class QueryProcessorTests : IDisposable
     }
 
     [Fact]
+    public void Can_FindOne_On_InMemoryList_With_OrderByDescending()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .OrderByDescending(nameof(MyClass.Property))
+            .Build();
+
+        // Act
+        var actual = sut.FindOne<MyClass>(query);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual?.Property.Should().Be("C");
+    }
+
+    [Fact]
+    public void Can_FindMany_On_InMemoryList_With_OrderByDescending()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .OrderByDescending(nameof(MyClass.Property))
+            .Build();
+
+        // Act
+        var actual = sut.FindMany<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(3);
+        actual.ElementAt(0).Property.Should().Be("C");
+        actual.ElementAt(1).Property.Should().Be("B");
+        actual.ElementAt(2).Property.Should().Be("A");
+    }
+
+    [Fact]
     public void Can_FindPaged_On_InMemoryList_With_Multiple_OrderBy_Clauses()
     {
         // Arrange
@@ -581,9 +617,56 @@ public sealed class QueryProcessorTests : IDisposable
         actual.First().Property.Should().Be("A2");
     }
 
+    [Fact]
+    public void FindOne_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder().Build();
+        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
+                         .Returns(default(IEnumerable<MyClass>));
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindOne<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data type QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass does not have a data provider");
+    }
+
+    [Fact]
+    public void FindMany_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder().Build();
+        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
+                         .Returns(default(IEnumerable<MyClass>));
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindMany<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data type QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass does not have a data provider");
+    }
+
+    [Fact]
+    public void FindPaged_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder().Build();
+        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
+                         .Returns(default(IEnumerable<MyClass>));
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data type QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass does not have a data provider");
+    }
+
     private IQueryProcessor CreateSut(MyClass[] items)
     {
-        _sourceDataDelegate = new Func<IEnumerable>(() => items);
+        var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
+        _dataProviderMock.Setup(x => x.GetData<MyClass>(It.IsAny<ISingleEntityQuery>()))
+                         .Returns<ISingleEntityQuery>(query => items.Where(item => conditionEvaluator.IsItemValid(item, query.Conditions)));
         return _serviceProvider.GetRequiredService<IQueryProcessor>();
     }
 

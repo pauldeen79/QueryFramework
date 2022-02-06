@@ -2,41 +2,47 @@
 
 public class QueryProcessor : IQueryProcessor
 {
-    private readonly Func<IEnumerable> _sourceDataDelegate;
-    private readonly IConditionEvaluator _conditionEvaluator;
     private readonly IPaginator _paginator;
+    private readonly IEnumerable<IDataProvider> _dataProviders;
 
-    public QueryProcessor(Func<IEnumerable> sourceDataDelegate,
-                          IConditionEvaluator conditionEvaluator,
-                          IPaginator paginator)
+    public QueryProcessor(IPaginator paginator, IEnumerable<IDataProvider> dataProviders)
     {
-        _sourceDataDelegate = sourceDataDelegate;
-        _conditionEvaluator = conditionEvaluator;
         _paginator = paginator;
+        _dataProviders = dataProviders;
     }
-
-    public TResult FindOne<TResult>(ISingleEntityQuery query)
-        where TResult : class
-        => _sourceDataDelegate.Invoke()
-            .OfType<TResult>()
-            .FirstOrDefault(item => _conditionEvaluator.IsItemValid(item, query.Conditions));
 
     public IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query)
         where TResult : class
-        => _sourceDataDelegate.Invoke()
-            .OfType<TResult>()
-            .Where(item => _conditionEvaluator.IsItemValid(item, query.Conditions))
-            .ToList();
+        => _paginator.GetPagedData
+        (
+            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
+            GetData<TResult>(query)
+        ).ToList();
+
+    public TResult? FindOne<TResult>(ISingleEntityQuery query) where TResult : class
+        => _paginator.GetPagedData
+        (
+            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
+            GetData<TResult>(query)
+        ).FirstOrDefault();
 
     public IPagedResult<TResult> FindPaged<TResult>(ISingleEntityQuery query)
         where TResult : class
     {
-        var filteredRecords = new List<TResult>(_sourceDataDelegate.Invoke()
-            .OfType<TResult>()
-            .Where(item => _conditionEvaluator.IsItemValid(item, query.Conditions)));
-        return new PagedResult<TResult>(_paginator.GetPagedData(query, filteredRecords),
-                                        filteredRecords.Count,
-                                        query.Offset.GetValueOrDefault(),
-                                        query.Limit.GetValueOrDefault());
+        var filteredRecords = GetData<TResult>(query).ToArray();
+        return new PagedResult<TResult>
+        (
+            _paginator.GetPagedData(query, filteredRecords),
+            filteredRecords.Length,
+            query.Offset.GetValueOrDefault(),
+            query.Limit.GetValueOrDefault()
+        );
     }
+
+    private IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query)
+        where TResult : class
+        => _dataProviders
+            .Select(x => x.GetData<TResult>(query))
+            .FirstOrDefault(x => x != null)
+            ?? throw new InvalidOperationException($"Data type {typeof(TResult).FullName} does not have a data provider");
 }
