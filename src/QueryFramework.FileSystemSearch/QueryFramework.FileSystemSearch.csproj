@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <PackageId>pauldeen79.QueryFramework.FileSystemSearch</PackageId>
+    <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
     <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
