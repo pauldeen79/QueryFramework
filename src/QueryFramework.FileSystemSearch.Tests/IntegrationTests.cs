@@ -73,6 +73,10 @@ public sealed class IntegrationTests : IDisposable
         actual.Should().ContainSingle();
         actual.First().Directory.Should().EndWith("FileSystemSearch.Tests");
         actual.First().FileName.Should().Be("IntegrationTests.cs");
+        actual.First().Extension.Should().Be(".cs");
+        actual.First().DateCreated.Should().BeAfter(DateTime.MinValue);
+        actual.First().DateLastModified.Should().BeAfter(DateTime.MinValue);
+        actual.First().Contents.Should().NotBeEmpty();
     }
 
     [Fact]
