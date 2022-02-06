@@ -1,7 +1,6 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class QueryPagedDatabaseCommandProvider<TQuery> : IPagedDatabaseCommandProvider<TQuery>
-    where TQuery : ISingleEntityQuery
+public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<ISingleEntityQuery>
 {
     private readonly IQueryFieldProvider _fieldProvider;
     private readonly IPagedDatabaseEntityRetrieverSettings _settings;
@@ -16,7 +15,7 @@ public class QueryPagedDatabaseCommandProvider<TQuery> : IPagedDatabaseCommandPr
         _evaluator = evaluator;
     }
 
-    public IPagedDatabaseCommand CreatePaged(TQuery source, DatabaseOperation operation, int offset, int pageSize)
+    public IPagedDatabaseCommand CreatePaged(ISingleEntityQuery source, DatabaseOperation operation, int offset, int pageSize)
     {
         if (operation != DatabaseOperation.Select)
         {

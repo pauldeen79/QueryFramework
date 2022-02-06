@@ -17,7 +17,6 @@ internal static class SqlHelpers
         ).Build();
         var serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
-            .AddQueryFrameworkSqlServer<ISingleEntityQuery>()
             .AddSingleton(settingsMock.Object)
             .BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();

@@ -4,6 +4,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection)
         => serviceCollection
+            .AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
+            .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
             .AddSingleton<IQueryFieldProvider, DefaultQueryFieldProvider>()
             .AddSingleton<IQueryExpressionEvaluator, DefaultQueryExpressionEvaluator>()
             .AddSingleton<IQueryProcessor, QueryProcessor>()
@@ -19,10 +21,4 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IFunctionParser, TrimFunctionParser>()
             .AddSingleton<IFunctionParser, UpperFunctionParser>()
             .AddSingleton<IFunctionParser, YearFunctionParser>();
-
-    public static IServiceCollection AddQueryFrameworkSqlServer<TQuery>(this IServiceCollection serviceCollection)
-        where TQuery : ISingleEntityQuery
-        => serviceCollection
-            .AddSingleton<IDatabaseCommandProvider<TQuery>, QueryDatabaseCommandProvider<TQuery>>()
-            .AddSingleton<IPagedDatabaseCommandProvider<TQuery>, QueryPagedDatabaseCommandProvider<TQuery>>();
 }

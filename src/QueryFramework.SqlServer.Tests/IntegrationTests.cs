@@ -19,7 +19,6 @@ public sealed class IntegrationTests : IDisposable
 
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
-            .AddQueryFrameworkSqlServer<ISingleEntityQuery>()
             .AddSingleton(_retrieverMock.Object)
             .AddSingleton(_evaluatorMock.Object)
             .AddSingleton(_databaseEntityRetrieverProviderMock.Object)

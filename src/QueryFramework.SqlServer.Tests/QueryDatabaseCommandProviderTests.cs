@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandProvider<ISingleEntityQuery>>
+public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandProvider>
 {
     public QueryDatabaseCommandProviderTests()
     {
@@ -12,7 +12,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         var pagedProviderMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
         pagedProviderMock.Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), It.IsAny<DatabaseOperation>(), It.IsAny<int>(), It.IsAny<int>()))
                          .Returns<ISingleEntityQuery, DatabaseOperation, int, int>((source, operation, offset, pageSize)
-                         => new QueryPagedDatabaseCommandProvider<ISingleEntityQuery>
+                         => new QueryPagedDatabaseCommandProvider
                          (
                              new DefaultQueryFieldProvider(),
                              Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettings>>().Object,

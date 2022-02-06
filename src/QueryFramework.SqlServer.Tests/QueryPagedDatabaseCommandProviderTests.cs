@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider<ISingleEntityQuery>>
+public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider>
 {
     public QueryPagedDatabaseCommandProviderTests()
     {

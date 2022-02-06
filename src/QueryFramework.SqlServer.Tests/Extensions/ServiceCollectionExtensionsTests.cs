@@ -11,7 +11,6 @@ public class ServiceCollectionExtensionsTests
         // Act
         var action = new Action(() => _ = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
-            .AddQueryFrameworkSqlServer<ISingleEntityQuery>()
             .AddSingleton(settingsMock.Object)
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
 

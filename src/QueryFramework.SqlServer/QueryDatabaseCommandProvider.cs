@@ -1,14 +1,13 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class QueryDatabaseCommandProvider<TQuery> : IDatabaseCommandProvider<TQuery>
-    where TQuery : ISingleEntityQuery
+public class QueryDatabaseCommandProvider : IDatabaseCommandProvider<ISingleEntityQuery>
 {
-    private readonly IPagedDatabaseCommandProvider<TQuery> _pagedDatabaseCommandProvider;
+    private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _pagedDatabaseCommandProvider;
 
-    public QueryDatabaseCommandProvider(IPagedDatabaseCommandProvider<TQuery> pagedDatabaseCommandProvider)
+    public QueryDatabaseCommandProvider(IPagedDatabaseCommandProvider<ISingleEntityQuery> pagedDatabaseCommandProvider)
         => _pagedDatabaseCommandProvider = pagedDatabaseCommandProvider;
 
-    public IDatabaseCommand Create(TQuery source, DatabaseOperation operation)
+    public IDatabaseCommand Create(ISingleEntityQuery source, DatabaseOperation operation)
     {
         if (operation != DatabaseOperation.Select)
         {
