@@ -18,7 +18,7 @@ public class QueryProcessor : IQueryProcessor
 
     public T? FindOne<T>(ISingleEntityQuery query)
         where T : class
-        => GetRetriever<T>().FindOne(GenerateCommand(query, 1).DataCommand) as T;
+        => GetRetriever<T>().FindOne(GenerateCommand(query, 1).DataCommand);
 
     public IPagedResult<T> FindPaged<T>(ISingleEntityQuery query)
         where T : class
