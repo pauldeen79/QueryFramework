@@ -3,7 +3,7 @@
 public sealed class IntegrationTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private static string _basePath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\");
+    private static string _basePath = Path.Combine(Directory.GetCurrentDirectory(), @"../../../../");
 
     public IntegrationTests()
         => _serviceProvider = new ServiceCollection()
