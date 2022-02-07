@@ -629,7 +629,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Act & Assert
         sut.Invoking(x => x.FindOne<MyClass>(query))
            .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
     }
 
     [Fact]
@@ -644,7 +644,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Act & Assert
         sut.Invoking(x => x.FindMany<MyClass>(query))
            .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
     }
 
     [Fact]
@@ -659,7 +659,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Act & Assert
         sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
     }
 
     [Fact]
@@ -674,7 +674,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Act & Assert
         sut.Invoking(x => x.FindOne<MyClass>(query))
            .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] provided an empty result");
+           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.DataProviderMock] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] provided an empty result");
     }
 
     private IQueryProcessor CreateSut(MyClass[] items)

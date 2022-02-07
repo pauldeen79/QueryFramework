@@ -2,8 +2,6 @@
 global using System.Collections.Generic;
 global using System.IO;
 global using System.Linq;
-global using CrossCutting.Data.Abstractions;
-global using CrossCutting.Data.Core;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Queries;

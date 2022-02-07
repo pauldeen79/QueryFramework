@@ -3,12 +3,12 @@
 public class QueryProcessor : IQueryProcessor
 {
     private readonly IPaginator _paginator;
-    private readonly IEnumerable<IDataProvider> _dataProviders;
+    private readonly IDataFactory _dataFactory;
 
-    public QueryProcessor(IPaginator paginator, IEnumerable<IDataProvider> dataProviders)
+    public QueryProcessor(IPaginator paginator, IDataFactory dataFactory)
     {
         _paginator = paginator;
-        _dataProviders = dataProviders;
+        _dataFactory = dataFactory;
     }
 
     public IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query)
@@ -41,16 +41,5 @@ public class QueryProcessor : IQueryProcessor
 
     private IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query)
         where TResult : class
-    {
-        foreach (var provider in _dataProviders)
-        {
-            var success = provider.TryGetData<TResult>(query, out var result);
-            if (success)
-            {
-                return result ?? throw new InvalidOperationException($"Data provider of type [{typeof(TResult).FullName}] provided an empty result");
-            }
-        }
-
-        throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a data provider");
-    }
+        => _dataFactory.GetData<TResult>(query);
 }

@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IValueProvider, DefaultValueProvider>()
             .AddSingleton<IConditionEvaluator, DefaultConditionEvaluator>()
             .AddSingleton<IPaginator, DefaultPaginator>()
+            .AddSingleton<IDataFactory, DefaultDataFactory>()
             .AddSingleton<IQueryProcessor, QueryProcessor>()
             .AddSingleton<IFunctionParser, LengthFunctionParser>()
             .AddSingleton<IFunctionParser, LeftFunctionParser>()
