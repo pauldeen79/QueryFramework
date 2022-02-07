@@ -7,7 +7,7 @@ public sealed class IntegrationTests : IDisposable
 
     public IntegrationTests()
         => _serviceProvider = new ServiceCollection()
-            .AddFileSystemSearch()
+            .AddQueryFrameworkFileSystemSearch()
             .BuildServiceProvider();
 
     [Fact]

@@ -2,7 +2,7 @@
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddFileSystemSearch(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddQueryFrameworkFileSystemSearch(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddQueryFrameworkInMemory()
             .AddSingleton<IDataProvider, FileSystemDataProvider>();
