@@ -2,13 +2,16 @@
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddQueryFrameworkSqlServer<TQuery>(this IServiceCollection serviceCollection)
-        where TQuery : ISingleEntityQuery
+    public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<IDatabaseCommandProvider<TQuery>, QueryDatabaseCommandProvider<TQuery>>()
-            .AddSingleton<IPagedDatabaseCommandProvider<TQuery>, QueryPagedDatabaseCommandProvider<TQuery>>()
-            .AddSingleton<IQueryFieldProvider, DefaultQueryFieldProvider>()
+            .AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
+            .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
+            .AddSingleton<IPagedDatabaseEntityRetrieverSettingsFactory, DefaultPagedDatabaseEntityRetrieverSettingsFactory>()
+            .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
+            .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()
+            .AddSingleton<IPagedDatabaseCommandProviderFactory, DefaultPagedDatabaseCommandProviderFactory>()
             .AddSingleton<IQueryExpressionEvaluator, DefaultQueryExpressionEvaluator>()
+            .AddSingleton<IQueryProcessor, DefaultQueryProcessor>()
             .AddSingleton<IFunctionParser, CoalesceFunctionParser>()
             .AddSingleton<IFunctionParser, CountFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, DayFunctionFunctionParser>()

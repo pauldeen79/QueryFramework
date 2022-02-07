@@ -1,8 +1,8 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, MyEntity>>
+public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 {
-    public QueryProcessorTests()
+    public DefaultQueryProcessorTests()
     {
         Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>()
                .Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
@@ -19,7 +19,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindPaged(new SingleEntityQuery());
+        var actual = Sut.FindPaged<MyEntity>(new SingleEntityQuery());
 
         // Assert
         actual.Should().HaveCount(1);
@@ -35,7 +35,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         var query = new SingleEntityQueryBuilder().Take(1).Build();
 
         // Act
-        var actual = Sut.FindPaged(query);
+        var actual = Sut.FindPaged<MyEntity>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -50,14 +50,11 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindOne(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
+        var actual = Sut.FindOne<MyEntity>(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
 
         // Assert
         actual.Should().NotBeNull();
-        if (actual != null)
-        {
-            actual.Property.Should().Be("Value");
-        }
+        actual?.Property.Should().Be("Value");
     }
 
     [Fact]
@@ -67,7 +64,7 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindMany(new SingleEntityQuery());
+        var actual = Sut.FindMany<MyEntity>(new SingleEntityQuery());
 
         // Assert
         actual.Should().HaveCount(1);
@@ -85,5 +82,11 @@ public class QueryProcessorTests : TestBase<QueryProcessor<ISingleEntityQuery, M
         // For FindPaged
         retrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>()))
                                   .Returns<IPagedDatabaseCommand>(command => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
+
+        // Hook up the database entity retriever to the SQL Database processor
+        var result = retrieverMock.Object;
+        Fixture.Freeze<Mock<IDatabaseEntityRetrieverFactory>>()
+               .Setup(x => x.Create<MyEntity>(It.IsAny<ISingleEntityQuery>()))
+               .Returns(result);
     }
 }

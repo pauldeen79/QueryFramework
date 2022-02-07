@@ -15,5 +15,6 @@ global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Core;
 global using QueryFramework.Core.Functions;
 global using QueryFramework.SqlServer.Abstractions;
+global using QueryFramework.SqlServer.CrossCutting.Data;
 global using QueryFramework.SqlServer.Extensions;
 global using QueryFramework.SqlServer.FunctionParsers;

@@ -10,10 +10,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = null };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(0);
@@ -29,10 +29,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(expectedOutput);
@@ -48,10 +48,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = null };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(expectedOutput);
@@ -67,10 +67,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(expectedOutput);
@@ -84,10 +84,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(0);
@@ -101,10 +101,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.CompareTo((object)new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.CompareTo((object)new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().Be(-1);
@@ -118,7 +118,7 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
         var actual = sut.CompareTo(other);
@@ -135,10 +135,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.Equals((object)new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.Equals((object)new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().BeTrue();
@@ -152,10 +152,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut.Equals(new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever));
+        var actual = sut.Equals(new OrderByWrapper(other, orderByFields, valueRetriever));
 
         // Assert
         actual.Should().BeTrue();
@@ -169,10 +169,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut == new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut == new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeTrue();
@@ -186,10 +186,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "a" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut != new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut != new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeFalse();
@@ -203,10 +203,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut < new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut < new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeTrue();
@@ -220,10 +220,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut > new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut > new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeFalse();
@@ -237,10 +237,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut <= new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut <= new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeTrue();
@@ -254,10 +254,10 @@ public class OrderByWrapperTests
         var other = new MyClass { Property = "b" };
         var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
         var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
-        var sut = new OrderByWrapper<MyClass>(data, orderByFields, valueRetriever);
+        var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
-        var actual = sut >= new OrderByWrapper<MyClass>(other, orderByFields, valueRetriever);
+        var actual = sut >= new OrderByWrapper(other, orderByFields, valueRetriever);
 
         // Assert
         actual.Should().BeFalse();

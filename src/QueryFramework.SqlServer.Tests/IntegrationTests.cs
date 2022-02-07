@@ -1,21 +1,40 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class IntegrationTests
+public sealed class IntegrationTests : IDisposable
 {
-    private readonly QueryProcessor<TestQuery, TestEntity> _sut;
+    private readonly ServiceProvider _serviceProvider;
+    private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();
     private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
-    private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
 
     public IntegrationTests()
     {
         _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-        _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
+        var evaluatorMock = new Mock<IQueryExpressionEvaluator>();
+        var databaseEntityRetrieverProviderMock = new Mock<IDatabaseEntityRetrieverProvider>();
+        var retriever = _retrieverMock.Object;
+        databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out retriever))
+                                            .Returns(true);
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-        _sut = new QueryProcessor<TestQuery, TestEntity>
-        (
-            _retrieverMock.Object,
-            new QueryPagedDatabaseCommandProvider<TestQuery>(new DefaultQueryFieldProvider(), settings, _evaluatorMock.Object)
-        );
+        var settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
+        IPagedDatabaseEntityRetrieverSettings? result = settings;
+        settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
+                             .Returns(true);
+        _serviceProvider = new ServiceCollection()
+            .AddQueryFrameworkSqlServer()
+            .AddSingleton(_retrieverMock.Object)
+            .AddSingleton(evaluatorMock.Object)
+            .AddSingleton(databaseEntityRetrieverProviderMock.Object)
+            .AddSingleton(settingsProviderMock.Object)
+            .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
+            .AddSingleton(ctx =>
+            {
+                var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
+                var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+                mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
+                    .Returns(true);
+                return mock.Object;
+            })
+            .BuildServiceProvider();
     }
 
     [Fact]
@@ -28,7 +47,7 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany(query);
+        var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
@@ -44,9 +63,11 @@ public class IntegrationTests
                       .Returns(expectedResult);
 
         // Act
-        var actual = _sut.FindMany(query);
+        var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);
     }
+
+    public void Dispose() => _serviceProvider.Dispose();
 }

@@ -1,9 +1,9 @@
 ﻿namespace QueryFramework.SqlServer;
 
 /// <summary>
-/// Default query field provider, which has enough functionality for single-entity queries. Getting all select fields (SelectAll) is not supported.
+/// Default query field info, which has enough functionality for single-entity queries. Getting all select fields (SelectAll) is not supported.
 /// </summary>
-public class DefaultQueryFieldProvider : IQueryFieldProvider
+public class DefaultQueryFieldInfo : IQueryFieldInfo
 {
     public IEnumerable<string> GetAllFields()
         => Enumerable.Empty<string>();

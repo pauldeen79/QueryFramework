@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.SqlServer.Tests;
+﻿namespace QueryFramework.SqlServer.Tests.CrossCutting.Data;
 
-public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider<ISingleEntityQuery>>
+public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider>
 {
     public QueryPagedDatabaseCommandProviderTests()
     {
@@ -29,8 +29,14 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Arrange
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
         settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-        var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
-        fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
+        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                           .Returns(settingsMock.Object);
+        var fieldInfoMock = Fixture.Freeze<Mock<IQueryFieldInfo>>();
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var queryFieldInfo = fieldInfoMock.Object;
+        var queryFieldInfoFactory = Fixture.Freeze<Mock<IQueryFieldInfoFactory>>();
+        queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>())).Returns(queryFieldInfo);
 
         // Act
         var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
@@ -57,10 +63,20 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Arrange
         const int pageSize = 10;
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
-        settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-        settingsMock.SetupGet(x => x.OverridePageSize).Returns(pageSize);
-        var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
-        fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        settingsMock.SetupGet(x => x.TableName)
+                    .Returns("MyTable");
+        settingsMock.SetupGet(x => x.OverridePageSize)
+                    .Returns(pageSize);
+        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
+        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                           .Returns(settingsMock.Object);
+        var fieldInfoMock = Fixture.Freeze<Mock<IQueryFieldInfo>>();
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
+                     .Returns<string>(x => x);
+        var queryFieldInfo = fieldInfoMock.Object;
+        var queryFieldInfoFactory = Fixture.Freeze<Mock<IQueryFieldInfoFactory>>();
+        queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                             .Returns(queryFieldInfo);
 
         // Act
         var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),

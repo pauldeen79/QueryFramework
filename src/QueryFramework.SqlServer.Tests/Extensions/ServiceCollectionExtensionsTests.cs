@@ -6,11 +6,12 @@ public class ServiceCollectionExtensionsTests
     public void All_Dependencies_Can_Be_Resolved()
     {
         // Arrange
-        var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
+        var settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
 
         // Act
-        var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkSqlServer<ISingleEntityQuery>()
-            .AddSingleton(settingsMock.Object)
+        var action = new Action(() => _ = new ServiceCollection()
+            .AddQueryFrameworkSqlServer()
+            .AddSingleton(settingsProviderMock.Object)
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
 
         // Assert

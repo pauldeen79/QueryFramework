@@ -1,7 +1,16 @@
 ﻿namespace QueryFramework.InMemory.Tests;
 
-public class QueryProcessorTests
+public sealed class QueryProcessorTests : IDisposable
 {
+    private readonly ServiceProvider _serviceProvider;
+    private readonly DataProviderMock _dataProviderMock = new DataProviderMock();
+
+    public QueryProcessorTests()
+        => _serviceProvider = new ServiceCollection()
+            .AddQueryFrameworkInMemory()
+            .AddSingleton<IDataProvider>(_dataProviderMock)
+            .BuildServiceProvider();
+
     [Fact]
     public void Unsupported_Query_Operator_Throws_On_FindPAged()
     {
@@ -16,7 +25,7 @@ public class QueryProcessorTests
             }).Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Unsupported query operator: 99");
     }
@@ -32,7 +41,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Fieldname [UnknownField] is not found on type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass]");
     }
@@ -50,7 +59,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act & Assert
-        sut.Invoking(x => x.FindPaged(query))
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Function [IQueryExpressionFunctionProxy] is not supported");
     }
@@ -61,14 +70,14 @@ public class QueryProcessorTests
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
-        var actual = sut.FindOne(query);
+        var actual = sut.FindOne<MyClass>(query);
 
         // Assert
         actual.Should().NotBeNull();
-        actual.Property.Should().Be("A");
+        actual?.Property.Should().Be("A");
     }
 
     [Fact]
@@ -77,10 +86,10 @@ public class QueryProcessorTests
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
-        var actual = sut.FindMany(query);
+        var actual = sut.FindMany<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -94,10 +103,10 @@ public class QueryProcessorTests
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -116,7 +125,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -135,7 +144,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -155,7 +164,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -172,7 +181,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -190,7 +199,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -208,7 +217,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -226,7 +235,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -244,7 +253,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -262,7 +271,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -280,7 +289,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -298,7 +307,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -316,7 +325,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -333,7 +342,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -352,7 +361,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(0);
@@ -369,7 +378,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -388,7 +397,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -406,7 +415,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -424,7 +433,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -442,7 +451,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -460,7 +469,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -479,7 +488,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
@@ -497,7 +506,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -517,7 +526,45 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(3);
+        actual.ElementAt(0).Property.Should().Be("C");
+        actual.ElementAt(1).Property.Should().Be("B");
+        actual.ElementAt(2).Property.Should().Be("A");
+    }
+
+    [Fact]
+    public void Can_FindOne_On_InMemoryList_With_OrderByDescending()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .OrderByDescending(nameof(MyClass.Property))
+            .Build();
+
+        // Act
+        var actual = sut.FindOne<MyClass>(query);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual?.Property.Should().Be("C");
+    }
+
+    [Fact]
+    public void Can_FindMany_On_InMemoryList_With_OrderByDescending()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .OrderByDescending(nameof(MyClass.Property))
+            .Build();
+
+        // Act
+        var actual = sut.FindMany<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -543,7 +590,7 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(3);
@@ -563,19 +610,82 @@ public class QueryProcessorTests
             .Build();
 
         // Act
-        var actual = sut.FindPaged(query);
+        var actual = sut.FindPaged<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(1);
         actual.First().Property.Should().Be("A2");
     }
 
-    private static QueryProcessor<ISingleEntityQuery, MyClass> CreateSut(MyClass[] items)
-        => new QueryProcessor<ISingleEntityQuery, MyClass>
-        (
-            () => items,
-            new DefaultExpressionEvaluator(new DefaultValueProvider(), new IFunctionParser[] { new LengthFunctionParser() })
-        );
+    [Fact]
+    public void FindOne_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQuery();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindOne<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+    }
+
+    [Fact]
+    public void FindMany_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQuery();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindMany<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+    }
+
+    [Fact]
+    public void FindPaged_On_InMemoryList_Without_DataProvider_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQuery();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = false;
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindPaged<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] does not have a data provider");
+    }
+
+    [Fact]
+    public void FindOne_On_InMemoryList_With_DataProvider_That_Returns_Null_Throws()
+    {
+        // Arrange
+        var query = new SingleEntityQuery();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
+        _dataProviderMock.ReturnValue = true;
+        var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
+
+        // Act & Assert
+        sut.Invoking(x => x.FindOne<MyClass>(query))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.DataProviderMock] for data type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass] provided an empty result");
+    }
+
+    private IQueryProcessor CreateSut(MyClass[] items)
+    {
+        var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
+        _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(query => items.Where(item => conditionEvaluator.IsItemValid(item, query.Conditions)));
+        _dataProviderMock.ReturnValue = true;
+        return _serviceProvider.GetRequiredService<IQueryProcessor>();
+    }
+
+    public void Dispose() => _serviceProvider.Dispose();
 
     public class MyClass
     {

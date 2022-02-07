@@ -1,0 +1,12 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using Microsoft.Extensions.DependencyInjection;
+global using QueryFramework.Abstractions;
+global using QueryFramework.Abstractions.Queries;
+global using QueryFramework.Core.Queries;
+global using QueryFramework.FileSystemSearch.Abstractions;
+global using QueryFramework.FileSystemSearch.Entities;
+global using QueryFramework.InMemory.Abstractions;
+global using QueryFramework.InMemory.Extensions;

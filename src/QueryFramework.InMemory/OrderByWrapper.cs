@@ -1,9 +1,8 @@
 ﻿namespace QueryFramework.InMemory;
 
-internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquatable<OrderByWrapper<T>>, IComparable
-    where T : class
+internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<OrderByWrapper>, IComparable
 {
-    public OrderByWrapper(T wrappedItem,
+    public OrderByWrapper(object wrappedItem,
                           IReadOnlyCollection<IQuerySortOrder> orderByFields,
                           IExpressionEvaluator valueRetriever)
     {
@@ -12,11 +11,11 @@ internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquat
         ValueRetriever = valueRetriever;
     }
 
-    public T WrappedItem { get; }
+    public object WrappedItem { get; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
     public IExpressionEvaluator ValueRetriever { get; }
 
-    public int CompareTo(OrderByWrapper<T> other)
+    public int CompareTo(OrderByWrapper other)
     {
         foreach (var orderByField in OrderByFields)
         {
@@ -45,14 +44,14 @@ internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquat
     }
 
     public int CompareTo(object obj)
-        => obj is OrderByWrapper<T> wrapper
+        => obj is OrderByWrapper wrapper
             ? CompareTo(wrapper)
             : 1;
 
     public override bool Equals(object obj)
-        => obj is OrderByWrapper<T> wrapper && Equals(wrapper);
+        => obj is OrderByWrapper wrapper && Equals(wrapper);
 
-    public bool Equals(OrderByWrapper<T> other)
+    public bool Equals(OrderByWrapper other)
         => CompareTo(other) == 0;
 
     public override int GetHashCode()
@@ -65,22 +64,22 @@ internal sealed class OrderByWrapper<T> : IComparable<OrderByWrapper<T>>, IEquat
         return hashCode;
     }
 
-    public static bool operator ==(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator ==(OrderByWrapper left, OrderByWrapper right)
         => left.CompareTo(right) == 0;
 
-    public static bool operator !=(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator !=(OrderByWrapper left, OrderByWrapper right)
         => !(left == right);
 
-    public static bool operator >(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator >(OrderByWrapper left, OrderByWrapper right)
         => left.CompareTo(right) > 0;
 
-    public static bool operator <(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator <(OrderByWrapper left, OrderByWrapper right)
         => left.CompareTo(right) < 0;
 
-    public static bool operator >=(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator >=(OrderByWrapper left, OrderByWrapper right)
         => left.CompareTo(right) >= 0;
 
-    public static bool operator <=(OrderByWrapper<T> left, OrderByWrapper<T> right)
+    public static bool operator <=(OrderByWrapper left, OrderByWrapper right)
         => left.CompareTo(right) <= 0;
 
     private static int CompareToNotNull(IQuerySortOrder orderByField, int result)
