@@ -28,6 +28,11 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
                              settingsFactoryMock.Object,
                              evaluatorMock.Object
                          ).CreatePaged(source, operation, offset, pageSize));
+
+        var result = pagedProviderMock.Object;
+        var pagedDatabaseCommandProviderFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProviderFactory>>();
+        pagedDatabaseCommandProviderFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                                               .Returns(result);
     }
 
     [Theory]

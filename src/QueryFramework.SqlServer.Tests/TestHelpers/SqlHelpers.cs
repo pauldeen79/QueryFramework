@@ -30,6 +30,15 @@ internal static class SqlHelpers
             .AddQueryFrameworkSqlServer()
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)
+            .AddSingleton<IPagedDatabaseCommandProviderProvider>(ctx =>
+            {
+                var pagedDatabaseCommandProviderMock = new PagedDatabaseCommandProviderProviderMock();
+                var pagedDatabaseCommandProvider = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+                pagedDatabaseCommandProviderMock.ReturnValue = true;
+                pagedDatabaseCommandProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IPagedDatabaseCommandProvider<ISingleEntityQuery>?>(_ => pagedDatabaseCommandProvider);
+
+                return pagedDatabaseCommandProviderMock;
+            })
             .BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();
 

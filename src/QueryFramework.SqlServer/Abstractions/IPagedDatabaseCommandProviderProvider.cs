@@ -2,5 +2,5 @@
 
 public interface IPagedDatabaseCommandProviderProvider
 {
-    bool TryCreate<TResult>(ISingleEntityQuery query, out IPagedDatabaseCommandProvider? result) where TResult : class;
+    bool TryCreate(ISingleEntityQuery query, out IPagedDatabaseCommandProvider<ISingleEntityQuery>? result);
 }

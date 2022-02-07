@@ -2,10 +2,10 @@
 
 public class QueryDatabaseCommandProvider : IDatabaseCommandProvider<ISingleEntityQuery>
 {
-    private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _pagedDatabaseCommandProvider;
+    private readonly IPagedDatabaseCommandProviderFactory _pagedDatabaseCommandProviderFactory;
 
-    public QueryDatabaseCommandProvider(IPagedDatabaseCommandProvider<ISingleEntityQuery> pagedDatabaseCommandProvider)
-        => _pagedDatabaseCommandProvider = pagedDatabaseCommandProvider;
+    public QueryDatabaseCommandProvider(IPagedDatabaseCommandProviderFactory pagedDatabaseCommandProviderFactory)
+        => _pagedDatabaseCommandProviderFactory = pagedDatabaseCommandProviderFactory;
 
     public IDatabaseCommand Create(ISingleEntityQuery source, DatabaseOperation operation)
     {
@@ -14,6 +14,6 @@ public class QueryDatabaseCommandProvider : IDatabaseCommandProvider<ISingleEnti
             throw new ArgumentOutOfRangeException(nameof(operation), "Only select operation is supported");
         }
 
-        return _pagedDatabaseCommandProvider.CreatePaged(source, operation, 0, 0).DataCommand;
+        return _pagedDatabaseCommandProviderFactory.Create(source).CreatePaged(source, operation, 0, 0).DataCommand;
     }
 }
