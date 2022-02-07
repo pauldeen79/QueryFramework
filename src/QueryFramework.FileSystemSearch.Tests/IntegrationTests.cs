@@ -97,6 +97,31 @@ public sealed class IntegrationTests : IDisposable
         // Assert
         actual.Should().ContainSingle();
         actual.First().Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
+        actual.First().LineNumber.Should().BeGreaterThan(0);
+        actual.First().FileData.FileName.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void Can_Query_Contents_Using_QueryProcessor_On_Both_File_And_Line_Level()
+    {
+        // Arrange
+        var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
+            .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
+            .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
+            .And(nameof(FileData.Contents).DoesContain("[Fact]"))
+            .And(nameof(LineData.Line).DoesContain(nameof(Can_Query_Contents_Using_QueryProcessor)))
+            .And(nameof(LineData.Line).DoesEndWith(" //*"))
+            .Build());
+        var processor = CreateSut();
+
+        // Act
+        var actual = processor.FindMany<LineData>(query);
+
+        // Assert
+        actual.Should().ContainSingle();
+        actual.First().Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
+        actual.First().LineNumber.Should().BeGreaterThan(0);
+        actual.First().FileData.FileName.Should().NotBeEmpty();
     }
 
     [Fact]
