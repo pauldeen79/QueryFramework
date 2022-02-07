@@ -10,7 +10,7 @@ public class DefaultPagedDatabaseEntityRetrieverSettingsFactoryTests
         providerMock.ReturnValue = true;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IPagedDatabaseEntityRetrieverSettings?>(_ => null);
         var sut = new DefaultPagedDatabaseEntityRetrieverSettingsFactory(new[] { providerMock });
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         sut.Invoking(x => x.Create(query))
@@ -26,7 +26,7 @@ public class DefaultPagedDatabaseEntityRetrieverSettingsFactoryTests
         providerMock.ReturnValue = false;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IPagedDatabaseEntityRetrieverSettings?>(_ => null);
         var sut = new DefaultPagedDatabaseEntityRetrieverSettingsFactory(new[] { providerMock });
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         sut.Invoking(x => x.Create(query))
@@ -44,7 +44,7 @@ public class DefaultPagedDatabaseEntityRetrieverSettingsFactoryTests
         providerMock.ReturnValue = true;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IPagedDatabaseEntityRetrieverSettings?>(_ => settings);
         var sut = new DefaultPagedDatabaseEntityRetrieverSettingsFactory(new[] { providerMock });
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         var actual = sut.Create(query);

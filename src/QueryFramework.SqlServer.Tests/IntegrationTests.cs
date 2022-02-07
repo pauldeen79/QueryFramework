@@ -22,12 +22,21 @@ public sealed class IntegrationTests : IDisposable
         IPagedDatabaseEntityRetrieverSettings? result = settings;
         _settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
                              .Returns(true);
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
+                     .Returns<string>(x => x);
+        var queryFieldInfo = fieldInfoMock.Object;
+        var queryFieldInfoProvider = new Mock<IQueryFieldInfoProvider>();
+        queryFieldInfoProvider.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out queryFieldInfo))
+                              .Returns(true);
+
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(_retrieverMock.Object)
             .AddSingleton(_evaluatorMock.Object)
             .AddSingleton(_databaseEntityRetrieverProviderMock.Object)
             .AddSingleton(_settingsProviderMock.Object)
+            .AddSingleton(queryFieldInfoProvider.Object)
             .BuildServiceProvider();
     }
 

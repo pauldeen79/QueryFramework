@@ -12,6 +12,13 @@ internal static class SqlHelpers
         var settings = settingsMock.Object;
         settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out settings))
                             .Returns(true);
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
+                     .Returns<string>(x => x);
+        var queryFieldInfo = fieldInfoMock.Object;
+        var queryFieldInfoFactory = new Mock<IQueryFieldInfoFactory>();
+        queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                             .Returns(queryFieldInfo);
         var query = new SingleEntityQueryBuilder().Where
         (
             new QueryConditionBuilder()
@@ -22,6 +29,7 @@ internal static class SqlHelpers
         var serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(settingsProviderMock.Object)
+            .AddSingleton(queryFieldInfoFactory.Object)
             .BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();
 

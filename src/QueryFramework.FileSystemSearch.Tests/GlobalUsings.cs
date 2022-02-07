@@ -6,6 +6,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Core.Extensions;
+global using QueryFramework.Core.Queries;
 global using QueryFramework.Core.Queries.Builders;
 global using QueryFramework.FileSystemSearch.Entities;
 global using QueryFramework.FileSystemSearch.Extensions;

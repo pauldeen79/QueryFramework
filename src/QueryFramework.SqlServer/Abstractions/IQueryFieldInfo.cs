@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Abstractions;
 
-public interface IQueryFieldProvider
+public interface IQueryFieldInfo
 {
     string? GetDatabaseFieldName(string queryFieldName);
     IEnumerable<string> GetAllFields();

@@ -12,8 +12,8 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         var settingsFactoryMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
         var settingsMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettings>>();
         settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-        var fieldProviderMock = Fixture.Freeze<Mock<IQueryFieldProvider>>();
-        fieldProviderMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var fieldInfoFactory = new Mock<IQueryFieldInfoFactory>();
+        fieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>())).Returns(new DefaultQueryFieldInfo());
         settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
                            .Returns(settingsMock.Object);
         var pagedProviderMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
@@ -24,7 +24,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
                          .Returns<ISingleEntityQuery, DatabaseOperation, int, int>((source, operation, offset, pageSize)
                          => new QueryPagedDatabaseCommandProvider
                          (
-                             new DefaultQueryFieldProvider(),
+                             fieldInfoFactory.Object,
                              settingsFactoryMock.Object,
                              evaluatorMock.Object
                          ).CreatePaged(source, operation, offset, pageSize));

@@ -70,7 +70,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         var actual = sut.FindOne<MyClass>(query);
@@ -86,7 +86,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         var actual = sut.FindMany<MyClass>(query);
@@ -103,7 +103,7 @@ public sealed class QueryProcessorTests : IDisposable
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
 
         // Act
         var actual = sut.FindPaged<MyClass>(query);
@@ -621,7 +621,7 @@ public sealed class QueryProcessorTests : IDisposable
     public void FindOne_On_InMemoryList_Without_DataProvider_Throws()
     {
         // Arrange
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
         _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
@@ -636,7 +636,7 @@ public sealed class QueryProcessorTests : IDisposable
     public void FindMany_On_InMemoryList_Without_DataProvider_Throws()
     {
         // Arrange
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
         _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
@@ -651,7 +651,7 @@ public sealed class QueryProcessorTests : IDisposable
     public void FindPaged_On_InMemoryList_Without_DataProvider_Throws()
     {
         // Arrange
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
         _dataProviderMock.ReturnValue = false;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();
@@ -666,7 +666,7 @@ public sealed class QueryProcessorTests : IDisposable
     public void FindOne_On_InMemoryList_With_DataProvider_That_Returns_Null_Throws()
     {
         // Arrange
-        var query = new SingleEntityQueryBuilder().Build();
+        var query = new SingleEntityQuery();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>(_ => default(IEnumerable<MyClass>));
         _dataProviderMock.ReturnValue = true;
         var sut = _serviceProvider.GetRequiredService<IQueryProcessor>();

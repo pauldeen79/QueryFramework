@@ -7,7 +7,7 @@ public class FileSystemDataProviderTests
     {
         // Act
         var actual = new FileSystemDataProvider(new Mock<IConditionEvaluator>().Object)
-            .TryGetData<FileData>(new SingleEntityQueryBuilder().Build(), out var result);
+            .TryGetData<FileData>(new SingleEntityQuery(), out var result);
 
         // Assert
         actual.Should().BeFalse();
