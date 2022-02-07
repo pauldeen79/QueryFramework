@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
             .AddSingleton<IPagedDatabaseEntityRetrieverSettingsFactory, DefaultPagedDatabaseEntityRetrieverSettingsFactory>()
             .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
+            .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()
             .AddSingleton<IQueryExpressionEvaluator, DefaultQueryExpressionEvaluator>()
             .AddSingleton<IQueryProcessor, QueryProcessor>()
             .AddSingleton<IFunctionParser, CoalesceFunctionParser>()

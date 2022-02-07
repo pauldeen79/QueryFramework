@@ -2,27 +2,27 @@
 
 public class QueryProcessor : IQueryProcessor
 {
-    private readonly IEnumerable<IDatabaseEntityRetrieverProvider> _databaseEntityRetrieverProviders;
+    private readonly IDatabaseEntityRetrieverFactory _databaseEntityRetrieverFactory;
     private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _databaseCommandProvider;
 
-    public QueryProcessor(IEnumerable<IDatabaseEntityRetrieverProvider> databaseEntityRetrieverProviders,
+    public QueryProcessor(IDatabaseEntityRetrieverFactory databaseEntityRetrieverFactory,
                           IPagedDatabaseCommandProvider<ISingleEntityQuery> databaseCommandProvider)
     {
-        _databaseEntityRetrieverProviders = databaseEntityRetrieverProviders;
+        _databaseEntityRetrieverFactory = databaseEntityRetrieverFactory;
         _databaseCommandProvider = databaseCommandProvider;
     }
 
     public IReadOnlyCollection<T> FindMany<T>(ISingleEntityQuery query)
         where T : class
-        => GetRetriever<T>().FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
+        => GetRetriever<T>(query).FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
 
     public T? FindOne<T>(ISingleEntityQuery query)
         where T : class
-        => GetRetriever<T>().FindOne(GenerateCommand(query, 1).DataCommand);
+        => GetRetriever<T>(query).FindOne(GenerateCommand(query, 1).DataCommand);
 
     public IPagedResult<T> FindPaged<T>(ISingleEntityQuery query)
         where T : class
-        => GetRetriever<T>().FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
+        => GetRetriever<T>(query).FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
 
     private IPagedDatabaseCommand GenerateCommand(ISingleEntityQuery query, int limit)
         => _databaseCommandProvider.CreatePaged
@@ -33,18 +33,7 @@ public class QueryProcessor : IQueryProcessor
             limit
         );
 
-    private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>()
+    private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>(ISingleEntityQuery query)
         where TResult : class
-    {
-        foreach (var provider in _databaseEntityRetrieverProviders)
-        {
-            var success = provider.TryCreate<TResult>(out var result);
-            if (success)
-            {
-                return result ?? throw new InvalidOperationException($"Database entity retriever provider of type [{typeof(TResult).FullName}] provided an empty result");
-            }
-        }
-
-        throw new InvalidOperationException($"Data type [{typeof(TResult).FullName}] does not have a database entity retriever provider");
-    }
+        => _databaseEntityRetrieverFactory.Create<TResult>(query);
 }

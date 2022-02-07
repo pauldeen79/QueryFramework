@@ -15,7 +15,7 @@ public sealed class IntegrationTests : IDisposable
         _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
         _databaseEntityRetrieverProviderMock = new Mock<IDatabaseEntityRetrieverProvider>();
         var retriever = _retrieverMock.Object;
-        _databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(out retriever))
+        _databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out retriever))
                                             .Returns(true);
         var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
         _settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
