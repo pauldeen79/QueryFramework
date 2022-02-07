@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests;
+﻿namespace QueryFramework.SqlServer.Tests.CrossCutting.Data;
 
 public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider>
 {

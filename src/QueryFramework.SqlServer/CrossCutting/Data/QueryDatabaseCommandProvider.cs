@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer;
+﻿namespace QueryFramework.SqlServer.CrossCutting.Data;
 
 public class QueryDatabaseCommandProvider : IDatabaseCommandProvider<ISingleEntityQuery>
 {

@@ -1,11 +1,11 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class QueryProcessor : IQueryProcessor
+public class DefaultQueryProcessor : IQueryProcessor
 {
     private readonly IDatabaseEntityRetrieverFactory _databaseEntityRetrieverFactory;
     private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _databaseCommandProvider;
 
-    public QueryProcessor(IDatabaseEntityRetrieverFactory databaseEntityRetrieverFactory,
+    public DefaultQueryProcessor(IDatabaseEntityRetrieverFactory databaseEntityRetrieverFactory,
                           IPagedDatabaseCommandProvider<ISingleEntityQuery> databaseCommandProvider)
     {
         _databaseEntityRetrieverFactory = databaseEntityRetrieverFactory;

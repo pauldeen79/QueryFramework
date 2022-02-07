@@ -47,7 +47,7 @@ public sealed class IntegrationTests : IDisposable
         // Act
         var actual = Directory.GetFiles(_basePath, "*.cs", SearchOption.AllDirectories)
             .Select(x => new FileData(x))
-            .Where(x => !x.FileName.EndsWith(".generated.cs"))
+            .Where(x => !x.FileName.EndsWith(".generated.cs") && !x.Directory.Contains("\\bin") && !x.Directory.Contains("\\obj"))
             .SelectMany(fileData => fileData.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, fileData)))
             .Where(x => x.Line.StartsWith("namespace") && !x.Line.EndsWith(";"))
             .ToArray();
@@ -130,6 +130,8 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
             .Where(nameof(FileData.FileName).DoesNotEndWith(".generated.cs"))
+            .And(nameof(FileData.Directory).DoesNotContain("\\bin"))
+            .And(nameof(FileData.Directory).DoesNotContain("\\obj"))
             .And(nameof(LineData.Line).DoesStartWith("namespace"))
             .And(nameof(LineData.Line).DoesNotEndWith(";"))
             .Build());
@@ -140,6 +142,26 @@ public sealed class IntegrationTests : IDisposable
 
         // Assert
         actual.Should().BeEmpty(); //we only want to use file-scoped namespaces!
+    }
+
+    [Fact]
+    public void Can_Detect_Usings_Outside_GlobalUsings_Using_QueryProcessor()
+    {
+        // Arrange
+        var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
+            .Where(nameof(FileData.FileName).DoesNotEndWith(".generated.cs"))
+            .And(nameof(FileData.Directory).DoesNotContain("\\bin"))
+            .And(nameof(FileData.Directory).DoesNotContain("\\obj"))
+            .And(nameof(LineData.Line).DoesStartWith("using "))
+            .And(nameof(LineData.Line).DoesEndWith(";"))
+            .Build());
+        var processor = CreateSut();
+
+        // Act
+        var actual = processor.FindMany<LineData>(query);
+
+        // Assert
+        actual.Should().BeEmpty(); //we only want to use global usings!
     }
 
     private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();

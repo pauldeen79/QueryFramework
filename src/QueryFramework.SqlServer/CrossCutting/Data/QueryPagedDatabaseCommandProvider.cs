@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer;
+﻿namespace QueryFramework.SqlServer.CrossCutting.Data;
 
 public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<ISingleEntityQuery>
 {
@@ -33,7 +33,7 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
             .Offset(source)
             .Distinct(fieldSelectionQuery)
             .From(source, settings)
-            .Where(source, settings, fieldInfo, _evaluator, out int paramCounter)
+            .Where(source, settings, fieldInfo, _evaluator, out var paramCounter)
             .GroupBy(groupingQuery, fieldInfo, _evaluator)
             .Having(groupingQuery, fieldInfo, _evaluator, ref paramCounter)
             .OrderBy(source, settings, fieldInfo, _evaluator)

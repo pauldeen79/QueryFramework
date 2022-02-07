@@ -1,8 +1,8 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class QueryProcessorTests : TestBase<QueryProcessor>
+public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 {
-    public QueryProcessorTests()
+    public DefaultQueryProcessorTests()
     {
         Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>()
                .Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
