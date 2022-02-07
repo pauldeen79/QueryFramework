@@ -3,13 +3,13 @@
 public class DefaultQueryProcessor : IQueryProcessor
 {
     private readonly IDatabaseEntityRetrieverFactory _databaseEntityRetrieverFactory;
-    private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _databaseCommandProvider;
+    private readonly IPagedDatabaseCommandProviderFactory _databaseCommandProviderFactory;
 
     public DefaultQueryProcessor(IDatabaseEntityRetrieverFactory databaseEntityRetrieverFactory,
-                          IPagedDatabaseCommandProvider<ISingleEntityQuery> databaseCommandProvider)
+                                 IPagedDatabaseCommandProviderFactory databaseCommandProviderFactory)
     {
         _databaseEntityRetrieverFactory = databaseEntityRetrieverFactory;
-        _databaseCommandProvider = databaseCommandProvider;
+        _databaseCommandProviderFactory = databaseCommandProviderFactory;
     }
 
     public IReadOnlyCollection<T> FindMany<T>(ISingleEntityQuery query)
@@ -25,9 +25,9 @@ public class DefaultQueryProcessor : IQueryProcessor
         => GetRetriever<T>(query).FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
 
     private IPagedDatabaseCommand GenerateCommand(ISingleEntityQuery query, int limit)
-        => _databaseCommandProvider.CreatePaged
+        => _databaseCommandProviderFactory.Create(query.Validate()).CreatePaged
         (
-            query.Validate(),
+            query,
             DatabaseOperation.Select,
             query.Offset.GetValueOrDefault(),
             limit

@@ -37,6 +37,14 @@ public sealed class IntegrationTests : IDisposable
             .AddSingleton(_databaseEntityRetrieverProviderMock.Object)
             .AddSingleton(_settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoProvider.Object)
+            .AddSingleton(ctx =>
+            {
+                var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
+                var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+                mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
+                    .Returns(true);
+                return mock.Object;
+            })
             .BuildServiceProvider();
     }
 
