@@ -9,22 +9,15 @@ public sealed class IntegrationTests : IDisposable
     public IntegrationTests()
     {
         _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-        var evaluatorMock = new Mock<IQueryExpressionEvaluator>();
         var databaseEntityRetrieverProviderMock = new Mock<IDatabaseEntityRetrieverProvider>();
         var retriever = _retrieverMock.Object;
         databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out retriever))
-                                            .Returns(true);
-        var settings = new PagedDatabaseEntityRetrieverSettings("MyTable", "", "", "", null);
-        var settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
-        IPagedDatabaseEntityRetrieverSettings? result = settings;
-        settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
-                             .Returns(true);
+                                           .Returns(true);
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(_retrieverMock.Object)
-            .AddSingleton(evaluatorMock.Object)
             .AddSingleton(databaseEntityRetrieverProviderMock.Object)
-            .AddSingleton(settingsProviderMock.Object)
+            .AddSingleton<IPagedDatabaseEntityRetrieverSettingsProvider, TestEntityQueryProcessorSettingsProvider >()
             .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
             .AddSingleton(ctx =>
             {
