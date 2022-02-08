@@ -3,13 +3,20 @@
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection)
+        => serviceCollection.AddQueryFrameworkSqlServer(new Action<IServiceCollection>(_ => { }));
+
+    public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection,
+                                                                Action<IServiceCollection> customConfigurationAction)
         => serviceCollection
+            .Chain(customConfigurationAction.Invoke)
             .AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
             .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
             .AddSingleton<IPagedDatabaseEntityRetrieverSettingsFactory, DefaultPagedDatabaseEntityRetrieverSettingsFactory>()
             .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
+            .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
             .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()
             .AddSingleton<IPagedDatabaseCommandProviderFactory, DefaultPagedDatabaseCommandProviderFactory>()
+            .AddSingleton<IPagedDatabaseCommandProviderProvider, DefaultPagedDatabaseCommandProviderProvider<ISingleEntityQuery>>()
             .AddSingleton<IQueryExpressionEvaluator, DefaultQueryExpressionEvaluator>()
             .AddSingleton<IQueryProcessor, DefaultQueryProcessor>()
             .AddSingleton<IFunctionParser, CoalesceFunctionParser>()

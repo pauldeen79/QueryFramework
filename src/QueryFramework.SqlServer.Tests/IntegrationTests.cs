@@ -14,20 +14,11 @@ public sealed class IntegrationTests : IDisposable
         databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out retriever))
                                            .Returns(true);
         _serviceProvider = new ServiceCollection()
-            .AddQueryFrameworkSqlServer()
-            .AddSingleton(_retrieverMock.Object)
-            .AddSingleton(databaseEntityRetrieverProviderMock.Object)
-            .AddSingleton<IPagedDatabaseEntityRetrieverSettingsProvider, TestEntityQueryProcessorSettingsProvider >()
-            .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
-            .AddSingleton(ctx =>
-            {
-                var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
-                var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
-                mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
-                    .Returns(true);
-                return mock.Object;
-            })
-            .BuildServiceProvider();
+            .AddQueryFrameworkSqlServer(x =>
+                x.AddSingleton(_retrieverMock.Object)
+                 .AddSingleton(databaseEntityRetrieverProviderMock.Object)
+                 .AddSingleton<IPagedDatabaseEntityRetrieverSettingsProvider, TestEntityQueryProcessorSettingsProvider>()
+            ).BuildServiceProvider();
     }
 
     [Fact]
