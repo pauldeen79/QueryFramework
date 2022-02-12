@@ -1,0 +1,26 @@
+-QueryCombination
+   -Rename to Combination
+   -Move to separate project
+-QueryOperator
+   -Rename to Operator
+   -Move to separate project
+-IQueryExpression
+   -Rename to IExpression
+   -Move to separate project
+-IQueryExpressionFunction
+   -Rename to IExpressionFunction
+   -Move to separate project
+-IQueryCondition
+   -Rename to ICondition
+   -Rename Field to LeftExpression
+   -Rename Value to RightExpression
+   -Change type of RightExpression (currently: Value) from string to IExpression
+   -Move to separate project
+-InMemory.IValueProvider, InMemory.IExpressionEvaluator
+   -Move to separate project
+   -Add factory/provider pattern
+-InMemory.DefaultValueProvider, InMemory.DefaultExpressionEvaluator
+   -Move to separate project
+   -Add support for nested properties (Order.DeliveryAddress.Street, Order.OrderLines.Count)
+-QueryFramework.Core.Functions
+   -Move to separate project

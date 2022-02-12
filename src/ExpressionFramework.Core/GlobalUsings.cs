@@ -1,0 +1,12 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.ComponentModel.DataAnnotations;
+global using System.Linq;
+global using CrossCutting.Common;
+global using CrossCutting.Common.Extensions;
+global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Abstractions.DomainModel.Builders;
+global using ExpressionFramework.Abstractions.DomainModel.Extensions;
+//global using ExpressionFramework.Core.DomainModel.Builders;
+//global using ExpressionFramework.Core.DomainModel.Extensions;
+//global using ExpressionFramework.Core.Functions;

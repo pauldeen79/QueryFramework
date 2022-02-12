@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
+    <!--<PackageId>pauldeen79.ExpressionFramework.Core</PackageId>
+    <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>-->
     <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.22" />
+    <ProjectReference Include="..\ExpressionFramework.Abstractions\ExpressionFramework.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

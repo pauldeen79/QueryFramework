@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <!--<PackageId>pauldeen79.ExpressionFramework.Abstractions</PackageId>
+    <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>-->
+    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.4" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.7.4" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DomainModel\Builders\" />
+    <Folder Include="DomainModel\Extensions\" />
+  </ItemGroup>
+
+</Project>

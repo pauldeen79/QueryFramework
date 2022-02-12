@@ -22,6 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4DD0B4A5-0C50-4CAB-BFB6-4E262344D28B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		ChangeLog.md = ChangeLog.md
+		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers", "src\QueryFramework.QueryParsers\QueryFramework.QueryParsers.csproj", "{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}"
@@ -32,9 +34,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGenerati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration.Tests", "src\QueryFramework.CodeGeneration.Tests\QueryFramework.CodeGeneration.Tests.csproj", "{ED1165AD-1F6F-4023-877F-E9C3C5B6F695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryFramework.FileSystemSearch", "src\QueryFramework.FileSystemSearch\QueryFramework.FileSystemSearch.csproj", "{C125FA4A-0B1D-44D0-BA42-DF85A4618D1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSearch", "src\QueryFramework.FileSystemSearch\QueryFramework.FileSystemSearch.csproj", "{C125FA4A-0B1D-44D0-BA42-DF85A4618D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryFramework.FileSystemSearch.Tests", "src\QueryFramework.FileSystemSearch.Tests\QueryFramework.FileSystemSearch.Tests.csproj", "{BE082275-7AB6-434C-A758-5D5B1F74B3B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSearch.Tests", "src\QueryFramework.FileSystemSearch.Tests\QueryFramework.FileSystemSearch.Tests.csproj", "{BE082275-7AB6-434C-A758-5D5B1F74B3B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionFramework.Abstractions", "src\ExpressionFramework.Abstractions\ExpressionFramework.Abstractions.csproj", "{39731322-F3AE-4F6A-8F93-55E88989C645}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionFramework.CodeGeneration", "src\ExpressionFramework.CodeGeneration\ExpressionFramework.CodeGeneration.csproj", "{AFCF049D-0833-479E-AB07-AD0D38C239E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionFramework.CodeGeneration.Tests", "src\ExpressionFramework.CodeGeneration.Tests\ExpressionFramework.CodeGeneration.Tests.csproj", "{528286C4-0378-4FA3-920E-E9BEB245E6CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionFramework.Core", "src\ExpressionFramework.Core\ExpressionFramework.Core.csproj", "{38655441-24D8-4666-BCC5-3CFC4F7C0C62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +108,22 @@ Global
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39731322-F3AE-4F6A-8F93-55E88989C645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39731322-F3AE-4F6A-8F93-55E88989C645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39731322-F3AE-4F6A-8F93-55E88989C645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39731322-F3AE-4F6A-8F93-55E88989C645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFCF049D-0833-479E-AB07-AD0D38C239E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFCF049D-0833-479E-AB07-AD0D38C239E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFCF049D-0833-479E-AB07-AD0D38C239E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFCF049D-0833-479E-AB07-AD0D38C239E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{528286C4-0378-4FA3-920E-E9BEB245E6CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{528286C4-0378-4FA3-920E-E9BEB245E6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{528286C4-0378-4FA3-920E-E9BEB245E6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{528286C4-0378-4FA3-920E-E9BEB245E6CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38655441-24D8-4666-BCC5-3CFC4F7C0C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38655441-24D8-4666-BCC5-3CFC4F7C0C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38655441-24D8-4666-BCC5-3CFC4F7C0C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38655441-24D8-4666-BCC5-3CFC4F7C0C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

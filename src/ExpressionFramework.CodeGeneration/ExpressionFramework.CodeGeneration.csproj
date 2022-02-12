@@ -16,4 +16,8 @@
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.22" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ExpressionFramework.Abstractions\ExpressionFramework.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

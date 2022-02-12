@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Default\**" />
-    <EmbeddedResource Remove="Default\**" />
-    <None Remove="Default\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="FluentAssertions" Version="6.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
@@ -30,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
-    <ProjectReference Include="..\QueryFramework.SqlServer\QueryFramework.SqlServer.csproj" />
+    <ProjectReference Include="..\ExpressionFramework.CodeGeneration\ExpressionFramework.CodeGeneration.csproj" />
   </ItemGroup>
 
 </Project>
