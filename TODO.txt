@@ -1,2 +1,3 @@
 -Add functions: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
 -Add expression: EmptyExpression (needed when there is no expression in the builder)
+-Refactor fluent extension methods on string and expression to work with new And and Or functions
