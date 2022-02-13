@@ -14,8 +14,8 @@ internal static class Operators
         { Operator.NotEqual, data => !Equal(data) },
         { Operator.GreaterOrEqual, GreaterOrEqual },
         { Operator.Greater, Greater },
-        { Operator.LowerOrEqual, LowerOrEqual },
-        { Operator.Lower, Lower },
+        { Operator.SmallerOrEqual, SmallerOrEqual },
+        { Operator.Smaller, Smaller },
         { Operator.IsNull, Null },
         { Operator.IsNotNull, data => !Null(data) },
         { Operator.IsNullOrEmpty, NullOrEmpty },
@@ -35,13 +35,13 @@ internal static class Operators
         => data.LeftValue == null
         || data.LeftValue.ToString().Trim() == string.Empty;
 
-    private static bool Lower(OperatorData data)
+    private static bool Smaller(OperatorData data)
         => data.LeftValue != null
         && data.RightValue != null
         && data.LeftValue is IComparable c
         && c.CompareTo(data.RightValue) < 0;
 
-    private static bool LowerOrEqual(OperatorData data)
+    private static bool SmallerOrEqual(OperatorData data)
         => data.LeftValue != null
         && data.RightValue != null
         && data.LeftValue is IComparable c

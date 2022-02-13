@@ -7,6 +7,7 @@ global using ExpressionFramework.Core.Default;
 global using ExpressionFramework.Core.DependencyInjection;
 global using ExpressionFramework.Core.FunctionParsers;
 global using ExpressionFramework.Core.Functions;
+global using ExpressionFramework.Core.Tests.TestHelpers;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Moq;

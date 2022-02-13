@@ -2,14 +2,14 @@
 
 public class ValueProvider : IValueProvider
 {
-    public object? GetValue(object? item, string fieldName)
+    public object? GetValue(object? context, string fieldName)
     {
-        if (item == null)
+        if (context == null)
         {
             return null;
         }
 
-        var type = item.GetType();
+        var type = context.GetType();
         object? returnValue = null;
         foreach (var part in fieldName.Split('.'))
         {
@@ -20,11 +20,12 @@ public class ValueProvider : IValueProvider
                 throw new ArgumentOutOfRangeException(nameof(fieldName), $"Fieldname [{fieldName}] is not found on type [{type.FullName}]");
             }
 
-            returnValue = property.GetValue(item) ?? null;
+            returnValue = property.GetValue(context) ?? null;
             if (returnValue == null)
             {
                 break;
             }
+            context = returnValue;
             type = returnValue.GetType();
         }
 
