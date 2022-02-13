@@ -2,8 +2,13 @@
 
 public class ValueProvider : IValueProvider
 {
-    public object? GetValue(object item, string fieldName)
+    public object? GetValue(object? item, string fieldName)
     {
+        if (item == null)
+        {
+            return null;
+        }
+
         var type = item.GetType();
         object? returnValue = null;
         foreach (var part in fieldName.Split('.'))

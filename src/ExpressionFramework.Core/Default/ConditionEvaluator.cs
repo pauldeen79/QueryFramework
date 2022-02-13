@@ -7,7 +7,7 @@ public class ConditionEvaluator : IConditionEvaluator
     public ConditionEvaluator(IEnumerable<IExpressionEvaluator> expressionEvaluators)
         => _expressionEvaluators = expressionEvaluators;
 
-    public bool IsItemValid(object item, ICondition condition)
+    public bool IsItemValid(object? item, ICondition condition)
     {
         var leftValue = Evaluate(item, condition.LeftExpression, nameof(condition), "left");
         var rightValue = Evaluate(item, condition.RightExpression, nameof(condition), "right");
@@ -20,7 +20,7 @@ public class ConditionEvaluator : IConditionEvaluator
         throw new ArgumentOutOfRangeException(nameof(condition), $"Unsupported operator: {condition.Operator}");
     }
 
-    private object? Evaluate(object item, IExpression expression, string paramName, string expressionName)
+    private object? Evaluate(object? item, IExpression expression, string paramName, string expressionName)
     {
         foreach (var evaluator in _expressionEvaluators)
         {

@@ -2,5 +2,5 @@
 
 public interface IConditionEvaluator
 {
-    bool IsItemValid(object item, ICondition condition);
+    bool IsItemValid(object? item, ICondition condition);
 }

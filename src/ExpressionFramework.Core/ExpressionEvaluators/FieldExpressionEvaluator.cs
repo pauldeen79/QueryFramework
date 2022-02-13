@@ -11,7 +11,7 @@ public class FieldExpressionEvaluator : IExpressionEvaluator
         _functionEvaluators = functionEvaluators;
     }
 
-    public bool TryEvaluate(object item, IExpression expression, out object? result)
+    public bool TryEvaluate(object? item, IExpression expression, out object? result)
     {
         if (expression is IFieldExpression fieldExpression)
         {
