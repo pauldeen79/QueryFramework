@@ -20,7 +20,7 @@ public class ValueProvider : IValueProvider
                 throw new ArgumentOutOfRangeException(nameof(fieldName), $"Fieldname [{fieldName}] is not found on type [{type.FullName}]");
             }
 
-            returnValue = property.GetValue(context) ?? null;
+            returnValue = property.GetValue(context);
             if (returnValue == null)
             {
                 break;
