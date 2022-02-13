@@ -2,9 +2,10 @@
 
 public class ConditionEvaluator : IConditionEvaluator
 {
-    private readonly IExpressionEvaluator _valueRetriever;
+    private readonly IEnumerable<IExpressionEvaluator> _expressionEvaluators;
 
-    public ConditionEvaluator(IExpressionEvaluator valueRetriever) => _valueRetriever = valueRetriever;
+    public ConditionEvaluator(IEnumerable<IExpressionEvaluator> expressionEvaluators)
+        => _expressionEvaluators = expressionEvaluators;
 
     public bool IsItemValid(object item, IReadOnlyCollection<ICondition> conditions)
     {
@@ -16,8 +17,8 @@ public class ConditionEvaluator : IConditionEvaluator
                 builder.Append(condition.Combination == Combination.And ? "&" : "|");
             }
 
-            var leftValue = _valueRetriever.GetValue(item, condition.LeftExpression);
-            var rightValue = _valueRetriever.GetValue(item, condition.RightExpression);
+            var leftValue = Evaluate(item, condition.LeftExpression);
+            var rightValue = Evaluate(item, condition.RightExpression);
             var prefix = condition.OpenBracket ? "(" : string.Empty;
             var suffix = condition.CloseBracket ? ")" : string.Empty;
             var result = Evaluate(condition, leftValue, rightValue);
@@ -27,6 +28,19 @@ public class ConditionEvaluator : IConditionEvaluator
         }
 
         return EvaluateBooleanExpression(builder.ToString());
+    }
+
+    private object? Evaluate(object item, IExpression expression)
+    {
+        foreach (var evaluator in _expressionEvaluators)
+        {
+            if (evaluator.TryEvaluate(item, expression, out var result))
+            {
+                return result;
+            }
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
     }
 
     private static bool EvaluateBooleanExpression(string expression)

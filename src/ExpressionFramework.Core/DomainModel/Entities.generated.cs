@@ -63,6 +63,22 @@ namespace ExpressionFramework.Core.DomainModel
 #nullable enable
     public partial record Expression : ExpressionFramework.Abstractions.DomainModel.IExpression
     {
+        public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
+        {
+            get;
+        }
+
+        public Expression(ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        {
+            this.Function = function;
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
+        }
+    }
+#nullable restore
+
+#nullable enable
+    public partial record FieldExpression : ExpressionFramework.Abstractions.DomainModel.IFieldExpression
+    {
         public string FieldName
         {
             get;
@@ -73,7 +89,7 @@ namespace ExpressionFramework.Core.DomainModel
             get;
         }
 
-        public Expression(string fieldName, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        public FieldExpression(string fieldName, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
         {
             this.FieldName = fieldName;
             this.Function = function;

@@ -83,6 +83,31 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable enable
     public partial class ExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
+        {
+            return new ExpressionFramework.Core.DomainModel.Expression(Function?.Build());
+        }
+
+        public ExpressionBuilder()
+        {
+        }
+
+        public ExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IExpression source)
+        {
+            Function = source.Function == null ? null : source.Function.ToBuilder();
+        }
+    }
+#nullable restore
+
+#nullable enable
+    public partial class FieldExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
+    {
         public string FieldName
         {
             get;
@@ -95,17 +120,17 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
+        public ExpressionFramework.Abstractions.DomainModel.IFieldExpression Build()
         {
-            return new ExpressionFramework.Core.DomainModel.Expression(FieldName, Function?.Build());
+            return new ExpressionFramework.Core.DomainModel.FieldExpression(FieldName, Function?.Build());
         }
 
-        public ExpressionBuilder()
+        public FieldExpressionBuilder()
         {
             FieldName = string.Empty;
         }
 
-        public ExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IExpression source)
+        public FieldExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IFieldExpression source)
         {
             FieldName = source.FieldName;
             Function = source.Function == null ? null : source.Function.ToBuilder();

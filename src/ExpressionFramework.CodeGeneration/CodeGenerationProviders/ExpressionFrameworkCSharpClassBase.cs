@@ -93,6 +93,7 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
         {
             typeof(ICondition),
             typeof(IExpression),
+            typeof(IFieldExpression),
             typeof(IExpressionFunction),
         };
 }

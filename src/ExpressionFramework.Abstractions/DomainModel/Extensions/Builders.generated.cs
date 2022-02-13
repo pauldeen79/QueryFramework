@@ -64,13 +64,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
 #nullable enable
     public static partial class ExpressionBuilderExtensions
     {
-        public static T WithFieldName<T>(this T instance, string fieldName)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
-        {
-            instance.FieldName = fieldName;
-            return instance;
-        }
-
         public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
             where T : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
         {
@@ -87,6 +80,25 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
             where T : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder
         {
             instance.InnerFunction = innerFunction;
+            return instance;
+        }
+    }
+#nullable restore
+
+#nullable enable
+    public static partial class FieldExpressionBuilderExtensions
+    {
+        public static T WithFieldName<T>(this T instance, string fieldName)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
+        {
+            instance.FieldName = fieldName;
+            return instance;
+        }
+
+        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
+        {
+            instance.Function = function;
             return instance;
         }
     }

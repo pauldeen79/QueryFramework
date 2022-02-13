@@ -60,12 +60,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
 #nullable enable
     public partial interface IExpressionBuilder
     {
-        string FieldName
-        {
-            get;
-            set;
-        }
-
         ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
         {
             get;
@@ -86,6 +80,25 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
         }
 
         ExpressionFramework.Abstractions.DomainModel.IExpressionFunction Build();
+    }
+#nullable restore
+
+#nullable enable
+    public partial interface IFieldExpressionBuilder
+    {
+        string FieldName
+        {
+            get;
+            set;
+        }
+
+        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        ExpressionFramework.Abstractions.DomainModel.IFieldExpression Build();
     }
 #nullable restore
 }
