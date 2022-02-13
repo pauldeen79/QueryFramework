@@ -1,6 +1,4 @@
-﻿using ModelFramework.Objects.Settings;
-
-namespace ExpressionFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace ExpressionFramework.CodeGeneration.CodeGenerationProviders;
 
 public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBase
 {
@@ -98,8 +96,5 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
             typeof(IFieldExpression),
             typeof(IConstantExpression),
             typeof(IExpressionFunction),
-        }
-        //.Select(x => x.ToClassBuilder(new ClassSettings()).Chain(y => y.Properties.RemoveAll(z => new[] { nameof(ICondition.CloseBracket), nameof(ICondition.OpenBracket), nameof(ICondition.Combination) }.Contains(z.Name))))
-        //.Select(x => x.Build())
-        .ToArray();
+        }.ToArray();
 }
