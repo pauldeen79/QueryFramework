@@ -5,11 +5,11 @@ internal static class Operators
     internal static readonly Dictionary<Operator, Predicate<OperatorData>> Items = new Dictionary<Operator, Predicate<OperatorData>>
     {
         { Operator.Contains, Contains },
-        { Operator.NotContains, data => !Contains(data) },
+        { Operator.NotContains, data => data.LeftValue != null && !Contains(data) },
         { Operator.StartsWith, StartsWith},
-        { Operator.NotStartsWith, data => !StartsWith(data) },
+        { Operator.NotStartsWith, data => data.LeftValue != null && !StartsWith(data) },
         { Operator.EndsWith, EndsWith},
-        { Operator.NotEndsWith, data => !EndsWith(data) },
+        { Operator.NotEndsWith, data => data.LeftValue != null && !EndsWith(data) },
         { Operator.Equal, Equal },
         { Operator.NotEqual, data => !Equal(data) },
         { Operator.GreaterOrEqual, GreaterOrEqual },
