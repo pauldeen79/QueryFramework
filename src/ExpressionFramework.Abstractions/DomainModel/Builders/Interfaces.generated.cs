@@ -17,18 +17,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
 #nullable enable
     public partial interface IConditionBuilder
     {
-        bool OpenBracket
-        {
-            get;
-            set;
-        }
-
-        bool CloseBracket
-        {
-            get;
-            set;
-        }
-
         ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder LeftExpression
         {
             get;
@@ -47,13 +35,26 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
             set;
         }
 
-        ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        ExpressionFramework.Abstractions.DomainModel.ICondition Build();
+    }
+#nullable restore
+
+#nullable enable
+    public partial interface IConstantExpressionBuilder
+    {
+        object? Value
         {
             get;
             set;
         }
 
-        ExpressionFramework.Abstractions.DomainModel.ICondition Build();
+        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        ExpressionFramework.Abstractions.DomainModel.IConstantExpression Build();
     }
 #nullable restore
 

@@ -17,18 +17,6 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable enable
     public partial class ConditionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
     {
-        public bool OpenBracket
-        {
-            get;
-            set;
-        }
-
-        public bool CloseBracket
-        {
-            get;
-            set;
-        }
-
         public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder LeftExpression
         {
             get;
@@ -47,35 +35,55 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        public ExpressionFramework.Abstractions.DomainModel.ICondition Build()
+        {
+            return new ExpressionFramework.Core.DomainModel.Condition(LeftExpression.Build(), Operator, RightExpression.Build());
+        }
+
+        public ConditionBuilder()
+        {
+            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
+            Operator = default;
+            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
+        }
+
+        public ConditionBuilder(ExpressionFramework.Abstractions.DomainModel.ICondition source)
+        {
+            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.LeftExpression);
+            Operator = source.Operator;
+            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.RightExpression);
+        }
+    }
+#nullable restore
+
+#nullable enable
+    public partial class ConstantExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
+    {
+        public object? Value
         {
             get;
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.ICondition Build()
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
         {
-            return new ExpressionFramework.Core.DomainModel.Condition(OpenBracket, CloseBracket, LeftExpression.Build(), Operator, RightExpression.Build(), Combination);
+            get;
+            set;
         }
 
-        public ConditionBuilder()
+        public ExpressionFramework.Abstractions.DomainModel.IConstantExpression Build()
         {
-            OpenBracket = default;
-            CloseBracket = default;
-            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
-            Operator = default;
-            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
-            Combination = default;
+            return new ExpressionFramework.Core.DomainModel.ConstantExpression(Value, Function?.Build());
         }
 
-        public ConditionBuilder(ExpressionFramework.Abstractions.DomainModel.ICondition source)
+        public ConstantExpressionBuilder()
         {
-            OpenBracket = source.OpenBracket;
-            CloseBracket = source.CloseBracket;
-            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.LeftExpression);
-            Operator = source.Operator;
-            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.RightExpression);
-            Combination = source.Combination;
+        }
+
+        public ConstantExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IConstantExpression source)
+        {
+            Value = source.Value;
+            Function = source.Function == null ? null : source.Function.ToBuilder();
         }
     }
 #nullable restore

@@ -1,0 +1,13 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Abstractions.DomainModel;
+global using ExpressionFramework.Abstractions.DomainModel.Domains;
+global using ExpressionFramework.Core.Default;
+global using ExpressionFramework.Core.DependencyInjection;
+global using ExpressionFramework.Core.FunctionParsers;
+global using ExpressionFramework.Core.Functions;
+global using FluentAssertions;
+global using Microsoft.Extensions.DependencyInjection;
+global using Moq;
+global using Xunit;

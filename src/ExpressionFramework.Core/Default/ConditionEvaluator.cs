@@ -7,28 +7,44 @@ public class ConditionEvaluator : IConditionEvaluator
     public ConditionEvaluator(IEnumerable<IExpressionEvaluator> expressionEvaluators)
         => _expressionEvaluators = expressionEvaluators;
 
-    public bool IsItemValid(object item, IReadOnlyCollection<ICondition> conditions)
+    public bool IsItemValid(object item, ICondition condition)
+        => EvaluateBooleanExpression(new StringBuilder().Chain(x => IsItemValid(item, condition, x, default, default, default)).ToString());
+
+    public bool AreItemsValid(object item, IReadOnlyCollection<ICondition> conditions, Combination combination)
     {
         var builder = new StringBuilder();
         foreach (var condition in conditions)
         {
-            if (builder.Length > 0)
-            {
-                builder.Append(condition.Combination == Combination.And ? "&" : "|");
-            }
-
-            var leftValue = Evaluate(item, condition.LeftExpression);
-            var rightValue = Evaluate(item, condition.RightExpression);
-            var prefix = condition.OpenBracket ? "(" : string.Empty;
-            var suffix = condition.CloseBracket ? ")" : string.Empty;
-            var result = Evaluate(condition, leftValue, rightValue);
-            builder.Append(prefix)
-                   .Append(result ? "T" : "F")
-                   .Append(suffix);
+            IsItemValid(item, condition, builder, combination, false, false);
         }
 
         return EvaluateBooleanExpression(builder.ToString());
     }
+
+    private void IsItemValid(object item, ICondition condition, StringBuilder builder, Combination combination, bool openBracket, bool closeBracket)
+    {
+        if (builder.Length > 0)
+        {
+            builder.Append(GetCombination(combination));
+        }
+
+        var leftValue = Evaluate(item, condition.LeftExpression);
+        var rightValue = Evaluate(item, condition.RightExpression);
+        var prefix = openBracket ? "(" : string.Empty;
+        var suffix = closeBracket ? ")" : string.Empty;
+        var result = IsValid(condition, leftValue, rightValue);
+        builder.Append(prefix)
+               .Append(result ? "T" : "F")
+               .Append(suffix);
+    }
+
+    private static string GetCombination(Combination combination)
+        => combination switch
+        {
+            Combination.And => "&",
+            Combination.Or => "|",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     private object? Evaluate(object item, IExpression expression)
     {
@@ -110,7 +126,7 @@ public class ConditionEvaluator : IConditionEvaluator
             ? string.Empty
             : expression.Substring(closeIndex + 1);
 
-    private static bool Evaluate(ICondition condition, object? leftValue, object? rightValue)
+    private static bool IsValid(ICondition condition, object? leftValue, object? rightValue)
     {
         if (Operators.Items.TryGetValue(condition.Operator, out var predicate))
         {

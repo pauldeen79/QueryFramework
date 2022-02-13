@@ -17,20 +17,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
 #nullable enable
     public static partial class ConditionBuilderExtensions
     {
-        public static T WithOpenBracket<T>(this T instance, bool openBracket = true)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
-        {
-            instance.OpenBracket = openBracket;
-            return instance;
-        }
-
-        public static T WithCloseBracket<T>(this T instance, bool closeBracket = true)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
-        {
-            instance.CloseBracket = closeBracket;
-            return instance;
-        }
-
         public static T WithLeftExpression<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder leftExpression)
             where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
         {
@@ -51,11 +37,23 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
             instance.RightExpression = rightExpression;
             return instance;
         }
+    }
+#nullable restore
 
-        public static T WithCombination<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Domains.Combination combination)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
+#nullable enable
+    public static partial class ConstantExpressionBuilderExtensions
+    {
+        public static T WithValue<T>(this T instance, object? value)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
         {
-            instance.Combination = combination;
+            instance.Value = value;
+            return instance;
+        }
+
+        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
+        {
+            instance.Function = function;
             return instance;
         }
     }

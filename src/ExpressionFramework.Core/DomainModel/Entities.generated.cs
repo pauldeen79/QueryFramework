@@ -17,16 +17,6 @@ namespace ExpressionFramework.Core.DomainModel
 #nullable enable
     public partial record Condition : ExpressionFramework.Abstractions.DomainModel.ICondition
     {
-        public bool OpenBracket
-        {
-            get;
-        }
-
-        public bool CloseBracket
-        {
-            get;
-        }
-
         public ExpressionFramework.Abstractions.DomainModel.IExpression LeftExpression
         {
             get;
@@ -42,19 +32,33 @@ namespace ExpressionFramework.Core.DomainModel
             get;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        public Condition(ExpressionFramework.Abstractions.DomainModel.IExpression leftExpression, ExpressionFramework.Abstractions.DomainModel.Domains.Operator @operator, ExpressionFramework.Abstractions.DomainModel.IExpression rightExpression)
+        {
+            this.LeftExpression = leftExpression;
+            this.Operator = @operator;
+            this.RightExpression = rightExpression;
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
+        }
+    }
+#nullable restore
+
+#nullable enable
+    public partial record ConstantExpression : ExpressionFramework.Abstractions.DomainModel.IConstantExpression
+    {
+        public object? Value
         {
             get;
         }
 
-        public Condition(bool openBracket, bool closeBracket, ExpressionFramework.Abstractions.DomainModel.IExpression leftExpression, ExpressionFramework.Abstractions.DomainModel.Domains.Operator @operator, ExpressionFramework.Abstractions.DomainModel.IExpression rightExpression, ExpressionFramework.Abstractions.DomainModel.Domains.Combination combination)
+        public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
         {
-            this.OpenBracket = openBracket;
-            this.CloseBracket = closeBracket;
-            this.LeftExpression = leftExpression;
-            this.Operator = @operator;
-            this.RightExpression = rightExpression;
-            this.Combination = combination;
+            get;
+        }
+
+        public ConstantExpression(object? value, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        {
+            this.Value = value;
+            this.Function = function;
             System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
         }
     }

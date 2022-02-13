@@ -2,5 +2,5 @@
 
 public interface IConditionEvaluator
 {
-    bool IsItemValid(object item, IReadOnlyCollection<ICondition> conditions);
+    bool IsItemValid(object item, ICondition condition);
 }
