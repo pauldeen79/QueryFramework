@@ -7,7 +7,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Act
         var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkInMemory()
-            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
 
         // Assert
         action.Should().NotThrow();
