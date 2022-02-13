@@ -59,6 +59,19 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
 #nullable restore
 
 #nullable enable
+    public partial interface IEmptyExpressionBuilder
+    {
+        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        ExpressionFramework.Abstractions.DomainModel.IEmptyExpression Build();
+    }
+#nullable restore
+
+#nullable enable
     public partial interface IExpressionBuilder
     {
         ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function

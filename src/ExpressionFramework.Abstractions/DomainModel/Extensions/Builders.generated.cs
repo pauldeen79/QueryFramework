@@ -60,6 +60,18 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
 #nullable restore
 
 #nullable enable
+    public static partial class EmptyExpressionBuilderExtensions
+    {
+        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IEmptyExpressionBuilder
+        {
+            instance.Function = function;
+            return instance;
+        }
+    }
+#nullable restore
+
+#nullable enable
     public static partial class ExpressionBuilderExtensions
     {
         public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)

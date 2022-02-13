@@ -95,6 +95,7 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
             typeof(IExpression),
             typeof(IFieldExpression),
             typeof(IConstantExpression),
+            typeof(IEmptyExpression),
             typeof(IExpressionFunction),
         }.ToArray();
 }

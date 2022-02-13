@@ -1,5 +1,6 @@
 -Add functions: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
+-Add functionevaluators: Coalesce, Count, Day, Month, Sum, Year, And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
 -Add expression: EmptyExpression (needed when there is no expression in the builder)
--Add exprssions: NullExpression, TrueExpression, FalseExpression, TodayExpression and NowExpression
+-Add expressions: NullExpression, TrueExpression, FalseExpression, TodayExpression and NowExpression
 -Refactor fluent extension methods on string and expression to work with new And and Or functions
 -Refactor fluent extension methods on string and expression to work with null, true, false, today and now expressions

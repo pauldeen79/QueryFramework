@@ -89,6 +89,31 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable restore
 
 #nullable enable
+    public partial class EmptyExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IEmptyExpressionBuilder
+    {
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.IEmptyExpression Build()
+        {
+            return new ExpressionFramework.Core.DomainModel.EmptyExpression(Function?.Build());
+        }
+
+        public EmptyExpressionBuilder()
+        {
+        }
+
+        public EmptyExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IEmptyExpression source)
+        {
+            Function = source.Function == null ? null : source.Function.ToBuilder();
+        }
+    }
+#nullable restore
+
+#nullable enable
     public partial class ExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
         public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function

@@ -65,6 +65,22 @@ namespace ExpressionFramework.Core.DomainModel
 #nullable restore
 
 #nullable enable
+    public partial record EmptyExpression : ExpressionFramework.Abstractions.DomainModel.IEmptyExpression
+    {
+        public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
+        {
+            get;
+        }
+
+        public EmptyExpression(ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        {
+            this.Function = function;
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
+        }
+    }
+#nullable restore
+
+#nullable enable
     public partial record Expression : ExpressionFramework.Abstractions.DomainModel.IExpression
     {
         public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
