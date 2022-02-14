@@ -8,9 +8,10 @@ public class ConstantExpressionEvaluatorTests
         // Arrange
         var sut = new ConstantExpressionEvaluator();
         var expressionMock = new Mock<IExpression>();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -24,9 +25,10 @@ public class ConstantExpressionEvaluatorTests
         var sut = new ConstantExpressionEvaluator();
         var expressionMock = new Mock<IConstantExpression>();
         expressionMock.SetupGet(x => x.Value).Returns(12345);
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();

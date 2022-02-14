@@ -10,9 +10,10 @@ public class FieldExpressionEvaluatorTests
         var functionEvaluatorMock = new Mock<IFunctionEvaluator>();
         var sut = new FieldExpressionEvaluator(valueProviderMock.Object, new[] { functionEvaluatorMock.Object });
         var expressionMock = new Mock<IExpression>();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -30,9 +31,10 @@ public class FieldExpressionEvaluatorTests
         expressionMock.SetupGet(x => x.Function).Returns(default(IExpressionFunction));
         expressionMock.SetupGet(x => x.FieldName).Returns("Test");
         valueProviderMock.Setup(x => x.GetValue(It.IsAny<object?>(), "Test")).Returns(12345);
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();
@@ -52,10 +54,11 @@ public class FieldExpressionEvaluatorTests
         expressionMock.SetupGet(x => x.Function).Returns(expressionFunctionMock.Object);
         expressionMock.SetupGet(x => x.FieldName).Returns("Test");
         object? functionResult = 12345;
-        functionEvaluatorMock.Setup(x => x.TryEvaluate(It.IsAny<IExpressionFunction>(), It.IsAny<object?>(), "Test", out functionResult)).Returns(true);
+        functionEvaluatorMock.Setup(x => x.TryEvaluate(It.IsAny<IExpressionFunction>(), It.IsAny<object?>(), It.IsAny<IExpressionEvaluatorCallback>(), out functionResult)).Returns(true);
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();

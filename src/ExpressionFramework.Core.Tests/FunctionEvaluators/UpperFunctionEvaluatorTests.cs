@@ -8,9 +8,10 @@ public class UpperFunctionEvaluatorTests
         // Arrange
         var sut = new UpperFunctionEvaluator();
         var functionMock = new Mock<IExpressionFunction>();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(functionMock.Object, "test", "TestProperty", out var _);
+        var actual = sut.TryEvaluate(functionMock.Object, "test", expressionEvaluatorCallbackMock.Object, out var _);
 
         // Assert
         actual.Should().BeFalse();
@@ -22,9 +23,10 @@ public class UpperFunctionEvaluatorTests
         // Arrange
         var sut = new UpperFunctionEvaluator();
         var function = new UpperFunction();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(function, "test", "TestProperty", out var functionResult);
+        var actual = sut.TryEvaluate(function, "test", expressionEvaluatorCallbackMock.Object, out var functionResult);
 
         // Assert
         actual.Should().BeTrue();
@@ -37,9 +39,10 @@ public class UpperFunctionEvaluatorTests
         // Arrange
         var sut = new UpperFunctionEvaluator();
         var function = new UpperFunction();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(function, null, "TestProperty", out var functionResult);
+        var actual = sut.TryEvaluate(function, null, expressionEvaluatorCallbackMock.Object, out var functionResult);
 
         // Assert
         actual.Should().BeTrue();

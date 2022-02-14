@@ -2,15 +2,15 @@
 
 public class ConditionEvaluator : IConditionEvaluator
 {
-    private readonly IEnumerable<IExpressionEvaluator> _expressionEvaluators;
+    private readonly IExpressionEvaluatorCallback _expressionEvaluatorCallback;
 
-    public ConditionEvaluator(IEnumerable<IExpressionEvaluator> expressionEvaluators)
-        => _expressionEvaluators = expressionEvaluators;
+    public ConditionEvaluator(IExpressionEvaluatorCallback expressionEvaluatorCallback)
+        => _expressionEvaluatorCallback = expressionEvaluatorCallback;
 
     public bool IsItemValid(object? item, ICondition condition)
     {
-        var leftValue = Evaluate(item, condition.LeftExpression, nameof(condition), "left");
-        var rightValue = Evaluate(item, condition.RightExpression, nameof(condition), "right");
+        var leftValue = _expressionEvaluatorCallback.Evaluate(item, condition.LeftExpression);
+        var rightValue = _expressionEvaluatorCallback.Evaluate(item, condition.RightExpression);
         
         if (Operators.Items.TryGetValue(condition.Operator, out var predicate))
         {
@@ -20,16 +20,5 @@ public class ConditionEvaluator : IConditionEvaluator
         throw new ArgumentOutOfRangeException(nameof(condition), $"Unsupported operator: {condition.Operator}");
     }
 
-    private object? Evaluate(object? item, IExpression expression, string paramName, string expressionName)
-    {
-        foreach (var evaluator in _expressionEvaluators)
-        {
-            if (evaluator.TryEvaluate(item, expression, out var result))
-            {
-                return result;
-            }
-        }
 
-        throw new ArgumentOutOfRangeException(paramName, $"Unsupported {expressionName} expression in condition: [{expression.GetType().Name}]");
-    }
 }

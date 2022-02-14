@@ -4,6 +4,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddExpressionFramework(this IServiceCollection services)
         => services.AddSingleton<IConditionEvaluator, ConditionEvaluator>()
+                   .AddSingleton<IExpressionEvaluatorCallback, ExpressionEvaluatorCallback>()
                    .AddSingleton<IExpressionEvaluator, FieldExpressionEvaluator>()
                    .AddSingleton<IExpressionEvaluator, ConstantExpressionEvaluator>()
                    .AddSingleton<IValueProvider, ValueProvider>()

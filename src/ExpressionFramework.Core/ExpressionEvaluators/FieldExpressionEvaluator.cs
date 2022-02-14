@@ -11,7 +11,7 @@ public class FieldExpressionEvaluator : IExpressionEvaluator
         _functionEvaluators = functionEvaluators;
     }
 
-    public bool TryEvaluate(object? item, IExpression expression, out object? result)
+    public bool TryEvaluate(object? item, IExpression expression, IExpressionEvaluatorCallback callback, out object? result)
     {
         if (expression is IFieldExpression fieldExpression)
         {
@@ -21,7 +21,7 @@ public class FieldExpressionEvaluator : IExpressionEvaluator
                 {
                     if (evaluator.TryEvaluate(expression.Function,
                                               _valueProvider.GetValue(item, fieldExpression.FieldName),
-                                              fieldExpression.FieldName,
+                                              callback,
                                               out var functionResult))
                     {
                         result = functionResult;

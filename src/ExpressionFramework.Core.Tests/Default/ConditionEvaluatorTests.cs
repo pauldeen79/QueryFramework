@@ -2,8 +2,8 @@
 
 public class ConditionEvaluatorTests
 {
-    private readonly ExpressionEvaluatorMock _evaluator = new ExpressionEvaluatorMock();
-    private ConditionEvaluator CreateSut() => new ConditionEvaluator(new[] { _evaluator });
+    private readonly Mock<IExpressionEvaluatorCallback> _expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+    private ConditionEvaluator CreateSut() => new ConditionEvaluator(_expressionEvaluatorCallbackMock.Object);
 
     [Fact]
     public void IsItemValid_Throws_On_Unsupported_Operator()
@@ -12,48 +12,12 @@ public class ConditionEvaluatorTests
         var conditionMock = new Mock<ICondition>();
         conditionMock.SetupGet(x => x.Operator)
                      .Returns((Operator)int.MaxValue);
-        _evaluator.Delegate = new Func<object?, IExpression, Tuple<bool, object?>>((_, _) => new Tuple<bool, object?>(true, null));
 
         // Act
         CreateSut().Invoking(x => x.IsItemValid(default, conditionMock.Object))
                    .Should().ThrowExactly<ArgumentOutOfRangeException>()
                    .WithParameterName("condition")
                    .And.Message.Should().StartWith($"Unsupported operator: {int.MaxValue}");
-    }
-
-    [Fact]
-    public void IsItemValid_Throws_On_Unsupported_Left_Expression()
-    {
-        // Arrange
-        var leftExpression = new Mock<IExpression>().Object;
-        var rightExpression = new Mock<IExpression>().Object;
-        var conditionMock = new Mock<ICondition>();
-        conditionMock.SetupGet(x => x.LeftExpression).Returns(leftExpression);
-        conditionMock.SetupGet(x => x.RightExpression).Returns(rightExpression);
-
-        // Act
-        CreateSut().Invoking(x => x.IsItemValid(default, conditionMock.Object))
-                   .Should().ThrowExactly<ArgumentOutOfRangeException>()
-                   .WithParameterName("condition")
-                   .And.Message.Should().StartWith("Unsupported left expression in condition: [IExpressionProxy]");
-    }
-
-    [Fact]
-    public void IsItemValid_Throws_On_Unsupported_Right_Expression()
-    {
-        // Arrange
-        var leftExpression = new Mock<IExpression>().Object;
-        var rightExpression = new Mock<IExpression>().Object;
-        var conditionMock = new Mock<ICondition>();
-        conditionMock.SetupGet(x => x.LeftExpression).Returns(leftExpression);
-        conditionMock.SetupGet(x => x.RightExpression).Returns(rightExpression);
-        _evaluator.Delegate = new Func<object?, IExpression, Tuple<bool, object?>>((item, expression) => new Tuple<bool, object?>(expression != rightExpression, null));
-
-        // Act
-        CreateSut().Invoking(x => x.IsItemValid(default, conditionMock.Object))
-                   .Should().ThrowExactly<ArgumentOutOfRangeException>()
-                   .WithParameterName("condition")
-                   .And.Message.Should().StartWith("Unsupported right expression in condition: [IExpressionProxy]");
     }
 
     [Theory]
@@ -151,19 +115,20 @@ public class ConditionEvaluatorTests
         conditionMock.SetupGet(x => x.Operator).Returns(@operator);
         conditionMock.SetupGet(x => x.LeftExpression).Returns(leftExpression);
         conditionMock.SetupGet(x => x.RightExpression).Returns(rightExpression);
-        _evaluator.Delegate = new Func<object?, IExpression, Tuple<bool, object?>>((item, expression) =>
-        {
-            if (expression == leftExpression)
-            {
-                return new Tuple<bool, object?>(true, leftExpression.Value);
-            }
-            if (expression == rightExpression)
-            {
-                return new Tuple<bool, object?>(true, rightExpression.Value);
-            }
-
-            return new Tuple<bool, object?>(false, default);
-        });
+        _expressionEvaluatorCallbackMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IExpression>()))
+                                        .Returns<object?, IExpression>((_, expression) =>
+                                        {
+                                            if (expression == leftExpression)
+                                            {
+                                                return leftExpression.Value;
+                                            }
+                                            if (expression == rightExpression)
+                                            {
+                                                return rightExpression.Value;
+                                            }
+                                        
+                                            return null;
+                                        });
 
         // Act
         var actual = CreateSut().IsItemValid(default, conditionMock.Object);

@@ -2,7 +2,7 @@
 
 public class EmptyExpressionEvaluator : IExpressionEvaluator
 {
-    public bool TryEvaluate(object? item, IExpression expression, out object? result)
+    public bool TryEvaluate(object? item, IExpression expression, IExpressionEvaluatorCallback callback, out object? result)
     {
         if (expression is IEmptyExpression constantExpression)
         {

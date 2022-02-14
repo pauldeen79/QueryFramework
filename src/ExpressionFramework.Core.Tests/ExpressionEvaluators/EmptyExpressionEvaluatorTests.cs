@@ -8,9 +8,10 @@ public class EmptyExpressionEvaluatorTests
         // Arrange
         var sut = new EmptyExpressionEvaluator();
         var expressionMock = new Mock<IExpression>();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -23,9 +24,10 @@ public class EmptyExpressionEvaluatorTests
         // Arrange
         var sut = new EmptyExpressionEvaluator();
         var expressionMock = new Mock<IEmptyExpression>();
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();
