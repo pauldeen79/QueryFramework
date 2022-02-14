@@ -1,4 +1,4 @@
-﻿namespace ExpressionFramework.Core.FunctionParsers;
+﻿namespace ExpressionFramework.Core.FunctionEvaluators;
 
 public class LengthFunctionEvaluator : IFunctionEvaluator
 {

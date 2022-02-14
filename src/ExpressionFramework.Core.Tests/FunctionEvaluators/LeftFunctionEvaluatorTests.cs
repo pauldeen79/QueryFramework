@@ -3,7 +3,7 @@
 public class LeftFunctionEvaluatorTests
 {
     [Fact]
-    public void TryParse_Return_False_When_Function_Is_Not_Correct()
+    public void TryParse_Return_False_When_Function_Is_Not_Of_Correct_Type()
     {
         // Arrange
         var sut = new LeftFunctionEvaluator();
@@ -18,7 +18,7 @@ public class LeftFunctionEvaluatorTests
     }
 
     [Fact]
-    public void TryParse_Returns_True_When_Function_Is_Correct()
+    public void TryParse_Returns_True_When_Function_Is_Of_Correct_Type()
     {
         // Arrange
         var sut = new LeftFunctionEvaluator();

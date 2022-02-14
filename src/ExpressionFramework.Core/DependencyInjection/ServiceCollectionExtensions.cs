@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
                    .AddSingleton<IExpressionEvaluator, FieldExpressionEvaluator>()
                    .AddSingleton<IExpressionEvaluator, ConstantExpressionEvaluator>()
                    .AddSingleton<IValueProvider, ValueProvider>()
+                   .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
                    .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
                    .AddSingleton<IFunctionEvaluator, LeftFunctionEvaluator>()
                    .AddSingleton<IFunctionEvaluator, RightFunctionEvaluator>()
