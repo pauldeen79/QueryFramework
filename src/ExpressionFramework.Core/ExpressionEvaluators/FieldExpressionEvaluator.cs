@@ -28,7 +28,7 @@ public class FieldExpressionEvaluator : IExpressionEvaluator
                         return true;
                     }
                 }
-                throw new ArgumentOutOfRangeException(nameof(expression), $"No evaluator found for function [{expression.Function.GetType().Name}]");
+                throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported function: [{expression.Function.GetType().Name}]");
             }
 
             result = _valueProvider.GetValue(item, fieldExpression.FieldName);
