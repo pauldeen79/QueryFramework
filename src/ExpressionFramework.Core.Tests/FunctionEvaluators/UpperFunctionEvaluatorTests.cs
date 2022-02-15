@@ -22,7 +22,7 @@ public class UpperFunctionEvaluatorTests
     {
         // Arrange
         var sut = new UpperFunctionEvaluator();
-        var function = new UpperFunction();
+        var function = new UpperFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -38,7 +38,7 @@ public class UpperFunctionEvaluatorTests
     {
         // Arrange
         var sut = new UpperFunctionEvaluator();
-        var function = new UpperFunction();
+        var function = new UpperFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act

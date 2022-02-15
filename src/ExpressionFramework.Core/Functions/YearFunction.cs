@@ -2,8 +2,6 @@
 
 public record YearFunction : IExpressionFunction
 {
-    public YearFunction() { }
-
     public YearFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

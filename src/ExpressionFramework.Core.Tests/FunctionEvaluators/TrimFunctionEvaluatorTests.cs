@@ -22,7 +22,7 @@ public class TrimFunctionEvaluatorTests
     {
         // Arrange
         var sut = new TrimFunctionEvaluator();
-        var function = new TrimFunction();
+        var function = new TrimFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -38,7 +38,7 @@ public class TrimFunctionEvaluatorTests
     {
         // Arrange
         var sut = new TrimFunctionEvaluator();
-        var function = new TrimFunction();
+        var function = new TrimFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act

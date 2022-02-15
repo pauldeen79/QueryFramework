@@ -2,8 +2,6 @@
 
 public record TrimFunction : IExpressionFunction
 {
-    public TrimFunction() { }
-
     public TrimFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

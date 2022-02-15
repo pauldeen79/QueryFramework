@@ -2,8 +2,6 @@
 
 public record LowerFunction : IExpressionFunction
 {
-    public LowerFunction() { }
-
     public LowerFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

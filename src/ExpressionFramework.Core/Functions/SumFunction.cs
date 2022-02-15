@@ -2,8 +2,6 @@
 
 public record SumFunction : IExpressionFunction
 {
-    public SumFunction() { }
-
     public SumFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

@@ -22,7 +22,7 @@ public class LowerFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LowerFunctionEvaluator();
-        var function = new LowerFunction();
+        var function = new LowerFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -38,7 +38,7 @@ public class LowerFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LowerFunctionEvaluator();
-        var function = new LowerFunction();
+        var function = new LowerFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act

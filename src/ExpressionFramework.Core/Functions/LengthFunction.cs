@@ -2,8 +2,6 @@
 
 public record LengthFunction : IExpressionFunction
 {
-    public LengthFunction() { }
-
     public LengthFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

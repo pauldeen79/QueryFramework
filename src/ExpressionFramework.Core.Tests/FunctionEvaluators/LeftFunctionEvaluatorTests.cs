@@ -22,7 +22,7 @@ public class LeftFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LeftFunctionEvaluator();
-        var function = new LeftFunction(1);
+        var function = new LeftFunction(1, new EmptyExpressionBuilder().Build(), null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -38,7 +38,7 @@ public class LeftFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LeftFunctionEvaluator();
-        var function = new LeftFunction(5);
+        var function = new LeftFunction(5, new EmptyExpressionBuilder().Build(), null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -54,7 +54,7 @@ public class LeftFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LeftFunctionEvaluator();
-        var function = new LeftFunction(2);
+        var function = new LeftFunction(2, new EmptyExpressionBuilder().Build(), null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act

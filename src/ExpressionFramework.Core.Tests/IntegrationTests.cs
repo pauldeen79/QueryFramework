@@ -63,6 +63,23 @@ public sealed class IntegrationTests : IDisposable
         actual.Should().BeFalse();
     }
 
+    [Fact]
+    public void Can_Evaluate_Condition_With_Constant_Expressions_And_Functions_True()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var condition = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345").WithFunction(new LeftFunctionBuilder().WithLength(1)))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345").WithFunction(new RightFunctionBuilder().WithLength(1)))
+            .Build();
+
+        // Act
+        var actual = sut.IsItemValid(null, condition);
+
+        // Assert
+        actual.Should().BeFalse();
+    }
     private IConditionEvaluator CreateSut() => _serviceProvider.GetRequiredService<IConditionEvaluator>();
 
     public void Dispose() => _serviceProvider.Dispose();

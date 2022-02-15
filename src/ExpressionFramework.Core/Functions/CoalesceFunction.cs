@@ -3,16 +3,10 @@
 public record CoalesceFunction : IExpression, IExpressionFunction
 {
     public CoalesceFunction(IExpressionFunction? innerFunction,
-                            params IExpression[] innerExpressions)
+                            IEnumerable<IExpression> innerExpressions)
     {
         InnerFunction = innerFunction;
         InnerExpressions = innerExpressions;
-    }
-
-    public CoalesceFunction(IExpressionFunction? innerFunction,
-                            IEnumerable<IExpression> innerExpressions)
-        : this(innerFunction, innerExpressions.ToArray())
-    {
     }
 
     public IExpressionFunction? InnerFunction { get; }
@@ -22,11 +16,8 @@ public record CoalesceFunction : IExpression, IExpressionFunction
     public IExpressionFunction? Function => this;
 
     private CoalesceFunctionBuilder CreateBuilder()
-        => new CoalesceFunctionBuilder
-        {
-            InnerFunction = InnerFunction?.ToBuilder(),
-            InnerExpressions = InnerExpressions.Select(x => x.ToBuilder()).ToList()
-        };
+        => new CoalesceFunctionBuilder().WithInnerFunction(InnerFunction?.ToBuilder())
+                                        .AddInnerExpressions(InnerExpressions.Select(x => x.ToBuilder()));
 
     IExpressionBuilder IExpression.ToBuilder() => CreateBuilder();
 

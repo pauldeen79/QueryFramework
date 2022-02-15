@@ -2,8 +2,6 @@
 
 public record MonthFunction : IExpressionFunction
 {
-    public MonthFunction() { }
-
     public MonthFunction(IExpressionFunction? innerFunction)
         => InnerFunction = innerFunction;
 

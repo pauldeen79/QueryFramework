@@ -22,7 +22,7 @@ public class LengthFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LengthFunctionEvaluator();
-        var function = new LengthFunction();
+        var function = new LengthFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
@@ -38,7 +38,7 @@ public class LengthFunctionEvaluatorTests
     {
         // Arrange
         var sut = new LengthFunctionEvaluator();
-        var function = new LengthFunction();
+        var function = new LengthFunction(null);
         var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
 
         // Act
