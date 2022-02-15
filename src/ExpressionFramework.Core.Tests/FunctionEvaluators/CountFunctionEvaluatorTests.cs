@@ -18,7 +18,7 @@ public class CountFunctionEvaluatorTests
     }
 
     [Fact]
-    public void TryParse_Returns_True_When_Function_Is_Of_Correct_Type()
+    public void TryParse_Returns_True_When_Function_Is_Of_Correct_Type_And_Value_Is_Of_Correct_Type()
     {
         // Arrange
         var sut = new CountFunctionEvaluator();
@@ -32,5 +32,22 @@ public class CountFunctionEvaluatorTests
         // Assert
         actual.Should().BeTrue();
         functionResult.Should().Be(value.Count);
+    }
+
+    [Fact]
+    public void TryParse_Returns_True_When_Function_Is_Of_Correct_Type_And_Value_Is_Not_Of_Correct_Type()
+    {
+        // Arrange
+        var sut = new CountFunctionEvaluator();
+        var value = 0; //integer, cannot convert this to IEnumerable!
+        var function = new CountFunction(new EmptyExpressionBuilder().Build(), null);
+        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+
+        // Act
+        var actual = sut.TryEvaluate(function, value, expressionEvaluatorCallbackMock.Object, out var functionResult);
+
+        // Assert
+        actual.Should().BeTrue();
+        functionResult.Should().BeNull();
     }
 }
