@@ -19,6 +19,4 @@ public class ConditionEvaluator : IConditionEvaluator
 
         throw new ArgumentOutOfRangeException(nameof(condition), $"Unsupported operator: {condition.Operator}");
     }
-
-
 }
