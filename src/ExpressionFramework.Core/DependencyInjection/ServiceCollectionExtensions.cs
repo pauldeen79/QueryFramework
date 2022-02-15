@@ -21,7 +21,9 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IFunctionEvaluator, LeftFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LowerFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, MonthFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, RightFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, TrimFunctionEvaluator>()
-            .AddSingleton<IFunctionEvaluator, UpperFunctionEvaluator>();
+            .AddSingleton<IFunctionEvaluator, UpperFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, YearFunctionEvaluator>();
 }
