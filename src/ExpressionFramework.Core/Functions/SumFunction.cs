@@ -2,11 +2,16 @@
 
 public record SumFunction : IExpressionFunction
 {
-    public SumFunction(IExpressionFunction? innerFunction)
-        => InnerFunction = innerFunction;
+    public SumFunction(IExpression expression, IExpressionFunction? innerFunction)
+    {
+        Expression = expression;
+        InnerFunction = innerFunction;
+    }
 
+    public IExpression Expression { get; }
     public IExpressionFunction? InnerFunction { get; }
 
     public IExpressionFunctionBuilder ToBuilder()
-        => new SumFunctionBuilder().WithInnerFunction(InnerFunction?.ToBuilder());
+        => new SumFunctionBuilder().WithExpression(Expression.ToBuilder())
+                                   .WithInnerFunction(InnerFunction?.ToBuilder());
 }
