@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IValueProvider, ValueProvider>()
             .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, CountFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, DayFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LeftFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LowerFunctionEvaluator>()
