@@ -34,43 +34,6 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
 
                 property.SetDefaultValueForBuilderClassConstructor(GetDefaultValueForBuilderClassConstructor(typeName));
             }
-            else if (typeName.Contains("Collection<ExpressionFramework."))
-            {
-                property.ConvertCollectionPropertyToBuilderOnBuilder
-                (
-                    false,
-                    typeof(ValueCollection<>).WithoutGenerics(),
-                    typeName.Replace("ExpressionFramework.Abstractions.DomainModel.", "ExpressionFramework.Core.DomainModel.Builders.").ReplaceSuffix(">", "Builder>", StringComparison.InvariantCulture)
-                );
-            }
-            else if (typeName.Contains("Collection<System.String"))
-            {
-                property.AddMetadata(ModelFramework.Objects.MetadataNames.CustomBuilderMethodParameterExpression, $"new {typeof(ValueCollection<string>).FullName.FixTypeName()}({{0}})");
-            }
-            else if (typeName.IsBooleanTypeName() || typeName.IsNullableBooleanTypeName())
-            {
-                property.SetDefaultArgumentValueForWithMethod(true);
-                if (property.Name == nameof(ClassProperty.HasGetter) || property.Name == nameof(ClassProperty.HasSetter))
-                {
-                    property.SetDefaultValueForBuilderClassConstructor(new Literal("true"));
-                }
-            }
-        }
-    }
-
-    protected override IEnumerable<ClassMethodBuilder> CreateExtraOverloads(IClass c)
-    {
-        if (c.Properties.Any(p => p.Name == "Field"))
-        {
-            yield return new ClassMethodBuilder()
-                .WithName("WithField")
-                .WithStatic()
-                .WithExtensionMethod()
-                .WithTypeName($"{c.Name}Builder")
-                .AddParameter("instance", $"{c.Name}Builder")
-                .AddParameter("fieldName", typeof(string))
-                .AddLiteralCodeStatements("instance.Field.FieldName = fieldName;",
-                                          "return instance;");
         }
     }
 
