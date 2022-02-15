@@ -55,6 +55,11 @@ namespace ExpressionFramework.Core.DomainModel
             get;
         }
 
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder ToBuilder()
+        {
+            return new ExpressionFramework.Core.DomainModel.Builders.ConstantExpressionBuilder(this);
+        }
+
         public ConstantExpression(object? value, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
         {
             this.Value = value;
@@ -72,23 +77,12 @@ namespace ExpressionFramework.Core.DomainModel
             get;
         }
 
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder ToBuilder()
+        {
+            return new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder(this);
+        }
+
         public EmptyExpression(ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
-        {
-            this.Function = function;
-            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial record Expression : ExpressionFramework.Abstractions.DomainModel.IExpression
-    {
-        public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
-        {
-            get;
-        }
-
-        public Expression(ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
         {
             this.Function = function;
             System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
@@ -107,6 +101,11 @@ namespace ExpressionFramework.Core.DomainModel
         public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
         {
             get;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder ToBuilder()
+        {
+            return new ExpressionFramework.Core.DomainModel.Builders.FieldExpressionBuilder(this);
         }
 
         public FieldExpression(string fieldName, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)

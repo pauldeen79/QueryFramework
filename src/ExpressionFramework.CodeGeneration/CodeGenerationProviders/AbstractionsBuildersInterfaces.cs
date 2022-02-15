@@ -11,7 +11,7 @@ public class AbstractionsBuildersInterfaces : ExpressionFrameworkCSharpClassBase
     public override object CreateModel()
         => GetImmutableBuilderClasses
         (
-            GetModels(),
+            GetBaseModels(),
             "ExpressionFramework.Core.DomainModel",
             "ExpressionFramework.Core.DomainModel.Builders"
         )

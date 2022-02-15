@@ -2,13 +2,17 @@
 
 public record CountFunction : IExpressionFunction
 {
-    public CountFunction() { }
+    public CountFunction(IExpression expression): this(expression,null) { }
 
-    public CountFunction(IExpressionFunction? innerFunction)
-        => InnerFunction = innerFunction;
+    public CountFunction(IExpression expression, IExpressionFunction? innerFunction)
+    {
+        Expression = expression;
+        InnerFunction = innerFunction;
+    }
 
+    public IExpression Expression { get; }
     public IExpressionFunction? InnerFunction { get; }
 
     public IExpressionFunctionBuilder ToBuilder()
-        => new CountFunctionBuilder().WithInnerFunction(InnerFunction?.ToBuilder());
+        => new CountFunctionBuilder().WithExpression(Expression.ToBuilder()).WithInnerFunction(InnerFunction?.ToBuilder());
 }

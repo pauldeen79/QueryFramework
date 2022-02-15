@@ -32,7 +32,7 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
                     GetCustomBuilderConstructorInitializeExpression(property, typeName)
                 );
 
-                property.SetDefaultValueForBuilderClassConstructor(new Literal("new " + typeName.Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder()"));
+                property.SetDefaultValueForBuilderClassConstructor(GetDefaultValueForBuilderClassConstructor(typeName));
             }
             else if (typeName.Contains("Collection<ExpressionFramework."))
             {
@@ -76,7 +76,8 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
 
     private static string GetCustomBuilderConstructorInitializeExpression(ClassPropertyBuilder property, string typeName)
     {
-        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpressionFunction")
+        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpressionFunction"
+            || typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression")
         {
             return property.IsNullable
                 ? "{0} = source.{0} == null ? null : source.{0}.ToBuilder()"
@@ -88,14 +89,25 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
             : "{0} = new " + typeName.Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder" + "(source.{0})";
     }
 
-    protected static Type[] GetModels()
+    private static Literal GetDefaultValueForBuilderClassConstructor(string typeName)
+        => new Literal(typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression"
+            ? "new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder()"
+            : "new " + typeName.Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder()");
+
+    protected static Type[] GetBaseModels()
         => new[]
         {
             typeof(ICondition),
             typeof(IExpression),
-            typeof(IFieldExpression),
-            typeof(IConstantExpression),
+            typeof(IExpressionFunction)
+        };
+
+    protected static Type[] GetCoreModels()
+        => new[]
+        {
+            typeof(ICondition),
             typeof(IEmptyExpression),
-            typeof(IExpressionFunction),
+            typeof(IConstantExpression),
+            typeof(IFieldExpression),
         }.ToArray();
 }

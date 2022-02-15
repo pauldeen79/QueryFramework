@@ -41,37 +41,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
 #nullable restore
 
 #nullable enable
-    public static partial class ConstantExpressionBuilderExtensions
-    {
-        public static T WithValue<T>(this T instance, object? value)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
-        {
-            instance.Value = value;
-            return instance;
-        }
-
-        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
-        {
-            instance.Function = function;
-            return instance;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public static partial class EmptyExpressionBuilderExtensions
-    {
-        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IEmptyExpressionBuilder
-        {
-            instance.Function = function;
-            return instance;
-        }
-    }
-#nullable restore
-
-#nullable enable
     public static partial class ExpressionBuilderExtensions
     {
         public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
@@ -90,25 +59,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
             where T : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder
         {
             instance.InnerFunction = innerFunction;
-            return instance;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public static partial class FieldExpressionBuilderExtensions
-    {
-        public static T WithFieldName<T>(this T instance, string fieldName)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
-        {
-            instance.FieldName = fieldName;
-            return instance;
-        }
-
-        public static T WithFunction<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? function)
-            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
-        {
-            instance.Function = function;
             return instance;
         }
     }

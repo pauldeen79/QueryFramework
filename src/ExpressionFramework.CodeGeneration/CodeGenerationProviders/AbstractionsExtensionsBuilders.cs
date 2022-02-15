@@ -13,7 +13,7 @@ public class AbstractionsExtensionsBuilders : ExpressionFrameworkCSharpClassBase
     public override object CreateModel()
         => GetImmutableBuilderExtensionClasses
         (
-            GetModels(),
+            GetBaseModels(),
             "ExpressionFramework.Core.DomainModel",
             "ExpressionFramework.Core.DomainModel.Builders"
         )

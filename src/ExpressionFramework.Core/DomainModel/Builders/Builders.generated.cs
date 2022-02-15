@@ -42,22 +42,22 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 
         public ConditionBuilder()
         {
-            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
+            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder();
             Operator = default;
-            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder();
+            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder();
         }
 
         public ConditionBuilder(ExpressionFramework.Abstractions.DomainModel.ICondition source)
         {
-            LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.LeftExpression);
+            LeftExpression = source.LeftExpression.ToBuilder();
             Operator = source.Operator;
-            RightExpression = new ExpressionFramework.Core.DomainModel.Builders.ExpressionBuilder(source.RightExpression);
+            RightExpression = source.RightExpression.ToBuilder();
         }
     }
 #nullable restore
 
 #nullable enable
-    public partial class ConstantExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IConstantExpressionBuilder
+    public partial class ConstantExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
         public object? Value
         {
@@ -71,7 +71,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.IConstantExpression Build()
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
         {
             return new ExpressionFramework.Core.DomainModel.ConstantExpression(Value, Function?.Build());
         }
@@ -89,7 +89,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable restore
 
 #nullable enable
-    public partial class EmptyExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IEmptyExpressionBuilder
+    public partial class EmptyExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
         public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
         {
@@ -97,7 +97,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.IEmptyExpression Build()
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
         {
             return new ExpressionFramework.Core.DomainModel.EmptyExpression(Function?.Build());
         }
@@ -114,32 +114,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable restore
 
 #nullable enable
-    public partial class ExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
-    {
-        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
-        {
-            get;
-            set;
-        }
-
-        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
-        {
-            return new ExpressionFramework.Core.DomainModel.Expression(Function?.Build());
-        }
-
-        public ExpressionBuilder()
-        {
-        }
-
-        public ExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IExpression source)
-        {
-            Function = source.Function == null ? null : source.Function.ToBuilder();
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial class FieldExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IFieldExpressionBuilder
+    public partial class FieldExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
         public string FieldName
         {
@@ -153,7 +128,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
-        public ExpressionFramework.Abstractions.DomainModel.IFieldExpression Build()
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
         {
             return new ExpressionFramework.Core.DomainModel.FieldExpression(FieldName, Function?.Build());
         }

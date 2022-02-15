@@ -21,10 +21,14 @@ public record CoalesceFunction : IExpression, IExpressionFunction
 
     public IExpressionFunction? Function => this;
 
-    public IExpressionFunctionBuilder ToBuilder()
+    private CoalesceFunctionBuilder CreateBuilder()
         => new CoalesceFunctionBuilder
         {
             InnerFunction = InnerFunction?.ToBuilder(),
-            InnerExpressions = InnerExpressions.Select(x => new ExpressionBuilder(x)).Cast<IExpressionBuilder>().ToList()
+            InnerExpressions = InnerExpressions.Select(x => x.ToBuilder()).ToList()
         };
+
+    IExpressionBuilder IExpression.ToBuilder() => CreateBuilder();
+
+    IExpressionFunctionBuilder IExpressionFunction.ToBuilder() => CreateBuilder();
 }

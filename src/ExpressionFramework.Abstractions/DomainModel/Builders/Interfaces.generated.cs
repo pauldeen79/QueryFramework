@@ -40,38 +40,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
 #nullable restore
 
 #nullable enable
-    public partial interface IConstantExpressionBuilder
-    {
-        object? Value
-        {
-            get;
-            set;
-        }
-
-        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
-        {
-            get;
-            set;
-        }
-
-        ExpressionFramework.Abstractions.DomainModel.IConstantExpression Build();
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IEmptyExpressionBuilder
-    {
-        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
-        {
-            get;
-            set;
-        }
-
-        ExpressionFramework.Abstractions.DomainModel.IEmptyExpression Build();
-    }
-#nullable restore
-
-#nullable enable
     public partial interface IExpressionBuilder
     {
         ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
@@ -94,25 +62,6 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
         }
 
         ExpressionFramework.Abstractions.DomainModel.IExpressionFunction Build();
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IFieldExpressionBuilder
-    {
-        string FieldName
-        {
-            get;
-            set;
-        }
-
-        ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
-        {
-            get;
-            set;
-        }
-
-        ExpressionFramework.Abstractions.DomainModel.IFieldExpression Build();
     }
 #nullable restore
 }

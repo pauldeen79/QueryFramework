@@ -9,6 +9,26 @@ public class CoreEntities : ExpressionFrameworkCSharpClassBase, ICodeGenerationP
     public override bool RecurseOnDeleteGeneratedFiles => false;
 
     public override object CreateModel()
-        => GetImmutableClasses(GetModels().Where(x => x.Name != "IExpressionFunction").ToArray(),
-                               "ExpressionFramework.Core.DomainModel");
+        => GetImmutableClasses
+        (
+            GetCoreModels(),
+            "ExpressionFramework.Core.DomainModel"
+        ).Select
+        (
+            x => new ClassBuilder(x)
+                .Chain(y => y.Methods.RemoveAll(z => z.Static))
+                .Chain(y =>
+                {
+                    if (y.Interfaces[0].EndsWith("Expression"))
+                    {
+                        y.Methods.Add(new ClassMethodBuilder()
+                            .WithName("ToBuilder")
+                            .WithTypeName("ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder")
+                            .AddLiteralCodeStatements($"return new ExpressionFramework.Core.DomainModel.Builders.{y.Name}Builder(this);")
+                        );
+                    }
+                })
+                .Build()
+        )
+        .ToArray();
 }

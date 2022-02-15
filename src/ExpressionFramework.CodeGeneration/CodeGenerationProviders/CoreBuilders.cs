@@ -11,11 +11,24 @@ public class CoreBuilders : ExpressionFrameworkCSharpClassBase, ICodeGenerationP
     public override object CreateModel()
         => GetImmutableBuilderClasses
         (
-            GetModels().Where(x => x.Name != "IExpressionFunction").ToArray(),
+            GetCoreModels(),
             "ExpressionFramework.Core.DomainModel",
             "ExpressionFramework.Core.DomainModel.Builders",
             "ExpressionFramework.Abstractions.DomainModel.Builders.I{0}"
         )
-        .Select(x => new ClassBuilder(x).Chain(y => y.Methods.RemoveAll(z => z.Static)).Build())
+        .Select
+        (
+            x => new ClassBuilder(x)
+                .Chain(y => y.Methods.RemoveAll(z => z.Static))
+                .Chain(y =>
+                {
+                    if (y.Interfaces[0].EndsWith("ExpressionBuilder"))
+                    {
+                        y.Interfaces[0] = "ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder";
+                        y.Methods.Single(z => z.Name == "Build").TypeName = "ExpressionFramework.Abstractions.DomainModel.IExpression";
+                    }
+                })
+                .Build()
+        )
         .ToArray();
 }
