@@ -2,7 +2,7 @@
 
 public class CountFunctionBuilder : IExpressionFunctionBuilder
 {
-    public IExpressionBuilder Expression { get; set; }// = new EmptyExpressionBuilder();
+    public IExpressionBuilder Expression { get; set; } = new EmptyExpressionBuilder();
     public IExpressionFunctionBuilder? InnerFunction { get; set; }
 
     public CountFunctionBuilder WithExpression(IExpressionBuilder expression)
