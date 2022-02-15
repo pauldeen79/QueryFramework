@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IExpressionEvaluatorCallback, ExpressionEvaluatorCallback>()
             .AddSingleton<IExpressionEvaluator, FieldExpressionEvaluator>()
             .AddSingleton<IExpressionEvaluator, ConstantExpressionEvaluator>()
+            .AddSingleton<IExpressionEvaluator, EmptyExpressionEvaluator>()
             .AddSingleton<IValueProvider, ValueProvider>()
             .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
