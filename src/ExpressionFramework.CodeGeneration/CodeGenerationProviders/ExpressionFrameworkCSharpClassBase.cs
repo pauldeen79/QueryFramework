@@ -71,6 +71,7 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
             typeof(ICondition),
             typeof(IEmptyExpression),
             typeof(IConstantExpression),
+            typeof(IDelegateExpression),
             typeof(IFieldExpression),
         }.ToArray();
 }

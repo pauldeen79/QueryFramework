@@ -70,6 +70,33 @@ namespace ExpressionFramework.Core.DomainModel
 #nullable restore
 
 #nullable enable
+    public partial record DelegateExpression : ExpressionFramework.Abstractions.DomainModel.IDelegateExpression
+    {
+        public System.Func<object?> ValueDelegate
+        {
+            get;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function
+        {
+            get;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder ToBuilder()
+        {
+            return new ExpressionFramework.Core.DomainModel.Builders.DelegateExpressionBuilder(this);
+        }
+
+        public DelegateExpression(System.Func<object?> valueDelegate, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        {
+            this.ValueDelegate = valueDelegate;
+            this.Function = function;
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
+        }
+    }
+#nullable restore
+
+#nullable enable
     public partial record EmptyExpression : ExpressionFramework.Abstractions.DomainModel.IEmptyExpression
     {
         public ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? Function

@@ -89,6 +89,39 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable restore
 
 #nullable enable
+    public partial class DelegateExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
+    {
+        public System.Func<object?> ValueDelegate
+        {
+            get;
+            set;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
+        {
+            get;
+            set;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Build()
+        {
+            return new ExpressionFramework.Core.DomainModel.DelegateExpression(ValueDelegate, Function?.Build());
+        }
+
+        public DelegateExpressionBuilder()
+        {
+            ValueDelegate = new Func<object?>(() => null);
+        }
+
+        public DelegateExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IDelegateExpression source)
+        {
+            ValueDelegate = source.ValueDelegate;
+            Function = source.Function == null ? null : source.Function.ToBuilder();
+        }
+    }
+#nullable restore
+
+#nullable enable
     public partial class EmptyExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
         public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionFunctionBuilder? Function
