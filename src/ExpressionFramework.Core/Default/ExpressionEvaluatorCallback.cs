@@ -13,13 +13,13 @@ public class ExpressionEvaluatorCallback : IExpressionEvaluatorCallback
 
     public object? Evaluate(object? item, IExpression expression)
     {
-        object? result = null;
+        object? expressionResult = null;
         var handled = false;
         foreach (var evaluator in _expressionEvaluators)
         {
             if (evaluator.TryEvaluate(item, expression, this, out var evaluatorResult))
             {
-                result = evaluatorResult;
+                expressionResult = evaluatorResult;
                 handled = true;
                 break;
             }
@@ -35,7 +35,7 @@ public class ExpressionEvaluatorCallback : IExpressionEvaluatorCallback
             foreach (var evaluator in _functionEvaluators)
             {
                 if (evaluator.TryEvaluate(expression.Function,
-                                          result,
+                                          expressionResult,
                                           this,
                                           out var functionResult))
                 {
@@ -45,6 +45,6 @@ public class ExpressionEvaluatorCallback : IExpressionEvaluatorCallback
             throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported function: [{expression.Function.GetType().Name}]");
         }
 
-        return result;
+        return expressionResult;
     }
 }
