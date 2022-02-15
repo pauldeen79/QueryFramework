@@ -16,10 +16,11 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IExpressionEvaluator, EmptyExpressionEvaluator>()
             .AddSingleton<IValueProvider, ValueProvider>()
             .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
-            .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, CountFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LeftFunctionEvaluator>()
-            .AddSingleton<IFunctionEvaluator, RightFunctionEvaluator>()
-            .AddSingleton<IFunctionEvaluator, UpperFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, LengthFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LowerFunctionEvaluator>()
-            .AddSingleton<IFunctionEvaluator, TrimFunctionEvaluator>();
+            .AddSingleton<IFunctionEvaluator, RightFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, TrimFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, UpperFunctionEvaluator>();
 }
