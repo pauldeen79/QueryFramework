@@ -23,6 +23,13 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
     {
         foreach (var property in classBuilder.Properties)
         {
+            if (property.Name == nameof(IDelegateExpression.ValueDelegate))
+            {
+                //HACK: Fix nullable type in generic parameter
+                property.TypeName = "System.Func<System.Object?>";
+                // Fix initialization in builder c'tor, because the object it not nullable
+                property.SetDefaultValueForBuilderClassConstructor(new Literal("new Func<object?>(() => null)"));
+            }
             var typeName = property.TypeName.FixTypeName();
             if (typeName.StartsWith("ExpressionFramework.Abstractions.DomainModel.I", StringComparison.InvariantCulture))
             {
