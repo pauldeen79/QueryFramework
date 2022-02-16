@@ -15,22 +15,7 @@ public class AbstractionsExtensionsBuilders : ExpressionFrameworkCSharpClassBase
         (
             GetBaseModels(),
             "ExpressionFramework.Core.DomainModel",
-            "ExpressionFramework.Core.DomainModel.Builders"
-        )
-        .Select
-        (
-            x => new ClassBuilder(x)
-                  .WithNamespace("ExpressionFramework.Abstractions.DomainModel.Extensions")
-                  .Chain
-                  (
-                    x => x.Methods.ForEach(y => y.AddGenericTypeArguments("T").AddGenericTypeArgumentConstraints($"where T : ExpressionFramework.Abstractions.DomainModel.Builders.I{y.TypeName}"))
-                  )
-                  .Chain
-                  (
-                    x => x.Methods.ForEach(y => y.WithTypeName("T")
-                                                 .Chain(z => z.Parameters.First().WithTypeName(z.TypeName)))
-                  )
-                  .Build()
-        )
-        .ToArray();
+            "ExpressionFramework.Abstractions.DomainModel.Extensions",
+            "ExpressionFramework.Abstractions.DomainModel.Builders"
+        );
 }
