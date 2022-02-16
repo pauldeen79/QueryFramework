@@ -1,4 +1,4 @@
-﻿namespace ExpressionFramework.Core.Default;
+﻿namespace ExpressionFramework.Core.FunctionEvaluators.ConditionEvaluation;
 
 internal class OperatorData
 {

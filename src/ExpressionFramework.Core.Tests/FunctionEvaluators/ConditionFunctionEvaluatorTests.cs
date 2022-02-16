@@ -1,9 +1,9 @@
-﻿namespace ExpressionFramework.Core.Tests.Default;
+﻿namespace ExpressionFramework.Core.Tests.FunctionEvaluators;
 
-public class ConditionEvaluatorTests
+public class ConditionFunctionEvaluatorTests
 {
     private readonly Mock<IExpressionEvaluatorCallback> _expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
-    private ConditionEvaluator CreateSut() => new ConditionEvaluator(_expressionEvaluatorCallbackMock.Object);
+    private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();
 
     [Fact]
     public void IsItemValid_Throws_On_Unsupported_Operator()
@@ -12,9 +12,14 @@ public class ConditionEvaluatorTests
         var conditionMock = new Mock<ICondition>();
         conditionMock.SetupGet(x => x.Operator)
                      .Returns((Operator)int.MaxValue);
+        conditionMock.SetupGet(x => x.LeftExpression)
+                     .Returns(new EmptyExpressionBuilder().Build());
+        conditionMock.SetupGet(x => x.RightExpression)
+                     .Returns(new EmptyExpressionBuilder().Build());
+        var function = new ConditionFunction(new ConditionBuilder(conditionMock.Object).Build(), null);
 
         // Act
-        CreateSut().Invoking(x => x.IsItemValid(default, conditionMock.Object))
+        CreateSut().Invoking(x => x.TryEvaluate(function, null, _expressionEvaluatorCallbackMock.Object, out _))
                    .Should().ThrowExactly<ArgumentOutOfRangeException>()
                    .WithParameterName("condition")
                    .And.Message.Should().StartWith($"Unsupported operator: {int.MaxValue}");
@@ -126,14 +131,16 @@ public class ConditionEvaluatorTests
                                             {
                                                 return rightExpression.Value;
                                             }
-                                        
+
                                             return null;
                                         });
+        var function = new ConditionFunction(conditionMock.Object, null);
 
         // Act
-        var actual = CreateSut().IsItemValid(default, conditionMock.Object);
+        var actual = CreateSut().TryEvaluate(function, null, _expressionEvaluatorCallbackMock.Object, out var result);
 
         // Assert
-        actual.Should().Be(expectedResult);
+        actual.Should().BeTrue();
+        result.Should().Be(expectedResult);
     }
 }

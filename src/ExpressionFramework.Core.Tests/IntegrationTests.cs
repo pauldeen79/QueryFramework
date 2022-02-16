@@ -21,10 +21,11 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = sut.IsItemValid(null, condition);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
 
         // Assert
-        actual.Should().BeTrue();
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
     }
 
     [Fact]
@@ -39,10 +40,11 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = sut.IsItemValid(null, condition);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
 
         // Assert
-        actual.Should().BeTrue();
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
     }
 
     [Fact]
@@ -57,10 +59,11 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = sut.IsItemValid(null, condition);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
 
         // Assert
-        actual.Should().BeTrue();
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
     }
 
     [Fact]
@@ -75,10 +78,11 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = sut.IsItemValid(null, condition);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
 
         // Assert
-        actual.Should().BeFalse();
+        returnValue.Should().BeTrue();
+        result.Should().Be(false);
     }
 
     [Fact]
@@ -93,13 +97,16 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = sut.IsItemValid(null, condition);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
 
         // Assert
-        actual.Should().BeFalse();
+        returnValue.Should().BeTrue();
+        result.Should().Be(false);
     }
 
-    private IConditionEvaluator CreateSut() => _serviceProvider.GetRequiredService<IConditionEvaluator>();
+    private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();
+
+    private IExpressionEvaluatorCallback CreateCallback() => _serviceProvider.GetRequiredService<IExpressionEvaluatorCallback>();
 
     public void Dispose() => _serviceProvider.Dispose();
 }

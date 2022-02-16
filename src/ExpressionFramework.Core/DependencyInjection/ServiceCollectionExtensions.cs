@@ -9,7 +9,6 @@ public static class ServiceCollectionExtensions
                                                             Action<IServiceCollection> customConfigurationAction)
         => services
             .Chain(customConfigurationAction.Invoke)
-            .AddSingleton<IConditionEvaluator, ConditionEvaluator>()
             .AddSingleton<IExpressionEvaluatorCallback, ExpressionEvaluatorCallback>()
             .AddSingleton<IExpressionEvaluator, ConstantExpressionEvaluator>()
             .AddSingleton<IExpressionEvaluator, DelegateExpressionEvaluator>()
@@ -17,6 +16,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IExpressionEvaluator, FieldExpressionEvaluator>()
             .AddSingleton<IValueProvider, ValueProvider>()
             .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
+            .AddSingleton<IFunctionEvaluator, ConditionFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, CountFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, DayFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, LeftFunctionEvaluator>()

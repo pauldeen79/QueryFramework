@@ -12,5 +12,6 @@ global using ExpressionFramework.Core.Default;
 global using ExpressionFramework.Core.DomainModel.Builders;
 global using ExpressionFramework.Core.ExpressionEvaluators;
 global using ExpressionFramework.Core.FunctionEvaluators;
+global using ExpressionFramework.Core.FunctionEvaluators.ConditionEvaluation;
 global using ExpressionFramework.Core.Functions;
 global using Microsoft.Extensions.DependencyInjection;

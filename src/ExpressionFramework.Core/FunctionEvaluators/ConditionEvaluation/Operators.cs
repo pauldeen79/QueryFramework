@@ -1,4 +1,4 @@
-﻿namespace ExpressionFramework.Core.Default;
+﻿namespace ExpressionFramework.Core.FunctionEvaluators.ConditionEvaluation;
 
 internal static class Operators
 {
@@ -60,9 +60,9 @@ internal static class Operators
         && c.CompareTo(data.RightValue) >= 0;
 
     private static bool Equal(OperatorData data)
-        => (data.LeftValue == null && data.RightValue == null)
+        => data.LeftValue == null && data.RightValue == null
         || data.LeftValueString.Equals(data.RightValueString, StringComparison.OrdinalIgnoreCase)
-        || (data.LeftValue != null && data.RightValue != null && data.LeftValue.Equals(data.RightValue));
+        || data.LeftValue != null && data.RightValue != null && data.LeftValue.Equals(data.RightValue);
 
     private static bool StartsWith(OperatorData data)
         => data.LeftValue != null
