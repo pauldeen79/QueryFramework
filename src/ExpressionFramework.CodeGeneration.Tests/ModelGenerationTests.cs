@@ -18,6 +18,84 @@ public class ModelGenerationTests
         Verify(GenerateCode.For<CoreBuilders>(Settings));
     }
 
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_NonGeneric_Type()
+    {
+        // Arrange
+        var input = typeof(int).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Int32");
+    }
+
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Nullable_Type()
+    {
+        // Arrange
+        var input = typeof(int?).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Nullable<System.Int32>");
+    }
+
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Generic_Func()
+    {
+        // Arrange
+        var input = typeof(Func<int>).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Func<System.Int32>");
+    }
+
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Nullable_Generic_Func()
+    {
+        // Arrange
+        var input = typeof(Func<int?>).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Func<System.Nullable<System.Int32>>");
+    }
+
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Generic_Enumerable()
+    {
+        // Arrange
+        var input = typeof(Func<int>).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Func<System.Int32>");
+    }
+
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Nullable_Generic_Enumerable()
+    {
+        // Arrange
+        var input = typeof(IEnumerable<int?>).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        actual.Should().Be("System.Collections.Generic.IEnumerable<System.Nullable<System.Int32>>");
+    }
+
     private void Verify(GenerateCode generatedCode)
     {
         if (Settings.DryRun)

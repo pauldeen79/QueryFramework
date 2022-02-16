@@ -1,6 +1,9 @@
-﻿global using System.IO;
+﻿global using System;
+global using System.Collections.Generic;
+global using System.IO;
 global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.CodeGeneration.CodeGenerationProviders;
 global using FluentAssertions;
+global using ModelFramework.Common.Extensions;
 global using TextTemplateTransformationFramework.Runtime.CodeGeneration;
 global using Xunit;
