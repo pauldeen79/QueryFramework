@@ -1,8 +1,8 @@
 ﻿namespace ExpressionFramework.Core.Tests.Default;
 
-public class ExpressionEvaluatorCallbackTests
+public class ExpressionEvaluatorTests
 {
-    private readonly ExpressionEvaluatorMock _expressionEvaluatorMock = new ExpressionEvaluatorMock();
+    private readonly ExpressionEvaluatorProviderMock _expressionEvaluatorProviderMock = new ExpressionEvaluatorProviderMock();
     private readonly FunctionEvaluatorMock _functionEvaluatorMock = new FunctionEvaluatorMock();
 
     [Fact]
@@ -28,7 +28,7 @@ public class ExpressionEvaluatorCallbackTests
         var expressionMock = new Mock<IExpression>();
         expressionMock.SetupGet(x => x.Function).Returns(functionMock.Object);
         var expression = expressionMock.Object;
-        _expressionEvaluatorMock.Delegate = new Func<object?, IExpression, IExpressionEvaluatorCallback, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, null));
+        _expressionEvaluatorProviderMock.Delegate = new Func<object?, IExpression, IExpressionEvaluator, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, null));
 
         // Act
         sut.Invoking(x => x.Evaluate(null, expression))
@@ -43,7 +43,7 @@ public class ExpressionEvaluatorCallbackTests
         // Arrange
         var sut = CreateSut();
         var expression = new Mock<IExpression>().Object;
-        _expressionEvaluatorMock.Delegate = new Func<object?, IExpression, IExpressionEvaluatorCallback, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, 12345));
+        _expressionEvaluatorProviderMock.Delegate = new Func<object?, IExpression, IExpressionEvaluator, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, 12345));
 
         // Act
         var actual = sut.Evaluate(null, expression);
@@ -61,8 +61,8 @@ public class ExpressionEvaluatorCallbackTests
         var expressionMock = new Mock<IExpression>();
         expressionMock.SetupGet(x => x.Function).Returns(functionMock.Object);
         var expression = expressionMock.Object;
-        _expressionEvaluatorMock.Delegate = new Func<object?, IExpression, IExpressionEvaluatorCallback, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, 12345));
-        _functionEvaluatorMock.Delegate = new Func<IExpressionFunction, object?, IExpressionEvaluatorCallback, Tuple<bool, object?>>((_, value, _) => new Tuple<bool, object?>(true, Convert.ToInt32(value) * 2));
+        _expressionEvaluatorProviderMock.Delegate = new Func<object?, IExpression, IExpressionEvaluator, Tuple<bool, object?>>((_, _, _) => new Tuple<bool, object?>(true, 12345));
+        _functionEvaluatorMock.Delegate = new Func<IExpressionFunction, object?, IExpressionEvaluator, Tuple<bool, object?>>((_, value, _) => new Tuple<bool, object?>(true, Convert.ToInt32(value) * 2));
 
         // Act
         var actual = sut.Evaluate(null, expression);
@@ -71,7 +71,7 @@ public class ExpressionEvaluatorCallbackTests
         actual.Should().Be(12345 * 2);
     }
 
-    private ExpressionEvaluatorCallback CreateSut()
-        => new ExpressionEvaluatorCallback(new[] { _expressionEvaluatorMock },
-                                           new[] { _functionEvaluatorMock });
+    private ExpressionEvaluator CreateSut()
+        => new ExpressionEvaluator(new[] { _expressionEvaluatorProviderMock },
+                                   new[] { _functionEvaluatorMock });
 }

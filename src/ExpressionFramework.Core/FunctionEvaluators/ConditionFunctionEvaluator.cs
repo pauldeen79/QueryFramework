@@ -2,7 +2,7 @@
 
 public class ConditionFunctionEvaluator : IFunctionEvaluator
 {
-    public bool TryEvaluate(IExpressionFunction function, object? value, IExpressionEvaluatorCallback callback, out object? result)
+    public bool TryEvaluate(IExpressionFunction function, object? value, IExpressionEvaluator evaluator, out object? result)
     {
         if (!(function is ConditionFunction c))
         {
@@ -10,14 +10,14 @@ public class ConditionFunctionEvaluator : IFunctionEvaluator
             return false;
         }
 
-        result = IsItemValid(value, c.Condition, callback);
+        result = IsItemValid(value, c.Condition, evaluator);
         return true;
     }
 
-    private bool IsItemValid(object? item, ICondition condition, IExpressionEvaluatorCallback callback)
+    private bool IsItemValid(object? item, ICondition condition, IExpressionEvaluator evaluator)
     {
-        var leftValue = callback.Evaluate(item, condition.LeftExpression);
-        var rightValue = callback.Evaluate(item, condition.RightExpression);
+        var leftValue = evaluator.Evaluate(item, condition.LeftExpression);
+        var rightValue = evaluator.Evaluate(item, condition.RightExpression);
 
         if (Operators.Items.TryGetValue(condition.Operator, out var predicate))
         {

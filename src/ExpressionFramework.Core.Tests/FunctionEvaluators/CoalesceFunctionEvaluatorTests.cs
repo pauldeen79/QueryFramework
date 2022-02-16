@@ -8,10 +8,10 @@ public class CoalesceFunctionEvaluatorTests
         // Arrange
         var sut = new CoalesceFunctionEvaluator();
         var functionMock = new Mock<IExpressionFunction>();
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(functionMock.Object, "test", expressionEvaluatorCallbackMock.Object, out var _);
+        var actual = sut.TryEvaluate(functionMock.Object, "test", expressionEvaluatorMock.Object, out var _);
 
         // Assert
         actual.Should().BeFalse();
@@ -27,12 +27,12 @@ public class CoalesceFunctionEvaluatorTests
         var expressionMock2 = new Mock<IConstantExpression>();
         expressionMock2.SetupGet(x => x.Value).Returns("some non-null return value");
         var function = new CoalesceFunction(null, new[] { expressionMock1.Object, expressionMock2.Object });
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
-        expressionEvaluatorCallbackMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IConstantExpression>()))
-                                       .Returns<object?, IExpression>((_, expression) => ((IConstantExpression)expression).Value);
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
+        expressionEvaluatorMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IConstantExpression>()))
+                               .Returns<object?, IExpression>((_, expression) => ((IConstantExpression)expression).Value);
 
         // Act
-        var actual = sut.TryEvaluate(function, "test", expressionEvaluatorCallbackMock.Object, out var functionResult);
+        var actual = sut.TryEvaluate(function, "test", expressionEvaluatorMock.Object, out var functionResult);
 
         // Assert
         actual.Should().BeTrue();

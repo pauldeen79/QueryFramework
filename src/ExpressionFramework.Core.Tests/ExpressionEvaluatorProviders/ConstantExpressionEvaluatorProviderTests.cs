@@ -1,17 +1,17 @@
-﻿namespace ExpressionFramework.Core.Tests.ExpressionEvaluators;
+﻿namespace ExpressionFramework.Core.Tests.ExpressionEvaluatorProviders;
 
-public class ConstantExpressionEvaluatorTests
+public class ConstantExpressionEvaluatorProviderTests
 {
     [Fact]
     public void TryEvaluate_Returns_False_When_Expression_Is_Not_A_ConstantExpression()
     {
         // Arrange
-        var sut = new ConstantExpressionEvaluator();
+        var sut = new ConstantExpressionEvaluatorProvider();
         var expressionMock = new Mock<IExpression>();
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorMock.Object, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -22,13 +22,13 @@ public class ConstantExpressionEvaluatorTests
     public void TryEvaluate_Returns_True_When_Expression_Is_A_ConstantExpression()
     {
         // Arrange
-        var sut = new ConstantExpressionEvaluator();
+        var sut = new ConstantExpressionEvaluatorProvider();
         var expressionMock = new Mock<IConstantExpression>();
         expressionMock.SetupGet(x => x.Value).Returns(12345);
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();

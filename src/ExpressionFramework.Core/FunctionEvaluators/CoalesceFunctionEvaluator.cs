@@ -2,7 +2,7 @@
 
 public class CoalesceFunctionEvaluator : IFunctionEvaluator
 {
-    public bool TryEvaluate(IExpressionFunction function, object? value, IExpressionEvaluatorCallback callback, out object? result)
+    public bool TryEvaluate(IExpressionFunction function, object? value, IExpressionEvaluator evaluator, out object? result)
     {
         if (!(function is CoalesceFunction c))
         {
@@ -13,7 +13,7 @@ public class CoalesceFunctionEvaluator : IFunctionEvaluator
         result = null;
         foreach (var expression in c.InnerExpressions)
         {
-            var expressionResult = callback.Evaluate(value, expression);
+            var expressionResult = evaluator.Evaluate(value, expression);
             if (expressionResult != null)
             {
                 result = expressionResult;

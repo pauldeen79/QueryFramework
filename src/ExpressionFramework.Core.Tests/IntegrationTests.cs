@@ -21,7 +21,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -40,7 +40,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -59,7 +59,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -78,7 +78,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -97,7 +97,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateCallback(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -106,7 +106,7 @@ public sealed class IntegrationTests : IDisposable
 
     private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();
 
-    private IExpressionEvaluatorCallback CreateCallback() => _serviceProvider.GetRequiredService<IExpressionEvaluatorCallback>();
+    private IExpressionEvaluator CreateEvaluator() => _serviceProvider.GetRequiredService<IExpressionEvaluator>();
 
     public void Dispose() => _serviceProvider.Dispose();
 }

@@ -1,13 +1,13 @@
 ﻿namespace ExpressionFramework.Core.Default;
 
-public class ExpressionEvaluatorCallback : IExpressionEvaluatorCallback
+public class ExpressionEvaluator : IExpressionEvaluator
 {
-    private readonly IEnumerable<IExpressionEvaluator> _expressionEvaluators;
+    private readonly IEnumerable<IExpressionEvaluatorProvider> _expressionEvaluatorProviders;
     private readonly IEnumerable<IFunctionEvaluator> _functionEvaluators;
 
-    public ExpressionEvaluatorCallback(IEnumerable<IExpressionEvaluator> expressionEvaluators, IEnumerable<IFunctionEvaluator> functionEvaluators)
+    public ExpressionEvaluator(IEnumerable<IExpressionEvaluatorProvider> expressionEvaluators, IEnumerable<IFunctionEvaluator> functionEvaluators)
     {
-        _expressionEvaluators = expressionEvaluators;
+        _expressionEvaluatorProviders = expressionEvaluators;
         _functionEvaluators = functionEvaluators;
     }
 
@@ -15,9 +15,9 @@ public class ExpressionEvaluatorCallback : IExpressionEvaluatorCallback
     {
         object? expressionResult = null;
         var handled = false;
-        foreach (var evaluator in _expressionEvaluators)
+        foreach (var evaluatorProvider in _expressionEvaluatorProviders)
         {
-            if (evaluator.TryEvaluate(item, expression, this, out var evaluatorResult))
+            if (evaluatorProvider.TryEvaluate(item, expression, this, out var evaluatorResult))
             {
                 expressionResult = evaluatorResult;
                 handled = true;

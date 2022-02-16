@@ -8,10 +8,10 @@ public class LengthFunctionEvaluatorTests
         // Arrange
         var sut = new LengthFunctionEvaluator();
         var functionMock = new Mock<IExpressionFunction>();
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(functionMock.Object, "test", expressionEvaluatorCallbackMock.Object, out var _);
+        var actual = sut.TryEvaluate(functionMock.Object, "test", expressionEvaluatorMock.Object, out var _);
 
         // Assert
         actual.Should().BeFalse();
@@ -23,10 +23,10 @@ public class LengthFunctionEvaluatorTests
         // Arrange
         var sut = new LengthFunctionEvaluator();
         var function = new LengthFunction(null);
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(function, "test", expressionEvaluatorCallbackMock.Object, out var functionResult);
+        var actual = sut.TryEvaluate(function, "test", expressionEvaluatorMock.Object, out var functionResult);
 
         // Assert
         actual.Should().BeTrue();
@@ -39,10 +39,10 @@ public class LengthFunctionEvaluatorTests
         // Arrange
         var sut = new LengthFunctionEvaluator();
         var function = new LengthFunction(null);
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(function, null, expressionEvaluatorCallbackMock.Object, out var functionResult);
+        var actual = sut.TryEvaluate(function, null, expressionEvaluatorMock.Object, out var functionResult);
 
         // Assert
         actual.Should().BeTrue();

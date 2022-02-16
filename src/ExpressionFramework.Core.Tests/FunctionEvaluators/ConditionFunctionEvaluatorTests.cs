@@ -2,7 +2,7 @@
 
 public class ConditionFunctionEvaluatorTests
 {
-    private readonly Mock<IExpressionEvaluatorCallback> _expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+    private readonly Mock<IExpressionEvaluator> _expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
     private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();
 
     [Fact]
@@ -19,7 +19,7 @@ public class ConditionFunctionEvaluatorTests
         var function = new ConditionFunction(new ConditionBuilder(conditionMock.Object).Build(), null);
 
         // Act
-        CreateSut().Invoking(x => x.TryEvaluate(function, null, _expressionEvaluatorCallbackMock.Object, out _))
+        CreateSut().Invoking(x => x.TryEvaluate(function, null, _expressionEvaluatorMock.Object, out _))
                    .Should().ThrowExactly<ArgumentOutOfRangeException>()
                    .WithParameterName("condition")
                    .And.Message.Should().StartWith($"Unsupported operator: {int.MaxValue}");
@@ -120,24 +120,24 @@ public class ConditionFunctionEvaluatorTests
         conditionMock.SetupGet(x => x.Operator).Returns(@operator);
         conditionMock.SetupGet(x => x.LeftExpression).Returns(leftExpression);
         conditionMock.SetupGet(x => x.RightExpression).Returns(rightExpression);
-        _expressionEvaluatorCallbackMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IExpression>()))
-                                        .Returns<object?, IExpression>((_, expression) =>
-                                        {
-                                            if (expression == leftExpression)
-                                            {
-                                                return leftExpression.Value;
-                                            }
-                                            if (expression == rightExpression)
-                                            {
-                                                return rightExpression.Value;
-                                            }
+        _expressionEvaluatorMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IExpression>()))
+                                .Returns<object?, IExpression>((_, expression) =>
+                                {
+                                    if (expression == leftExpression)
+                                    {
+                                        return leftExpression.Value;
+                                    }
+                                    if (expression == rightExpression)
+                                    {
+                                        return rightExpression.Value;
+                                    }
 
-                                            return null;
-                                        });
+                                    return null;
+                                });
         var function = new ConditionFunction(conditionMock.Object, null);
 
         // Act
-        var actual = CreateSut().TryEvaluate(function, null, _expressionEvaluatorCallbackMock.Object, out var result);
+        var actual = CreateSut().TryEvaluate(function, null, _expressionEvaluatorMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();

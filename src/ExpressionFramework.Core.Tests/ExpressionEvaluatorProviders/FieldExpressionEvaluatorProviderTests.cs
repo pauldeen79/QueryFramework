@@ -1,18 +1,18 @@
-﻿namespace ExpressionFramework.Core.Tests.ExpressionEvaluators;
+﻿namespace ExpressionFramework.Core.Tests.ExpressionEvaluatorProviders;
 
-public class FieldExpressionEvaluatorTests
+public class FieldExpressionEvaluatorProviderTests
 {
     [Fact]
     public void TryEvaluate_Returns_False_When_Expression_Is_Not_A_FieldExpression()
     {
         // Arrange
         var valueProviderMock = new Mock<IValueProvider>();
-        var sut = new FieldExpressionEvaluator(valueProviderMock.Object);
+        var sut = new FieldExpressionEvaluatorProvider(valueProviderMock.Object);
         var expressionMock = new Mock<IExpression>();
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorMock.Object, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -24,15 +24,15 @@ public class FieldExpressionEvaluatorTests
     {
         // Arrange
         var valueProviderMock = new Mock<IValueProvider>();
-        var sut = new FieldExpressionEvaluator(valueProviderMock.Object);
+        var sut = new FieldExpressionEvaluatorProvider(valueProviderMock.Object);
         var expressionMock = new Mock<IFieldExpression>();
         expressionMock.SetupGet(x => x.Function).Returns(default(IExpressionFunction));
         expressionMock.SetupGet(x => x.FieldName).Returns("Test");
         valueProviderMock.Setup(x => x.GetValue(It.IsAny<object?>(), "Test")).Returns(12345);
-        var expressionEvaluatorCallbackMock = new Mock<IExpressionEvaluatorCallback>();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
 
         // Act
-        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorCallbackMock.Object, out var result);
+        var actual = sut.TryEvaluate(default, expressionMock.Object, expressionEvaluatorMock.Object, out var result);
 
         // Assert
         actual.Should().BeTrue();
