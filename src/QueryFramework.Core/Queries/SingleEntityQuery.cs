@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Core.Queries;
 
-public record SingleEntityQuery : ISingleEntityQuery, IValidatableObject
+public record SingleEntityQuery : ISingleEntityQuery
 {
     public SingleEntityQuery() : this(null,
                                       null,
@@ -25,7 +25,4 @@ public record SingleEntityQuery : ISingleEntityQuery, IValidatableObject
     public int? Offset { get; }
     public ValueCollection<ICondition> Conditions { get; }
     public ValueCollection<IQuerySortOrder> OrderByFields { get; }
-
-    public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        => this.ValidateQuery();
 }

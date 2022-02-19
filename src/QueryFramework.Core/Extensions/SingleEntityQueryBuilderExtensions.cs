@@ -18,26 +18,6 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions);
 
-    //public static T Or<T>(this T instance, params IConditionBuilder[] additionalConditions)
-    //    where T : ISingleEntityQueryBuilderBase
-    //    => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: QueryCombination.Or)));
-
-    //public static T And<T>(this T instance, params IConditionBuilder[] additionalConditions)
-    //    where T : ISingleEntityQueryBuilderBase
-    //    => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: QueryCombination.And)));
-
-    //public static T AndAny<T>(this T instance, params IConditionBuilder[] additionalConditions)
-    //    where T : ISingleEntityQueryBuilderBase
-    //    => instance.Where(additionalConditions.Select((a, index) => a.WithOpenBracket(index == 0)
-    //                                                                 .WithCloseBracket(index + 1 == additionalConditions.Length)
-    //                                                                 .WithCombination(index == 0 ? QueryCombination.And : QueryCombination.Or)));
-
-    //public static T OrAll<T>(this T instance, params IConditionBuilder[] additionalConditions)
-    //    where T : ISingleEntityQueryBuilderBase
-    //    => instance.Where(additionalConditions.Select((a, index) => a.WithOpenBracket(index == 0)
-    //                                                                 .WithCloseBracket(index + 1 == additionalConditions.Length)
-    //                                                                 .WithCombination(index == 0 ? QueryCombination.Or : QueryCombination.And)));
-
     public static T OrderBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalOrderByFields)
         where T : ISingleEntityQueryBuilderBase
         => instance.Chain(x => x.OrderByFields.AddRange(additionalOrderByFields));

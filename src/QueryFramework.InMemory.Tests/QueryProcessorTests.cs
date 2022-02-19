@@ -143,26 +143,6 @@ public sealed class QueryProcessorTests : IDisposable
         actual.First().Property.Should().Be("B");
     }
 
-    //[Fact]
-    //public void Can_FindPaged_On_InMemoryList_With_Two_Equals_Conditions_Using_Or_Combination()
-    //{
-    //    // Arrange
-    //    var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-    //    var sut = CreateSut(items);
-    //    var query = new SingleEntityQueryBuilder()
-    //        .Where(nameof(MyClass.Property).IsEqualTo("B"))
-    //        .Or(nameof(MyClass.Property).IsEqualTo("A"))
-    //        .Build();
-
-    //    // Act
-    //    var actual = sut.FindPaged<MyClass>(query);
-
-    //    // Assert
-    //    actual.Should().HaveCount(2);
-    //    actual.First().Property.Should().Be("A");
-    //    actual.Last().Property.Should().Be("B");
-    //}
-
     [Fact]
     public void Can_FindPaged_On_InMemoryList_With_Two_Equals_Conditions_Using_And_Combination()
     {
@@ -198,24 +178,6 @@ public sealed class QueryProcessorTests : IDisposable
         actual.Should().HaveCount(1);
         actual.First().Property.Should().Be("A");
     }
-
-    //[Fact]
-    //public void Can_FindPaged_On_InMemoryList_With_One_NotEquals_Condition_And_Brackets()
-    //{
-    //    // Arrange
-    //    var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-    //    var sut = CreateSut(items);
-    //    var query = new SingleEntityQueryBuilder()
-    //        .OrAll(nameof(MyClass.Property).IsNotEqualTo("B"))
-    //        .Build();
-
-    //    // Act
-    //    var actual = sut.FindPaged<MyClass>(query);
-
-    //    // Assert
-    //    actual.Should().HaveCount(1);
-    //    actual.First().Property.Should().Be("A");
-    //}
 
     [Fact]
     public void Can_FindPaged_On_InMemoryList_With_One_Contains_Condition()

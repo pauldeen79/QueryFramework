@@ -163,19 +163,6 @@ public static class StringExtensions
     public static IExpressionBuilder Day(this string fieldName)
         => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new DayFunctionBuilder());
 
-    /////// <summary>Gets the first non-null value of the specified expressions.</summary>
-    //public static IExpressionBuilder Coalesce(this string fieldName, params IExpressionBuilder[] innerExpressions)
-    //    => new FieldExpressionBuilder().WithFieldName(fieldName)
-    //                                   .WithFunction(new CoalesceFunctionBuilder().AddInnerExpressions(innerExpressions));
-
-    ///// <summary>Gets the first non-null value of the specified expressions.</summary>
-    //public static IExpressionBuilder Coalesce(this string fieldName, IEnumerable<IExpressionBuilder> innerExpressions)
-    //    => fieldName.Coalesce(innerExpressions.ToArray());
-
-    ///// <summary>Gets the first non-null value of the specified fields.</summary>
-    //public static IExpressionBuilder Coalesce(this string fieldName, params string[] innerFieldNames)
-    //    => Coalesce(fieldName, innerFieldNames.Select(innerFieldName => new FieldExpressionBuilder().WithFieldName(innerFieldName)));
-
     /// <summary>Gets the count of this field.</summary>
     public static IExpressionBuilder Count(this string fieldName)
         => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new CountFunctionBuilder());

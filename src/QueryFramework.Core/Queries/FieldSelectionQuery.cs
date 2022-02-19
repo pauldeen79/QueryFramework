@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Core.Queries;
 
-public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
+public record FieldSelectionQuery : IFieldSelectionQuery
 {
     public FieldSelectionQuery() : this(null,
                                         null,
@@ -37,7 +37,4 @@ public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
     public ValueCollection<IExpression> Fields { get; }
     public ValueCollection<ICondition> Conditions { get; }
     public ValueCollection<IQuerySortOrder> OrderByFields { get; }
-
-    public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        => this.ValidateQuery();
 }

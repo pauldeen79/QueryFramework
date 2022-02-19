@@ -29,7 +29,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         {
             return default;
         }
-        var nextSearchCombination = QueryCombination.And;
         var result = new List<IConditionBuilder>();
         for (int i = 0; i < items.Length && itemCountIsCorrect; i += 4)
         {
@@ -37,8 +36,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             //-items[i] needs to be a valid fieldname
             //-items[i + 1] needs to be a valid operator
             //-items[i + 3] needs to be a valid combination for the next condition
-            var openBracket = false;
-            var closeBracket = false;
             var fieldName = items[i];
             var fieldValue = items[i + 2];
             var @operator = items[i + 1];
@@ -46,12 +43,10 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             //remove brackets and set bracket property values for this query item.
             if (fieldName.StartsWith("("))
             {
-                openBracket = true;
                 fieldName = fieldName.Substring(1);
             }
             if (fieldValue.EndsWith(")"))
             {
-                closeBracket = true;
                 fieldValue = fieldValue.Substring(0, fieldValue.Length - 1);
             }
 
@@ -63,9 +58,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
 
             var condition = new ConditionBuilder
             {
-                //OpenBracket = openBracket,
-                //CloseBracket = closeBracket,
-                //Combination = nextSearchCombination,
                 LeftExpression = GetField(fieldName),
                 Operator = queryOperator.Value,
                 RightExpression = new ConstantExpressionBuilder().WithValue(GetValue(queryOperator.Value, fieldValue))
@@ -78,7 +70,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 {
                     return default;
                 }
-                nextSearchCombination = combination.Value;
             }
 
             result.Add(condition);
@@ -107,30 +98,23 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 StartsWithPlusOrMinus = x.StartsWith("+") || x.StartsWith("-"),
                 StartsWithMinus = x.StartsWith("-")
             })
-            .Select(item => CreateQueryCondition(item.Index,
-                                                 item.Value,
+            .Select(item => CreateQueryCondition(item.Value,
                                                  item.StartsWithPlusOrMinus,
-                                                 item.StartsWithMinus,
-                                                 items.Length))
+                                                 item.StartsWithMinus))
             .ToList();
 
-    private IConditionBuilder CreateQueryCondition(int index, string value, bool startsWithPlusOrMinus, bool startsWithMinus, int itemsLength)
+    private IConditionBuilder CreateQueryCondition(string value, bool startsWithPlusOrMinus, bool startsWithMinus)
         => new ConditionBuilder
         {
             LeftExpression = _defaultFieldExpressionBuilderFactory == null
                 ? new TQueryExpressionBuilder()
                 : _defaultFieldExpressionBuilderFactory.Invoke(),
-            //Combination = startsWithPlusOrMinus
-            //    ? QueryCombination.And
-            //    : QueryCombination.Or,
             RightExpression = new ConstantExpressionBuilder().WithValue(startsWithPlusOrMinus
                 ? value.Substring(1)
                 : value),
             Operator = startsWithMinus
                 ? Operator.NotContains
-                : Operator.Contains,
-            //OpenBracket = index == 0,
-            //CloseBracket = index == itemsLength - 1
+                : Operator.Contains
         };
 
     private static QueryCombination? GetQueryCombination(string combination)

@@ -42,18 +42,6 @@ public static class QueryExpressionBuilderExtensions
     public static IExpressionBuilder Day(this IExpressionBuilder instance)
         => instance.Chain(x => x.Function = new DayFunctionBuilder().WithInnerFunction(instance));
 
-    ///// <summary>Gets the first non-null value of the specified expressions.</summary>
-    //public static IExpressionBuilder Coalesce(this IExpressionBuilder instance, params IExpressionBuilder[] innerExpressions)
-    //    => instance.Chain(x => x.Function = new CoalesceFunctionBuilder().AddInnerExpressions(innerExpressions));
-
-    ///// <summary>Gets the first non-null value of the specified fields.</summary>
-    //public static IExpressionBuilder Coalesce(this IExpressionBuilder instance, IEnumerable<IExpressionBuilder> innerExpressions)
-    //    => instance.Coalesce(innerExpressions.ToArray());
-
-    ///// <summary>Gets the first non-null value of the specified fields.</summary>
-    //public static IExpressionBuilder Coalesce(this IExpressionBuilder instance, params string[] innerFieldNames)
-    //    => Coalesce(instance, innerFieldNames.Select(innerFieldName => new FieldExpressionBuilder().WithFieldName(innerFieldName)));
-
     /// <summary>Gets the count of this expression.</summary>
     public static IExpressionBuilder Count(this IExpressionBuilder instance)
         => instance.Chain(x => x.Function = new CountFunctionBuilder().WithInnerFunction(instance));

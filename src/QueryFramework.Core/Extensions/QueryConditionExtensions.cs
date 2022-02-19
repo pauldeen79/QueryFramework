@@ -76,6 +76,15 @@ public static class QueryConditionExtensions
             Operator = Operator.IsNotNullOrEmpty
         };
 
+    /// <summary>Creates a query condition builder with the IsNotNullOrWhiteSpace query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    public static IConditionBuilder IsNotNullOrWhiteSpace(this IExpressionBuilder instance)
+        => new ConditionBuilder()
+        {
+            LeftExpression = instance,
+            Operator = Operator.IsNotNullOrWhiteSpace
+        };
+
     /// <summary>Creates a query condition builder with the IsNull query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     public static IConditionBuilder IsNull(this IExpressionBuilder instance)
@@ -92,6 +101,15 @@ public static class QueryConditionExtensions
         {
             LeftExpression = instance,
             Operator = Operator.IsNullOrEmpty
+        };
+
+    /// <summary>Creates a query condition builder with the IsNullOrWhiteSpace query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    public static IConditionBuilder IsNullOrWhiteSpace(this IExpressionBuilder instance)
+        => new ConditionBuilder()
+        {
+            LeftExpression = instance,
+            Operator = Operator.IsNullOrWhiteSpace
         };
 
     /// <summary>Creates a query condition builder with the LowerOrEqualThan query operator, using the specified values.</summary>
