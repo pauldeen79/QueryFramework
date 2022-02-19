@@ -532,6 +532,8 @@ public class DatabaseCommandBuilderExtensionsTests
     [Theory]
     [InlineData(Operator.IsNullOrEmpty, "COALESCE(Field,'') = ''")]
     [InlineData(Operator.IsNotNullOrEmpty, "COALESCE(Field,'') <> ''")]
+    [InlineData(Operator.IsNullOrWhiteSpace, "COALESCE(TRIM(Field),'') = ''")]
+    [InlineData(Operator.IsNotNullOrWhiteSpace, "COALESCE(TRIM(Field),'') <> ''")]
     [InlineData(Operator.IsNull, "Field IS NULL")]
     [InlineData(Operator.IsNotNull, "Field IS NOT NULL")]
     public void AppendQueryCondition_Fills_CommandText_Correctly_For_QueryOperator_Without_Value(Operator @operator, string expectedCommandText)

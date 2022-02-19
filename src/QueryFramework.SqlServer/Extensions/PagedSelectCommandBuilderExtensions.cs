@@ -116,7 +116,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 queryCondition,
                 fieldInfo,
                 evaluator,
-                instance.And
+                instance.Where
             );
         }
 
@@ -305,12 +305,20 @@ internal static class PagedSelectCommandBuilderExtensions
             {
                 builder.Append("COALESCE(");
             }
+            else if (condition.Operator.In(Operator.IsNullOrWhiteSpace, Operator.IsNotNullOrWhiteSpace))
+            {
+                builder.Append("COALESCE(TRIM(");
+            }
 
             builder.Append(evaluator.GetSqlExpression(fieldExpression));
 
             if (condition.Operator.In(Operator.IsNullOrEmpty, Operator.IsNotNullOrEmpty))
             {
                 builder.Append(",'')");
+            }
+            else if (condition.Operator.In(Operator.IsNullOrWhiteSpace, Operator.IsNotNullOrWhiteSpace))
+            {
+                builder.Append("),'')");
             }
         }
 
@@ -339,6 +347,8 @@ internal static class PagedSelectCommandBuilderExtensions
             Operator.IsNotNull => " IS NOT NULL",
             Operator.IsNullOrEmpty => " = ''",
             Operator.IsNotNullOrEmpty => " <> ''",
+            Operator.IsNullOrWhiteSpace => " = ''",
+            Operator.IsNotNullOrWhiteSpace => " <> ''",
             Operator.Contains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(expression)}) > 0",
             Operator.NotContains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(expression)}) = 0",
             Operator.StartsWith => $"LEFT({evaluator.GetSqlExpression(expression)}, {constantValue.ToStringWithNullCheck().Length}) = {paramName}",
