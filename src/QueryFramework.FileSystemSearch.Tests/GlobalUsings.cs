@@ -2,7 +2,6 @@
 global using System.IO;
 global using System.Linq;
 global using System.Runtime.InteropServices;
-global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Abstractions;
 global using ExpressionFramework.Abstractions.DomainModel.Domains;
 global using ExpressionFramework.Abstractions.DomainModel.Extensions;
@@ -15,6 +14,7 @@ global using QueryFramework.Abstractions;
 global using QueryFramework.Core.Extensions;
 global using QueryFramework.Core.Queries;
 global using QueryFramework.Core.Queries.Builders;
+global using QueryFramework.FileSystemSearch.Abstractions;
 global using QueryFramework.FileSystemSearch.Entities;
 global using QueryFramework.FileSystemSearch.Extensions;
 global using QueryFramework.FileSystemSearch.Queries;

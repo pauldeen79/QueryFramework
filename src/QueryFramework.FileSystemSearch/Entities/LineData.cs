@@ -1,8 +1,8 @@
 ﻿namespace QueryFramework.FileSystemSearch.Entities;
 
-public class LineData
+public class LineData : ILineData
 {
-    public LineData(string line, int lineNumber, FileData fileData)
+    public LineData(string line, int lineNumber, IFileData fileData)
     {
         Line = line;
         LineNumber = lineNumber;
@@ -11,5 +11,5 @@ public class LineData
 
     public string Line { get; }
     public int LineNumber { get; }
-    public FileData FileData { get; }
+    public IFileData FileData { get; }
 }

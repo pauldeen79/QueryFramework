@@ -1,28 +1,33 @@
 ﻿namespace QueryFramework.FileSystemSearch;
 
-public class FileSystemDataProvider : IDataProvider
+public class DefaultFileDataProvider : IDataProvider
 {
     private static readonly string[] _fileDataFields = new[]
     {
-        nameof(FileData.Contents),
-        nameof(FileData.DateCreated),
-        nameof(FileData.DateLastModified),
-        nameof(FileData.Directory),
-        nameof(FileData.Extension),
-        nameof(FileData.FileName),
-        nameof(FileData.FullPath)
+        nameof(IFileData.Contents),
+        nameof(IFileData.DateCreated),
+        nameof(IFileData.DateLastModified),
+        nameof(IFileData.Directory),
+        nameof(IFileData.Extension),
+        nameof(IFileData.FileName),
+        nameof(IFileData.FullPath)
     };
 
     private static readonly string[] _lineDataFields = new[]
     {
-        nameof(LineData.Line),
-        nameof(LineData.LineNumber)
+        nameof(ILineData.Line),
+        nameof(ILineData.LineNumber)
     };
 
     private readonly IExpressionEvaluator _expressionEvaluator;
+    private readonly IFileDataProvider _fileDataProvider;
 
-    public FileSystemDataProvider(IExpressionEvaluator expressionEvaluator) => _expressionEvaluator = expressionEvaluator;
-    
+    public DefaultFileDataProvider(IExpressionEvaluator expressionEvaluator, IFileDataProvider fileDataProvider)
+    {
+        _expressionEvaluator = expressionEvaluator;
+        _fileDataProvider = fileDataProvider;
+    }
+
     public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
@@ -32,8 +37,8 @@ public class FileSystemDataProvider : IDataProvider
             return false;
         }
 
-        if (!typeof(FileData).IsAssignableFrom(typeof(TResult))
-            && !typeof(LineData).IsAssignableFrom(typeof(TResult)))
+        if (!typeof(IFileData).IsAssignableFrom(typeof(TResult))
+            && !typeof(ILineData).IsAssignableFrom(typeof(TResult)))
         {
             result = default;
             return false;
@@ -54,7 +59,9 @@ public class FileSystemDataProvider : IDataProvider
                 x => !IsValidForFields(x.LeftFieldName, _fileDataFields.Concat(_lineDataFields))
                 && !IsValidForFields(x.RightFieldName, _fileDataFields.Concat(_lineDataFields))
             )
-            .Select(x => new ConstantExpressionBuilder().WithValue(true).WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition))).Build())
+            .Select(x => new ConstantExpressionBuilder().WithValue(true)
+                                                        .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+                                                        .Build())
             .ToArray();
 
         if (noDataExpressions.Length > 0 && !noDataExpressions.All(x => Convert.ToBoolean(_expressionEvaluator.Evaluate(null, x))))
@@ -73,12 +80,11 @@ public class FileSystemDataProvider : IDataProvider
             .WithValueDelegate((item, _, _) => item)
             .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
             .Build());
-        var fileData = Directory.GetFiles(fileSystemQuery.Path, fileSystemQuery.SearchPattern, fileSystemQuery.SearchOption)
-            .Select(x => new FileData(x))
+        var fileData = _fileDataProvider.Get(fileSystemQuery)
             .Where(x => fileDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
             .ToArray();
 
-        if (typeof(FileData).IsAssignableFrom(typeof(TResult)))
+        if (typeof(IFileData).IsAssignableFrom(typeof(TResult)))
         {
             result = fileData.Cast<TResult>();
             return true;
