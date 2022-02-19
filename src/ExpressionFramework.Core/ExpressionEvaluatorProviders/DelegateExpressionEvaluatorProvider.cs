@@ -6,7 +6,7 @@ public class DelegateExpressionEvaluatorProvider : IExpressionEvaluatorProvider
     {
         if (expression is IDelegateExpression delegateExpression)
         {
-            result = delegateExpression.ValueDelegate.Invoke();
+            result = delegateExpression.ValueDelegate.Invoke(item, expression, evaluator);
             return true;
         }
 

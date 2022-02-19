@@ -5,7 +5,7 @@ public class ConditionFunctionBuilder : IExpressionFunctionBuilder
     public IConditionBuilder Condition { get; set; } = new ConditionBuilder();
     public IExpressionFunctionBuilder? InnerFunction { get; set; }
 
-    internal ConditionFunctionBuilder WithCondition(IConditionBuilder condition)
+    public ConditionFunctionBuilder WithCondition(IConditionBuilder condition)
         => this.Chain(x => x.Condition = condition);
 
     public IExpressionFunction Build()

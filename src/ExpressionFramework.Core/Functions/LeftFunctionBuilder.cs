@@ -6,7 +6,7 @@ public class LeftFunctionBuilder : IExpressionFunctionBuilder
     public IExpressionBuilder Expression { get; set; } = new EmptyExpressionBuilder();
     public IExpressionFunctionBuilder? InnerFunction { get; set; }
 
-    internal LeftFunctionBuilder WithExpression(IExpressionBuilder expression)
+    public LeftFunctionBuilder WithExpression(IExpressionBuilder expression)
         => this.Chain(x => x.Expression = expression);
 
     public LeftFunctionBuilder WithLength(int length)

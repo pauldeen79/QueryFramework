@@ -91,7 +91,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 #nullable enable
     public partial class DelegateExpressionBuilder : ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder
     {
-        public System.Func<object?> ValueDelegate
+        public System.Func<object,ExpressionFramework.Abstractions.DomainModel.IExpression,ExpressionFramework.Abstractions.IExpressionEvaluator,object> ValueDelegate
         {
             get;
             set;
@@ -110,7 +110,7 @@ namespace ExpressionFramework.Core.DomainModel.Builders
 
         public DelegateExpressionBuilder()
         {
-            ValueDelegate = new Func<object?>(() => null);
+            ValueDelegate = new Func<object?, IExpression, IExpressionEvaluator, object?>((_, _, _) => null);
         }
 
         public DelegateExpressionBuilder(ExpressionFramework.Abstractions.DomainModel.IDelegateExpression source)

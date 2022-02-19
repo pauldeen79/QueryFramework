@@ -5,7 +5,7 @@ public class MonthFunctionBuilder : IExpressionFunctionBuilder
     public IExpressionBuilder Expression { get; set; } = new EmptyExpressionBuilder();
     public IExpressionFunctionBuilder? InnerFunction { get; set; }
 
-    internal MonthFunctionBuilder WithExpression(IExpressionBuilder expression)
+    public MonthFunctionBuilder WithExpression(IExpressionBuilder expression)
         => this.Chain(x => x.Expression = expression);
 
     public IExpressionFunction Build()

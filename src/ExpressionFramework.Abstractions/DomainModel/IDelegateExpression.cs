@@ -2,5 +2,5 @@
 
 public interface IDelegateExpression : IExpression
 {
-    Func<object?> ValueDelegate { get; }
+    Func<object?, IExpression, IExpressionEvaluator, object?> ValueDelegate { get; }
 }

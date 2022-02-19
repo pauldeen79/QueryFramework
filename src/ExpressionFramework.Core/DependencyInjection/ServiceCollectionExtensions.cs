@@ -15,7 +15,6 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IExpressionEvaluatorProvider, EmptyExpressionEvaluatorProvider>()
             .AddSingleton<IExpressionEvaluatorProvider, FieldExpressionEvaluatorProvider>()
             .AddSingleton<IValueProvider, ValueProvider>()
-            .AddSingleton<IFunctionEvaluator, CoalesceFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, ConditionFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, CountFunctionEvaluator>()
             .AddSingleton<IFunctionEvaluator, DayFunctionEvaluator>()

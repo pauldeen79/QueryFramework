@@ -53,9 +53,9 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var sut = CreateSut();
         var condition = new ConditionBuilder()
-            .WithLeftExpression(new DelegateExpressionBuilder().WithValue(() => "12345"))
+            .WithLeftExpression(new DelegateExpressionBuilder().WithValueDelegate((_, _, _) => "12345"))
             .WithOperator(Operator.Equal)
-            .WithRightExpression(new DelegateExpressionBuilder().WithValue(() => "12345"))
+            .WithRightExpression(new DelegateExpressionBuilder().WithValueDelegate((_, _, _) => "12345"))
             .Build();
 
         // Act

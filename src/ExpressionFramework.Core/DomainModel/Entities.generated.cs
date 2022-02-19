@@ -72,7 +72,7 @@ namespace ExpressionFramework.Core.DomainModel
 #nullable enable
     public partial record DelegateExpression : ExpressionFramework.Abstractions.DomainModel.IDelegateExpression
     {
-        public System.Func<object?> ValueDelegate
+        public System.Func<object,ExpressionFramework.Abstractions.DomainModel.IExpression,ExpressionFramework.Abstractions.IExpressionEvaluator,object> ValueDelegate
         {
             get;
         }
@@ -87,7 +87,7 @@ namespace ExpressionFramework.Core.DomainModel
             return new ExpressionFramework.Core.DomainModel.Builders.DelegateExpressionBuilder(this);
         }
 
-        public DelegateExpression(System.Func<object?> valueDelegate, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
+        public DelegateExpression(System.Func<object,ExpressionFramework.Abstractions.DomainModel.IExpression,ExpressionFramework.Abstractions.IExpressionEvaluator,object> valueDelegate, ExpressionFramework.Abstractions.DomainModel.IExpressionFunction? function)
         {
             this.ValueDelegate = valueDelegate;
             this.Function = function;
