@@ -41,14 +41,19 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.Select(", ");
             }
 
-            var correctedFieldName = fieldInfo.GetDatabaseFieldName(expression.FieldName);
+            var fieldName = expression.GetFieldName();
+            if (fieldName == null)
+            {
+                throw new InvalidOperationException($"Query fields contains no field in expression [{expression}]");
+            }
+            var correctedFieldName = fieldInfo.GetDatabaseFieldName(fieldName);
             if (correctedFieldName == null)
             {
                 throw new InvalidOperationException($"Query fields contains unknown field in expression [{expression}]");
             }
 
             //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
-            var correctedExpression = new QueryExpression(correctedFieldName, expression.Function);
+            var correctedExpression = new FieldExpression(correctedFieldName, expression.Function);
 
             instance.Select(evaluator.GetSqlExpression(correctedExpression));
             paramCounter++;
@@ -111,9 +116,9 @@ internal static class PagedSelectCommandBuilderExtensions
                 queryCondition,
                 fieldInfo,
                 evaluator,
-                queryCondition.Combination == QueryCombination.And
-                    ? instance.And
-                    : instance.Or
+                /*queryCondition.Combination == QueryCombination.And
+                    ? */instance.And/*
+                    : instance.Or*/
             );
         }
 
@@ -138,12 +143,17 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.GroupBy(", ");
             }
 
-            var correctedFieldName = fieldInfo.GetDatabaseFieldName(groupBy.FieldName);
+            var fieldName = groupBy.GetFieldName();
+            if (fieldName == null)
+            {
+                throw new InvalidOperationException($"Query group by fields contains no field in expression [{groupBy}]");
+            }
+            var correctedFieldName = fieldInfo.GetDatabaseFieldName(fieldName);
             if (correctedFieldName == null)
             {
-                throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
+                throw new InvalidOperationException($"Query group by fields contains unknown field [{fieldName}]");
             }
-            var corrected = new QueryExpression(correctedFieldName, groupBy.Function);
+            var corrected = new FieldExpression(correctedFieldName, groupBy.Function);
             instance.GroupBy(evaluator.GetSqlExpression(corrected));
             fieldCounter++;
         }
@@ -167,7 +177,8 @@ internal static class PagedSelectCommandBuilderExtensions
         {
             if (fieldCounter > 0)
             {
-                instance.Having($" {having.Combination.ToSql()} ");
+                //instance.Having($" {having.Combination.ToSql()} ");
+                instance.Having($" AND ");
             }
             paramCounter = instance.AppendQueryCondition
             (
@@ -217,12 +228,17 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.OrderBy(", ");
             }
 
-            var newFieldName = fieldInfo.GetDatabaseFieldName(querySortOrder.SortOrder.Field.FieldName);
+            var fieldName = querySortOrder.SortOrder.Field.GetFieldName();
+            if (fieldName == null)
+            {
+                throw new InvalidOperationException($"Query order by fields contains no field in expression [{querySortOrder.SortOrder.Field}]");
+            }
+            var newFieldName = fieldInfo.GetDatabaseFieldName(fieldName);
             if (newFieldName == null)
             {
-                throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
+                throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", fieldName));
             }
-            var newQuerySortOrder = new QuerySortOrder(new QueryExpression(newFieldName, null), querySortOrder.SortOrder.Order);
+            var newQuerySortOrder = new QuerySortOrder(new FieldExpression(newFieldName, null), querySortOrder.SortOrder.Order);
             instance.OrderBy($"{evaluator.GetSqlExpression(newQuerySortOrder.Field)} {newQuerySortOrder.ToSql()}");
         }
 
@@ -242,56 +258,79 @@ internal static class PagedSelectCommandBuilderExtensions
 
     internal static int AppendQueryCondition(this PagedSelectCommandBuilder instance,
                                              int paramCounter,
-                                             IQueryCondition queryCondition,
+                                             ICondition condition,
                                              IQueryFieldInfo fieldInfo,
                                              IQueryExpressionEvaluator evaluator,
                                              Func<string, PagedSelectCommandBuilder> actionDelegate)
     {
         var builder = new StringBuilder();
 
-        if (queryCondition.OpenBracket)
-        {
-            builder.Append("(");
-        }
+        //if (condition.OpenBracket)
+        //{
+        //    builder.Append("(");
+        //}
 
-        var customFieldName = fieldInfo.GetDatabaseFieldName(queryCondition.Field.FieldName);
+        var fieldExpression = condition.LeftExpression;
+
+        var leftFieldName = condition.LeftExpression.GetFieldName();
+        var rightFieldName =  condition.RightExpression.GetFieldName();
+        if (leftFieldName == null && rightFieldName == null)
+        {
+            //TODO: Write code for constant, and think of a way to prevent sql injection
+            throw new NotImplementedException("Need to implement two constant values here");
+        }
+        if (leftFieldName != null && rightFieldName != null)
+        {
+            //TODO: Refactor code, so this scenario is also supported
+            throw new NotSupportedException("At this moment, only one expression with a field name is supported for one condition");
+        }
+        var leftConstantValue = condition.LeftExpression.GetConstantValue();
+        var rightConstantValue = condition.RightExpression.GetConstantValue();
+        if (leftConstantValue != null && rightConstantValue != null)
+        {
+            //TODO: Refactor code, so this scenario is also supported
+            throw new NotSupportedException("At this moment, only one expression with a constant value is supported for one condition");
+        }
+        var fieldName = leftFieldName ?? rightFieldName ?? string.Empty;
+        var customFieldName = fieldInfo.GetDatabaseFieldName(fieldName);
         if (customFieldName == null)
         {
-            throw new InvalidOperationException($"Query conditions contains unknown field [{queryCondition.Field.FieldName}]");
+            throw new InvalidOperationException($"Query conditions contains unknown field [{fieldName}]");
         }
 
-        var field = new QueryExpression(customFieldName, queryCondition.Field.Function);
+        fieldExpression = new FieldExpression(customFieldName, fieldExpression.Function);
 
-        if (!queryCondition.Operator.In(QueryOperator.Contains,
-                                        QueryOperator.NotContains,
-                                        QueryOperator.EndsWith,
-                                        QueryOperator.NotEndsWith,
-                                        QueryOperator.StartsWith,
-                                        QueryOperator.NotStartsWith))
+        if (!condition.Operator.In(Operator.Contains,
+                                   Operator.NotContains,
+                                   Operator.EndsWith,
+                                   Operator.NotEndsWith,
+                                   Operator.StartsWith,
+                                   Operator.NotStartsWith))
         {
-            builder.Append(queryCondition.Operator.ToNot());
+            builder.Append(condition.Operator.ToNot());
 
-            if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
+            if (condition.Operator.In(Operator.IsNullOrEmpty, Operator.IsNotNullOrEmpty))
             {
                 builder.Append("COALESCE(");
             }
 
-            builder.Append(evaluator.GetSqlExpression(field));
+            builder.Append(evaluator.GetSqlExpression(fieldExpression));
 
-            if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
+            if (condition.Operator.In(Operator.IsNullOrEmpty, Operator.IsNotNullOrEmpty))
             {
                 builder.Append(",'')");
             }
         }
 
-        var paramName = GetQueryParameterName(paramCounter, queryCondition.Value);
+        var constantValue = leftConstantValue ?? rightConstantValue;
+        var paramName = GetQueryParameterName(paramCounter, constantValue);
 
-        AppendOperatorAndValue(instance, paramCounter, queryCondition, field, paramName, builder, evaluator);
+        AppendOperatorAndValue(instance, paramCounter, condition, fieldExpression, paramName, constantValue, builder, evaluator);
 
-        if (queryCondition.CloseBracket)
-        {
-            builder.Append(")");
-        }
+        //if (condition.CloseBracket)
+        //{
+        //    builder.Append(")");
+        //}
 
         actionDelegate.Invoke(builder.ToString());
 
@@ -300,51 +339,52 @@ internal static class PagedSelectCommandBuilderExtensions
 
     private static void AppendOperatorAndValue(PagedSelectCommandBuilder instance,
                                                int paramCounter,
-                                               IQueryCondition queryCondition,
-                                               IQueryExpression field,
+                                               ICondition condition,
+                                               IExpression expression,
                                                string paramName,
+                                               object? constantValue,
                                                StringBuilder builder,
                                                IQueryExpressionEvaluator evaluator)
     {
-        var sqlToAppend = queryCondition.Operator switch
+        var sqlToAppend = condition.Operator switch
         {
-            QueryOperator.IsNull => " IS NULL",
-            QueryOperator.IsNotNull => " IS NOT NULL",
-            QueryOperator.IsNullOrEmpty => " = ''",
-            QueryOperator.IsNotNullOrEmpty => " <> ''",
-            QueryOperator.Contains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(field)}) > 0",
-            QueryOperator.NotContains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(field)}) = 0",
-            QueryOperator.StartsWith => $"LEFT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
-            QueryOperator.NotStartsWith => $"LEFT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
-            QueryOperator.EndsWith => $"RIGHT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
-            QueryOperator.NotEndsWith => $"RIGHT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
-            _ => $" {queryCondition.Operator.ToSql()} {paramName}"
+            Operator.IsNull => " IS NULL",
+            Operator.IsNotNull => " IS NOT NULL",
+            Operator.IsNullOrEmpty => " = ''",
+            Operator.IsNotNullOrEmpty => " <> ''",
+            Operator.Contains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(expression)}) > 0",
+            Operator.NotContains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(expression)}) = 0",
+            Operator.StartsWith => $"LEFT({evaluator.GetSqlExpression(expression)}, {constantValue.ToStringWithNullCheck().Length}) = {paramName}",
+            Operator.NotStartsWith => $"LEFT({evaluator.GetSqlExpression(expression)}, {constantValue.ToStringWithNullCheck().Length}) <> {paramName}",
+            Operator.EndsWith => $"RIGHT({evaluator.GetSqlExpression(expression)}, {constantValue.ToStringWithNullCheck().Length}) = {paramName}",
+            Operator.NotEndsWith => $"RIGHT({evaluator.GetSqlExpression(expression)}, {constantValue.ToStringWithNullCheck().Length}) <> {paramName}",
+            _ => $" {condition.Operator.ToSql()} {paramName}"
         };
 
         builder.Append(sqlToAppend);
 
-        if (!queryCondition.Operator.In(QueryOperator.IsNull,
-                                        QueryOperator.IsNotNull,
-                                        QueryOperator.IsNullOrEmpty,
-                                        QueryOperator.IsNotNullOrEmpty))
+        if (!condition.Operator.In(Operator.IsNull,
+                                   Operator.IsNotNull,
+                                   Operator.IsNullOrEmpty,
+                                   Operator.IsNotNullOrEmpty))
         {
-            AppendParameterIfNecessary(instance, paramCounter, queryCondition);
+            AppendParameterIfNecessary(instance, paramCounter, constantValue);
         }
     }
 
     private static void AppendParameterIfNecessary(PagedSelectCommandBuilder instance,
                                                    int paramCounter,
-                                                   IQueryCondition queryCondition)
+                                                   object? constantValue)
     {
-        if (queryCondition.Value is IQueryParameterValue)
+        if (constantValue is IQueryParameterValue)
         {
             return;
         }
 
         instance.AppendParameter(string.Format("p{0}", paramCounter),
-                                 queryCondition.Value is KeyValuePair<string, object> keyValuePair
+                                 constantValue is KeyValuePair<string, object> keyValuePair
                                      ? keyValuePair.Value
-                                     : queryCondition.Value ?? new object());
+                                     : constantValue ?? new object());
     }
 
     private static string GetQueryParameterName(int paramCounter, object? value)

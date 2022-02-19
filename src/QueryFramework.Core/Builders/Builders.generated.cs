@@ -15,104 +15,6 @@ using System.Text;
 namespace QueryFramework.Core.Builders
 {
 #nullable enable
-    public partial class QueryConditionBuilder : QueryFramework.Abstractions.Builders.IQueryConditionBuilder
-    {
-        public bool OpenBracket
-        {
-            get;
-            set;
-        }
-
-        public bool CloseBracket
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.Builders.IQueryExpressionBuilder Field
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.QueryOperator Operator
-        {
-            get;
-            set;
-        }
-
-        public object? Value
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.QueryCombination Combination
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.IQueryCondition Build()
-        {
-            return new QueryFramework.Core.QueryCondition(OpenBracket, CloseBracket, Field.Build(), Operator, Value, Combination);
-        }
-
-        public QueryConditionBuilder()
-        {
-            OpenBracket = default;
-            CloseBracket = default;
-            Field = new QueryFramework.Core.Builders.QueryExpressionBuilder();
-            Operator = default;
-            Combination = default;
-        }
-
-        public QueryConditionBuilder(QueryFramework.Abstractions.IQueryCondition source)
-        {
-            OpenBracket = source.OpenBracket;
-            CloseBracket = source.CloseBracket;
-            Field = new QueryFramework.Core.Builders.QueryExpressionBuilder(source.Field);
-            Operator = source.Operator;
-            Value = source.Value;
-            Combination = source.Combination;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial class QueryExpressionBuilder : QueryFramework.Abstractions.Builders.IQueryExpressionBuilder
-    {
-        public string FieldName
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder? Function
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.IQueryExpression Build()
-        {
-            return new QueryFramework.Core.QueryExpression(FieldName, Function?.Build());
-        }
-
-        public QueryExpressionBuilder()
-        {
-            FieldName = string.Empty;
-        }
-
-        public QueryExpressionBuilder(QueryFramework.Abstractions.IQueryExpression source)
-        {
-            FieldName = source.FieldName;
-            Function = source.Function == null ? null : source.Function.ToBuilder();
-        }
-    }
-#nullable restore
-
-#nullable enable
     public partial class QueryParameterBuilder : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
     {
         public string Name
@@ -175,7 +77,7 @@ namespace QueryFramework.Core.Builders
 #nullable enable
     public partial class QuerySortOrderBuilder : QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder
     {
-        public QueryFramework.Abstractions.Builders.IQueryExpressionBuilder Field
+        public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder Field
         {
             get;
             set;
@@ -194,13 +96,13 @@ namespace QueryFramework.Core.Builders
 
         public QuerySortOrderBuilder()
         {
-            Field = new QueryFramework.Core.Builders.QueryExpressionBuilder();
+            Field = new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder();
             Order = default;
         }
 
         public QuerySortOrderBuilder(QueryFramework.Abstractions.IQuerySortOrder source)
         {
-            Field = new QueryFramework.Core.Builders.QueryExpressionBuilder(source.Field);
+            Field = source.Field.ToBuilder();
             Order = source.Order;
         }
     }

@@ -10,6 +10,7 @@ public sealed class IntegrationTests : IDisposable
 
     public IntegrationTests()
         => _serviceProvider = new ServiceCollection()
+            .AddExpressionFramework()
             .AddQueryFrameworkFileSystemSearch()
             .BuildServiceProvider();
 

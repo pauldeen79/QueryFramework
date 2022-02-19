@@ -5,8 +5,11 @@ public class ServiceCollectionExtensionsTests
     [Fact]
     public void All_Dependencies_Can_Be_Resolved()
     {
+        // Arrange
+        var collection = new ServiceCollection().AddExpressionFramework();
+
         // Act
-        var action = new Action(() => _ = new ServiceCollection().AddQueryFrameworkFileSystemSearch()
+        var action = new Action(() => _ = collection.AddQueryFrameworkFileSystemSearch()
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
 
         // Assert

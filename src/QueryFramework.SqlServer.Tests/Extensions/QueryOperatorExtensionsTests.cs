@@ -6,22 +6,22 @@ public class QueryOperatorExtensionsTests
     public void ToSql_Throws_On_Invalid_QueryOperator()
     {
         // Act & Assert
-        ((QueryOperator)99).Invoking(x => x.ToSql())
-                           .Should().Throw<ArgumentOutOfRangeException>();
+        ((Operator)99).Invoking(x => x.ToSql())
+                      .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData(QueryOperator.Contains)]
-    [InlineData(QueryOperator.EndsWith)]
-    [InlineData(QueryOperator.IsNotNull)]
-    [InlineData(QueryOperator.IsNotNullOrEmpty)]
-    [InlineData(QueryOperator.IsNull)]
-    [InlineData(QueryOperator.IsNullOrEmpty)]
-    [InlineData(QueryOperator.NotContains)]
-    [InlineData(QueryOperator.NotEndsWith)]
-    [InlineData(QueryOperator.NotStartsWith)]
-    [InlineData(QueryOperator.StartsWith)]
-    public void ToSql_Throws_On_Unsupported_QueryOperator(QueryOperator input)
+    [InlineData(Operator.Contains)]
+    [InlineData(Operator.EndsWith)]
+    [InlineData(Operator.IsNotNull)]
+    [InlineData(Operator.IsNotNullOrEmpty)]
+    [InlineData(Operator.IsNull)]
+    [InlineData(Operator.IsNullOrEmpty)]
+    [InlineData(Operator.NotContains)]
+    [InlineData(Operator.NotEndsWith)]
+    [InlineData(Operator.NotStartsWith)]
+    [InlineData(Operator.StartsWith)]
+    public void ToSql_Throws_On_Unsupported_QueryOperator(Operator input)
     {
         // Act & Assert
         input.Invoking(x => x.ToSql())
@@ -29,13 +29,13 @@ public class QueryOperatorExtensionsTests
     }
 
     [Theory]
-    [InlineData(QueryOperator.Equal, "=")]
-    [InlineData(QueryOperator.GreaterOrEqual, ">=")]
-    [InlineData(QueryOperator.Greater, ">")]
-    [InlineData(QueryOperator.LowerOrEqual, "<=")]
-    [InlineData(QueryOperator.Lower, "<")]
-    [InlineData(QueryOperator.NotEqual, "<>")]
-    public void ToSql_Converts_Valid_QueryOperator_Correctly(QueryOperator input, string expectedOutput)
+    [InlineData(Operator.Equal, "=")]
+    [InlineData(Operator.GreaterOrEqual, ">=")]
+    [InlineData(Operator.Greater, ">")]
+    [InlineData(Operator.SmallerOrEqual, "<=")]
+    [InlineData(Operator.Smaller, "<")]
+    [InlineData(Operator.NotEqual, "<>")]
+    public void ToSql_Converts_Valid_QueryOperator_Correctly(Operator input, string expectedOutput)
     {
         // Act
         var actual = input.ToSql();
@@ -45,12 +45,12 @@ public class QueryOperatorExtensionsTests
     }
 
     [Theory]
-    [InlineData(QueryOperator.NotContains, "NOT ")]
-    [InlineData(QueryOperator.NotEndsWith, "NOT ")]
-    [InlineData(QueryOperator.NotStartsWith, "NOT ")]
-    [InlineData(QueryOperator.Equal, "")]
-    [InlineData(QueryOperator.Contains, "")]
-    public void ToNot_Returns_Correct_Result(QueryOperator input, string expectedOutput)
+    [InlineData(Operator.NotContains, "NOT ")]
+    [InlineData(Operator.NotEndsWith, "NOT ")]
+    [InlineData(Operator.NotStartsWith, "NOT ")]
+    [InlineData(Operator.Equal, "")]
+    [InlineData(Operator.Contains, "")]
+    public void ToNot_Returns_Correct_Result(Operator input, string expectedOutput)
     {
         // Act
         var actual = input.ToNot();

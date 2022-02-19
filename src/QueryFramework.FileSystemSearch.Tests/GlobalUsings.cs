@@ -2,6 +2,8 @@
 global using System.IO;
 global using System.Linq;
 global using System.Runtime.InteropServices;
+global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Core.DependencyInjection;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
@@ -12,5 +14,4 @@ global using QueryFramework.Core.Queries.Builders;
 global using QueryFramework.FileSystemSearch.Entities;
 global using QueryFramework.FileSystemSearch.Extensions;
 global using QueryFramework.FileSystemSearch.Queries;
-global using QueryFramework.InMemory.Abstractions;
 global using Xunit;

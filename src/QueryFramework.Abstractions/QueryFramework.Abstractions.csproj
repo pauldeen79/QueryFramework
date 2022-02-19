@@ -19,4 +19,9 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ExpressionFramework.Abstractions\ExpressionFramework.Abstractions.csproj" />
+    <ProjectReference Include="..\ExpressionFramework.Core\ExpressionFramework.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@ public class DefaultQueryExpressionEvaluatorTests
         // Arrange
         var functionParserMock = new Mock<IFunctionParser>();
         var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
-        var expression = new QueryExpressionBuilder().WithFieldName("Test").Build();
+        var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
 
         // Act
         var actual = sut.GetSqlExpression(expression);
@@ -24,11 +24,11 @@ public class DefaultQueryExpressionEvaluatorTests
         var functionParserMock = new Mock<IFunctionParser>();
         var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
         var sqlExpression = "LEN({0})";
-        functionParserMock.Setup(x => x.TryParse(It.IsAny<IQueryExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(true);
-        var queryExpressionFunctionBuilderMock = new Mock<IQueryExpressionFunctionBuilder>();
-        var queryExpressionFunctionMock = new Mock<IQueryExpressionFunction>();
+        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(true);
+        var queryExpressionFunctionBuilderMock = new Mock<IExpressionFunctionBuilder>();
+        var queryExpressionFunctionMock = new Mock<IExpressionFunction>();
         queryExpressionFunctionBuilderMock.Setup(x => x.Build()).Returns(queryExpressionFunctionMock.Object);
-        var expression = new QueryExpressionBuilder().WithFieldName("Test")
+        var expression = new FieldExpressionBuilder().WithFieldName("Test")
                                                      .WithFunction(queryExpressionFunctionBuilderMock.Object)
                                                      .Build();
 
@@ -36,7 +36,7 @@ public class DefaultQueryExpressionEvaluatorTests
         var actual = sut.GetSqlExpression(expression);
 
         // Assert
-        actual.Should().Be(string.Format(sqlExpression, expression.FieldName));
+        actual.Should().Be(string.Format(sqlExpression, expression.GetFieldName()));
     }
 
     [Fact]
@@ -46,11 +46,11 @@ public class DefaultQueryExpressionEvaluatorTests
         var functionParserMock = new Mock<IFunctionParser>();
         var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
         var sqlExpression = string.Empty;
-        functionParserMock.Setup(x => x.TryParse(It.IsAny<IQueryExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(false);
-        var queryExpressionFunctionBuilderMock = new Mock<IQueryExpressionFunctionBuilder>();
-        var queryExpressionFunctionMock = new Mock<IQueryExpressionFunction>();
+        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(false);
+        var queryExpressionFunctionBuilderMock = new Mock<IExpressionFunctionBuilder>();
+        var queryExpressionFunctionMock = new Mock<IExpressionFunction>();
         queryExpressionFunctionBuilderMock.Setup(x => x.Build()).Returns(queryExpressionFunctionMock.Object);
-        var expression = new QueryExpressionBuilder().WithFieldName("Test")
+        var expression = new FieldExpressionBuilder().WithFieldName("Test")
                                                      .WithFunction(queryExpressionFunctionBuilderMock.Object)
                                                      .Build();
 
@@ -58,6 +58,6 @@ public class DefaultQueryExpressionEvaluatorTests
         sut.Invoking(x => x.GetSqlExpression(expression))
            .Should().ThrowExactly<ArgumentException>()
            .WithParameterName("expression")
-           .And.Message.Should().StartWith("Unsupported function: IQueryExpressionFunctionProxy");
+           .And.Message.Should().StartWith("Unsupported function: IExpressionFunctionProxy");
     }
 }

@@ -2,7 +2,7 @@
 
 public static class QueryExpressionFunctionBuilderExtensions
 {
-    public static T WithInnerFunction<T>(this T instance, IQueryExpressionBuilder currentExpression)
-        where T : IQueryExpressionFunctionBuilder
+    public static T WithInnerFunction<T>(this T instance, IExpressionBuilder currentExpression)
+        where T : IExpressionFunctionBuilder
         => instance.Chain(x => x.InnerFunction = currentExpression.GetFunction()?.ToBuilder());
 }

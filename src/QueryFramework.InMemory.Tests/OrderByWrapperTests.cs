@@ -8,8 +8,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -27,8 +27,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), direction) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -46,8 +46,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), direction) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -65,8 +65,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "b" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), direction) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), direction) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -82,8 +82,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -99,8 +99,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -116,8 +116,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -133,8 +133,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -150,8 +150,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -167,8 +167,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -184,8 +184,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -201,8 +201,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -218,8 +218,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -235,8 +235,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act
@@ -252,8 +252,8 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new QueryExpression(nameof(MyClass.Property), null), QuerySortOrderDirection.Ascending) };
-        var valueRetriever = new DefaultExpressionEvaluator(new DefaultValueProvider(), Enumerable.Empty<IFunctionParser>());
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
+        var valueRetriever = new ExpressionEvaluator(new[] { new FieldExpressionEvaluatorProvider(new ValueProvider()) }, Enumerable.Empty<IFunctionEvaluator>());
         var sut = new OrderByWrapper(data, orderByFields, valueRetriever);
 
         // Act

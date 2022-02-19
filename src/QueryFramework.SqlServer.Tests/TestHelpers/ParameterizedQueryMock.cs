@@ -4,7 +4,7 @@ internal class ParameterizedQueryMock : IParameterizedQuery
 {
     public ParameterizedQueryMock(IEnumerable<IQueryParameter> parameters)
     {
-        Conditions = new ValueCollection<IQueryCondition>();
+        Conditions = new ValueCollection<ICondition>();
         OrderByFields = new ValueCollection<IQuerySortOrder>();
         Parameters = new ValueCollection<IQueryParameter>(parameters.ToList());
     }
@@ -12,6 +12,6 @@ internal class ParameterizedQueryMock : IParameterizedQuery
     public ValueCollection<IQueryParameter> Parameters { get; set; }
     public int? Limit { get; set; }
     public int? Offset { get; set; }
-    public ValueCollection<IQueryCondition> Conditions { get; set; }
+    public ValueCollection<ICondition> Conditions { get; set; }
     public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
 }

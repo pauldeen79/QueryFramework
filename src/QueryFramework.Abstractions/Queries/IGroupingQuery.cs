@@ -2,6 +2,6 @@
 
 public interface IGroupingQuery : ISingleEntityQuery
 {
-    ValueCollection<IQueryExpression> GroupByFields { get; }
-    ValueCollection<IQueryCondition> HavingFields { get; }
+    ValueCollection<IExpression> GroupByFields { get; }
+    ValueCollection<ICondition> HavingFields { get; }
 }

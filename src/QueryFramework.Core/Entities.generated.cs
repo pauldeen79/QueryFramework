@@ -15,74 +15,6 @@ using System.Text;
 namespace QueryFramework.Core
 {
 #nullable enable
-    public partial record QueryCondition : QueryFramework.Abstractions.IQueryCondition
-    {
-        public bool OpenBracket
-        {
-            get;
-        }
-
-        public bool CloseBracket
-        {
-            get;
-        }
-
-        public QueryFramework.Abstractions.IQueryExpression Field
-        {
-            get;
-        }
-
-        public QueryFramework.Abstractions.QueryOperator Operator
-        {
-            get;
-        }
-
-        public object? Value
-        {
-            get;
-        }
-
-        public QueryFramework.Abstractions.QueryCombination Combination
-        {
-            get;
-        }
-
-        public QueryCondition(bool openBracket, bool closeBracket, QueryFramework.Abstractions.IQueryExpression field, QueryFramework.Abstractions.QueryOperator @operator, object? value, QueryFramework.Abstractions.QueryCombination combination)
-        {
-            this.OpenBracket = openBracket;
-            this.CloseBracket = closeBracket;
-            this.Field = field;
-            this.Operator = @operator;
-            this.Value = value;
-            this.Combination = combination;
-            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial record QueryExpression : QueryFramework.Abstractions.IQueryExpression
-    {
-        public string FieldName
-        {
-            get;
-        }
-
-        public QueryFramework.Abstractions.IQueryExpressionFunction? Function
-        {
-            get;
-        }
-
-        public QueryExpression(string fieldName, QueryFramework.Abstractions.IQueryExpressionFunction? function)
-        {
-            this.FieldName = fieldName;
-            this.Function = function;
-            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
-        }
-    }
-#nullable restore
-
-#nullable enable
     public partial record QueryParameter : QueryFramework.Abstractions.IQueryParameter
     {
         public string Name
@@ -123,7 +55,7 @@ namespace QueryFramework.Core
 #nullable enable
     public partial record QuerySortOrder : QueryFramework.Abstractions.IQuerySortOrder
     {
-        public QueryFramework.Abstractions.IQueryExpression Field
+        public ExpressionFramework.Abstractions.DomainModel.IExpression Field
         {
             get;
         }
@@ -133,7 +65,7 @@ namespace QueryFramework.Core
             get;
         }
 
-        public QuerySortOrder(QueryFramework.Abstractions.IQueryExpression field, QueryFramework.Abstractions.QuerySortOrderDirection order)
+        public QuerySortOrder(ExpressionFramework.Abstractions.DomainModel.IExpression field, QueryFramework.Abstractions.QuerySortOrderDirection order)
         {
             this.Field = field;
             this.Order = order;

@@ -10,15 +10,15 @@ public static class QueryOperatorExtensions
     /// <remarks>
     /// Note that only a sub set is supported. For some constructs, you have to use LIKE/LEFT/RIGHT/CHARINDEX and implement this yourself.
     /// </remarks>
-    public static string ToSql(this QueryOperator instance)
+    public static string ToSql(this Operator instance)
         => instance switch
         {
-            QueryOperator.Equal => "=",
-            QueryOperator.GreaterOrEqual => ">=",
-            QueryOperator.Greater => ">",
-            QueryOperator.LowerOrEqual => "<=",
-            QueryOperator.Lower => "<",
-            QueryOperator.NotEqual => "<>",
+            Operator.Equal => "=",
+            Operator.GreaterOrEqual => ">=",
+            Operator.Greater => ">",
+            Operator.SmallerOrEqual => "<=",
+            Operator.Smaller => "<",
+            Operator.NotEqual => "<>",
             _ => throw new ArgumentOutOfRangeException(nameof(instance), $"Unsupported query operator: {instance}"),
         };
 
@@ -26,10 +26,10 @@ public static class QueryOperatorExtensions
     /// Creates a NOT keyword when the operator is negative.
     /// </summary>
     /// <param name="instance">The instance.</param>
-    public static string ToNot(this QueryOperator instance)
-        => instance.In(QueryOperator.NotContains,
-                       QueryOperator.NotEndsWith,
-                       QueryOperator.NotStartsWith)
+    public static string ToNot(this Operator instance)
+        => instance.In(Operator.NotContains,
+                       Operator.NotEndsWith,
+                       Operator.NotStartsWith)
             ? "NOT "
             : string.Empty;
 }

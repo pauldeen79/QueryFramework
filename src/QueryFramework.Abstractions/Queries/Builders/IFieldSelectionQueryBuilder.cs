@@ -4,6 +4,6 @@ public interface IFieldSelectionQueryBuilder : ISingleEntityQueryBuilderBase
 {
     bool Distinct { get; set; }
     bool GetAllFields { get; set; }
-    List<IQueryExpressionBuilder> Fields { get; set; }
+    List<IExpressionBuilder> Fields { get; set; }
     IFieldSelectionQuery Build();
 }

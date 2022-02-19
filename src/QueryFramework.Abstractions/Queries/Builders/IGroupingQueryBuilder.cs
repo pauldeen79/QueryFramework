@@ -2,7 +2,7 @@
 
 public interface IGroupingQueryBuilder : ISingleEntityQueryBuilderBase
 {
-    List<IQueryExpressionBuilder> GroupByFields { get; set; }
-    List<IQueryConditionBuilder> HavingFields { get; set; }
+    List<IExpressionBuilder> GroupByFields { get; set; }
+    List<IConditionBuilder> HavingFields { get; set; }
     IGroupingQuery Build();
 }

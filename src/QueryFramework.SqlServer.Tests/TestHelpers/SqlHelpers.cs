@@ -2,7 +2,7 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe(IQueryExpressionBuilder expression, string expectedSqlForExpression)
+    internal static void ExpressionSqlShouldBe(IExpressionBuilder expression, string expectedSqlForExpression)
     {
         // Arrange
         var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
@@ -21,10 +21,10 @@ internal static class SqlHelpers
                              .Returns(queryFieldInfo);
         var query = new SingleEntityQueryBuilder().Where
         (
-            new QueryConditionBuilder()
-                .WithField(expression)
-                .WithOperator(QueryOperator.Equal)
-                .WithValue("test")
+            new ConditionBuilder()
+                .WithLeftExpression(expression)
+                .WithOperator(Operator.Equal)
+                .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
         ).Build();
         var serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer()

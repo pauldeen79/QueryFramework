@@ -15,68 +15,6 @@ using System.Text;
 namespace QueryFramework.Abstractions
 {
 #nullable enable
-    public partial interface IQueryCondition
-    {
-        bool OpenBracket
-        {
-            get;
-        }
-
-        bool CloseBracket
-        {
-            get;
-        }
-
-        QueryFramework.Abstractions.IQueryExpression Field
-        {
-            get;
-        }
-
-        QueryFramework.Abstractions.QueryOperator Operator
-        {
-            get;
-        }
-
-        object? Value
-        {
-            get;
-        }
-
-        QueryFramework.Abstractions.QueryCombination Combination
-        {
-            get;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IQueryExpression
-    {
-        string FieldName
-        {
-            get;
-        }
-
-        QueryFramework.Abstractions.IQueryExpressionFunction? Function
-        {
-            get;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IQueryExpressionFunction
-    {
-        QueryFramework.Abstractions.IQueryExpressionFunction? InnerFunction
-        {
-            get;
-        }
-
-        QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder ToBuilder();
-    }
-#nullable restore
-
-#nullable enable
     public partial interface IQueryParameter
     {
         string Name
@@ -104,7 +42,7 @@ namespace QueryFramework.Abstractions
 #nullable enable
     public partial interface IQuerySortOrder
     {
-        QueryFramework.Abstractions.IQueryExpression Field
+        ExpressionFramework.Abstractions.DomainModel.IExpression Field
         {
             get;
         }

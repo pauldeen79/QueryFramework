@@ -19,9 +19,9 @@ public class FileSystemDataProvider : IDataProvider
         nameof(LineData.LineNumber)
     };
 
-    private readonly IConditionEvaluator _conditionEvaluator;
+    private readonly IExpressionEvaluator _expressionEvaluator;
 
-    public FileSystemDataProvider(IConditionEvaluator conditionEvaluator) => _conditionEvaluator = conditionEvaluator;
+    public FileSystemDataProvider(IExpressionEvaluator expressionEvaluator) => _expressionEvaluator = expressionEvaluator;
     
     public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
     {
@@ -39,10 +39,43 @@ public class FileSystemDataProvider : IDataProvider
             return false;
         }
 
-        var fileDataConditions = query.Conditions.Where(x => _fileDataFields.Contains(x.Field.FieldName)).ToArray();
+        var conditions = query.Conditions
+            .Select(x =>
+            new
+            {
+                Condition = x,
+                LeftFieldName = x.LeftExpression.GetFieldName(),
+                RightFieldName = x.RightExpression.GetFieldName()
+            });
+
+        var noDataExpressions = conditions
+            .Where
+            (
+                x => (x.LeftFieldName == null || (!_fileDataFields.Contains(x.LeftFieldName) && !_lineDataFields.Contains(x.LeftFieldName)))
+                && (x.RightFieldName == null || (!_fileDataFields.Contains(x.RightFieldName) && !_lineDataFields.Contains(x.RightFieldName)))
+            )
+            .Select(x => new ConstantExpressionBuilder().WithValue(true).WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition))).Build())
+            .ToArray();
+
+        if (noDataExpressions.Length > 0 && !noDataExpressions.All(x => Convert.ToBoolean(_expressionEvaluator.Evaluate(null, x))))
+        {
+            result = Enumerable.Empty<TResult>();
+            return true;
+        }
+
+        var fileDataExpressions = conditions
+            .Where
+            (
+                x => (x.LeftFieldName != null && _fileDataFields.Contains(x.LeftFieldName))
+                || (x.RightFieldName != null && _fileDataFields.Contains(x.RightFieldName))
+            )
+            .Select(x => new DelegateExpressionBuilder()
+            .WithValueDelegate((item, _, _) => item)
+            .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+            .Build());
         var fileData = Directory.GetFiles(fileSystemQuery.Path, fileSystemQuery.SearchPattern, fileSystemQuery.SearchOption)
             .Select(x => new FileData(x))
-            .Where(x => _conditionEvaluator.IsItemValid(x, fileDataConditions))
+            .Where(x => fileDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
             .ToArray();
 
         if (typeof(FileData).IsAssignableFrom(typeof(TResult)))
@@ -51,10 +84,19 @@ public class FileSystemDataProvider : IDataProvider
             return true;
         }
 
-        var lineDataConditions = query.Conditions.Where(x => _lineDataFields.Contains(x.Field.FieldName)).ToArray();
+        var lineDataExpressions = conditions
+            .Where
+            (
+                x => (x.LeftFieldName != null && _lineDataFields.Contains(x.LeftFieldName))
+                || (x.RightFieldName != null && _lineDataFields.Contains(x.RightFieldName))
+            )
+            .Select(x => new DelegateExpressionBuilder()
+            .WithValueDelegate((item, _, _) => item)
+            .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+            .Build());
         result = fileData
             .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, x)))
-            .Where(x => _conditionEvaluator.IsItemValid(x, lineDataConditions))
+            .Where(x => lineDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
             .Cast<TResult>();
         return true;
     }

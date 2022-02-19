@@ -2,5 +2,5 @@
 
 public interface IQueryExpressionEvaluator
 {
-    string GetSqlExpression(IQueryExpression expression);
+    string GetSqlExpression(IExpression expression);
 }

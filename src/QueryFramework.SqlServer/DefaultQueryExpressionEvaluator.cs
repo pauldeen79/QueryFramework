@@ -7,12 +7,12 @@ public class DefaultQueryExpressionEvaluator : IQueryExpressionEvaluator
     public DefaultQueryExpressionEvaluator(IEnumerable<IFunctionParser> functionParsers)
         => _functionParsers = functionParsers;
 
-    public string GetSqlExpression(IQueryExpression expression)
+    public string GetSqlExpression(IExpression expression)
         => expression.Function == null
-            ? expression.FieldName
-            : GetSqlExpression(expression.Function, _functionParsers, nameof(expression)).Replace("{0}", expression.FieldName);
+            ? expression.GetFieldName() ?? throw new ArgumentException("Expression contains no field name", nameof(expression))
+            : GetSqlExpression(expression.Function, _functionParsers, nameof(expression)).Replace("{0}", expression.GetFieldName() ?? throw new ArgumentException("Expression contains no field name", nameof(expression)));
 
-    private string GetSqlExpression(IQueryExpressionFunction function,
+    private string GetSqlExpression(IExpressionFunction function,
                                     IEnumerable<IFunctionParser> functionParsers,
                                     string paramName)
     {

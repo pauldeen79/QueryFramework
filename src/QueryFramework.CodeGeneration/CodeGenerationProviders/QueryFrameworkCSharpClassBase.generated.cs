@@ -31,97 +31,6 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                         new ClassPropertyBuilder
                         {
                             HasSetter = false,
-                            Name = @"OpenBracket",
-                            TypeName = @"System.Boolean",
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"CloseBracket",
-                            TypeName = @"System.Boolean",
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"Field",
-                            TypeName = @"QueryFramework.Abstractions.IQueryExpression",
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"Operator",
-                            TypeName = @"QueryFramework.Abstractions.QueryOperator",
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"Value",
-                            TypeName = @"System.Object",
-                            IsNullable = true,
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"Combination",
-                            TypeName = @"QueryFramework.Abstractions.QueryCombination",
-                        },
-                    } ),
-                    Name = @"IQueryCondition",
-                },
-                new ClassBuilder
-                {
-                    Namespace = @"QueryFramework.Abstractions",
-                    Properties = new List<ClassPropertyBuilder>(new[]
-                    {
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"FieldName",
-                            TypeName = @"System.String",
-                        },
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"Function",
-                            TypeName = @"QueryFramework.Abstractions.IQueryExpressionFunction",
-                            IsNullable = true,
-                        },
-                    } ),
-                    Name = @"IQueryExpression",
-                },
-                new ClassBuilder
-                {
-                    Namespace = @"QueryFramework.Abstractions",
-                    Properties = new List<ClassPropertyBuilder>(new[]
-                    {
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
-                            Name = @"InnerFunction",
-                            TypeName = @"QueryFramework.Abstractions.IQueryExpressionFunction",
-                            IsNullable = true,
-                        },
-                    } ),
-                    Methods = new List<ClassMethodBuilder>(new[]
-                    {
-                        new ClassMethodBuilder
-                        {
-                            Virtual = true,
-                            Abstract = true,
-                            Name = @"ToBuilder",
-                            TypeName = @"QueryFramework.Abstractions.Builders.IQueryExpressionFunctionBuilder",
-                        },
-                    } ),
-                    Name = @"IQueryExpressionFunction",
-                },
-                new ClassBuilder
-                {
-                    Namespace = @"QueryFramework.Abstractions",
-                    Properties = new List<ClassPropertyBuilder>(new[]
-                    {
-                        new ClassPropertyBuilder
-                        {
-                            HasSetter = false,
                             Name = @"Name",
                             TypeName = @"System.String",
                         },
@@ -157,7 +66,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                         {
                             HasSetter = false,
                             Name = @"Field",
-                            TypeName = @"QueryFramework.Abstractions.IQueryExpression",
+                            TypeName = @"ExpressionFramework.Abstractions.DomainModel.IExpression",
                         },
                         new ClassPropertyBuilder
                         {

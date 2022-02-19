@@ -3,7 +3,7 @@
 public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
 {
     public FileSystemQuery(string path, string searchPattern, SearchOption searchOption)
-        : this(path, searchPattern, searchOption, null, null, Enumerable.Empty<IQueryCondition>(), Enumerable.Empty<IQuerySortOrder>())
+        : this(path, searchPattern, searchOption, null, null, Enumerable.Empty<ICondition>(), Enumerable.Empty<IQuerySortOrder>())
     {
     }
 
@@ -17,7 +17,7 @@ public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
                            SearchOption searchOption,
                            int? limit,
                            int? offset,
-                           IEnumerable<IQueryCondition> conditions,
+                           IEnumerable<ICondition> conditions,
                            IEnumerable<IQuerySortOrder> orderByFields)
         : base(limit, offset, conditions, orderByFields)
     {

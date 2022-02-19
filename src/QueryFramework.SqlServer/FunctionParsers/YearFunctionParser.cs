@@ -2,7 +2,7 @@
 
 public class YearFunctionParser : IFunctionParser
 {
-    public bool TryParse(IQueryExpressionFunction function, IQueryExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(IExpressionFunction function, IQueryExpressionEvaluator evaluator, out string sqlExpression)
     {
         if (function is YearFunction f)
         {

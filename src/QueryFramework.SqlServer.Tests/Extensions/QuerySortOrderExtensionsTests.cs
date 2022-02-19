@@ -6,7 +6,7 @@ public class QuerySortOrderExtensionsTests
     public void ToSql_Throws_On_Invalid_QuerySortOrder()
     {
         // Arrange
-        var querySortOrder = new QuerySortOrder(new QueryExpression("Field", null), (QuerySortOrderDirection)99);
+        var querySortOrder = new QuerySortOrder(new FieldExpressionBuilder().WithFieldName("Field").Build(), (QuerySortOrderDirection)99);
 
         // Act & Assert
         querySortOrder.Invoking(x => x.ToSql())
@@ -19,7 +19,7 @@ public class QuerySortOrderExtensionsTests
     public void ToSql_Converts_Valid_QuerySortOrder_Correctly(QuerySortOrderDirection input, string expectedOutput)
     {
         // Arrange
-        var querySortOrder = new QuerySortOrder(new QueryExpression("Field", null), input);
+        var querySortOrder = new QuerySortOrder(new FieldExpressionBuilder().WithFieldName("Field").Build(), input);
 
         // Act
         var actual = querySortOrder.ToSql();

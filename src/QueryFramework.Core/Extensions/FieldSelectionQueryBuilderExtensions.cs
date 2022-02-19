@@ -2,7 +2,7 @@
 
 public static class FieldSelectionQueryBuilderExtensions
 {
-    public static T Select<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
+    public static T Select<T>(this T instance, params IExpressionBuilder[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
     {
         instance.GetAllFields = false;
@@ -10,13 +10,13 @@ public static class FieldSelectionQueryBuilderExtensions
         return instance;
     }
 
-    public static T Select<T>(this T instance, IEnumerable<IQueryExpressionBuilder> additionalFieldNames)
+    public static T Select<T>(this T instance, IEnumerable<IExpressionBuilder> additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
         => instance.Select(additionalFieldNames.ToArray());
 
     public static T Select<T>(this T instance, params string[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
-        => instance.Select(additionalFieldNames.Select(s => new QueryExpressionBuilder().WithFieldName(s)));
+        => instance.Select(additionalFieldNames.Select(s => new FieldExpressionBuilder().WithFieldName(s)));
 
     public static T SelectAll<T>(this T instance)
         where T : IFieldSelectionQueryBuilder
@@ -26,7 +26,7 @@ public static class FieldSelectionQueryBuilderExtensions
         return instance;
     }
 
-    public static T SelectDistinct<T>(this T instance, params IQueryExpressionBuilder[] additionalFieldNames)
+    public static T SelectDistinct<T>(this T instance, params IExpressionBuilder[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
     {
         instance.Distinct = true;
