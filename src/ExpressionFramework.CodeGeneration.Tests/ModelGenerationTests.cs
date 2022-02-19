@@ -96,6 +96,20 @@ public class ModelGenerationTests
         actual.Should().Be("System.Collections.Generic.IEnumerable<System.Nullable<System.Int32>>");
     }
 
+    [Fact]
+    public void FixTypeName_Returns_Correct_Result_For_Generics_With_Multiple_Generic_Parameters()
+    {
+        // Arrange
+        var input = typeof(Func<object?, IExpression, IExpressionEvaluator, object?>).FullName;
+
+        // Act
+        var actual = input.FixTypeName();
+
+        // Assert
+        //Note that nullable generic argument types are not recognized
+        actual.Should().Be("System.Func<System.Object,ExpressionFramework.Abstractions.DomainModel.IExpression,ExpressionFramework.Abstractions.IExpressionEvaluator,System.Object>");
+    }
+    
     private void Verify(GenerateCode generatedCode)
     {
         if (Settings.DryRun)

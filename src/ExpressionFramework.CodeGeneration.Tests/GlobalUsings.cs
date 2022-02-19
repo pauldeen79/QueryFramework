@@ -2,6 +2,8 @@
 global using System.Collections.Generic;
 global using System.IO;
 global using CrossCutting.Common.Extensions;
+global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.CodeGeneration.CodeGenerationProviders;
 global using FluentAssertions;
 global using ModelFramework.Common.Extensions;
