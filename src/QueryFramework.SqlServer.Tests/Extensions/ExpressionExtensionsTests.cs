@@ -1,9 +1,9 @@
 ﻿namespace QueryFramework.SqlServer.Tests.Extensions;
 
-public class QueryExpressionExtensionsTests
+public class ExpressionExtensionsTests
 {
     [Fact]
-    public void Can_Use_Len_Function_On_Basic_QueryExpression()
+    public void Can_Use_Len_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -16,7 +16,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Len_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Len_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -29,7 +29,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Trim_Function_On_Basic_QueryExpression()
+    public void Can_Use_Trim_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -42,7 +42,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Trim_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Trim_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Upper();
@@ -55,7 +55,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Upper_Function_On_Basic_QueryExpression()
+    public void Can_Use_Upper_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -68,7 +68,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Upper_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Upper_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -81,7 +81,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Lower_Function_On_Basic_QueryExpression()
+    public void Can_Use_Lower_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -94,7 +94,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Lower_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Lower_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -107,7 +107,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Left_Function_On_Basic_QueryExpression()
+    public void Can_Use_Left_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -120,7 +120,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Left_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Left_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -133,7 +133,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Right_Function_On_Basic_QueryExpression()
+    public void Can_Use_Right_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -146,7 +146,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Right_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Right_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -159,7 +159,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Year_Function_On_Basic_QueryExpression()
+    public void Can_Use_Year_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -171,22 +171,8 @@ public class QueryExpressionExtensionsTests
         SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(Field)");
     }
 
-    //[Fact]
-    //public void Can_Use_Year_Function_On_QueryExpression_With_Existing_Expression()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field1")
-    //                                          .Coalesce(new FieldExpressionBuilder().WithFieldName("Field2"));
-
-    //    // Act
-    //    var actual = sut.Year();
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(COALESCE(Field1, Field2))");
-    //}
-
     [Fact]
-    public void Can_Use_Month_Function_On_Basic_QueryExpression()
+    public void Can_Use_Month_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -198,22 +184,8 @@ public class QueryExpressionExtensionsTests
         SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(Field)");
     }
 
-    //[Fact]
-    //public void Can_Use_Month_Function_On_QueryExpression_With_Existing_Expression()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field1")
-    //                                          .Coalesce(new FieldExpressionBuilder().WithFieldName("Field2"));
-
-    //    // Act
-    //    var actual = sut.Month();
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(COALESCE(Field1, Field2))");
-    //}
-
     [Fact]
-    public void Can_Use_Day_Function_On_Basic_QueryExpression()
+    public void Can_Use_Day_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -225,76 +197,8 @@ public class QueryExpressionExtensionsTests
         SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(Field)");
     }
 
-    //[Fact]
-    //public void Can_Use_Day_Function_On_QueryExpression_With_Existing_Expression()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field1")
-    //                                          .Coalesce("Field2");
-
-    //    // Act
-    //    var actual = sut.Day();
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(COALESCE(Field1, Field2))");
-    //}
-
-    //[Fact]
-    //public void Can_Use_Coalesce_Function_On_Basic_QueryExpression_With_FieldName()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field");
-
-    //    // Act
-    //    var actual = sut.Coalesce("default");
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
-    //}
-
-    //[Fact]
-    //public void Can_Use_Coalesce_Function_On_Basic_QueryExpression_With_Expression()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field");
-
-    //    // Act
-    //    var actual = sut.Coalesce(new FieldExpressionBuilder().WithFieldName("default"));
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
-    //}
-
-    //[Fact]
-    //public void Can_Use_Coalesce_Function_On_QueryExpression_With_Existing_Expression()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field")
-    //                                          .Trim();
-
-    //    // Act
-    //    var actual = sut.Coalesce("default");
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(TRIM(Field), default)");
-    //}
-
-    //[Fact]
-    //public void Can_Nest_Multiple_Coalesce_Functions()
-    //{
-    //    // Arrange
-    //    var sut = new FieldExpressionBuilder().WithFieldName("Field1")
-    //                                          .Coalesce("Field2");
-
-    //    // Act
-    //    var actual = sut.Coalesce("Field3");
-
-    //    // Assert
-    //    SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(COALESCE(Field1, Field2), Field3)");
-    //}
-
     [Fact]
-    public void Can_Use_Count_Function_On_Basic_QueryExpression()
+    public void Can_Use_Count_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -307,7 +211,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Count_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Count_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();
@@ -320,7 +224,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Sum_Function_On_Basic_QueryExpression()
+    public void Can_Use_Sum_Function_On_Basic_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field");
@@ -333,7 +237,7 @@ public class QueryExpressionExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Sum_Function_On_QueryExpression_With_Existing_Expression()
+    public void Can_Use_Sum_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
         var sut = new FieldExpressionBuilder().WithFieldName("Field").Trim();

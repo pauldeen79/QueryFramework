@@ -6,7 +6,7 @@ public class DatabaseCommandBuilderExtensionsTests
     private readonly Mock<IPagedDatabaseEntityRetrieverSettings> _settingsMock;
     private readonly Mock<IQueryFieldInfo> _fieldInfoMock;
     private readonly Mock<IGroupingQuery> _queryMock;
-    private readonly Mock<IQueryExpressionEvaluator> _evaluatorMock;
+    private readonly Mock<ISqlExpressionEvaluator> _evaluatorMock;
 
     public DatabaseCommandBuilderExtensionsTests()
     {
@@ -18,10 +18,10 @@ public class DatabaseCommandBuilderExtensionsTests
         _queryMock = new Mock<IGroupingQuery>();
         _queryMock.SetupGet(x => x.GroupByFields).Returns(new ValueCollection<IExpression>());
         _queryMock.SetupGet(x => x.HavingFields).Returns(new ValueCollection<ICondition>());
-        _evaluatorMock = new Mock<IQueryExpressionEvaluator>();
+        _evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         // Use real query expression evaluator
         _evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IExpression>()))
-                      .Returns<IExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+                      .Returns<IExpression>(x => new DefaultSqlExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
     }
 
     [Fact]
@@ -483,29 +483,6 @@ public class DatabaseCommandBuilderExtensionsTests
         }
         actual.Should().Be(paramCounter + 1);
     }
-
-    //[Fact]
-    //public void AppendQueryCondition_Adds_Brackets_When_Necessary()
-    //{
-    //    // Arrange
-    //    _builder.From("MyTable");
-
-    //    // Act
-    //    _builder.AppendQueryCondition(0,
-    //                                  new ConditionBuilder()
-    //                                    .WithOpenBracket()
-    //                                    .WithCloseBracket()
-    //                                    .WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field"))
-    //                                    .WithOperator(Operator.Greater)
-    //                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-    //                                    .Build(),
-    //                                  _fieldInfoMock.Object,
-    //                                  _evaluatorMock.Object,
-    //                                  _builder.Where);
-
-    //    // Assert
-    //    _builder.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE (Field > @p0)");
-    //}
 
     [Fact]
     public void AppendQueryCondition_Gets_CustomFieldName_When_Possible()

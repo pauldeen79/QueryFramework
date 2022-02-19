@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Abstractions;
 
-public interface IQueryExpressionEvaluator
+public interface ISqlExpressionEvaluator
 {
     string GetSqlExpression(IExpression expression);
 }

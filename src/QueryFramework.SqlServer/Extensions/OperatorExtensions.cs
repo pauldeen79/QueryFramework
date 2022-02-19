@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Extensions;
 
-public static class QueryOperatorExtensions
+public static class OperatorExtensions
 {
     /// <summary>
     /// Converts the QueryOperator to SQL.

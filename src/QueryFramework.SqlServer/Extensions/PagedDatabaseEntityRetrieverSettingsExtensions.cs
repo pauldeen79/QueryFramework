@@ -2,7 +2,8 @@
 
 public static class PagedDatabaseEntityRetrieverSettingsExtensions
 {
-    public static IPagedDatabaseEntityRetrieverSettings WithDefaultTableName(this IPagedDatabaseEntityRetrieverSettings instance, string entityTypeName)
+    public static IPagedDatabaseEntityRetrieverSettings WithDefaultTableName(this IPagedDatabaseEntityRetrieverSettings instance,
+                                                                             string entityTypeName)
         => string.IsNullOrEmpty(instance.TableName)
             ? new PagedDatabaseEntityRetrieverSettings(entityTypeName,
                                                        instance.Fields,

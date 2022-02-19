@@ -4,11 +4,11 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
 {
     private readonly IQueryFieldInfoFactory _fieldInfoFactory;
     private readonly IPagedDatabaseEntityRetrieverSettingsFactory _settingsFactory;
-    private readonly IQueryExpressionEvaluator _evaluator;
+    private readonly ISqlExpressionEvaluator _evaluator;
 
     public QueryPagedDatabaseCommandProvider(IQueryFieldInfoFactory fieldInfoFactory,
                                              IPagedDatabaseEntityRetrieverSettingsFactory settingsFactory,
-                                             IQueryExpressionEvaluator evaluator)
+                                             ISqlExpressionEvaluator evaluator)
     {
         _fieldInfoFactory = fieldInfoFactory;
         _settingsFactory = settingsFactory;

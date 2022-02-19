@@ -1,13 +1,13 @@
 ﻿namespace QueryFramework.SqlServer.Tests;
 
-public class DefaultQueryExpressionEvaluatorTests
+public class DefaultSqlExpressionEvaluatorTests
 {
     [Fact]
     public void GetSqlExpression_Returns_FieldName_When_Function_Is_Null()
     {
         // Arrange
         var functionParserMock = new Mock<IFunctionParser>();
-        var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
+        var sut = new DefaultSqlExpressionEvaluator(new[] { functionParserMock.Object });
         var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
 
         // Act
@@ -22,9 +22,9 @@ public class DefaultQueryExpressionEvaluatorTests
     {
         // Arrange
         var functionParserMock = new Mock<IFunctionParser>();
-        var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
+        var sut = new DefaultSqlExpressionEvaluator(new[] { functionParserMock.Object });
         var sqlExpression = "LEN({0})";
-        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(true);
+        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<ISqlExpressionEvaluator>(), out sqlExpression)).Returns(true);
         var queryExpressionFunctionBuilderMock = new Mock<IExpressionFunctionBuilder>();
         var queryExpressionFunctionMock = new Mock<IExpressionFunction>();
         queryExpressionFunctionBuilderMock.Setup(x => x.Build()).Returns(queryExpressionFunctionMock.Object);
@@ -44,9 +44,9 @@ public class DefaultQueryExpressionEvaluatorTests
     {
         // Arrange
         var functionParserMock = new Mock<IFunctionParser>();
-        var sut = new DefaultQueryExpressionEvaluator(new[] { functionParserMock.Object });
+        var sut = new DefaultSqlExpressionEvaluator(new[] { functionParserMock.Object });
         var sqlExpression = string.Empty;
-        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<IQueryExpressionEvaluator>(), out sqlExpression)).Returns(false);
+        functionParserMock.Setup(x => x.TryParse(It.IsAny<IExpressionFunction>(), It.IsAny<ISqlExpressionEvaluator>(), out sqlExpression)).Returns(false);
         var queryExpressionFunctionBuilderMock = new Mock<IExpressionFunctionBuilder>();
         var queryExpressionFunctionMock = new Mock<IExpressionFunction>();
         queryExpressionFunctionBuilderMock.Setup(x => x.Build()).Returns(queryExpressionFunctionMock.Object);

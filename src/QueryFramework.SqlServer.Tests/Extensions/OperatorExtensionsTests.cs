@@ -1,9 +1,9 @@
 ﻿namespace QueryFramework.SqlServer.Tests.Extensions;
 
-public class QueryOperatorExtensionsTests
+public class OperatorExtensionsTests
 {
     [Fact]
-    public void ToSql_Throws_On_Invalid_QueryOperator()
+    public void ToSql_Throws_On_Invalid_Operator()
     {
         // Act & Assert
         ((Operator)99).Invoking(x => x.ToSql())
@@ -21,7 +21,7 @@ public class QueryOperatorExtensionsTests
     [InlineData(Operator.NotEndsWith)]
     [InlineData(Operator.NotStartsWith)]
     [InlineData(Operator.StartsWith)]
-    public void ToSql_Throws_On_Unsupported_QueryOperator(Operator input)
+    public void ToSql_Throws_On_Unsupported_Operator(Operator input)
     {
         // Act & Assert
         input.Invoking(x => x.ToSql())
@@ -35,7 +35,7 @@ public class QueryOperatorExtensionsTests
     [InlineData(Operator.SmallerOrEqual, "<=")]
     [InlineData(Operator.Smaller, "<")]
     [InlineData(Operator.NotEqual, "<>")]
-    public void ToSql_Converts_Valid_QueryOperator_Correctly(Operator input, string expectedOutput)
+    public void ToSql_Converts_Valid_Operator_Correctly(Operator input, string expectedOutput)
     {
         // Act
         var actual = input.ToSql();
