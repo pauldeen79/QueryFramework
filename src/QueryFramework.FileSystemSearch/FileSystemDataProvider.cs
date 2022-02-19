@@ -51,8 +51,8 @@ public class FileSystemDataProvider : IDataProvider
         var noDataExpressions = conditions
             .Where
             (
-                x => (x.LeftFieldName == null || (!_fileDataFields.Contains(x.LeftFieldName) && !_lineDataFields.Contains(x.LeftFieldName)))
-                && (x.RightFieldName == null || (!_fileDataFields.Contains(x.RightFieldName) && !_lineDataFields.Contains(x.RightFieldName)))
+                x => !IsValidForFields(x.LeftFieldName, _fileDataFields.Concat(_lineDataFields))
+                && !IsValidForFields(x.RightFieldName, _fileDataFields.Concat(_lineDataFields))
             )
             .Select(x => new ConstantExpressionBuilder().WithValue(true).WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition))).Build())
             .ToArray();
@@ -66,8 +66,8 @@ public class FileSystemDataProvider : IDataProvider
         var fileDataExpressions = conditions
             .Where
             (
-                x => (x.LeftFieldName != null && _fileDataFields.Contains(x.LeftFieldName))
-                || (x.RightFieldName != null && _fileDataFields.Contains(x.RightFieldName))
+                x => IsValidForFields(x.LeftFieldName, _fileDataFields)
+                || IsValidForFields(x.RightFieldName, _fileDataFields)
             )
             .Select(x => new DelegateExpressionBuilder()
             .WithValueDelegate((item, _, _) => item)
@@ -87,8 +87,8 @@ public class FileSystemDataProvider : IDataProvider
         var lineDataExpressions = conditions
             .Where
             (
-                x => (x.LeftFieldName != null && _lineDataFields.Contains(x.LeftFieldName))
-                || (x.RightFieldName != null && _lineDataFields.Contains(x.RightFieldName))
+                x => IsValidForFields(x.LeftFieldName, _lineDataFields)
+                || IsValidForFields(x.RightFieldName, _lineDataFields)
             )
             .Select(x => new DelegateExpressionBuilder()
             .WithValueDelegate((item, _, _) => item)
@@ -100,4 +100,7 @@ public class FileSystemDataProvider : IDataProvider
             .Cast<TResult>();
         return true;
     }
+
+    private static bool IsValidForFields(string? fieldName, IEnumerable<string> validFieldNames)
+        => fieldName != null && validFieldNames.Contains(fieldName);
 }

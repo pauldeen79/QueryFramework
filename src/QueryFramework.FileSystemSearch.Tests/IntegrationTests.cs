@@ -168,6 +168,24 @@ public sealed class IntegrationTests : IDisposable
         actual.Should().BeEmpty(); //we only want to use global usings!
     }
 
+    [Fact]
+    public void Result_Is_Empty_When_Conditions_Contain_NonData_Condition_Which_Evaluates_To_False()
+    {
+        // Arrange
+        var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
+            .Chain(x => x.Conditions.Add(new ConditionBuilder().WithLeftExpression(new ConstantExpressionBuilder().WithValue(1))
+                                                               .WithOperator(Operator.Equal)
+                                                               .WithRightExpression(new ConstantExpressionBuilder().WithValue(2))))
+            .Build());
+        var processor = CreateSut();
+
+        // Act
+        var actual = processor.FindMany<LineData>(query);
+
+        // Assert
+        actual.Should().BeEmpty(); //filesystem is not read, because condition is false!
+    }
+
     private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();
 
     public void Dispose() => _serviceProvider.Dispose();

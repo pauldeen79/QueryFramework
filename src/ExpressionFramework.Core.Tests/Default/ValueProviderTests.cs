@@ -114,7 +114,6 @@ public class ValueProviderTests
         return order;
     }
 
-
     public class Order
     {
         public int OrderNumber { get; set; }

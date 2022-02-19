@@ -2,8 +2,12 @@
 global using System.IO;
 global using System.Linq;
 global using System.Runtime.InteropServices;
+global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Abstractions.DomainModel.Domains;
+global using ExpressionFramework.Abstractions.DomainModel.Extensions;
 global using ExpressionFramework.Core.DependencyInjection;
+global using ExpressionFramework.Core.DomainModel.Builders;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
