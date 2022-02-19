@@ -63,15 +63,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 RightExpression = new ConstantExpressionBuilder().WithValue(GetValue(queryOperator.Value, fieldValue))
             };
 
-            if (items.Length > i + 3)
-            {
-                var combination = GetQueryCombination(items[i + 3]);
-                if (combination == null)
-                {
-                    return default;
-                }
-            }
-
             result.Add(condition);
         }
 
@@ -116,14 +107,6 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 ? Operator.NotContains
                 : Operator.Contains
         };
-
-    private static QueryCombination? GetQueryCombination(string combination)
-        => combination.ToUpper(CultureInfo.InvariantCulture) switch
-        {
-            "AND" => QueryCombination.And,
-            "OR" => QueryCombination.Or,
-            _ => null,// Unknown search combination
-            };
 
     private static Operator? GetQueryOperator(string @operator)
         => @operator.ToUpper(CultureInfo.InvariantCulture) switch

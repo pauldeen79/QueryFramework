@@ -77,20 +77,6 @@ public class SingleEntityQueryParserTests
     }
 
     [Fact]
-    public void Can_Parse_SimpleQuery_With_Invalid_Combination()
-    {
-        // Arrange
-        var builder = new SingleEntityQueryBuilder();
-        var sut = CreateSut();
-
-        // Act
-        var actual = sut.Parse(builder, "MyFieldName = MyFirstValue ? MyOtherFieldName != MySecondValue");
-
-        // Assert
-        actual.Conditions.Should().HaveCount(7);
-    }
-
-    [Fact]
     public void Can_Parse_SimpleQuery_With_Invalid_Operator()
     {
         // Arrange
