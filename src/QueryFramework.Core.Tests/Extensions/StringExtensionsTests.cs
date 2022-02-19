@@ -4,67 +4,75 @@ public class StringExtensionsTests
 {
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesContain()
-        => QueryConditionTest(x => x.DoesContain("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.Contains);
+        => QueryConditionTest(x => x.DoesContain("value"), Operator.Contains);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesEndWith()
-        => QueryConditionTest(x => x.DoesEndWith("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.EndsWith);
+        => QueryConditionTest(x => x.DoesEndWith("value"), Operator.EndsWith);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsEqualTo()
-        => QueryConditionTest(x => x.IsEqualTo("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.Equal);
+        => QueryConditionTest(x => x.IsEqualTo("value"), Operator.Equal);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsGreaterOrEqualThan()
-        => QueryConditionTest(x => x.IsGreaterOrEqualThan("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.GreaterOrEqual);
+        => QueryConditionTest(x => x.IsGreaterOrEqualThan("value"), Operator.GreaterOrEqual);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsGreaterThan()
-        => QueryConditionTest(x => x.IsGreaterThan("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.Greater);
+        => QueryConditionTest(x => x.IsGreaterThan("value"), Operator.Greater);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNotNullOrEmpty()
-        => QueryConditionTest(x => x.IsNotNullOrEmpty()/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.IsNotNullOrEmpty);
+        => QueryConditionTest(x => x.IsNotNullOrEmpty(), Operator.IsNotNullOrEmpty);
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsNotNullOrWhiteSpace()
+    => QueryConditionTest(x => x.IsNotNullOrWhiteSpace(), Operator.IsNotNullOrWhiteSpace);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNotNull()
-        => QueryConditionTest(x => x.IsNotNull()/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.IsNotNull);
+        => QueryConditionTest(x => x.IsNotNull(), Operator.IsNotNull);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNullOrEmpty()
-        => QueryConditionTest(x => x.IsNullOrEmpty()/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.IsNullOrEmpty);
+        => QueryConditionTest(x => x.IsNullOrEmpty(), Operator.IsNullOrEmpty);
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsNullOrWhiteSpace()
+        => QueryConditionTest(x => x.IsNullOrWhiteSpace(), Operator.IsNullOrWhiteSpace);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNull()
-        => QueryConditionTest(x => x.IsNull()/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.IsNull);
+        => QueryConditionTest(x => x.IsNull(), Operator.IsNull);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsSmallerOrEqualThan()
-        => QueryConditionTest(x => x.IsSmallerOrEqualThan("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.SmallerOrEqual);
+        => QueryConditionTest(x => x.IsSmallerOrEqualThan("value"), Operator.SmallerOrEqual);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsSmallerThan()
-        => QueryConditionTest(x => x.IsSmallerThan("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.Smaller);
+        => QueryConditionTest(x => x.IsSmallerThan("value"), Operator.Smaller);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesNotContain()
-        => QueryConditionTest(x => x.DoesNotContain("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.NotContains);
+        => QueryConditionTest(x => x.DoesNotContain("value"), Operator.NotContains);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesNotEndWith()
-        => QueryConditionTest(x => x.DoesNotEndWith("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.NotEndsWith);
+        => QueryConditionTest(x => x.DoesNotEndWith("value"), Operator.NotEndsWith);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNotEqualTo()
-        => QueryConditionTest(x => x.IsNotEqualTo("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.NotEqual);
+        => QueryConditionTest(x => x.IsNotEqualTo("value"), Operator.NotEqual);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesNotStartWith()
-        => QueryConditionTest(x => x.DoesNotStartWith("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.NotStartsWith);
+        => QueryConditionTest(x => x.DoesNotStartWith("value"), Operator.NotStartsWith);
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesStartWith()
-        => QueryConditionTest(x => x.DoesStartWith("value")/*.WithOpenBracket().WithCloseBracket().WithCombination(QueryCombination.Or)*/, Operator.StartsWith);
+        => QueryConditionTest(x => x.DoesStartWith("value"), Operator.StartsWith);
 
     private static void QueryConditionTest(Func<string, IConditionBuilder> func, Operator expectedOperator)
     {
@@ -80,8 +88,10 @@ public class StringExtensionsTests
         field?.FieldName.Should().Be("fieldname");
         if (expectedOperator == Operator.IsNull
             || expectedOperator == Operator.IsNullOrEmpty
+            || expectedOperator == Operator.IsNullOrWhiteSpace
             || expectedOperator == Operator.IsNotNull
-            || expectedOperator == Operator.IsNotNullOrEmpty)
+            || expectedOperator == Operator.IsNotNullOrEmpty
+            || expectedOperator == Operator.IsNotNullOrWhiteSpace)
         {
             value.Should().BeNull();
         }
@@ -89,9 +99,6 @@ public class StringExtensionsTests
         {
             value.Should().Be("value");
         }
-        //actual.OpenBracket.Should().BeTrue();
-        //actual.CloseBracket.Should().BeTrue();
-        //actual.Combination.Should().Be(QueryCombination.Or);
         actual.Operator.Should().Be(expectedOperator);
     }
 }
