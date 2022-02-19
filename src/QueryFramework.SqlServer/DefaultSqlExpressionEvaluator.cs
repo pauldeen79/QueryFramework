@@ -2,37 +2,21 @@
 
 public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
 {
-    private readonly IEnumerable<IFunctionParser> _functionParsers;
+    private readonly IEnumerable<ISqlExpressionEvaluatorProvider> _sqlExpressionEvaluatorProviders;
 
-    public DefaultSqlExpressionEvaluator(IEnumerable<IFunctionParser> functionParsers)
-        => _functionParsers = functionParsers;
+    public DefaultSqlExpressionEvaluator(IEnumerable<ISqlExpressionEvaluatorProvider> sqlExpressionEvaluatorProviders)
+        => _sqlExpressionEvaluatorProviders = sqlExpressionEvaluatorProviders;
 
     public string GetSqlExpression(IExpression expression)
-        => expression.Function == null
-            ? expression.GetFieldName() ?? throw new ArgumentException("Expression contains no field name", nameof(expression))
-            : GetSqlExpression(expression.Function, _functionParsers, nameof(expression)).Replace("{0}", expression.GetFieldName() ?? throw new ArgumentException("Expression contains no field name", nameof(expression)));
-
-    private string GetSqlExpression(IExpressionFunction function,
-                                    IEnumerable<IFunctionParser> functionParsers,
-                                    string paramName)
     {
-        var inner = function.InnerFunction != null
-            ? GetSqlExpression(function.InnerFunction, functionParsers, paramName)
-            : string.Empty;
-
-        foreach (var parser in functionParsers)
+        foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (parser.TryParse(function, this, out var sqlExpression))
+            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(expression, this, out var result))
             {
-                return Combine(sqlExpression, inner);
+                return result ?? string.Empty;
             }
         }
 
-        throw new ArgumentException($"Unsupported function: {function.GetType().Name}", paramName);
+        throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
     }
-
-    private static string Combine(string sqlExpression, string inner)
-        => inner.Length > 0
-            ? string.Format(sqlExpression, inner)
-            : sqlExpression;
 }

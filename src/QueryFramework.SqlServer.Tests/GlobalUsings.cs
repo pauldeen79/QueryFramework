@@ -33,6 +33,7 @@ global using QueryFramework.Core.Queries.Builders;
 global using QueryFramework.SqlServer.Abstractions;
 global using QueryFramework.SqlServer.CrossCutting.Data;
 global using QueryFramework.SqlServer.Extensions;
+global using QueryFramework.SqlServer.SqlExpressionEvaluatorProviders;
 global using QueryFramework.SqlServer.Tests.Repositories;
 global using QueryFramework.SqlServer.Tests.TestHelpers;
 global using Xunit;

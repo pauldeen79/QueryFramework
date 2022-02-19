@@ -22,3 +22,4 @@ global using QueryFramework.SqlServer.Abstractions;
 global using QueryFramework.SqlServer.CrossCutting.Data;
 global using QueryFramework.SqlServer.Extensions;
 global using QueryFramework.SqlServer.FunctionParsers;
+global using QueryFramework.SqlServer.SqlExpressionEvaluatorProviders;

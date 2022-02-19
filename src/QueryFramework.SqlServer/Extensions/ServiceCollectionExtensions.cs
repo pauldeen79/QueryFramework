@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IPagedDatabaseCommandProviderFactory, DefaultPagedDatabaseCommandProviderFactory>()
             .AddSingleton<IPagedDatabaseCommandProviderProvider, DefaultPagedDatabaseCommandProviderProvider<ISingleEntityQuery>>()
             .AddSingleton<ISqlExpressionEvaluator, DefaultSqlExpressionEvaluator>()
+            .AddSingleton<ISqlExpressionEvaluatorProvider, FieldExpressionEvaluatorProvider>()
             .AddSingleton<IQueryProcessor, DefaultQueryProcessor>()
             .AddSingleton<IFunctionParser, CountFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, DayFunctionFunctionParser>()
