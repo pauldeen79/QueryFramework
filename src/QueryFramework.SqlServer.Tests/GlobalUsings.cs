@@ -17,7 +17,7 @@ global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.Abstractions.DomainModel.Builders;
 global using ExpressionFramework.Abstractions.DomainModel.Domains;
 global using ExpressionFramework.Abstractions.DomainModel.Extensions;
-global using ExpressionFramework.Abstractions.Extensions;
+global using ExpressionFramework.Core.DependencyInjection;
 global using ExpressionFramework.Core.DomainModel.Builders;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;

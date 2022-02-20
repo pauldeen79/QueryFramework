@@ -27,6 +27,7 @@ internal static class SqlHelpers
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
         ).Build();
         var serviceProvider = new ServiceCollection()
+            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)
