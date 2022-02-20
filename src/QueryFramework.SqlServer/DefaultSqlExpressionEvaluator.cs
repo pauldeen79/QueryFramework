@@ -61,11 +61,11 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
             }
         }
 
-        throw new ArgumentOutOfRangeException(paramName, $"Unsupported function: {function.GetType().Name}");
+        throw new ArgumentOutOfRangeException(paramName, $"Unsupported function: [{function.GetType().Name}]");
     }
 
     private static string Combine(string sqlExpression, string inner)
         => inner.Length > 0
-            ? string.Format(sqlExpression, inner)
+            ? sqlExpression.Replace("{0}", inner)
             : sqlExpression;
 }
