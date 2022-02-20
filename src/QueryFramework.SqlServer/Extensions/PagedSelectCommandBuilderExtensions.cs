@@ -16,16 +16,9 @@ internal static class PagedSelectCommandBuilderExtensions
                                                                             IQueryFieldInfo fieldInfo)
     {
         var allFields = fieldInfo.GetAllFields();
-        if (!allFields.Any())
-        {
-            instance.Select(settings.Fields.WhenNullOrWhitespace("*"));
-        }
-        else
-        {
-            instance.Select(string.Join(", ", allFields.Select(x => fieldInfo.GetDatabaseFieldName(x)).OfType<string>()));
-        }
-
-        return instance;
+        return allFields.Any()
+            ? instance.Select(string.Join(", ", allFields.Select(x => fieldInfo.GetDatabaseFieldName(x)).OfType<string>()))
+            : instance.Select(settings.Fields.WhenNullOrWhitespace("*"));
     }
 
     private static PagedSelectCommandBuilder AppendSelectFieldsForSpecifiedFields(this PagedSelectCommandBuilder instance,
@@ -33,17 +26,15 @@ internal static class PagedSelectCommandBuilderExtensions
                                                                                   IQueryFieldInfo fieldInfo,
                                                                                   ISqlExpressionEvaluator evaluator)
     {
-        var counter = 0;
-        foreach (var expression in fieldSelectionQuery.Fields)
+        foreach (var expression in fieldSelectionQuery.Fields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (counter > 0)
+            if (expression.Index > 0)
             {
                 instance.Select(", ");
             }
 
             //TODO: Fix parameter counter
-            instance.Select(evaluator.GetSqlExpression(expression, fieldInfo, -1));
-            counter++;
+            instance.Select(evaluator.GetSqlExpression(expression.Item, fieldInfo, -1));
         }
 
         return instance;
@@ -120,17 +111,15 @@ internal static class PagedSelectCommandBuilderExtensions
             return instance;
         }
 
-        var fieldCounter = 0;
-        foreach (var groupBy in groupingQuery.GroupByFields)
+        foreach (var groupBy in groupingQuery.GroupByFields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (fieldCounter > 0)
+            if (groupBy.Index > 0)
             {
                 instance.GroupBy(", ");
             }
 
             //TODO: Fix parameter counter
-            instance.GroupBy(evaluator.GetSqlExpression(groupBy, fieldInfo, -1));
-            fieldCounter++;
+            instance.GroupBy(evaluator.GetSqlExpression(groupBy.Item, fieldInfo, -1));
         }
 
         return instance;
@@ -147,22 +136,20 @@ internal static class PagedSelectCommandBuilderExtensions
             return instance;
         }
 
-        var fieldCounter = 0;
-        foreach (var having in groupingQuery.HavingFields)
+        foreach (var having in groupingQuery.HavingFields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (fieldCounter > 0)
+            if (having.Index > 0)
             {
                 instance.Having($" AND ");
             }
             paramCounter = instance.AppendQueryCondition
             (
                 paramCounter,
-                having,
+                having.Item,
                 fieldInfo,
                 evaluator,
                 instance.Having
             );
-            fieldCounter++;
         }
 
         return instance;
@@ -195,7 +182,7 @@ internal static class PagedSelectCommandBuilderExtensions
                                                            IQueryFieldInfo fieldInfo,
                                                            ISqlExpressionEvaluator evaluator)
     {
-        foreach (var querySortOrder in orderByFields.Select((field, index) => new { SortOrder = field, Index = index }))
+        foreach (var querySortOrder in orderByFields.Select((x, index) => new { Item = x, Index = index }))
         {
             if (querySortOrder.Index > 0)
             {
@@ -203,7 +190,7 @@ internal static class PagedSelectCommandBuilderExtensions
             }
 
             //TODO: Fix parameter counter
-            instance.OrderBy($"{evaluator.GetSqlExpression(querySortOrder.SortOrder.Field, fieldInfo, -1)} {querySortOrder.SortOrder.ToSql()}");
+            instance.OrderBy($"{evaluator.GetSqlExpression(querySortOrder.Item.Field, fieldInfo, -1)} {querySortOrder.Item.ToSql()}");
         }
 
         if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
