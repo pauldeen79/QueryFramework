@@ -39,22 +39,6 @@ public class SingleEntityQueryTests
         sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
     }
 
-    //[Fact]
-    //public void Constructing_SingleEntityQuery_With_ValidationError_Leads_To_Exception()
-    //{
-    //    // Arrange
-    //    var conditions = new[]
-    //    {
-    //        new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-    //                              .WithOperator(Operator.Equal)
-    //                              .Build()
-    //    };
-    //    var action = new Action(() => _ = new FieldSelectionQuery(null, null, false, true, conditions, Enumerable.Empty<IQuerySortOrder>(), Enumerable.Empty<IExpression>()));
-
-    //    // Act
-    //    action.Should().Throw<ValidationException>();
-    //}
-
     [Fact]
     public void Can_Compare_SingleEntityQuery_With_Equal_Values()
     {

@@ -47,26 +47,4 @@ public class FieldSelectionQueryTests
         sut.Offset.Should().Be(offset);
         sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
     }
-
-    //[Fact]
-    //public void Constructing_FieldSelectionQuery_With_ValidationError_Leads_To_Exception()
-    //{
-    //    // Arrange
-    //    var conditions = new[]
-    //    {
-    //        new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-    //                              .WithOperator(Operator.Equal)
-    //                              .Build()
-    //    };
-    //    var action = new Action(() => _ = new FieldSelectionQuery(null,
-    //                                                              null,
-    //                                                              false,
-    //                                                              true,
-    //                                                              conditions,
-    //                                                              Enumerable.Empty<IQuerySortOrder>(),
-    //                                                              Enumerable.Empty<IExpression>()));
-
-    //    // Act
-    //    action.Should().Throw<ValidationException>();
-    //}
 }
