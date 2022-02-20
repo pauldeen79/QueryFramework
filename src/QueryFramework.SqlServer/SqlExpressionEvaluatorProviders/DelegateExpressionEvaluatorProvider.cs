@@ -15,7 +15,6 @@ public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
             return false;
         }
 
-        //TODO: Review how to get context here. There is no item, because we're building a Sql query...
         result = delegateExpression.ValueDelegate.Invoke(null, expression, _expressionEvaluator).ToStringWithNullCheck().Length.ToString();
         return true;
     }
@@ -28,7 +27,6 @@ public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
             return false;
         }
 
-        //TODO: Review how to get context here. There is no item, because we're building a Sql query...
         result = parameterBag.CreateQueryParameterName(delegateExpression.ValueDelegate.Invoke(null, expression, _expressionEvaluator));
         return true;
     }

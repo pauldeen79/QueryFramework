@@ -13,6 +13,7 @@ global using CrossCutting.Data.Core.Builders;
 global using CrossCutting.Data.Core.Commands;
 global using CrossCutting.Data.Sql.Builders;
 global using CrossCutting.Data.Sql.Extensions;
+global using ExpressionFramework.Abstractions;
 global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.Abstractions.DomainModel.Builders;
 global using ExpressionFramework.Abstractions.DomainModel.Domains;

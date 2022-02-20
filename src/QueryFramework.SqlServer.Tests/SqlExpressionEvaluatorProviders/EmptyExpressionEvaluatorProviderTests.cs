@@ -1,13 +1,13 @@
 ﻿namespace QueryFramework.SqlServer.Tests.SqlExpressionEvaluatorProviders;
 
-public class FieldExpressionEvaluatorProviderTests
+public class EmptyExpressionEvaluatorProviderTests
 {
     [Fact]
-    public void TryGetSqlExpression_Returns_Null_When_Expression_Is_Not_Of_Type_FieldExpression()
+    public void TryGetSqlExpression_Returns_Null_When_Expression_Is_Not_Of_Type_EmptyExpression()
     {
         // Arrange
-        var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new EmptyExpressionBuilder().Build();
+        var sut = new EmptyExpressionEvaluatorProvider();
+        var expression = new ConstantExpressionBuilder().Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         var parameterBag = new ParameterBag();
@@ -21,11 +21,11 @@ public class FieldExpressionEvaluatorProviderTests
     }
 
     [Fact]
-    public void TryGetSqlExpression_Returns_FieldName_When_Expression_Is_Of_Type_FieldExpression()
+    public void TryGetSqlExpression_Returns_FieldName_When_Expression_Is_Of_Type_EmptyExpression()
     {
         // Arrange
-        var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
+        var sut = new EmptyExpressionEvaluatorProvider();
+        var expression = new EmptyExpressionBuilder().Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
@@ -36,6 +36,6 @@ public class FieldExpressionEvaluatorProviderTests
 
         // Assert
         actual.Should().BeTrue();
-        result.Should().Be("Test");
+        result.Should().BeNull();
     }
 }

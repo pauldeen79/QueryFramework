@@ -1,12 +1,13 @@
 ﻿namespace QueryFramework.SqlServer.Tests.SqlExpressionEvaluatorProviders;
 
-public class FieldExpressionEvaluatorProviderTests
+public class DelegateExpressionEvaluatorProviderTests
 {
     [Fact]
-    public void TryGetSqlExpression_Returns_Null_When_Expression_Is_Not_Of_Type_FieldExpression()
+    public void TryGetSqlExpression_Returns_Null_When_Expression_Is_Not_Of_Type_DelegateExpression()
     {
         // Arrange
-        var sut = new FieldExpressionEvaluatorProvider();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
+        var sut = new DelegateExpressionEvaluatorProvider(expressionEvaluatorMock.Object);
         var expression = new EmptyExpressionBuilder().Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
@@ -21,11 +22,12 @@ public class FieldExpressionEvaluatorProviderTests
     }
 
     [Fact]
-    public void TryGetSqlExpression_Returns_FieldName_When_Expression_Is_Of_Type_FieldExpression()
+    public void TryGetSqlExpression_Returns_FieldName_When_Expression_Is_Of_Type_DelegateExpression()
     {
         // Arrange
-        var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
+        var sut = new DelegateExpressionEvaluatorProvider(expressionEvaluatorMock.Object);
+        var expression = new DelegateExpressionBuilder().WithValueDelegate(new Func<object?, IExpression, IExpressionEvaluator, object?>((_, _, _) => "Test")).Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
@@ -36,6 +38,6 @@ public class FieldExpressionEvaluatorProviderTests
 
         // Assert
         actual.Should().BeTrue();
-        result.Should().Be("Test");
+        result.Should().Be("@p0");
     }
 }
