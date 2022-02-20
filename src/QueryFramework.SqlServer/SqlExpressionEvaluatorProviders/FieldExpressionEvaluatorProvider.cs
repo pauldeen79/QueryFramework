@@ -19,7 +19,7 @@ public class FieldExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
         return true;
     }
 
-    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, int paramCounter, out string? result)
+    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, out string? result)
     {
         if (!(expression is IFieldExpression fieldExpression))
         {

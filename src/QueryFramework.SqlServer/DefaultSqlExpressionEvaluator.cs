@@ -12,12 +12,12 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         _functionParsers = functionParsers;
     }
 
-    public string GetSqlExpression(IExpression expression, IQueryFieldInfo fieldInfo, int paramCounter)
+    public string GetSqlExpression(IExpression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag)
     {
-        string? result = null;
+        var result = default(string?);
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(expression, this, fieldInfo, paramCounter, out var providerResult))
+            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(expression, this, fieldInfo, parameterBag, out var providerResult))
             {
                 result = providerResult ?? string.Empty;
                 break;

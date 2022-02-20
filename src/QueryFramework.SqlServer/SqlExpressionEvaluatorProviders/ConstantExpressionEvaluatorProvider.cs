@@ -14,7 +14,7 @@ public class ConstantExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
         return true;
     }
 
-    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, int paramCounter, out string? result)
+    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, out string? result)
     {
         if (!(expression is IConstantExpression constantExpression))
         {
@@ -22,22 +22,7 @@ public class ConstantExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
             return false;
         }
 
-        result = GetQueryParameterName(paramCounter, constantExpression.Value);
+        result = parameterBag.CreateQueryParameterName(constantExpression.Value);
         return true;
-    }
-
-    private static string GetQueryParameterName(int paramCounter, object? value)
-    {
-        if (value is KeyValuePair<string, object> keyValuePair)
-        {
-            return $"@{keyValuePair.Key}";
-        }
-
-        if (value is IQueryParameterValue queryParameterValue)
-        {
-            return $"@{queryParameterValue.Name}";
-        }
-
-        return $"@p{paramCounter}";
     }
 }

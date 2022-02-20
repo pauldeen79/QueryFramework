@@ -10,9 +10,10 @@ public class FieldExpressionEvaluatorProviderTests
         var expression = new EmptyExpressionBuilder().Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, -1, out var result);
+        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, parameterBag, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -28,9 +29,10 @@ public class FieldExpressionEvaluatorProviderTests
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, -1, out var result);
+        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, parameterBag, out var result);
 
         // Assert
         actual.Should().BeTrue();

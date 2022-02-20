@@ -2,11 +2,13 @@
 
 public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabaseCommandProvider>
 {
+    private readonly ParameterBag _parameterBag = new ParameterBag();
+
     public QueryPagedDatabaseCommandProviderTests()
     {
         // Use real query expression evaluator
         var evaluatorMock = Fixture.Freeze<Mock<ISqlExpressionEvaluator>>();
-        DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(evaluatorMock);
+        DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(evaluatorMock, _parameterBag);
     }
 
     [Theory]
@@ -27,15 +29,18 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     {
         // Arrange
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
-        settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
+        settingsMock.SetupGet(x => x.TableName)
+                    .Returns("MyTable");
         var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
         settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
                            .Returns(settingsMock.Object);
         var fieldInfoMock = Fixture.Freeze<Mock<IQueryFieldInfo>>();
-        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
+                     .Returns<string>(x => x);
         var queryFieldInfo = fieldInfoMock.Object;
         var queryFieldInfoFactory = Fixture.Freeze<Mock<IQueryFieldInfoFactory>>();
-        queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>())).Returns(queryFieldInfo);
+        queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                             .Returns(queryFieldInfo);
 
         // Act
         var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
@@ -46,14 +51,6 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
         actual.CommandParameters.Should().NotBeNull();
-        var parameters = actual.CommandParameters as IEnumerable<KeyValuePair<string, object>>;
-        parameters.Should().NotBeNull();
-        if (parameters != null)
-        {
-            parameters.Should().ContainSingle();
-            parameters.First().Key.Should().Be("p0");
-            parameters.First().Value.Should().Be("Value");
-        }
     }
 
     [Fact]
@@ -86,13 +83,5 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Assert
         actual.DataCommand.CommandText.Should().Be("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");
         actual.DataCommand.CommandParameters.Should().NotBeNull();
-        var parameters = actual.DataCommand.CommandParameters as IEnumerable<KeyValuePair<string, object>>;
-        parameters.Should().NotBeNull();
-        if (parameters != null)
-        {
-            parameters.Should().ContainSingle();
-            parameters.First().Key.Should().Be("p0");
-            parameters.First().Value.Should().Be("Value");
-        }
     }
 }
