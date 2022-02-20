@@ -18,13 +18,17 @@ public class DatabaseCommandBuilderExtensionsTests
         _queryMock = new Mock<IGroupingQuery>();
         _queryMock.SetupGet(x => x.GroupByFields).Returns(new ValueCollection<IExpression>());
         _queryMock.SetupGet(x => x.HavingFields).Returns(new ValueCollection<ICondition>());
+        var evaluator = new DefaultSqlExpressionEvaluator
+        (
+            new ISqlExpressionEvaluatorProvider[] { new FieldExpressionEvaluatorProvider(), new ConstantExpressionEvaluatorProvider() },
+            Enumerable.Empty<IFunctionParser>()
+        );
         _evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         // Use real query expression evaluator
-        _evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IExpression>()))
-                      .Returns<IExpression>(x => new DefaultSqlExpressionEvaluator(new[]
-                      {
-                          new FieldExpressionEvaluatorProvider(Enumerable.Empty<IFunctionParser>())
-                      }).GetSqlExpression(x));
+        _evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<int>()))
+                      .Returns<IExpression, IQueryFieldInfo, int>((x, y, z) => evaluator.GetSqlExpression(x, y, z));
+        _evaluatorMock.Setup(x => x.GetLengthExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>()))
+                      .Returns<IExpression, IQueryFieldInfo>((x, y) => evaluator.GetLengthExpression(x, y));
     }
 
     [Fact]
@@ -87,20 +91,6 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Assert
         actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
-    }
-
-    [Fact]
-    public void Select_Throws_When_GetDatabaseFieldName_Returns_Null()
-    {
-        // Arrange
-        var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
-        _fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
-                      .Returns(default(string));
-
-        // Act
-        _builder.Invoking(x => x.Select(_settingsMock.Object, _fieldInfoMock.Object, query, _evaluatorMock.Object))
-                .Should().Throw<InvalidOperationException>()
-                .And.Message.Should().StartWith("Query fields contains unknown field in expression [FieldExpression { FieldName = Field1, Function =  }]");
     }
 
     [Fact]
@@ -290,7 +280,7 @@ public class DatabaseCommandBuilderExtensionsTests
         // Act & Assert
         _builder.Invoking(x => x.OrderBy(query, _settingsMock.Object, _fieldInfoMock.Object, _evaluatorMock.Object))
                 .Should().Throw<InvalidOperationException>()
-                .And.Message.Should().StartWith("Query order by fields contains unknown field [Field]");
+                .And.Message.Should().StartWith("Expression contains unknown field [Field]");
     }
 
     [Fact]
@@ -366,22 +356,6 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Assert
         actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY FieldA");
-    }
-
-    [Fact]
-    public void GroupBy_Throws_When_GetDatabaseFieldName_Returns_Null()
-    {
-        // Arrange
-        _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field").Build() }));
-        _settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
-        _fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
-                      .Returns(default(string));
-
-        // Act & Assert
-        _builder.Invoking(x => x.GroupBy(_queryMock.Object, _fieldInfoMock.Object, _evaluatorMock.Object))
-                .Should().Throw<InvalidOperationException>()
-                .And.Message.Should().StartWith("Query group by fields contains unknown field [Field]");
     }
 
     [Fact]
@@ -529,7 +503,7 @@ public class DatabaseCommandBuilderExtensionsTests
                                                       _evaluatorMock.Object,
                                                       _builder.Where))
                .Should().Throw<InvalidOperationException>()
-               .And.Message.Should().StartWith("Query conditions contains unknown field [Field]");
+               .And.Message.Should().StartWith("Expression contains unknown field [Field]");
     }
 
     [Theory]

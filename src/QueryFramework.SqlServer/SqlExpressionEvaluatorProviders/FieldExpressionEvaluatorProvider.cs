@@ -2,12 +2,7 @@
 
 public class FieldExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
-    private readonly IEnumerable<IFunctionParser> _functionParsers;
-
-    public FieldExpressionEvaluatorProvider(IEnumerable<IFunctionParser> functionParsers)
-        => _functionParsers = functionParsers;
-
-    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, out string? result)
+    public bool TryGetLengthExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, out string? result)
     {
         if (!(expression is IFieldExpression fieldExpression))
         {
@@ -15,11 +10,28 @@ public class FieldExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
             return false;
         }
 
-        result = expression.Function == null
-            ? fieldExpression.FieldName
-            : expression.Function.GetSqlExpression(evaluator,
-                                                   _functionParsers,
-                                                   nameof(expression)).Replace("{0}", fieldExpression.FieldName);
+        var fieldName = fieldInfo.GetDatabaseFieldName(fieldExpression.FieldName);
+        if (fieldName == null)
+        {
+            throw new InvalidOperationException($"Expression contains unknown field [{fieldExpression.FieldName}]");
+        }
+        result = $"LEN({fieldName})";
+        return true;
+    }
+
+    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, int paramCounter, out string? result)
+    {
+        if (!(expression is IFieldExpression fieldExpression))
+        {
+            result = null;
+            return false;
+        }
+
+        result = fieldInfo.GetDatabaseFieldName(fieldExpression.FieldName);
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Expression contains unknown field [{fieldExpression.FieldName}]");
+        }
 
         return true;
     }
