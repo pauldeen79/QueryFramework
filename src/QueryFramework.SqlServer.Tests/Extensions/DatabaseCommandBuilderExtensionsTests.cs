@@ -18,17 +18,8 @@ public class DatabaseCommandBuilderExtensionsTests
         _queryMock = new Mock<IGroupingQuery>();
         _queryMock.SetupGet(x => x.GroupByFields).Returns(new ValueCollection<IExpression>());
         _queryMock.SetupGet(x => x.HavingFields).Returns(new ValueCollection<ICondition>());
-        var evaluator = new DefaultSqlExpressionEvaluator
-        (
-            new ISqlExpressionEvaluatorProvider[] { new FieldExpressionEvaluatorProvider(), new ConstantExpressionEvaluatorProvider() },
-            Enumerable.Empty<IFunctionParser>()
-        );
         _evaluatorMock = new Mock<ISqlExpressionEvaluator>();
-        // Use real query expression evaluator
-        _evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<int>()))
-                      .Returns<IExpression, IQueryFieldInfo, int>((x, y, z) => evaluator.GetSqlExpression(x, y, z));
-        _evaluatorMock.Setup(x => x.GetLengthExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>()))
-                      .Returns<IExpression, IQueryFieldInfo>((x, y) => evaluator.GetLengthExpression(x, y));
+        DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(_evaluatorMock);
     }
 
     [Fact]
