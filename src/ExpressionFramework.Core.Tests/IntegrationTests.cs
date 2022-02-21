@@ -155,10 +155,11 @@ public sealed class IntegrationTests : IDisposable
     }
 
     [Fact]
-    public void Can_Evaluate_Multiple_Conditions_With_Group_And_Different_Combinations()
+    public void Can_Evaluate_Multiple_Conditions_With_Group_And_Different_Combinations_1()
     {
         // Arrange
         var sut = CreateSut();
+        //This translates to: True&(False|True) -> True
         var condition1 = new ConditionBuilder()
             .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
             .WithOperator(Operator.Equal)
@@ -174,6 +175,40 @@ public sealed class IntegrationTests : IDisposable
         var condition3 = new ConditionBuilder()
             .WithEndGroup()
             .WithCombination(Combination.Or)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .Build();
+
+        // Act
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition1, condition2, condition3 }, null), null, CreateEvaluator(), out var result);
+
+        // Assert
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
+    }
+
+    [Fact]
+    public void Can_Evaluate_Multiple_Conditions_With_Group_And_Different_Combinations_2()
+    {
+        // Arrange
+        var sut = CreateSut();
+        //This translates to: False|(True&True) -> True
+        var condition1 = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("wrong"))
+            .Build();
+        var condition2 = new ConditionBuilder()
+            .WithStartGroup()
+            .WithCombination(Combination.Or)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .Build();
+        var condition3 = new ConditionBuilder()
+            .WithEndGroup()
+            .WithCombination(Combination.And)
             .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
             .WithOperator(Operator.Equal)
             .WithRightExpression(new ConstantExpressionBuilder().WithValue("54321"))

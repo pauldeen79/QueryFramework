@@ -98,7 +98,7 @@ public class ConditionFunctionEvaluator : IFunctionEvaluator
     private static string GetPrefix(string expression, int openIndex)
         => openIndex == 0
             ? string.Empty
-            : expression.Substring(0, openIndex - 1);
+            : expression.Substring(0, openIndex - 2);
 
     private static string GetCurrent(bool result)
         => result
