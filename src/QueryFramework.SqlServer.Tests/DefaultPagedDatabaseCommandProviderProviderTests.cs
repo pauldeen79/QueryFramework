@@ -3,12 +3,20 @@
 public class DefaultPagedDatabaseCommandProviderProviderTests
 {
     [Fact]
-    public void TryCreate_Returns_True_When_Query_Is_Of_Correct_Type()
+    public void TryCreate_Returns_True_For_SingleEntityQuery() => TryCreate<ISingleEntityQuery>();
+
+    [Fact]
+    public void TryCreate_Returns_True_For_FieldSelectionQuery() => TryCreate<IFieldSelectionQuery>();
+
+    [Fact]
+    public void TryCreate_Returns_True_For_GroupingQuery() => TryCreate<IGroupingQuery>();
+
+    private void TryCreate<T>() where T : class, ISingleEntityQuery
     {
         // Arrange
         var pagedDatabaseCommandProvider = new Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>().Object;
-        var sut = new DefaultPagedDatabaseCommandProviderProvider<IFieldSelectionQuery>(pagedDatabaseCommandProvider);
-        var query = new Mock<IFieldSelectionQuery>().Object;
+        var sut = new DefaultPagedDatabaseCommandProviderProvider(pagedDatabaseCommandProvider);
+        var query = new Mock<T>().Object;
 
         // Act
         var actual = sut.TryCreate(query, out var provider);
@@ -16,21 +24,5 @@ public class DefaultPagedDatabaseCommandProviderProviderTests
         // Assert
         actual.Should().BeTrue();
         provider.Should().BeSameAs(pagedDatabaseCommandProvider);
-    }
-
-    [Fact]
-    public void TryCreate_Returns_False_When_Query_Is_Not_Of_Correct_Type()
-    {
-        // Arrange
-        var pagedDatabaseCommandProvider = new Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>().Object;
-        var sut = new DefaultPagedDatabaseCommandProviderProvider<IFieldSelectionQuery>(pagedDatabaseCommandProvider);
-        var query = new Mock<IGroupingQuery>().Object;
-
-        // Act
-        var actual = sut.TryCreate(query, out var provider);
-
-        // Assert
-        actual.Should().BeFalse();
-        provider.Should().BeNull();
     }
 }

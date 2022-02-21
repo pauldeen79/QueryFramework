@@ -1,7 +1,6 @@
 ﻿namespace QueryFramework.SqlServer;
 
-public class DefaultPagedDatabaseCommandProviderProvider<TQuery> : IPagedDatabaseCommandProviderProvider
-    where TQuery : ISingleEntityQuery
+public class DefaultPagedDatabaseCommandProviderProvider : IPagedDatabaseCommandProviderProvider
 {
     private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _pagedDatabaseCommandProvider;
 
@@ -10,13 +9,7 @@ public class DefaultPagedDatabaseCommandProviderProvider<TQuery> : IPagedDatabas
 
     public bool TryCreate(ISingleEntityQuery query, out IPagedDatabaseCommandProvider<ISingleEntityQuery>? result)
     {
-        if (query is TQuery)
-        {
-            result = _pagedDatabaseCommandProvider;
-            return true;
-        }
-
-        result = default;
-        return false;
+        result = _pagedDatabaseCommandProvider;
+        return true;
     }
 }
