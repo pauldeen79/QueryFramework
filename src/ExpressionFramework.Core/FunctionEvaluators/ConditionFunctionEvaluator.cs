@@ -10,20 +10,23 @@ public class ConditionFunctionEvaluator : IFunctionEvaluator
             return false;
         }
 
-        var fullResult = true;
-        foreach (var condition in c.Conditions.Select((item, index) => new { Item = item, Index = index }))
+        var builder = new StringBuilder();
+        foreach (var condition in c.Conditions)
         {
-            if ((condition.Item.StartGroup && !condition.Item.EndGroup) || (condition.Item.EndGroup && !condition.Item.StartGroup))
+            if (builder.Length > 0)
             {
-                //TODO: Add support for groups
-                throw new NotSupportedException("Grouped conditions are not supported yet");
+                builder.Append(condition.Combination == Combination.And ? "&" : "|");
             }
-            var isItemValid = IsItemValid(value, condition.Item, evaluator);
-            fullResult = condition.Index == 0 || condition.Item.Combination == Combination.And
-                ? fullResult && isItemValid
-                : fullResult || isItemValid;
+
+            var prefix = condition.StartGroup ? "(" : string.Empty;
+            var suffix = condition.EndGroup ? ")" : string.Empty;
+            var itemResult = IsItemValid(value, condition, evaluator);
+            builder.Append(prefix)
+                   .Append(itemResult ? "T" : "F")
+                   .Append(suffix);
         }
-        result = fullResult;
+
+        result = EvaluateBooleanExpression(builder.ToString());
         return true;
     }
 
@@ -39,4 +42,71 @@ public class ConditionFunctionEvaluator : IFunctionEvaluator
 
         throw new ArgumentOutOfRangeException(nameof(condition), $"Unsupported operator: {condition.Operator}");
     }
+
+    private static bool EvaluateBooleanExpression(string expression)
+    {
+        var result = ProcessRecursive(ref expression);
+
+        var @operator = "&";
+        foreach (var character in expression)
+        {
+            bool currentResult;
+            switch (character)
+            {
+                case '&':
+                    @operator = "&";
+                    break;
+                case '|':
+                    @operator = "|";
+                    break;
+                case 'T':
+                case 'F':
+                    currentResult = character == 'T';
+                    result = @operator == "&"
+                        ? result && currentResult
+                        : result || currentResult;
+                    break;
+            }
+        }
+
+        return result;
+    }
+
+    private static bool ProcessRecursive(ref string expression)
+    {
+        var result = true;
+        var openIndex = -1;
+        int closeIndex;
+        do
+        {
+            closeIndex = expression.IndexOf(")");
+            if (closeIndex > -1)
+            {
+                openIndex = expression.LastIndexOf("(", closeIndex);
+                if (openIndex > -1)
+                {
+                    result = EvaluateBooleanExpression(expression.Substring(openIndex + 1, closeIndex - openIndex - 1));
+                    expression = string.Concat(GetPrefix(expression, openIndex),
+                                               GetCurrent(result),
+                                               GetSuffix(expression, closeIndex));
+                }
+            }
+        } while (closeIndex > -1 && openIndex > -1);
+        return result;
+    }
+
+    private static string GetPrefix(string expression, int openIndex)
+        => openIndex == 0
+            ? string.Empty
+            : expression.Substring(0, openIndex - 1);
+
+    private static string GetCurrent(bool result)
+        => result
+            ? "T"
+            : "F";
+
+    private static string GetSuffix(string expression, int closeIndex)
+        => closeIndex == expression.Length
+            ? string.Empty
+            : expression.Substring(closeIndex + 1);
 }

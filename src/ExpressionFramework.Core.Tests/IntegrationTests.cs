@@ -155,39 +155,36 @@ public sealed class IntegrationTests : IDisposable
     }
 
     [Fact]
-    public void Can_Not_Evaluate_Condition_With_StartGroup()
+    public void Can_Evaluate_Multiple_Conditions_With_Group_And_Different_Combinations()
     {
         // Arrange
         var sut = CreateSut();
-        var condition = new ConditionBuilder()
+        var condition1 = new ConditionBuilder()
             .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
             .WithOperator(Operator.Equal)
             .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .Build();
+        var condition2 = new ConditionBuilder()
             .WithStartGroup()
-            .Build();
-
-        // Act & Assert
-        sut.Invoking(x => x.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result))
-           .Should().ThrowExactly<NotSupportedException>()
-           .WithMessage("Grouped conditions are not supported yet");
-    }
-
-    [Fact]
-    public void Can_Not_Evaluate_Condition_With_EndGroup()
-    {
-        // Arrange
-        var sut = CreateSut();
-        var condition = new ConditionBuilder()
-            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithCombination(Combination.And)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
             .WithOperator(Operator.Equal)
-            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("wrong"))
+            .Build();
+        var condition3 = new ConditionBuilder()
             .WithEndGroup()
+            .WithCombination(Combination.Or)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("54321"))
             .Build();
 
-        // Act & Assert
-        sut.Invoking(x => x.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result))
-           .Should().ThrowExactly<NotSupportedException>()
-           .WithMessage("Grouped conditions are not supported yet");
+        // Act
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition1, condition2, condition3 }, null), null, CreateEvaluator(), out var result);
+
+        // Assert
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
     }
 
     private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();
