@@ -1,4 +1,2 @@
 -Add functions: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
 -Add functionevaluators: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
--Add and refactor fluent extension methods on string and expression to work with new And and Or functions
--Add and refactor fluent extension methods on string and expression to work with null (=empty), true/false (=constant) expressions
