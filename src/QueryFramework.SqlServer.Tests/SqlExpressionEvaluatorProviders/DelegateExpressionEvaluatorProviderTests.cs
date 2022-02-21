@@ -22,7 +22,7 @@ public class DelegateExpressionEvaluatorProviderTests
     }
 
     [Fact]
-    public void TryGetSqlExpression_Returns_FieldName_When_Expression_Is_Of_Type_DelegateExpression()
+    public void TryGetSqlExpression_Returns_ValueDelegate_Result_When_Expression_Is_Of_Type_DelegateExpression()
     {
         // Arrange
         var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
@@ -39,5 +39,42 @@ public class DelegateExpressionEvaluatorProviderTests
         // Assert
         actual.Should().BeTrue();
         result.Should().Be("@p0");
+    }
+
+    [Fact]
+    public void TryGetLengthExpression_Returns_Null_When_Expression_Is_Not_Of_Type_DelegateExpression()
+    {
+        // Arrange
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
+        var sut = new DelegateExpressionEvaluatorProvider(expressionEvaluatorMock.Object);
+        var expression = new EmptyExpressionBuilder().Build();
+        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+
+        // Act
+        var actual = sut.TryGetLengthExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, out var result);
+
+        // Assert
+        actual.Should().BeFalse();
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void TryGetLengthExpression_Returns_ValueDelegate_Result_When_Expression_Is_Of_Type_DelegateExpression()
+    {
+        // Arrange
+        var expressionEvaluatorMock = new Mock<IExpressionEvaluator>();
+        var sut = new DelegateExpressionEvaluatorProvider(expressionEvaluatorMock.Object);
+        var expression = new DelegateExpressionBuilder().WithValueDelegate(new Func<object?, IExpression, IExpressionEvaluator, object?>((_, _, _) => "Test")).Build();
+        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+
+        // Act
+        var actual = sut.TryGetLengthExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, out var result);
+
+        // Assert
+        actual.Should().BeTrue();
+        result.Should().Be("Test".Length.ToString());
     }
 }

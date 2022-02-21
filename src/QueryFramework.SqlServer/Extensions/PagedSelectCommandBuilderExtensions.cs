@@ -203,11 +203,26 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     internal static PagedSelectCommandBuilder WithParameters(this PagedSelectCommandBuilder instance,
-                                                             IParameterizedQuery? parameterizedQuery)
-        => parameterizedQuery == null
-            ? instance
-            : parameterizedQuery.Parameters.Aggregate(instance, (acc, parameter)
-                => acc.AppendParameter(parameter.Name, parameter.Value));
+                                                             IParameterizedQuery? parameterizedQuery,
+                                                             ParameterBag parameterBag)
+    {
+        if (parameterizedQuery != null)
+        {
+            foreach (var parameter in parameterizedQuery.Parameters)
+            {
+                instance.AppendParameter(parameter.Name, parameter.Value);
+            }
+        }
+
+        foreach (var parameter in parameterBag.Parameters)
+        {
+#pragma warning disable CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
+            instance.AppendParameter(parameter.Key, parameter.Value);
+#pragma warning restore CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
+        }
+
+        return instance; 
+    }
 
     internal static PagedSelectCommandBuilder AppendQueryCondition(this PagedSelectCommandBuilder instance,
                                                                    ICondition condition,

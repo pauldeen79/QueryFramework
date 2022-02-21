@@ -38,7 +38,7 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
             .GroupBy(groupingQuery, fieldInfo, _evaluator, parameterBag)
             .Having(groupingQuery, fieldInfo, _evaluator, parameterBag)
             .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag)
-            .WithParameters(parameterizedQuery)
+            .WithParameters(parameterizedQuery, parameterBag)
             .Build();
     }
 }

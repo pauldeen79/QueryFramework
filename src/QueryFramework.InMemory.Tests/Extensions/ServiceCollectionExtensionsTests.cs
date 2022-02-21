@@ -7,6 +7,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var collection = new ServiceCollection().AddExpressionFramework();
+
         // Act
         var action = new Action(() => _ = collection.AddQueryFrameworkInMemory()
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));

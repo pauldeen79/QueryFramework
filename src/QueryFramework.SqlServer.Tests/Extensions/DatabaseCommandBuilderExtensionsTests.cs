@@ -548,14 +548,18 @@ public class DatabaseCommandBuilderExtensionsTests
     public void WithParameters_Adds_QueryParameters_When_Found()
     {
         // Arrange
-        var query = new ParameterizedQueryMock(new[] { new QueryParameter("name", "Value") });
+        var query = new ParameterizedQueryMock(new[] { new QueryParameter("name", "Value1") });
+        var parameterBag = new ParameterBag();
+        parameterBag.CreateQueryParameterName("Value2");
 
         // Act
-        var actual = _builder.WithParameters(query);
+        var actual = _builder.WithParameters(query, parameterBag);
 
         // Assert
-        actual.CommandParameters.Should().HaveCount(1);
+        actual.CommandParameters.Should().HaveCount(2);
         actual.CommandParameters.First().Key.Should().Be("name");
-        actual.CommandParameters.First().Value.Should().Be("Value");
+        actual.CommandParameters.First().Value.Should().Be("Value1");
+        actual.CommandParameters.Last().Key.Should().Be("@p0");
+        actual.CommandParameters.Last().Value.Should().Be("Value2");
     }
 }
