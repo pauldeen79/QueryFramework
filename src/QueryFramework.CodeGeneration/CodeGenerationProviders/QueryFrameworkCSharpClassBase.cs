@@ -24,26 +24,7 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
         foreach (var property in classBuilder.Properties)
         {
             var typeName = property.TypeName.FixTypeName();
-            if (typeName.StartsWith("QueryFramework.Abstractions.I", StringComparison.InvariantCulture))
-            {
-                property.ConvertSinglePropertyToBuilderOnBuilder
-                (
-                    typeName.Replace("QueryFramework.Abstractions.", "QueryFramework.Abstractions.Builders.") + "Builder",
-                    GetCustomBuilderConstructorInitializeExpression(property, typeName)
-                );
-
-                property.SetDefaultValueForBuilderClassConstructor(new Literal("new " + typeName.Replace("QueryFramework.Abstractions.I", "QueryFramework.Core.Builders.") + "Builder()"));
-            }
-            else if (typeName.Contains("Collection<QueryFramework."))
-            {
-                property.ConvertCollectionPropertyToBuilderOnBuilder
-                (
-                    false,
-                    typeof(ValueCollection<>).WithoutGenerics(),
-                    typeName.Replace("QueryFramework.Abstractions.", "QueryFramework.Core.Builders.").ReplaceSuffix(">", "Builder>", StringComparison.InvariantCulture)
-                );
-            }
-            else if (typeName.StartsWith("ExpressionFramework.Abstractions.DomainModel.I", StringComparison.InvariantCulture))
+            if (typeName.StartsWith("ExpressionFramework.Abstractions.DomainModel.I", StringComparison.InvariantCulture))
             {
                 property.ConvertSinglePropertyToBuilderOnBuilder
                 (
@@ -52,27 +33,6 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
                 );
 
                 property.SetDefaultValueForBuilderClassConstructor(new Literal(GetBuilderInitialization(typeName)));
-            }
-            else if (typeName.Contains("Collection<ExpressionFramework."))
-            {
-                property.ConvertCollectionPropertyToBuilderOnBuilder
-                (
-                    false,
-                    typeof(ValueCollection<>).WithoutGenerics(),
-                    typeName.Replace("ExpressionFramework.Abstractions.DomeinModel.", "ExpressionFramework.Core.DomainModel.Builders.").ReplaceSuffix(">", "Builder>", StringComparison.InvariantCulture)
-                );
-            }
-            else if (typeName.Contains("Collection<System.String"))
-            {
-                property.AddMetadata(ModelFramework.Objects.MetadataNames.CustomBuilderMethodParameterExpression, $"new {typeof(ValueCollection<string>).FullName.FixTypeName()}({{0}})");
-            }
-            else if (typeName.IsBooleanTypeName() || typeName.IsNullableBooleanTypeName())
-            {
-                property.SetDefaultArgumentValueForWithMethod(true);
-                if (property.Name == nameof(ClassProperty.HasGetter) || property.Name == nameof(ClassProperty.HasSetter))
-                {
-                    property.SetDefaultValueForBuilderClassConstructor(new Literal("true"));
-                }
             }
         }
     }
@@ -104,12 +64,9 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     private static string GetCustomBuilderConstructorInitializeExpression(ClassPropertyBuilder property, string typeName)
     {
-        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression"
-            || typeName == "ExpressionFramework.Abstractions.DomainModel.IExpressionFunction")
+        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression")
         {
-            return property.IsNullable
-                ? "{0} = source.{0} == null ? null : source.{0}.ToBuilder()"
-                : "{0} = source.{0}.ToBuilder()";
+            return "{0} = source.{0}.ToBuilder()";
         }
 
         return property.IsNullable
