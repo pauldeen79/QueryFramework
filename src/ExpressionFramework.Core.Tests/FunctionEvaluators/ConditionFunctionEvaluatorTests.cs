@@ -16,7 +16,7 @@ public class ConditionFunctionEvaluatorTests
                      .Returns(new EmptyExpressionBuilder().Build());
         conditionMock.SetupGet(x => x.RightExpression)
                      .Returns(new EmptyExpressionBuilder().Build());
-        var function = new ConditionFunction(new ConditionBuilder(conditionMock.Object).Build(), null);
+        var function = new ConditionFunction(new[] { new ConditionBuilder(conditionMock.Object).Build() }, null);
 
         // Act
         CreateSut().Invoking(x => x.TryEvaluate(function, null, _expressionEvaluatorMock.Object, out _))
@@ -134,7 +134,7 @@ public class ConditionFunctionEvaluatorTests
 
                                     return null;
                                 });
-        var function = new ConditionFunction(conditionMock.Object, null);
+        var function = new ConditionFunction(new[] { conditionMock.Object }, null);
 
         // Act
         var actual = CreateSut().TryEvaluate(function, null, _expressionEvaluatorMock.Object, out var result);

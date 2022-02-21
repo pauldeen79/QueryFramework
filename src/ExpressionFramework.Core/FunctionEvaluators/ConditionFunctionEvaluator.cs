@@ -10,7 +10,20 @@ public class ConditionFunctionEvaluator : IFunctionEvaluator
             return false;
         }
 
-        result = IsItemValid(value, c.Condition, evaluator);
+        var fullResult = true;
+        foreach (var condition in c.Conditions.Select((item, index) => new { Item = item, Index = index }))
+        {
+            if ((condition.Item.StartGroup && !condition.Item.EndGroup) || (condition.Item.EndGroup && !condition.Item.StartGroup))
+            {
+                //TODO: Add support for groups
+                throw new NotSupportedException("Grouped conditions are not supported yet");
+            }
+            var isItemValid = IsItemValid(value, condition.Item, evaluator);
+            fullResult = condition.Index == 0 || condition.Item.Combination == Combination.And
+                ? fullResult && isItemValid
+                : fullResult || isItemValid;
+        }
+        result = fullResult;
         return true;
     }
 

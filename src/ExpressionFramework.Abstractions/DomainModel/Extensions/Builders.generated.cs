@@ -37,6 +37,27 @@ namespace ExpressionFramework.Abstractions.DomainModel.Extensions
             instance.RightExpression = rightExpression;
             return instance;
         }
+
+        public static T WithStartGroup<T>(this T instance, bool startGroup = true)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
+        {
+            instance.StartGroup = startGroup;
+            return instance;
+        }
+
+        public static T WithEndGroup<T>(this T instance, bool endGroup = true)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
+        {
+            instance.EndGroup = endGroup;
+            return instance;
+        }
+
+        public static T WithCombination<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Domains.Combination combination)
+            where T : ExpressionFramework.Abstractions.DomainModel.Builders.IConditionBuilder
+        {
+            instance.Combination = combination;
+            return instance;
+        }
     }
 #nullable restore
 

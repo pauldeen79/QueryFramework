@@ -35,6 +35,24 @@ namespace ExpressionFramework.Abstractions.DomainModel.Builders
             set;
         }
 
+        bool StartGroup
+        {
+            get;
+            set;
+        }
+
+        bool EndGroup
+        {
+            get;
+            set;
+        }
+
+        ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        {
+            get;
+            set;
+        }
+
         ExpressionFramework.Abstractions.DomainModel.ICondition Build();
     }
 #nullable restore

@@ -2,16 +2,16 @@
 
 public record class ConditionFunction : IExpressionFunction
 {
-    public ICondition Condition { get; }
+    public ValueCollection<ICondition> Conditions { get; }
     public IExpressionFunction? InnerFunction { get; }
 
-    public ConditionFunction(ICondition condition, IExpressionFunction? innerFunction)
+    public ConditionFunction(IEnumerable<ICondition> conditions, IExpressionFunction? innerFunction)
     {
-        Condition = condition;
+        Conditions = new ValueCollection<ICondition>(conditions);
         InnerFunction = innerFunction;
     }
 
     public IExpressionFunctionBuilder ToBuilder()
-        => new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(Condition))
+        => new ConditionFunctionBuilder().AddConditions(Conditions.Select(x => new ConditionBuilder(x)))
                                          .WithInnerFunction(InnerFunction?.ToBuilder());
 }

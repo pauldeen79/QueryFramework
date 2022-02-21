@@ -92,7 +92,9 @@ internal static class PagedSelectCommandBuilderExtensions
                 fieldInfo,
                 evaluator,
                 parameterBag,
-                instance.Where
+                queryCondition.Combination == Combination.And
+                    ? instance.And
+                    : instance.Or
             );
         }
 
@@ -138,7 +140,7 @@ internal static class PagedSelectCommandBuilderExtensions
         {
             if (having.Index > 0)
             {
-                instance.Having($" AND ");
+                instance.Having($" {having.Item.Combination.ToSql()} ");
             }
             instance.AppendQueryCondition
             (
@@ -216,6 +218,11 @@ internal static class PagedSelectCommandBuilderExtensions
     {
         var builder = new StringBuilder();
 
+        if (condition.StartGroup)
+        {
+            builder.Append("(");
+        }
+
         if (!condition.Operator.In(Operator.Contains,
                                    Operator.NotContains,
                                    Operator.EndsWith,
@@ -247,6 +254,11 @@ internal static class PagedSelectCommandBuilderExtensions
         }
 
         AppendOperatorAndValue(condition, fieldInfo, builder, evaluator, parameterBag);
+
+        if (condition.EndGroup)
+        {
+            builder.Append(")");
+        }
 
         actionDelegate.Invoke(builder.ToString());
 

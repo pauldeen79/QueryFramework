@@ -10,13 +10,33 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.ToArray());
 
+    public static T Or<T>(this T instance, params IConditionBuilder[] additionalConditions)
+        where T : ISingleEntityQueryBuilderBase
+        => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.Or)));
+
+    public static T Or<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
+        where T : ISingleEntityQueryBuilderBase
+        => instance.Or(additionalConditions.ToArray());
+
     public static T And<T>(this T instance, params IConditionBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Where(additionalConditions);
+        => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.And)));
 
     public static T And<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Where(additionalConditions);
+        => instance.And(additionalConditions.ToArray());
+
+    public static T AndAny<T>(this T instance, params IConditionBuilder[] additionalConditions)
+        where T : ISingleEntityQueryBuilderBase
+        => instance.Where(additionalConditions.Select((a, index) => a.WithStartGroup(index == 0)
+                                                                     .WithEndGroup(index + 1 == additionalConditions.Length)
+                                                                     .WithCombination(index == 0 ? Combination.And : Combination.Or)));
+
+    public static T OrAll<T>(this T instance, params IConditionBuilder[] additionalConditions)
+        where T : ISingleEntityQueryBuilderBase
+        => instance.Where(additionalConditions.Select((a, index) => a.WithStartGroup(index == 0)
+                                                                     .WithEndGroup(index + 1 == additionalConditions.Length)
+                                                                     .WithCombination(index == 0 ? Combination.Or : Combination.And)));
 
     public static T OrderBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalOrderByFields)
         where T : ISingleEntityQueryBuilderBase

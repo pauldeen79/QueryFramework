@@ -32,11 +32,29 @@ namespace ExpressionFramework.Core.DomainModel
             get;
         }
 
-        public Condition(ExpressionFramework.Abstractions.DomainModel.IExpression leftExpression, ExpressionFramework.Abstractions.DomainModel.Domains.Operator @operator, ExpressionFramework.Abstractions.DomainModel.IExpression rightExpression)
+        public bool StartGroup
+        {
+            get;
+        }
+
+        public bool EndGroup
+        {
+            get;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        {
+            get;
+        }
+
+        public Condition(ExpressionFramework.Abstractions.DomainModel.IExpression leftExpression, ExpressionFramework.Abstractions.DomainModel.Domains.Operator @operator, ExpressionFramework.Abstractions.DomainModel.IExpression rightExpression, bool startGroup, bool endGroup, ExpressionFramework.Abstractions.DomainModel.Domains.Combination combination)
         {
             this.LeftExpression = leftExpression;
             this.Operator = @operator;
             this.RightExpression = rightExpression;
+            this.StartGroup = startGroup;
+            this.EndGroup = endGroup;
+            this.Combination = combination;
             System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
         }
     }

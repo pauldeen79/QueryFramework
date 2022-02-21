@@ -12,9 +12,9 @@ public class SingleEntityQueryBuilderExtensionsTests
         var actual = sut.Where(new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
                                                      .WithOperator(Operator.Greater)
                                                      .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-                                                     /*.WithOpenBracket()
-                                                     .WithCloseBracket()
-                                                     .WithCombination(QueryCombination.Or)*/);
+                                                     .WithStartGroup()
+                                                     .WithEndGroup()
+                                                     .WithCombination(Combination.Or));
 
         // Assert
         var field = actual.Conditions.First().LeftExpression as FieldExpressionBuilder;
@@ -22,6 +22,9 @@ public class SingleEntityQueryBuilderExtensionsTests
         actual.Conditions.Should().HaveCount(1);
         field?.FieldName.Should().Be("field");
         actual.Conditions.First().Operator.Should().Be(Operator.Greater);
+        actual.Conditions.First().StartGroup.Should().BeTrue();
+        actual.Conditions.First().EndGroup.Should().BeTrue();
+        actual.Conditions.First().Combination.Should().Be(Combination.Or);
         value.Should().Be("value");
     }
 

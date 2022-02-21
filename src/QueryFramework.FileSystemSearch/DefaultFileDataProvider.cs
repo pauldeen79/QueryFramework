@@ -60,7 +60,7 @@ public class DefaultFileDataProvider : IDataProvider
                 && !IsValidForFields(x.RightFieldName, _fileDataFields.Concat(_lineDataFields))
             )
             .Select(x => new ConstantExpressionBuilder().WithValue(true)
-                                                        .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+                                                        .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
                                                         .Build())
             .ToArray();
 
@@ -78,7 +78,7 @@ public class DefaultFileDataProvider : IDataProvider
             )
             .Select(x => new DelegateExpressionBuilder()
             .WithValueDelegate((item, _, _) => item)
-            .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+            .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
             .Build());
         var fileData = _fileDataProvider.Get(fileSystemQuery)
             .Where(x => fileDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
@@ -98,7 +98,7 @@ public class DefaultFileDataProvider : IDataProvider
             )
             .Select(x => new DelegateExpressionBuilder()
             .WithValueDelegate((item, _, _) => item)
-            .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x.Condition)))
+            .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
             .Build());
         result = fileData
             .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, x)))

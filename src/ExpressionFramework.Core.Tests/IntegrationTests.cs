@@ -21,7 +21,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -40,7 +40,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -59,7 +59,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -78,7 +78,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
@@ -97,11 +97,97 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var returnValue = sut.TryEvaluate(new ConditionFunction(condition, null), null, CreateEvaluator(), out var result);
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result);
 
         // Assert
         returnValue.Should().BeTrue();
         result.Should().Be(false);
+    }
+
+    [Fact]
+    public void Can_Evaluate_Multiple_Conditions_With_And_Combination()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var condition1 = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .Build();
+        var condition2 = new ConditionBuilder()
+            .WithCombination(Combination.And)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .Build();
+
+        // Act
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition1, condition2 }, null), null, CreateEvaluator(), out var result);
+
+        // Assert
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
+    }
+
+    [Fact]
+    public void Can_Evaluate_Multiple_Conditions_With_Or_Combination()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var condition1 = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .Build();
+        var condition2 = new ConditionBuilder()
+            .WithCombination(Combination.Or)
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("54321"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("wrong"))
+            .Build();
+
+        // Act
+        var returnValue = sut.TryEvaluate(new ConditionFunction(new[] { condition1, condition2 }, null), null, CreateEvaluator(), out var result);
+
+        // Assert
+        returnValue.Should().BeTrue();
+        result.Should().Be(true);
+    }
+
+    [Fact]
+    public void Can_Not_Evaluate_Condition_With_StartGroup()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var condition = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithStartGroup()
+            .Build();
+
+        // Act & Assert
+        sut.Invoking(x => x.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result))
+           .Should().ThrowExactly<NotSupportedException>()
+           .WithMessage("Grouped conditions are not supported yet");
+    }
+
+    [Fact]
+    public void Can_Not_Evaluate_Condition_With_EndGroup()
+    {
+        // Arrange
+        var sut = CreateSut();
+        var condition = new ConditionBuilder()
+            .WithLeftExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithOperator(Operator.Equal)
+            .WithRightExpression(new ConstantExpressionBuilder().WithValue("12345"))
+            .WithEndGroup()
+            .Build();
+
+        // Act & Assert
+        sut.Invoking(x => x.TryEvaluate(new ConditionFunction(new[] { condition }, null), null, CreateEvaluator(), out var result))
+           .Should().ThrowExactly<NotSupportedException>()
+           .WithMessage("Grouped conditions are not supported yet");
     }
 
     private ConditionFunctionEvaluator CreateSut() => new ConditionFunctionEvaluator();

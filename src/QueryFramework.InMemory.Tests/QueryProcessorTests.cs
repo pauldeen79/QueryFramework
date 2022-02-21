@@ -661,12 +661,17 @@ public sealed class QueryProcessorTests : IDisposable
         (
             query => items.Where
             (
-                item => query.Conditions
-                    .Select(x => new DelegateExpressionBuilder()
-                        .WithValueDelegate((item, expression, evaluator) => item)
-                        .WithFunction(new ConditionFunctionBuilder().WithCondition(new ConditionBuilder(x)))
-                        .Build())
-                    .All(y => Convert.ToBoolean(expressionEvaluator.Evaluate(item, y)))
+                item => Convert.ToBoolean
+                (
+                    expressionEvaluator.Evaluate
+                    (
+                        item,
+                        new DelegateExpressionBuilder()
+                            .WithValueDelegate((item, expression, evaluator) => item)
+                            .WithFunction(new ConditionFunctionBuilder().AddConditions(query.Conditions.Select(x => new ConditionBuilder(x))))
+                            .Build()
+                    )
+                )
             )
         );
         _dataProviderMock.ReturnValue = true;

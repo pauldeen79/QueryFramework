@@ -35,9 +35,27 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             set;
         }
 
+        public bool StartGroup
+        {
+            get;
+            set;
+        }
+
+        public bool EndGroup
+        {
+            get;
+            set;
+        }
+
+        public ExpressionFramework.Abstractions.DomainModel.Domains.Combination Combination
+        {
+            get;
+            set;
+        }
+
         public ExpressionFramework.Abstractions.DomainModel.ICondition Build()
         {
-            return new ExpressionFramework.Core.DomainModel.Condition(LeftExpression.Build(), Operator, RightExpression.Build());
+            return new ExpressionFramework.Core.DomainModel.Condition(LeftExpression.Build(), Operator, RightExpression.Build(), StartGroup, EndGroup, Combination);
         }
 
         public ConditionBuilder()
@@ -45,6 +63,9 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             LeftExpression = new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder();
             Operator = default;
             RightExpression = new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder();
+            StartGroup = default;
+            EndGroup = default;
+            Combination = default;
         }
 
         public ConditionBuilder(ExpressionFramework.Abstractions.DomainModel.ICondition source)
@@ -52,6 +73,9 @@ namespace ExpressionFramework.Core.DomainModel.Builders
             LeftExpression = source.LeftExpression.ToBuilder();
             Operator = source.Operator;
             RightExpression = source.RightExpression.ToBuilder();
+            StartGroup = source.StartGroup;
+            EndGroup = source.EndGroup;
+            Combination = source.Combination;
         }
     }
 #nullable restore

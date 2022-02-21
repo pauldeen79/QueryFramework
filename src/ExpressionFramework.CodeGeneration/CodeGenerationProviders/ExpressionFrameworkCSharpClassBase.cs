@@ -41,6 +41,10 @@ public abstract partial class ExpressionFrameworkCSharpClassBase : CSharpClassBa
 
                 property.SetDefaultValueForBuilderClassConstructor(GetDefaultValueForBuilderClassConstructor(typeName));
             }
+            else if (typeName.IsBooleanTypeName() || typeName.IsNullableBooleanTypeName())
+            {
+                property.SetDefaultArgumentValueForWithMethod(true);
+            }
         }
     }
 
