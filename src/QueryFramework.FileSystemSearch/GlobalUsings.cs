@@ -5,7 +5,6 @@ global using System.Linq;
 global using ExpressionFramework.Abstractions;
 global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.Abstractions.DomainModel.Extensions;
-global using ExpressionFramework.Abstractions.Extensions;
 global using ExpressionFramework.Core.DomainModel.Builders;
 global using ExpressionFramework.Core.Functions;
 global using Microsoft.Extensions.DependencyInjection;
