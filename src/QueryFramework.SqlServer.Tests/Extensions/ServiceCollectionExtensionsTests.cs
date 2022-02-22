@@ -14,44 +14,4 @@ public class ServiceCollectionExtensionsTests
         // Assert
         action.Should().NotThrow();
     }
-
-    [Fact]
-    public void QueryPagedDatabaseCommandProvider_Is_Returned_When_No_Custom_PagedDatabaseCommandProviderProvider_Is_Registered()
-    {
-        // Arrange
-        using var provider = new ServiceCollection()
-            .AddExpressionFramework()
-            .AddQueryFrameworkSqlServer()
-            .BuildServiceProvider();
-        var sut = provider.GetRequiredService<IPagedDatabaseCommandProviderFactory>();
-        var query = new Mock<ISingleEntityQuery>().Object;
-
-        // Act
-        var actual = sut.Create(query);
-
-        // Assert
-        actual.Should().BeOfType<QueryPagedDatabaseCommandProvider>();
-    }
-
-    [Fact]
-    public void Custom_PagedDatabaseCommandProvider_Is_Returned_When_Custom_PagedDatabaseCommandProviderProvider_Is_Registered()
-    {
-        // Arrange
-        var customPagedDatabaseCommandProviderProviderMock = new Mock<IPagedDatabaseCommandProviderProvider>();
-        var customCommandProvider = new Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>().Object;
-        customPagedDatabaseCommandProviderProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out customCommandProvider))
-                                                      .Returns(true);
-        using var provider = new ServiceCollection()
-            .AddExpressionFramework()
-            .AddQueryFrameworkSqlServer(x => x.AddSingleton(customPagedDatabaseCommandProviderProviderMock.Object))
-            .BuildServiceProvider();
-        var sut = provider.GetRequiredService<IPagedDatabaseCommandProviderFactory>();
-        var query = new Mock<ISingleEntityQuery>().Object;
-
-        // Act
-        var actual = sut.Create(query);
-
-        // Assert
-        actual.Should().BeSameAs(customCommandProvider);
-    }
 }

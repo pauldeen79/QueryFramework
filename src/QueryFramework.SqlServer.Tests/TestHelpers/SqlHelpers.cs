@@ -42,16 +42,7 @@ internal static class SqlHelpers
                              .Returns(queryFieldInfo);
         using var serviceProvider = new ServiceCollection()
             .AddExpressionFramework()
-            .AddQueryFrameworkSqlServer(x =>
-                x.AddSingleton(ctx =>
-                {
-                    var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
-                    var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
-                    mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
-                        .Returns(true);
-                    return mock.Object;
-                })
-            )
+            .AddQueryFrameworkSqlServer()
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)
             .BuildServiceProvider();

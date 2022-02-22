@@ -15,8 +15,6 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
             .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
             .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()
-            .AddSingleton<IPagedDatabaseCommandProviderFactory, DefaultPagedDatabaseCommandProviderFactory>()
-            .AddSingleton<IPagedDatabaseCommandProviderProvider, DefaultPagedDatabaseCommandProviderProvider>()
             .AddSingleton<ISqlExpressionEvaluator, DefaultSqlExpressionEvaluator>()
             .AddSingleton<ISqlExpressionEvaluatorProvider, FieldExpressionEvaluatorProvider>()
             .AddSingleton<ISqlExpressionEvaluatorProvider, ConstantExpressionEvaluatorProvider>()
