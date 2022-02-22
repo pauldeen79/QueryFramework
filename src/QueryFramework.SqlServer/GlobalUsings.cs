@@ -11,6 +11,7 @@ global using CrossCutting.Data.Sql.Extensions;
 global using ExpressionFramework.Abstractions;
 global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.Abstractions.DomainModel.Domains;
+global using ExpressionFramework.Core.FunctionEvaluators;
 global using ExpressionFramework.Core.Functions;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.Abstractions;

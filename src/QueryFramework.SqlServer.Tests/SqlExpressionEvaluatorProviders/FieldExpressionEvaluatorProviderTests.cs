@@ -28,7 +28,7 @@ public class FieldExpressionEvaluatorProviderTests
         var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
-        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x.ToUpperInvariant());
         var parameterBag = new ParameterBag();
 
         // Act
@@ -36,7 +36,23 @@ public class FieldExpressionEvaluatorProviderTests
 
         // Assert
         actual.Should().BeTrue();
-        result.Should().Be("Test");
+        result.Should().Be("Test".ToUpperInvariant());
+    }
+
+    [Fact]
+    public void TryGetSqlExpression_Throws_On_Unknown_Field()
+    {
+        // Arrange
+        var sut = new FieldExpressionEvaluatorProvider();
+        var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
+        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        var parameterBag = new ParameterBag();
+
+        // Act & Assert
+        sut.Invoking(x => x.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, parameterBag, out var result))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Expression contains unknown field [Test]");
     }
 
     [Fact]
@@ -72,5 +88,21 @@ public class FieldExpressionEvaluatorProviderTests
         // Assert
         actual.Should().BeTrue();
         result.Should().Be("LEN(Test)");
+    }
+
+    [Fact]
+    public void TryGetLengthExpression_Throws_On_Unknown_Field()
+    {
+        // Arrange
+        var sut = new FieldExpressionEvaluatorProvider();
+        var expression = new FieldExpressionBuilder().WithFieldName("Test").Build();
+        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
+        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+
+        // Act & Assert
+        sut.Invoking(x => x.TryGetLengthExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, out var result))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Expression contains unknown field [Test]");
+
     }
 }

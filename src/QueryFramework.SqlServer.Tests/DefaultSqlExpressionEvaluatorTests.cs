@@ -102,66 +102,6 @@ public class DefaultSqlExpressionEvaluatorTests
         actual.Should().Be(result);
     }
 
-    [Fact]
-    public void GetSqlExpression_Returns_Correct_Result_On_Two_Expressions_With_And_Combination()
-    {
-        // Arrange
-        var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value1"))
-            .And("Field2".IsNotEqualTo("Value2"))
-            .Build();
-
-        // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
-
-        // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
-        actual.CommandParameters.Should().NotBeNull();
-        var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(2);
-        dict?.Keys.Should().BeEquivalentTo(new[] { "@p0", "@p1" });
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value1", "Value2" });
-    }
-
-    [Fact]
-    public void GetSqlExpression_Returns_Correct_Result_On_Two_Expressions_With_Or_Combination()
-    {
-        // Arrange
-        var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value1"))
-            .Or("Field2".IsGreaterThan("Value2"))
-            .Build();
-
-        // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
-
-        // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
-        actual.CommandParameters.Should().NotBeNull();
-    }
-
-    [Fact]
-    public void GetSqlExpression_Returns_Correct_Result_On_Three_Expressions_With_Different_Combinations_And_Group()
-    {
-        // Arrange
-        var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value"))
-            .AndAny
-            (
-                "Field2".IsEqualTo("A"),
-                "Field2".IsEqualTo("B")
-            )
-            .Build();
-
-        // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
-
-        // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
-        actual.CommandParameters.Should().NotBeNull();
-    }
-
     private ISqlExpressionEvaluator CreateSut() => new DefaultSqlExpressionEvaluator(new[] { _expressionEvaluatorProviderMock.Object },
                                                                                      new[] { _functionParserMock.Object });
 }
