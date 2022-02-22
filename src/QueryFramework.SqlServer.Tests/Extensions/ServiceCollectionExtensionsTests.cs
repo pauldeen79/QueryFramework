@@ -7,8 +7,9 @@ public class ServiceCollectionExtensionsTests
     {
         // Act
         var action = new Action(() => _ = new ServiceCollection()
+            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer()
-            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true }));
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
 
         // Assert
         action.Should().NotThrow();
@@ -19,6 +20,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         using var provider = new ServiceCollection()
+            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer()
             .BuildServiceProvider();
         var sut = provider.GetRequiredService<IPagedDatabaseCommandProviderFactory>();
@@ -40,6 +42,7 @@ public class ServiceCollectionExtensionsTests
         customPagedDatabaseCommandProviderProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out customCommandProvider))
                                                       .Returns(true);
         using var provider = new ServiceCollection()
+            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer(x => x.AddSingleton(customPagedDatabaseCommandProviderProviderMock.Object))
             .BuildServiceProvider();
         var sut = provider.GetRequiredService<IPagedDatabaseCommandProviderFactory>();

@@ -17,9 +17,6 @@ public class AbstractionsInterfacesModels : CSharpExpressionDumperClassBase
 
     protected override Type[] Models => new[]
     {
-        typeof(IQueryCondition),
-        typeof(IQueryExpression),
-        typeof(IQueryExpressionFunction),
         typeof(IQueryParameter),
         typeof(IQueryParameterValue),
         typeof(IQuerySortOrder)

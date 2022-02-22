@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.FileSystemSearch.Entities;
 
-public class FileData
+public class FileData : IFileData
 {
     private readonly FileInfo _fileInfo;
 

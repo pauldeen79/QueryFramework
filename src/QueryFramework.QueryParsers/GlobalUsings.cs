@@ -2,10 +2,10 @@
 global using System.Collections.Generic;
 global using System.Globalization;
 global using System.Linq;
+global using ExpressionFramework.Abstractions.DomainModel.Builders;
+global using ExpressionFramework.Abstractions.DomainModel.Domains;
+global using ExpressionFramework.Core.DomainModel.Builders;
 global using QueryFramework.Abstractions;
-global using QueryFramework.Abstractions.Builders;
-global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.Abstractions.Queries.Builders;
-global using QueryFramework.Core.Builders;
 global using QueryFramework.Core.Extensions;
 global using QueryFramework.QueryParsers.Extensions;

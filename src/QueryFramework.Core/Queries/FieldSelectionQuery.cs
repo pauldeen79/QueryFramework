@@ -1,14 +1,14 @@
 ﻿namespace QueryFramework.Core.Queries;
 
-public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
+public record FieldSelectionQuery : IFieldSelectionQuery
 {
     public FieldSelectionQuery() : this(null,
                                         null,
                                         false,
                                         false,
-                                        Enumerable.Empty<IQueryCondition>(),
+                                        Enumerable.Empty<ICondition>(),
                                         Enumerable.Empty<IQuerySortOrder>(),
-                                        Enumerable.Empty<IQueryExpression>())
+                                        Enumerable.Empty<IExpression>())
     {
     }
 
@@ -16,16 +16,16 @@ public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
                                int? offset,
                                bool distinct,
                                bool getAllFields,
-                               IEnumerable<IQueryCondition> conditions,
+                               IEnumerable<ICondition> conditions,
                                IEnumerable<IQuerySortOrder> orderByFields,
-                               IEnumerable<IQueryExpression> fields)
+                               IEnumerable<IExpression> fields)
     {
         Limit = limit;
         Offset = offset;
         Distinct = distinct;
         GetAllFields = getAllFields;
-        Fields = new ValueCollection<IQueryExpression>(fields);
-        Conditions = new ValueCollection<IQueryCondition>(conditions);
+        Fields = new ValueCollection<IExpression>(fields);
+        Conditions = new ValueCollection<ICondition>(conditions);
         OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields);
         Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
     }
@@ -34,10 +34,7 @@ public record FieldSelectionQuery : IFieldSelectionQuery, IValidatableObject
     public int? Offset { get; }
     public bool Distinct { get; }
     public bool GetAllFields { get; }
-    public ValueCollection<IQueryExpression> Fields { get; }
-    public ValueCollection<IQueryCondition> Conditions { get; }
+    public ValueCollection<IExpression> Fields { get; }
+    public ValueCollection<ICondition> Conditions { get; }
     public ValueCollection<IQuerySortOrder> OrderByFields { get; }
-
-    public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        => this.ValidateQuery();
 }

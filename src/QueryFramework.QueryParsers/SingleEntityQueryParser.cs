@@ -2,7 +2,7 @@
 
 public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : IQueryParser<TQueryBuilder>
     where TQueryBuilder : ISingleEntityQueryBuilder
-    where TQueryExpressionBuilder : IQueryExpressionBuilder, new()
+    where TQueryExpressionBuilder : FieldExpressionBuilder, new()
 {
     private readonly Func<TQueryExpressionBuilder>? _defaultFieldExpressionBuilderFactory;
 
@@ -22,23 +22,20 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         return builder;
     }
 
-    private List<IQueryConditionBuilder>? PerformQuerySearch(string[] items)
+    private List<IConditionBuilder>? PerformQuerySearch(string[] items)
     {
         var itemCountIsCorrect = (items.Length - 3) % 4 == 0;
         if (!itemCountIsCorrect)
         {
             return default;
         }
-        var nextSearchCombination = QueryCombination.And;
-        var result = new List<IQueryConditionBuilder>();
+        var result = new List<IConditionBuilder>();
         for (int i = 0; i < items.Length && itemCountIsCorrect; i += 4)
         {
             //verify that:
             //-items[i] needs to be a valid fieldname
             //-items[i + 1] needs to be a valid operator
-            //-items[i + 3] needs to be a valic combination for the next condition
-            var openBracket = false;
-            var closeBracket = false;
+            //-items[i + 3] needs to be a valid combination for the next condition
             var fieldName = items[i];
             var fieldValue = items[i + 2];
             var @operator = items[i + 1];
@@ -46,12 +43,10 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             //remove brackets and set bracket property values for this query item.
             if (fieldName.StartsWith("("))
             {
-                openBracket = true;
                 fieldName = fieldName.Substring(1);
             }
             if (fieldValue.EndsWith(")"))
             {
-                closeBracket = true;
                 fieldValue = fieldValue.Substring(0, fieldValue.Length - 1);
             }
 
@@ -61,25 +56,12 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 return default;
             }
 
-            var condition = new QueryConditionBuilder
+            var condition = new ConditionBuilder
             {
-                OpenBracket = openBracket,
-                CloseBracket = closeBracket,
-                Combination = nextSearchCombination,
-                Field = GetField(fieldName),
+                LeftExpression = GetField(fieldName),
                 Operator = queryOperator.Value,
-                Value = GetValue(queryOperator.Value, fieldValue)
+                RightExpression = new ConstantExpressionBuilder().WithValue(GetValue(queryOperator.Value, fieldValue))
             };
-
-            if (items.Length > i + 3)
-            {
-                var combination = GetQueryCombination(items[i + 3]);
-                if (combination == null)
-                {
-                    return default;
-                }
-                nextSearchCombination = combination.Value;
-            }
 
             result.Add(condition);
         }
@@ -87,17 +69,17 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         return result;
     }
 
-    private IQueryExpressionBuilder GetField(string fieldName)
+    private IExpressionBuilder GetField(string fieldName)
         => _defaultFieldExpressionBuilderFactory == null
             ? new TQueryExpressionBuilder().WithFieldName(fieldName)
             : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
-    private object? GetValue(QueryOperator queryOperator, object fieldValue)
-        => queryOperator == QueryOperator.IsNull || queryOperator == QueryOperator.IsNotNull
+    private object? GetValue(Operator queryOperator, object fieldValue)
+        => queryOperator == Operator.IsNull || queryOperator == Operator.IsNotNull
             ? null
             : fieldValue;
 
-    private List<IQueryConditionBuilder> PerformSimpleSearch(string[] items)
+    private List<IConditionBuilder> PerformSimpleSearch(string[] items)
         => items
             .Where(x => !string.IsNullOrEmpty(x))
             .Select((x, i) => new
@@ -107,74 +89,59 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 StartsWithPlusOrMinus = x.StartsWith("+") || x.StartsWith("-"),
                 StartsWithMinus = x.StartsWith("-")
             })
-            .Select(item => CreateQueryCondition(item.Index,
-                                                 item.Value,
+            .Select(item => CreateQueryCondition(item.Value,
                                                  item.StartsWithPlusOrMinus,
-                                                 item.StartsWithMinus,
-                                                 items.Length))
+                                                 item.StartsWithMinus))
             .ToList();
 
-    private IQueryConditionBuilder CreateQueryCondition(int index, string value, bool startsWithPlusOrMinus, bool startsWithMinus, int itemsLength)
-        => new QueryConditionBuilder
+    private IConditionBuilder CreateQueryCondition(string value, bool startsWithPlusOrMinus, bool startsWithMinus)
+        => new ConditionBuilder
         {
-            Field = _defaultFieldExpressionBuilderFactory == null
-                       ? new TQueryExpressionBuilder()
-                       : _defaultFieldExpressionBuilderFactory.Invoke(),
-            Combination = startsWithPlusOrMinus
-                       ? QueryCombination.And
-                       : QueryCombination.Or,
-            Value = startsWithPlusOrMinus
-                       ? value.Substring(1)
-                       : value,
+            LeftExpression = _defaultFieldExpressionBuilderFactory == null
+                ? new TQueryExpressionBuilder()
+                : _defaultFieldExpressionBuilderFactory.Invoke(),
+            RightExpression = new ConstantExpressionBuilder().WithValue(startsWithPlusOrMinus
+                ? value.Substring(1)
+                : value),
             Operator = startsWithMinus
-                       ? QueryOperator.NotContains
-                       : QueryOperator.Contains,
-            OpenBracket = index == 0,
-            CloseBracket = index == itemsLength - 1
+                ? Operator.NotContains
+                : Operator.Contains
         };
 
-    private static QueryCombination? GetQueryCombination(string combination)
-        => combination.ToUpper(CultureInfo.InvariantCulture) switch
-        {
-            "AND" => QueryCombination.And,
-            "OR" => QueryCombination.Or,
-            _ => null,// Unknown search combination
-            };
-
-    private static QueryOperator? GetQueryOperator(string @operator)
+    private static Operator? GetQueryOperator(string @operator)
         => @operator.ToUpper(CultureInfo.InvariantCulture) switch
         {
             var x when
                     x == "=" ||
-                    x == "==" => QueryOperator.Equal,
+                    x == "==" => Operator.Equal,
             var x when
                     x == "<>" ||
                     x == "!=" ||
-                    x == "#" => QueryOperator.NotEqual,
-            "<" => QueryOperator.Lower,
-            ">" => QueryOperator.Greater,
-            "<=" => QueryOperator.LowerOrEqual,
-            ">=" => QueryOperator.GreaterOrEqual,
-            "CONTAINS" => QueryOperator.Contains,
+                    x == "#" => Operator.NotEqual,
+            "<" => Operator.Smaller,
+            ">" => Operator.Greater,
+            "<=" => Operator.SmallerOrEqual,
+            ">=" => Operator.GreaterOrEqual,
+            "CONTAINS" => Operator.Contains,
             var x when
                     x == "NOTCONTAINS" ||
-                    x == "NOT CONTAINS" => QueryOperator.NotContains,
-            "IS" => QueryOperator.IsNull,
+                    x == "NOT CONTAINS" => Operator.NotContains,
+            "IS" => Operator.IsNull,
             var x when
                     x == "ISNOT" ||
-                    x == "IS NOT" => QueryOperator.IsNotNull,
+                    x == "IS NOT" => Operator.IsNotNull,
             var x when
                 x == "STARTS WITH" ||
-                x == "STARTSWITH" => QueryOperator.StartsWith,
+                x == "STARTSWITH" => Operator.StartsWith,
             var x when
                     x == "ENDS WITH" ||
-                    x == "ENDSWITH" => QueryOperator.EndsWith,
+                    x == "ENDSWITH" => Operator.EndsWith,
             var x when
                 x == "NOT STARTS WITH" ||
-                x == "NOTSTARTSWITH" => QueryOperator.NotStartsWith,
+                x == "NOTSTARTSWITH" => Operator.NotStartsWith,
             var x when
                 x == "NOT ENDS WITH" ||
-                x == "NOTENDSWITH" => QueryOperator.NotEndsWith,
+                x == "NOTENDSWITH" => Operator.NotEndsWith,
             _ => null // Unknown operator
         };
 }

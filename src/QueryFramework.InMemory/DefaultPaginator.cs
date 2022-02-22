@@ -2,9 +2,9 @@
 
 public class DefaultPaginator : IPaginator
 {
-    private readonly IExpressionEvaluator _valueRetriever;
+    private readonly IExpressionEvaluator _expressionEvaluator;
 
-    public DefaultPaginator(IExpressionEvaluator valueRetriever) => _valueRetriever = valueRetriever;
+    public DefaultPaginator(IExpressionEvaluator expressionEvaluator) => _expressionEvaluator = expressionEvaluator;
 
     public IEnumerable<T> GetPagedData<T>(ISingleEntityQuery query, IEnumerable<T> filteredRecords)
         where T : class
@@ -13,7 +13,7 @@ public class DefaultPaginator : IPaginator
 
         if (query.OrderByFields.Any())
         {
-            result = result.OrderBy(x => new OrderByWrapper(x, query.OrderByFields, _valueRetriever));
+            result = result.OrderBy(x => new OrderByWrapper(x, query.OrderByFields, _expressionEvaluator));
         }
 
         if (query.Offset != null)

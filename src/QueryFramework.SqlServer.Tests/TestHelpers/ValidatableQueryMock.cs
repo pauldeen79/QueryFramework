@@ -6,7 +6,7 @@ internal class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
 
     public int? Offset { get; set; }
 
-    public ValueCollection<IQueryCondition> Conditions { get; set; }
+    public ValueCollection<ICondition> Conditions { get; set; }
 
     public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
 
@@ -24,7 +24,7 @@ internal class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
 
     public ValidatableQueryMock()
     {
-        Conditions = new ValueCollection<IQueryCondition>();
+        Conditions = new ValueCollection<ICondition>();
         OrderByFields = new ValueCollection<IQuerySortOrder>();
     }
 }

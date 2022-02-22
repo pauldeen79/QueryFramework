@@ -2,18 +2,21 @@
 
 public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandProvider>
 {
+    private readonly ParameterBag _parameterBag = new ParameterBag();
+
     public QueryDatabaseCommandProviderTests()
     {
         // Use real query expression evaluator
-        var evaluatorMock = Fixture.Freeze<Mock<IQueryExpressionEvaluator>>();
-        evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IQueryExpression>()))
-                     .Returns<IQueryExpression>(x => new DefaultQueryExpressionEvaluator(Enumerable.Empty<IFunctionParser>()).GetSqlExpression(x));
+        var evaluatorMock = Fixture.Freeze<Mock<ISqlExpressionEvaluator>>();
+        DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(evaluatorMock, _parameterBag);
         // Use real paged database command provider
         var settingsFactoryMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
         var settingsMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettings>>();
-        settingsMock.SetupGet(x => x.TableName).Returns("MyTable");
+        settingsMock.SetupGet(x => x.TableName)
+                    .Returns("MyTable");
         var fieldInfoFactory = new Mock<IQueryFieldInfoFactory>();
-        fieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>())).Returns(new DefaultQueryFieldInfo());
+        fieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+                        .Returns(new DefaultQueryFieldInfo());
         settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
                            .Returns(settingsMock.Object);
         var pagedProviderMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
@@ -57,13 +60,5 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
         actual.CommandParameters.Should().NotBeNull();
-        var parameters = actual.CommandParameters as IEnumerable<KeyValuePair<string, object>>;
-        parameters.Should().NotBeNull();
-        if (parameters != null)
-        {
-            parameters.Should().ContainSingle();
-            parameters.First().Key.Should().Be("p0");
-            parameters.First().Value.Should().Be("Value");
-        }
     }
 }

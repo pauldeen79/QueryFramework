@@ -2,7 +2,28 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe(IQueryExpressionBuilder expression, string expectedSqlForExpression)
+    internal static void ExpressionSqlShouldBe(IExpressionBuilder expression, string expectedSqlForExpression)
+    {
+        // Arrange & Act
+        var actual = GetExpressionCommand
+        (
+            new SingleEntityQueryBuilder()
+                .Where
+                (
+                    new ConditionBuilder()
+                        .WithLeftExpression(expression)
+                        .WithOperator(Operator.Equal)
+                        .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
+                )
+                .Build()
+        ).CommandText;
+
+
+        // Assert
+        actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+    }
+
+    internal static IDatabaseCommand GetExpressionCommand(ISingleEntityQuery query)
     {
         // Arrange
         var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
@@ -19,34 +40,24 @@ internal static class SqlHelpers
         var queryFieldInfoFactory = new Mock<IQueryFieldInfoFactory>();
         queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
                              .Returns(queryFieldInfo);
-        var query = new SingleEntityQueryBuilder().Where
-        (
-            new QueryConditionBuilder()
-                .WithField(expression)
-                .WithOperator(QueryOperator.Equal)
-                .WithValue("test")
-        ).Build();
-        var serviceProvider = new ServiceCollection()
-            .AddQueryFrameworkSqlServer()
+        using var serviceProvider = new ServiceCollection()
+            .AddExpressionFramework()
+            .AddQueryFrameworkSqlServer(x =>
+                x.AddSingleton(ctx =>
+                {
+                    var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
+                    var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+                    mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
+                        .Returns(true);
+                    return mock.Object;
+                })
+            )
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)
-            .AddSingleton(ctx =>
-            {
-                var mock = new Mock<IPagedDatabaseCommandProviderProvider>();
-                var result = ctx.GetRequiredService<IPagedDatabaseCommandProvider<ISingleEntityQuery>>();
-                mock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out result))
-                    .Returns(true);
-                return mock.Object;
-            })
             .BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();
 
         // Act
-        var actual = provider
-            .Create(query, DatabaseOperation.Select)
-            .CommandText;
-
-        // Assert
-        actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+        return provider.Create(query, DatabaseOperation.Select);
     }
 }

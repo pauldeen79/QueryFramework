@@ -120,19 +120,6 @@ public class StringExtensionsTests
     }
 
     [Fact]
-    public void Can_Use_Coalesce_Function_On_FieldName_String()
-    {
-        // Arrange
-        var sut = "Field";
-
-        // Act
-        var actual = sut.Coalesce("default");
-
-        // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "COALESCE(Field, default)");
-    }
-
-    [Fact]
     public void Can_Use_Count_Function_On_FieldName_String()
     {
         // Arrange

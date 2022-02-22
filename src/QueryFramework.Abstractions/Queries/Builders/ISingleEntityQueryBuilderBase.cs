@@ -4,6 +4,6 @@ public interface ISingleEntityQueryBuilderBase
 {
     int? Limit { get; set; }
     int? Offset { get; set; }
-    List<IQueryConditionBuilder> Conditions { get; set; }
+    List<IConditionBuilder> Conditions { get; set; }
     List<IQuerySortOrderBuilder> OrderByFields { get; set; }
 }

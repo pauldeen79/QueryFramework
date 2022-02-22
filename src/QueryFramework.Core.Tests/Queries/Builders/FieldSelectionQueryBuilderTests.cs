@@ -22,24 +22,26 @@ public class FieldSelectionQueryBuilderTests
     public void Can_Construct_FieldSelectionQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
+        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                       .WithOperator(Operator.Equal)
+                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
         var distinct = true;
         var getAllFields = true;
-        var fields = new[] { new QueryExpressionBuilder().WithFieldName("field") };
+        var fields = new[] { new FieldExpressionBuilder().WithFieldName("field") };
 
         // Act
         var sut = new FieldSelectionQueryBuilder
         {
-            Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
+            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
             GetAllFields = getAllFields,
-            Fields = fields.Cast<IQueryExpressionBuilder>().ToList()
+            Fields = fields.Cast<IExpressionBuilder>().ToList()
         };
 
         // Assert
@@ -56,22 +58,24 @@ public class FieldSelectionQueryBuilderTests
     public void Can_Build_Entity_From_Builder()
     {
         // Arrange
-        var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
+        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                       .WithOperator(Operator.Equal)
+                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
         var distinct = true;
         var getAllFields = true;
-        var fields = new[] { new QueryExpressionBuilder().WithFieldName("field") };
+        var fields = new[] { new FieldExpressionBuilder().WithFieldName("field") };
         var sut = new FieldSelectionQueryBuilder
         {
-            Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
+            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
             GetAllFields = getAllFields,
-            Fields = fields.Cast<IQueryExpressionBuilder>().ToList()
+            Fields = fields.Cast<IExpressionBuilder>().ToList()
         };
 
         // Act

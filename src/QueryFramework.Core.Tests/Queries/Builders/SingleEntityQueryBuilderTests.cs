@@ -19,15 +19,17 @@ public class SingleEntityQueryBuilderTests
     public void Can_Construct_SingleEntityQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
+        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                       .WithOperator(Operator.Equal)
+                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
 
         // Act
         var sut = new SingleEntityQueryBuilder
         {
-            Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
+            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset
@@ -44,13 +46,15 @@ public class SingleEntityQueryBuilderTests
     public void Can_Build_Entity_From_Builder()
     {
         // Arrange
-        var conditions = new[] { new QueryConditionBuilder().WithField("field").WithOperator(QueryOperator.Equal).WithValue("value") };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField("field") };
+        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                       .WithOperator(Operator.Equal)
+                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
         var sut = new SingleEntityQueryBuilder
         {
-            Conditions = conditions.Cast<IQueryConditionBuilder>().ToList(),
+            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset

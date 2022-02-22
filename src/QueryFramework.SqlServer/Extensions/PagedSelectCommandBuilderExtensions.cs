@@ -6,52 +6,36 @@ internal static class PagedSelectCommandBuilderExtensions
                                                      IPagedDatabaseEntityRetrieverSettings settings,
                                                      IQueryFieldInfo fieldInfo,
                                                      IFieldSelectionQuery? fieldSelectionQuery,
-                                                     IQueryExpressionEvaluator evaluator)
+                                                     ISqlExpressionEvaluator evaluator,
+                                                     ParameterBag parameterBag)
         => fieldSelectionQuery == null || fieldSelectionQuery.GetAllFields
             ? instance.AppendSelectFieldsForAllFields(settings, fieldInfo)
-            : instance.AppendSelectFieldsForSpecifiedFields(fieldSelectionQuery, fieldInfo, evaluator);
+            : instance.AppendSelectFieldsForSpecifiedFields(fieldSelectionQuery, fieldInfo, evaluator, parameterBag);
 
     private static PagedSelectCommandBuilder AppendSelectFieldsForAllFields(this PagedSelectCommandBuilder instance,
                                                                             IPagedDatabaseEntityRetrieverSettings settings,
                                                                             IQueryFieldInfo fieldInfo)
     {
         var allFields = fieldInfo.GetAllFields();
-        if (!allFields.Any())
-        {
-            instance.Select(settings.Fields.WhenNullOrWhitespace("*"));
-        }
-        else
-        {
-            instance.Select(string.Join(", ", allFields.Select(x => fieldInfo.GetDatabaseFieldName(x)).OfType<string>()));
-        }
-
-        return instance;
+        return allFields.Any()
+            ? instance.Select(string.Join(", ", allFields.Select(x => fieldInfo.GetDatabaseFieldName(x)).OfType<string>()))
+            : instance.Select(settings.Fields.WhenNullOrWhitespace("*"));
     }
 
     private static PagedSelectCommandBuilder AppendSelectFieldsForSpecifiedFields(this PagedSelectCommandBuilder instance,
                                                                                   IFieldSelectionQuery fieldSelectionQuery,
                                                                                   IQueryFieldInfo fieldInfo,
-                                                                                  IQueryExpressionEvaluator evaluator)
+                                                                                  ISqlExpressionEvaluator evaluator,
+                                                                                  ParameterBag parameterBag)
     {
-        var paramCounter = 0;
-        foreach (var expression in fieldSelectionQuery.Fields)
+        foreach (var expression in fieldSelectionQuery.Fields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (paramCounter > 0)
+            if (expression.Index > 0)
             {
                 instance.Select(", ");
             }
 
-            var correctedFieldName = fieldInfo.GetDatabaseFieldName(expression.FieldName);
-            if (correctedFieldName == null)
-            {
-                throw new InvalidOperationException($"Query fields contains unknown field in expression [{expression}]");
-            }
-
-            //Note that for now, we assume that custom expressions don't override field name logic, only expression logic
-            var correctedExpression = new QueryExpression(correctedFieldName, expression.Function);
-
-            instance.Select(evaluator.GetSqlExpression(correctedExpression));
-            paramCounter++;
+            instance.Select(evaluator.GetSqlExpression(expression.Item, fieldInfo, parameterBag));
         }
 
         return instance;
@@ -87,16 +71,13 @@ internal static class PagedSelectCommandBuilderExtensions
                                                     ISingleEntityQuery query,
                                                     IPagedDatabaseEntityRetrieverSettings settings,
                                                     IQueryFieldInfo fieldInfo,
-                                                    IQueryExpressionEvaluator evaluator,
-                                                    out int paramCounter)
+                                                    ISqlExpressionEvaluator evaluator,
+                                                    ParameterBag parameterBag)
     {
         if (!query.Conditions.Any() && string.IsNullOrEmpty(settings.DefaultWhere))
         {
-            paramCounter = 0;
             return instance;
         }
-
-        paramCounter = 0;
 
         if (!string.IsNullOrEmpty(settings.DefaultWhere))
         {
@@ -105,13 +86,13 @@ internal static class PagedSelectCommandBuilderExtensions
 
         foreach (var queryCondition in query.Conditions)
         {
-            paramCounter = instance.AppendQueryCondition
+            instance.AppendQueryCondition
             (
-                paramCounter,
                 queryCondition,
                 fieldInfo,
                 evaluator,
-                queryCondition.Combination == QueryCombination.And
+                parameterBag,
+                queryCondition.Combination == Combination.And
                     ? instance.And
                     : instance.Or
             );
@@ -123,29 +104,22 @@ internal static class PagedSelectCommandBuilderExtensions
     internal static PagedSelectCommandBuilder GroupBy(this PagedSelectCommandBuilder instance,
                                                       IGroupingQuery? groupingQuery,
                                                       IQueryFieldInfo fieldInfo,
-                                                      IQueryExpressionEvaluator evaluator)
+                                                      ISqlExpressionEvaluator evaluator,
+                                                      ParameterBag parameterBag)
     {
         if (groupingQuery == null || !groupingQuery.GroupByFields.Any())
         {
             return instance;
         }
 
-        var fieldCounter = 0;
-        foreach (var groupBy in groupingQuery.GroupByFields)
+        foreach (var groupBy in groupingQuery.GroupByFields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (fieldCounter > 0)
+            if (groupBy.Index > 0)
             {
                 instance.GroupBy(", ");
             }
 
-            var correctedFieldName = fieldInfo.GetDatabaseFieldName(groupBy.FieldName);
-            if (correctedFieldName == null)
-            {
-                throw new InvalidOperationException($"Query group by fields contains unknown field [{groupBy.FieldName}]");
-            }
-            var corrected = new QueryExpression(correctedFieldName, groupBy.Function);
-            instance.GroupBy(evaluator.GetSqlExpression(corrected));
-            fieldCounter++;
+            instance.GroupBy(evaluator.GetSqlExpression(groupBy.Item, fieldInfo, parameterBag));
         }
 
         return instance;
@@ -154,30 +128,28 @@ internal static class PagedSelectCommandBuilderExtensions
     internal static PagedSelectCommandBuilder Having(this PagedSelectCommandBuilder instance,
                                                      IGroupingQuery? groupingQuery,
                                                      IQueryFieldInfo fieldInfo,
-                                                     IQueryExpressionEvaluator evaluator,
-                                                     ref int paramCounter)
+                                                     ISqlExpressionEvaluator evaluator,
+                                                     ParameterBag parameterBag)
     {
         if (groupingQuery == null || !groupingQuery.HavingFields.Any())
         {
             return instance;
         }
 
-        var fieldCounter = 0;
-        foreach (var having in groupingQuery.HavingFields)
+        foreach (var having in groupingQuery.HavingFields.Select((x, index) => new { Item = x, Index = index }))
         {
-            if (fieldCounter > 0)
+            if (having.Index > 0)
             {
-                instance.Having($" {having.Combination.ToSql()} ");
+                instance.Having($" {having.Item.Combination.ToSql()} ");
             }
-            paramCounter = instance.AppendQueryCondition
+            instance.AppendQueryCondition
             (
-                paramCounter,
-                having,
+                having.Item,
                 fieldInfo,
                 evaluator,
+                parameterBag,
                 instance.Having
             );
-            fieldCounter++;
         }
 
         return instance;
@@ -187,7 +159,8 @@ internal static class PagedSelectCommandBuilderExtensions
                                                       ISingleEntityQuery query,
                                                       IPagedDatabaseEntityRetrieverSettings settings,
                                                       IQueryFieldInfo fieldInfo,
-                                                      IQueryExpressionEvaluator evaluator)
+                                                      ISqlExpressionEvaluator evaluator,
+                                                      ParameterBag parameterBag)
     {
         if (query.Offset.HasValue && query.Offset.Value >= 0)
         {
@@ -196,7 +169,7 @@ internal static class PagedSelectCommandBuilderExtensions
         }
         else if (query.OrderByFields.Any() || !string.IsNullOrEmpty(settings.DefaultOrderBy))
         {
-            return instance.AppendOrderBy(query.OrderByFields, settings, fieldInfo, evaluator);
+            return instance.AppendOrderBy(query.OrderByFields, settings, fieldInfo, evaluator, parameterBag);
         }
         else
         {
@@ -208,22 +181,17 @@ internal static class PagedSelectCommandBuilderExtensions
                                                            IEnumerable<IQuerySortOrder> orderByFields,
                                                            IPagedDatabaseEntityRetrieverSettings settings,
                                                            IQueryFieldInfo fieldInfo,
-                                                           IQueryExpressionEvaluator evaluator)
+                                                           ISqlExpressionEvaluator evaluator,
+                                                           ParameterBag parameterBag)
     {
-        foreach (var querySortOrder in orderByFields.Select((field, index) => new { SortOrder = field, Index = index }))
+        foreach (var querySortOrder in orderByFields.Select((x, index) => new { Item = x, Index = index }))
         {
             if (querySortOrder.Index > 0)
             {
                 instance.OrderBy(", ");
             }
 
-            var newFieldName = fieldInfo.GetDatabaseFieldName(querySortOrder.SortOrder.Field.FieldName);
-            if (newFieldName == null)
-            {
-                throw new InvalidOperationException(string.Format("Query order by fields contains unknown field [{0}]", querySortOrder.SortOrder.Field.FieldName));
-            }
-            var newQuerySortOrder = new QuerySortOrder(new QueryExpression(newFieldName, null), querySortOrder.SortOrder.Order);
-            instance.OrderBy($"{evaluator.GetSqlExpression(newQuerySortOrder.Field)} {newQuerySortOrder.ToSql()}");
+            instance.OrderBy($"{evaluator.GetSqlExpression(querySortOrder.Item.Field, fieldInfo, parameterBag)} {querySortOrder.Item.ToSql()}");
         }
 
         if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
@@ -235,130 +203,110 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     internal static PagedSelectCommandBuilder WithParameters(this PagedSelectCommandBuilder instance,
-                                                             IParameterizedQuery? parameterizedQuery)
-        => parameterizedQuery == null
-            ? instance
-            : parameterizedQuery.Parameters.Aggregate(instance, (acc, parameter) => acc.AppendParameter(parameter.Name, parameter.Value));
+                                                             IParameterizedQuery? parameterizedQuery,
+                                                             ParameterBag parameterBag)
+    {
+        if (parameterizedQuery != null)
+        {
+            foreach (var parameter in parameterizedQuery.Parameters)
+            {
+                instance.AppendParameter(parameter.Name, parameter.Value);
+            }
+        }
 
-    internal static int AppendQueryCondition(this PagedSelectCommandBuilder instance,
-                                             int paramCounter,
-                                             IQueryCondition queryCondition,
-                                             IQueryFieldInfo fieldInfo,
-                                             IQueryExpressionEvaluator evaluator,
-                                             Func<string, PagedSelectCommandBuilder> actionDelegate)
+        foreach (var parameter in parameterBag.Parameters)
+        {
+#pragma warning disable CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
+            instance.AppendParameter(parameter.Key, parameter.Value);
+#pragma warning restore CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
+        }
+
+        return instance; 
+    }
+
+    internal static PagedSelectCommandBuilder AppendQueryCondition(this PagedSelectCommandBuilder instance,
+                                                                   ICondition condition,
+                                                                   IQueryFieldInfo fieldInfo,
+                                                                   ISqlExpressionEvaluator evaluator,
+                                                                   ParameterBag parameterBag,
+                                                                   Func<string, PagedSelectCommandBuilder> actionDelegate)
     {
         var builder = new StringBuilder();
 
-        if (queryCondition.OpenBracket)
+        if (condition.StartGroup)
         {
             builder.Append("(");
         }
 
-        var customFieldName = fieldInfo.GetDatabaseFieldName(queryCondition.Field.FieldName);
-        if (customFieldName == null)
+        if (!condition.Operator.In(Operator.Contains,
+                                   Operator.NotContains,
+                                   Operator.EndsWith,
+                                   Operator.NotEndsWith,
+                                   Operator.StartsWith,
+                                   Operator.NotStartsWith))
         {
-            throw new InvalidOperationException($"Query conditions contains unknown field [{queryCondition.Field.FieldName}]");
-        }
+            builder.Append(condition.Operator.ToNot());
 
-        var field = new QueryExpression(customFieldName, queryCondition.Field.Function);
-
-        if (!queryCondition.Operator.In(QueryOperator.Contains,
-                                        QueryOperator.NotContains,
-                                        QueryOperator.EndsWith,
-                                        QueryOperator.NotEndsWith,
-                                        QueryOperator.StartsWith,
-                                        QueryOperator.NotStartsWith))
-        {
-            builder.Append(queryCondition.Operator.ToNot());
-
-            if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
+            if (condition.Operator.In(Operator.IsNullOrEmpty, Operator.IsNotNullOrEmpty))
             {
                 builder.Append("COALESCE(");
             }
+            else if (condition.Operator.In(Operator.IsNullOrWhiteSpace, Operator.IsNotNullOrWhiteSpace))
+            {
+                builder.Append("COALESCE(TRIM(");
+            }
 
-            builder.Append(evaluator.GetSqlExpression(field));
+            builder.Append(evaluator.GetSqlExpression(condition.LeftExpression, fieldInfo, parameterBag));
 
-            if (queryCondition.Operator.In(QueryOperator.IsNullOrEmpty, QueryOperator.IsNotNullOrEmpty))
+            if (condition.Operator.In(Operator.IsNullOrEmpty, Operator.IsNotNullOrEmpty))
             {
                 builder.Append(",'')");
             }
+            else if (condition.Operator.In(Operator.IsNullOrWhiteSpace, Operator.IsNotNullOrWhiteSpace))
+            {
+                builder.Append("),'')");
+            }
         }
 
-        var paramName = GetQueryParameterName(paramCounter, queryCondition.Value);
+        AppendOperatorAndValue(condition, fieldInfo, builder, evaluator, parameterBag);
 
-        AppendOperatorAndValue(instance, paramCounter, queryCondition, field, paramName, builder, evaluator);
-
-        if (queryCondition.CloseBracket)
+        if (condition.EndGroup)
         {
             builder.Append(")");
         }
 
         actionDelegate.Invoke(builder.ToString());
 
-        return paramCounter + 1;
+        return instance;
     }
 
-    private static void AppendOperatorAndValue(PagedSelectCommandBuilder instance,
-                                               int paramCounter,
-                                               IQueryCondition queryCondition,
-                                               IQueryExpression field,
-                                               string paramName,
+    private static void AppendOperatorAndValue(ICondition condition,
+                                               IQueryFieldInfo fieldInfo,
                                                StringBuilder builder,
-                                               IQueryExpressionEvaluator evaluator)
+                                               ISqlExpressionEvaluator evaluator,
+                                               ParameterBag parameterBag)
     {
-        var sqlToAppend = queryCondition.Operator switch
+        var leftExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(condition.LeftExpression, fieldInfo, parameterBag));
+        var rightExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(condition.RightExpression, fieldInfo, parameterBag));
+        var length = new Func<string>(() => evaluator.GetLengthExpression(condition.RightExpression, fieldInfo));
+
+        var sqlToAppend = condition.Operator switch
         {
-            QueryOperator.IsNull => " IS NULL",
-            QueryOperator.IsNotNull => " IS NOT NULL",
-            QueryOperator.IsNullOrEmpty => " = ''",
-            QueryOperator.IsNotNullOrEmpty => " <> ''",
-            QueryOperator.Contains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(field)}) > 0",
-            QueryOperator.NotContains => $"CHARINDEX({paramName}, {evaluator.GetSqlExpression(field)}) = 0",
-            QueryOperator.StartsWith => $"LEFT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
-            QueryOperator.NotStartsWith => $"LEFT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
-            QueryOperator.EndsWith => $"RIGHT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) = {paramName}",
-            QueryOperator.NotEndsWith => $"RIGHT({evaluator.GetSqlExpression(field)}, {queryCondition.Value.ToStringWithNullCheck().Length}) <> {paramName}",
-            _ => $" {queryCondition.Operator.ToSql()} {paramName}"
+            Operator.IsNull => " IS NULL",
+            Operator.IsNotNull => " IS NOT NULL",
+            Operator.IsNullOrEmpty => " = ''",
+            Operator.IsNotNullOrEmpty => " <> ''",
+            Operator.IsNullOrWhiteSpace => " = ''",
+            Operator.IsNotNullOrWhiteSpace => " <> ''",
+            Operator.Contains => $"CHARINDEX({rightExpressionSql()}, {leftExpressionSql()}) > 0",
+            Operator.NotContains => $"CHARINDEX({rightExpressionSql()}, {leftExpressionSql()}) = 0",
+            Operator.StartsWith => $"LEFT({leftExpressionSql()}, {length()}) = {rightExpressionSql()}",
+            Operator.NotStartsWith => $"LEFT({leftExpressionSql()}, {length()}) <> {rightExpressionSql()}",
+            Operator.EndsWith => $"RIGHT({leftExpressionSql()}, {length()}) = {rightExpressionSql()}",
+            Operator.NotEndsWith => $"RIGHT({leftExpressionSql()}, {length()}) <> {rightExpressionSql()}",
+            _ => $" {condition.Operator.ToSql()} {rightExpressionSql()}"
         };
 
         builder.Append(sqlToAppend);
-
-        if (!queryCondition.Operator.In(QueryOperator.IsNull,
-                                        QueryOperator.IsNotNull,
-                                        QueryOperator.IsNullOrEmpty,
-                                        QueryOperator.IsNotNullOrEmpty))
-        {
-            AppendParameterIfNecessary(instance, paramCounter, queryCondition);
-        }
-    }
-
-    private static void AppendParameterIfNecessary(PagedSelectCommandBuilder instance,
-                                                   int paramCounter,
-                                                   IQueryCondition queryCondition)
-    {
-        if (queryCondition.Value is IQueryParameterValue)
-        {
-            return;
-        }
-
-        instance.AppendParameter(string.Format("p{0}", paramCounter),
-                                 queryCondition.Value is KeyValuePair<string, object> keyValuePair
-                                     ? keyValuePair.Value
-                                     : queryCondition.Value ?? new object());
-    }
-
-    private static string GetQueryParameterName(int paramCounter, object? value)
-    {
-        if (value is KeyValuePair<string, object> keyValuePair)
-        {
-            return $"@{keyValuePair.Key}";
-        }
-
-        if (value is IQueryParameterValue queryParameterValue)
-        {
-            return $"@{queryParameterValue.Name}";
-        }
-
-        return $"@p{paramCounter}";
     }
 }

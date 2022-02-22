@@ -6,14 +6,14 @@ public sealed class FieldSelectionQueryBuilder : IFieldSelectionQueryBuilder
     public int? Offset { get; set; }
     public bool Distinct { get; set; }
     public bool GetAllFields { get; set; }
-    public List<IQueryExpressionBuilder> Fields { get; set; }
-    public List<IQueryConditionBuilder> Conditions { get; set; }
+    public List<IExpressionBuilder> Fields { get; set; }
+    public List<IConditionBuilder> Conditions { get; set; }
     public List<IQuerySortOrderBuilder> OrderByFields { get; set; }
 
     public FieldSelectionQueryBuilder()
     {
-        Fields = new List<IQueryExpressionBuilder>();
-        Conditions = new List<IQueryConditionBuilder>();
+        Fields = new List<IExpressionBuilder>();
+        Conditions = new List<IConditionBuilder>();
         OrderByFields = new List<IQuerySortOrderBuilder>();
     }
 

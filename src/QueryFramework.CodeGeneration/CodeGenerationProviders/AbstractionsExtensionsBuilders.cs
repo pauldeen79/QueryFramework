@@ -15,22 +15,7 @@ public class AbstractionsExtensionsBuilders : QueryFrameworkCSharpClassBase, ICo
         (
             GetModels(),
             "QueryFramework.Core",
-            "QueryFramework.Core.Builders"
-        )
-        .Select
-        (
-            x => new ClassBuilder(x)
-                  .WithNamespace("QueryFramework.Abstractions.Extensions")
-                  .Chain
-                  (
-                    x => x.Methods.ForEach(y => y.AddGenericTypeArguments("T").AddGenericTypeArgumentConstraints($"where T : QueryFramework.Abstractions.Builders.I{y.TypeName}"))
-                  )
-                  .Chain
-                  (
-                    x => x.Methods.ForEach(y => y.WithTypeName("T")
-                                                 .Chain(z => z.Parameters.First().WithTypeName(z.TypeName)))
-                  )
-                  .Build()
-        )
-        .ToArray();
+            "QueryFramework.Abstractions.Extensions",
+            "QueryFramework.Abstractions.Builders"
+        );
 }

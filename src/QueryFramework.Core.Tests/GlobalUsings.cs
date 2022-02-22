@@ -1,6 +1,11 @@
 ﻿global using System;
 global using System.ComponentModel.DataAnnotations;
 global using System.Linq;
+global using ExpressionFramework.Abstractions.DomainModel;
+global using ExpressionFramework.Abstractions.DomainModel.Builders;
+global using ExpressionFramework.Abstractions.DomainModel.Domains;
+global using ExpressionFramework.Abstractions.DomainModel.Extensions;
+global using ExpressionFramework.Core.DomainModel.Builders;
 global using FluentAssertions;
 global using Moq;
 global using QueryFramework.Abstractions;

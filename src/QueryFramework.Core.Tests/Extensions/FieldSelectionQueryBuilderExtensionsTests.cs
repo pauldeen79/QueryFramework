@@ -6,15 +6,16 @@ public class FieldSelectionQueryBuilderExtensionsTests
     public void Can_Use_Select_With_QueryExpressionBuilder_To_Add_Field()
     {
         // Arrange
-        var functionBuilder = new Mock<IQueryExpressionFunctionBuilder>().Object;
+        var functionBuilder = new Mock<IExpressionFunctionBuilder>().Object;
         var sut = new FieldSelectionQueryBuilder();
 
         // Act
-        var actual = sut.Select(new QueryExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
+        var actual = sut.Select(new FieldExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
 
         // Assert
         actual.Fields.Should().HaveCount(1);
-        actual.Fields.First().FieldName.Should().Be("FieldName");
+        var field = actual.Fields.First() as FieldExpressionBuilder;
+        field?.FieldName.Should().Be("FieldName");
         actual.Fields.First().Function.Should().NotBeNull();
         actual.Distinct.Should().BeFalse();
     }
@@ -30,7 +31,8 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.Fields.Should().HaveCount(1);
-        actual.Fields.First().FieldName.Should().Be("FieldName");
+        var field = actual.Fields.First() as FieldExpressionBuilder;
+        field?.FieldName.Should().Be("FieldName");
         actual.Fields.First().Function.Should().BeNull();
         actual.Distinct.Should().BeFalse();
     }
@@ -46,9 +48,11 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.Fields.Should().HaveCount(2);
-        actual.Fields.ElementAt(0).FieldName.Should().Be("FieldName1");
+        var firstField = actual.Fields.First() as FieldExpressionBuilder;
+        firstField?.FieldName.Should().Be("FieldName1");
         actual.Fields.ElementAt(0).Function.Should().BeNull();
-        actual.Fields.ElementAt(1).FieldName.Should().Be("FieldName2");
+        var lastField = actual.Fields.Last() as FieldExpressionBuilder;
+        lastField?.FieldName.Should().Be("FieldName2");
         actual.Fields.ElementAt(1).Function.Should().BeNull();
         actual.Distinct.Should().BeFalse();
     }
@@ -72,14 +76,15 @@ public class FieldSelectionQueryBuilderExtensionsTests
     {
         // Arrange
         var sut = new FieldSelectionQueryBuilder();
-        var functionBuilder = new Mock<IQueryExpressionFunctionBuilder>().Object;
+        var functionBuilder = new Mock<IExpressionFunctionBuilder>().Object;
 
         // Act
-        var actual = sut.SelectDistinct(new QueryExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
+        var actual = sut.SelectDistinct(new FieldExpressionBuilder().WithFieldName("FieldName").WithFunction(functionBuilder));
 
         // Assert
         actual.Fields.Should().HaveCount(1);
-        actual.Fields.First().FieldName.Should().Be("FieldName");
+        var field = actual.Fields.First() as FieldExpressionBuilder;
+        field?.FieldName.Should().Be("FieldName");
         actual.Fields.First().Function.Should().NotBeNull();
         actual.Distinct.Should().BeTrue();
     }
@@ -95,7 +100,8 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.Fields.Should().HaveCount(1);
-        actual.Fields.First().FieldName.Should().Be("FieldName");
+        var field = actual.Fields.First() as FieldExpressionBuilder;
+        field?.FieldName.Should().Be("FieldName");
         actual.Fields.First().Function.Should().BeNull();
         actual.Distinct.Should().BeTrue();
     }
@@ -111,9 +117,11 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.Fields.Should().HaveCount(2);
-        actual.Fields.ElementAt(0).FieldName.Should().Be("FieldName1");
+        var firstField = actual.Fields.First() as FieldExpressionBuilder;
+        firstField?.FieldName.Should().Be("FieldName1");
         actual.Fields.ElementAt(0).Function.Should().BeNull();
-        actual.Fields.ElementAt(1).FieldName.Should().Be("FieldName2");
+        var lastField = actual.Fields.Last() as FieldExpressionBuilder;
+        lastField?.FieldName.Should().Be("FieldName2");
         actual.Fields.ElementAt(1).Function.Should().BeNull();
         actual.Distinct.Should().BeTrue();
     }
