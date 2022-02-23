@@ -1,8 +1,10 @@
 ﻿global using System;
+global using System.Collections.Generic;
 global using System.IO;
 global using System.Linq;
 global using System.Runtime.InteropServices;
 global using ExpressionFramework.Abstractions;
+global using ExpressionFramework.Abstractions.DomainModel;
 global using ExpressionFramework.Abstractions.DomainModel.Domains;
 global using ExpressionFramework.Abstractions.DomainModel.Extensions;
 global using ExpressionFramework.Core.DependencyInjection;
