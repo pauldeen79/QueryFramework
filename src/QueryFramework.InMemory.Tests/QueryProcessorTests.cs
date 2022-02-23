@@ -656,20 +656,17 @@ public sealed class QueryProcessorTests : IDisposable
 
     private IQueryProcessor CreateSut(MyClass[] items)
     {
-        var expressionEvaluator = _serviceProvider.GetRequiredService<IExpressionEvaluator>();
+        var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>
         (
             query => items.Where
             (
                 item => Convert.ToBoolean
                 (
-                    expressionEvaluator.Evaluate
+                    conditionEvaluator.Evaluate
                     (
                         item,
-                        new DelegateExpressionBuilder()
-                            .WithValueDelegate((item, expression, evaluator) => item)
-                            .WithFunction(new ConditionFunctionBuilder().AddConditions(query.Conditions.Select(x => new ConditionBuilder(x))))
-                            .Build()
+                        query.Conditions
                     )
                 )
             )

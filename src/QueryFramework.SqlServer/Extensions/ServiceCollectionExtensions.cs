@@ -21,7 +21,6 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ISqlExpressionEvaluatorProvider, DelegateExpressionEvaluatorProvider>()
             .AddSingleton<ISqlExpressionEvaluatorProvider, EmptyExpressionEvaluatorProvider>()
             .AddSingleton<IQueryProcessor, DefaultQueryProcessor>()
-            .AddSingleton<IFunctionParser, ConditionFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, CountFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, DayFunctionFunctionParser>()
             .AddSingleton<IFunctionParser, LeftFunctionParser>()

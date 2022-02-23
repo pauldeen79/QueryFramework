@@ -19,12 +19,13 @@ public class DefaultFileDataProvider : IDataProvider
         nameof(ILineData.LineNumber)
     };
 
-    private readonly IExpressionEvaluator _expressionEvaluator;
+    private readonly IConditionEvaluator _conditionEvaluator;
     private readonly IFileDataProvider _fileDataProvider;
 
-    public DefaultFileDataProvider(IExpressionEvaluator expressionEvaluator, IFileDataProvider fileDataProvider)
+    public DefaultFileDataProvider(IConditionEvaluator conditionEvaluator,
+                                   IFileDataProvider fileDataProvider)
     {
-        _expressionEvaluator = expressionEvaluator;
+        _conditionEvaluator = conditionEvaluator;
         _fileDataProvider = fileDataProvider;
     }
 
@@ -53,35 +54,30 @@ public class DefaultFileDataProvider : IDataProvider
                 RightFieldName = (x.RightExpression as IFieldExpression)?.FieldName
             });
 
-        var noDataExpressions = conditions
+        var noDataConditions = conditions
             .Where
             (
                 x => !IsValidForFields(x.LeftFieldName, _fileDataFields.Concat(_lineDataFields))
                 && !IsValidForFields(x.RightFieldName, _fileDataFields.Concat(_lineDataFields))
             )
-            .Select(x => new ConstantExpressionBuilder().WithValue(true)
-                                                        .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
-                                                        .Build())
+            .Select(x => x.Condition)
             .ToArray();
 
-        if (noDataExpressions.Length > 0 && !noDataExpressions.All(x => Convert.ToBoolean(_expressionEvaluator.Evaluate(null, x))))
+        if (noDataConditions.Length > 0 && !_conditionEvaluator.Evaluate(null, noDataConditions))
         {
             result = Enumerable.Empty<TResult>();
             return true;
         }
 
-        var fileDataExpressions = conditions
+        var fileDataConditions = conditions
             .Where
             (
                 x => IsValidForFields(x.LeftFieldName, _fileDataFields)
                 || IsValidForFields(x.RightFieldName, _fileDataFields)
             )
-            .Select(x => new DelegateExpressionBuilder()
-            .WithValueDelegate((item, _, _) => item)
-            .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
-            .Build());
+            .Select(x => x.Condition);
         var fileData = _fileDataProvider.Get(fileSystemQuery)
-            .Where(x => fileDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
+            .Where(x => _conditionEvaluator.Evaluate(x, fileDataConditions))
             .ToArray();
 
         if (typeof(IFileData).IsAssignableFrom(typeof(TResult)))
@@ -90,19 +86,16 @@ public class DefaultFileDataProvider : IDataProvider
             return true;
         }
 
-        var lineDataExpressions = conditions
+        var lineDataConditions = conditions
             .Where
             (
                 x => IsValidForFields(x.LeftFieldName, _lineDataFields)
                 || IsValidForFields(x.RightFieldName, _lineDataFields)
             )
-            .Select(x => new DelegateExpressionBuilder()
-            .WithValueDelegate((item, _, _) => item)
-            .WithFunction(new ConditionFunctionBuilder().AddConditions(new ConditionBuilder(x.Condition)))
-            .Build());
+            .Select(x => x.Condition);
         result = fileData
             .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, x)))
-            .Where(x => lineDataExpressions.All(y => Convert.ToBoolean(_expressionEvaluator.Evaluate(x, y))))
+            .Where(x => _conditionEvaluator.Evaluate(x, lineDataConditions))
             .Cast<TResult>();
         return true;
     }
