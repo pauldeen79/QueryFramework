@@ -3,12 +3,12 @@
 public class PagedDatabaseEntityRetrieverSettingsProviderMock : IPagedDatabaseEntityRetrieverSettingsProvider
 {
     public bool ReturnValue { get; set; }
-    public Func<ISingleEntityQuery, IPagedDatabaseEntityRetrieverSettings?> ResultDelegate { get; set; }
-        = new Func<ISingleEntityQuery, IPagedDatabaseEntityRetrieverSettings?>(_ => default(IPagedDatabaseEntityRetrieverSettings));
+    public Func<Type, IPagedDatabaseEntityRetrieverSettings?> ResultDelegate { get; set; }
+        = new Func<Type, IPagedDatabaseEntityRetrieverSettings?>(_ => default(IPagedDatabaseEntityRetrieverSettings));
 
-    public bool TryCreate(ISingleEntityQuery query, out IPagedDatabaseEntityRetrieverSettings? result)
+    public bool TryGet<TSource>(out IPagedDatabaseEntityRetrieverSettings? settings)
     {
-        result = ResultDelegate.Invoke(query);
+        settings = ResultDelegate.Invoke(typeof(TSource));
         return ReturnValue;
     }
 }

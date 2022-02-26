@@ -16,7 +16,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     [InlineData(DatabaseOperation.Insert)]
     [InlineData(DatabaseOperation.Unspecified)]
     [InlineData(DatabaseOperation.Update)]
-    public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
+    public void CreatePaged_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
         Sut.Invoking(x => x.CreatePaged(new Mock<ISingleEntityQuery>().Object, operation, 0, 0))
@@ -25,15 +25,16 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     }
 
     [Fact]
-    public void Create_With_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
+    public void CreatePaged_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
     {
         // Arrange
         var settingsMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettings>>();
         settingsMock.SetupGet(x => x.TableName)
                     .Returns("MyTable");
-        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
-        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
-                           .Returns(settingsMock.Object);
+        var settingsProviderMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsProvider>>();
+        var settings = settingsMock.Object;
+        settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
+                            .Returns(true);
         var fieldInfoMock = Fixture.Freeze<Mock<IQueryFieldInfo>>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                      .Returns<string>(x => x);
@@ -54,7 +55,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     }
 
     [Fact]
-    public void CreatePaged_With_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
+    public void CreatePaged_Generates_Correct_Command_When_DatabaseOperation_Is_Select_And_PageSize_Is_Filled()
     {
         // Arrange
         const int pageSize = 10;
@@ -63,9 +64,10 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                     .Returns("MyTable");
         settingsMock.SetupGet(x => x.OverridePageSize)
                     .Returns(pageSize);
-        var settingsFactoryMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsFactory>>();
-        settingsFactoryMock.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
-                           .Returns(settingsMock.Object);
+        var settingsProviderMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsProvider>>();
+        var settings = settingsMock.Object;
+        settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
+                            .Returns(true);
         var fieldInfoMock = Fixture.Freeze<Mock<IQueryFieldInfo>>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                      .Returns<string>(x => x);
@@ -83,5 +85,29 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Assert
         actual.DataCommand.CommandText.Should().Be("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");
         actual.DataCommand.CommandParameters.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void CreatePaged_Throws_When_DatabaseOperation_Is_Select_But_No_Database_Entity_Retriever_Provider_Is_Registered()
+    {
+        // Act
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .And.Message.Should().Be("No database entity retriever provider was found for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
+    }
+
+    [Fact]
+    public void CreatePaged_Throws_When_DatabaseOperation_Is_Select_But_Registered_Database_Entity_Retriever_Provider_Returns_False()
+    {
+        // Arrange
+        var settingsProviderMock = Fixture.Freeze<Mock<IPagedDatabaseEntityRetrieverSettingsProvider>>();
+        IPagedDatabaseEntityRetrieverSettings? settings = null;
+        settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
+                            .Returns(true);
+
+        // Act
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .And.Message.Should().Be("Database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
     }
 }

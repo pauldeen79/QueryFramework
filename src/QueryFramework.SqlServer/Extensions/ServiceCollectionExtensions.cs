@@ -11,7 +11,6 @@ public static class ServiceCollectionExtensions
             .Chain(customConfigurationAction.Invoke)
             .AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
             .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
-            .AddSingleton<IPagedDatabaseEntityRetrieverSettingsFactory, DefaultPagedDatabaseEntityRetrieverSettingsFactory>()
             .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
             .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
             .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()

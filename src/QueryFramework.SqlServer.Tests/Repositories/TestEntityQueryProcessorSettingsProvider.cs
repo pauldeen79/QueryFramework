@@ -2,15 +2,15 @@
 
 public class TestEntityQueryProcessorSettingsProvider : IPagedDatabaseEntityRetrieverSettingsProvider
 {
-    public bool TryCreate(ISingleEntityQuery query, out IPagedDatabaseEntityRetrieverSettings? result)
+    public bool TryGet<TSource>(out IPagedDatabaseEntityRetrieverSettings? settings)
     {
-        if (query is TestQuery)
+        if (typeof(TSource) == typeof(TestQuery))
         {
-            result = new TestEntityQueryProcessorSettings();
+            settings = new TestEntityQueryProcessorSettings();
             return true;
         }
 
-        result = default;
+        settings = default;
         return false;
     }
 }

@@ -31,7 +31,7 @@ internal static class SqlHelpers
                     .Returns(nameof(MyEntity));
         var settingsProviderMock = new Mock<IPagedDatabaseEntityRetrieverSettingsProvider>();
         var settings = settingsMock.Object;
-        settingsProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out settings))
+        settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
                             .Returns(true);
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))

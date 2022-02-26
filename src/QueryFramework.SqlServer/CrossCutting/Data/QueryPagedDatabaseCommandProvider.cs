@@ -3,15 +3,15 @@
 public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<ISingleEntityQuery>
 {
     private readonly IQueryFieldInfoFactory _fieldInfoFactory;
-    private readonly IPagedDatabaseEntityRetrieverSettingsFactory _settingsFactory;
+    private readonly IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> _settingsProviders;
     private readonly ISqlExpressionEvaluator _evaluator;
 
     public QueryPagedDatabaseCommandProvider(IQueryFieldInfoFactory fieldInfoFactory,
-                                             IPagedDatabaseEntityRetrieverSettingsFactory settingsFactory,
+                                             IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> settingsProviders,
                                              ISqlExpressionEvaluator evaluator)
     {
         _fieldInfoFactory = fieldInfoFactory;
-        _settingsFactory = settingsFactory;
+        _settingsProviders = settingsProviders;
         _evaluator = evaluator;
     }
 
@@ -25,7 +25,18 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
         var fieldSelectionQuery = source as IFieldSelectionQuery;
         var groupingQuery = source as IGroupingQuery;
         var parameterizedQuery = source as IParameterizedQuery;
-        var settings = _settingsFactory.Create(source);
+        IPagedDatabaseEntityRetrieverSettings settings;
+        try
+        {
+            settings = (IPagedDatabaseEntityRetrieverSettings)GetType()
+                .GetMethod(nameof(Create))
+                .MakeGenericMethod(source.GetType())
+                .Invoke(this, Array.Empty<object>());
+        }
+        catch (TargetInvocationException ex)
+        {
+            throw ex.InnerException;
+        }
         var fieldInfo = _fieldInfoFactory.Create(source);
         var parameterBag = new ParameterBag();
         return new PagedSelectCommandBuilder()
@@ -40,5 +51,19 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
             .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag)
             .WithParameters(parameterizedQuery, parameterBag)
             .Build();
+    }
+
+    public IPagedDatabaseEntityRetrieverSettings Create<TResult>() where TResult : class
+    {
+        foreach (var provider in _settingsProviders)
+        {
+            var success = provider.TryGet<TResult>(out var result);
+            if (success)
+            {
+                return result ?? throw new InvalidOperationException($"Database entity retriever provider for query type [{typeof(TResult).FullName}] provided an empty result");
+            }
+        }
+
+        throw new InvalidOperationException($"No database entity retriever provider was found for query type [{typeof(TResult).FullName}]");
     }
 }
