@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
                                                                 Action<IServiceCollection> customConfigurationAction)
         => serviceCollection
             .AddExpressionFramework()
+            .AddCrossCuttingDataSql()
             .Chain(x =>
             {
                 customConfigurationAction.Invoke(x);
