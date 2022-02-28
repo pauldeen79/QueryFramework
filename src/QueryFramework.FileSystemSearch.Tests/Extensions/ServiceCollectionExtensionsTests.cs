@@ -6,7 +6,7 @@ public class ServiceCollectionExtensionsTests
     public void All_Dependencies_Can_Be_Resolved()
     {
         // Arrange
-        var collection = new ServiceCollection().AddExpressionFramework();
+        var collection = new ServiceCollection();
 
         // Act
         var action = new Action(() => _ = collection.AddQueryFrameworkFileSystemSearch()

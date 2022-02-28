@@ -2,12 +2,11 @@
 global using System.Collections.Generic;
 global using System.IO;
 global using System.Linq;
+global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Abstractions;
 global using ExpressionFramework.Abstractions.DomainModel;
-global using ExpressionFramework.Abstractions.DomainModel.Extensions;
-global using ExpressionFramework.Core.DomainModel.Builders;
-global using ExpressionFramework.Core.Functions;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Core.Queries;

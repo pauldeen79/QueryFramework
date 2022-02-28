@@ -7,7 +7,6 @@ public sealed class QueryProcessorTests : IDisposable
 
     public QueryProcessorTests()
         => _serviceProvider = new ServiceCollection()
-            .AddExpressionFramework()
             .AddQueryFrameworkInMemory()
             .AddSingleton<IDataProvider>(_dataProviderMock)
             .BuildServiceProvider();

@@ -4,7 +4,11 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddQueryFrameworkInMemory(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<IPaginator, DefaultPaginator>()
-            .AddSingleton<IDataFactory, DefaultDataFactory>()
-            .AddSingleton<IQueryProcessor, QueryProcessor>();
+            .AddExpressionFramework()
+            .Chain(x =>
+            {
+                x.TryAddSingleton<IPaginator, DefaultPaginator>();
+                x.TryAddSingleton<IDataFactory, DefaultDataFactory>();
+                x.TryAddSingleton<IQueryProcessor, QueryProcessor>();
+            });
 }

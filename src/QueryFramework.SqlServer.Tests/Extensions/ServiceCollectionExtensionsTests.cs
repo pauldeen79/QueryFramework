@@ -7,7 +7,6 @@ public class ServiceCollectionExtensionsTests
     {
         // Act
         var action = new Action(() => _ = new ServiceCollection()
-            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer()
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
 

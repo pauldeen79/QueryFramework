@@ -41,7 +41,6 @@ internal static class SqlHelpers
         queryFieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
                              .Returns(queryFieldInfo);
         using var serviceProvider = new ServiceCollection()
-            .AddExpressionFramework()
             .AddQueryFrameworkSqlServer()
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)

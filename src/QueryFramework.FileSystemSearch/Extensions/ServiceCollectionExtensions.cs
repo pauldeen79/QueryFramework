@@ -5,6 +5,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueryFrameworkFileSystemSearch(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddQueryFrameworkInMemory()
-            .AddSingleton<IDataProvider, DefaultFileDataProvider>()
-            .AddSingleton<IFileDataProvider, FileSystemFileDataProvider>();
+            .Chain(x =>
+            {
+                if (!x.Any(y => y.ImplementationType == typeof(DefaultFileDataProvider)))
+                {
+                    x.AddSingleton<IDataProvider, DefaultFileDataProvider>();
+                }
+                x.TryAddSingleton<IFileDataProvider, FileSystemFileDataProvider>();
+            });
 }
