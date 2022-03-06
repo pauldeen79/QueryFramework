@@ -15,38 +15,6 @@ using System.Text;
 namespace QueryFramework.Abstractions.Builders
 {
 #nullable enable
-    public partial interface IQueryParameterBuilder
-    {
-        string Name
-        {
-            get;
-            set;
-        }
-
-        object Value
-        {
-            get;
-            set;
-        }
-
-        QueryFramework.Abstractions.IQueryParameter Build();
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IQueryParameterValueBuilder
-    {
-        string Name
-        {
-            get;
-            set;
-        }
-
-        QueryFramework.Abstractions.IQueryParameterValue Build();
-    }
-#nullable restore
-
-#nullable enable
     public partial interface IQuerySortOrderBuilder
     {
         ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder Field
@@ -65,3 +33,4 @@ namespace QueryFramework.Abstractions.Builders
     }
 #nullable restore
 }
+

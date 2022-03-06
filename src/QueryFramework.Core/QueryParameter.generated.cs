@@ -12,45 +12,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QueryFramework.Abstractions
+namespace QueryFramework.Core
 {
 #nullable enable
-    public partial interface IQueryParameter
+    public partial record QueryParameter : QueryFramework.Abstractions.IQueryParameter
     {
-        string Name
+        public string Name
         {
             get;
         }
 
-        object Value
-        {
-            get;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IQueryParameterValue
-    {
-        string Name
-        {
-            get;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial interface IQuerySortOrder
-    {
-        ExpressionFramework.Abstractions.DomainModel.IExpression Field
+        public object Value
         {
             get;
         }
 
-        QueryFramework.Abstractions.QuerySortOrderDirection Order
+        public QueryParameter(string name, object value)
         {
-            get;
+            this.Name = name;
+            this.Value = value;
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
         }
     }
 #nullable restore
 }
+

@@ -15,37 +15,6 @@ using System.Text;
 namespace QueryFramework.Abstractions.Extensions
 {
 #nullable enable
-    public static partial class QueryParameterBuilderExtensions
-    {
-        public static T WithName<T>(this T instance, string name)
-            where T : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
-        {
-            instance.Name = name;
-            return instance;
-        }
-
-        public static T WithValue<T>(this T instance, object value)
-            where T : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
-        {
-            instance.Value = value;
-            return instance;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public static partial class QueryParameterValueBuilderExtensions
-    {
-        public static T WithName<T>(this T instance, string name)
-            where T : QueryFramework.Abstractions.Builders.IQueryParameterValueBuilder
-        {
-            instance.Name = name;
-            return instance;
-        }
-    }
-#nullable restore
-
-#nullable enable
     public static partial class QuerySortOrderBuilderExtensions
     {
         public static T WithField<T>(this T instance, ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder field)
@@ -71,3 +40,4 @@ namespace QueryFramework.Abstractions.Extensions
     }
 #nullable restore
 }
+

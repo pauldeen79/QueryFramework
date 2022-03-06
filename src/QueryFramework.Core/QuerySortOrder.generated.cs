@@ -15,44 +15,6 @@ using System.Text;
 namespace QueryFramework.Core
 {
 #nullable enable
-    public partial record QueryParameter : QueryFramework.Abstractions.IQueryParameter
-    {
-        public string Name
-        {
-            get;
-        }
-
-        public object Value
-        {
-            get;
-        }
-
-        public QueryParameter(string name, object value)
-        {
-            this.Name = name;
-            this.Value = value;
-            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial record QueryParameterValue : QueryFramework.Abstractions.IQueryParameterValue
-    {
-        public string Name
-        {
-            get;
-        }
-
-        public QueryParameterValue(string name)
-        {
-            this.Name = name;
-            System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
-        }
-    }
-#nullable restore
-
-#nullable enable
     public partial record QuerySortOrder : QueryFramework.Abstractions.IQuerySortOrder
     {
         public ExpressionFramework.Abstractions.DomainModel.IExpression Field
@@ -74,3 +36,4 @@ namespace QueryFramework.Core
     }
 #nullable restore
 }
+

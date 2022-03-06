@@ -15,66 +15,6 @@ using System.Text;
 namespace QueryFramework.Core.Builders
 {
 #nullable enable
-    public partial class QueryParameterBuilder : QueryFramework.Abstractions.Builders.IQueryParameterBuilder
-    {
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        public object Value
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.IQueryParameter Build()
-        {
-            return new QueryFramework.Core.QueryParameter(Name, Value);
-        }
-
-        public QueryParameterBuilder()
-        {
-            Name = string.Empty;
-            Value = new object();
-        }
-
-        public QueryParameterBuilder(QueryFramework.Abstractions.IQueryParameter source)
-        {
-            Name = source.Name;
-            Value = source.Value;
-        }
-    }
-#nullable restore
-
-#nullable enable
-    public partial class QueryParameterValueBuilder : QueryFramework.Abstractions.Builders.IQueryParameterValueBuilder
-    {
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        public QueryFramework.Abstractions.IQueryParameterValue Build()
-        {
-            return new QueryFramework.Core.QueryParameterValue(Name);
-        }
-
-        public QueryParameterValueBuilder()
-        {
-            Name = string.Empty;
-        }
-
-        public QueryParameterValueBuilder(QueryFramework.Abstractions.IQueryParameterValue source)
-        {
-            Name = source.Name;
-        }
-    }
-#nullable restore
-
-#nullable enable
     public partial class QuerySortOrderBuilder : QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder
     {
         public ExpressionFramework.Abstractions.DomainModel.Builders.IExpressionBuilder Field
@@ -108,3 +48,4 @@ namespace QueryFramework.Core.Builders
     }
 #nullable restore
 }
+
