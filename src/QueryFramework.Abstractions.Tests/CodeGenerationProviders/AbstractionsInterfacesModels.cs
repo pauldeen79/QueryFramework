@@ -3,9 +3,7 @@
 public class AbstractionsInterfacesModels : CSharpExpressionDumperClassBase
 {
     public override string Path => "QueryFramework.CodeGeneration\\CodeGenerationProviders";
-
     public override string DefaultFileName => "QueryFrameworkCSharpClassBase.generated.cs";
-
     public override bool RecurseOnDeleteGeneratedFiles => false;
 
     protected override string[] NamespacesToAbbreviate => new[]
@@ -23,6 +21,5 @@ public class AbstractionsInterfacesModels : CSharpExpressionDumperClassBase
     };
 
     protected override string Namespace => "QueryFramework.CodeGeneration.CodeGenerationProviders";
-
     protected override string ClassName => "QueryFrameworkCSharpClassBase";
 }

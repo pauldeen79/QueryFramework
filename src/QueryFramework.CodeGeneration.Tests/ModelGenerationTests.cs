@@ -12,21 +12,20 @@ public class ModelGenerationTests
     [Fact]
     public void Can_Generate_Everything()
     {
-        Verify(GenerateCode.For<AbstractionsInterfaces>(Settings));
-        Verify(GenerateCode.For<AbstractionsBuildersInterfaces>(Settings));
-        Verify(GenerateCode.For<AbstractionsExtensionsBuilders>(Settings));
-        Verify(GenerateCode.For<CoreRecords>(Settings));
-        Verify(GenerateCode.For<CoreBuilders>(Settings));
+        var multipleContentBuilder = new MultipleContentBuilder(Settings.BasePath);
+        GenerateCode.For<AbstractionsInterfaces>(Settings, multipleContentBuilder);
+        GenerateCode.For<AbstractionsBuildersInterfaces>(Settings, multipleContentBuilder);
+        GenerateCode.For<AbstractionsExtensionsBuilders>(Settings, multipleContentBuilder);
+        GenerateCode.For<CoreRecords>(Settings, multipleContentBuilder);
+        GenerateCode.For<CoreBuilders>(Settings, multipleContentBuilder);
+        Verify(multipleContentBuilder);
     }
 
-    private void Verify(GenerateCode generatedCode)
+    private void Verify(MultipleContentBuilder multipleContentBuilder)
     {
-        if (Settings.DryRun)
-        {
-            var actual = generatedCode.GenerationEnvironment.ToString();
+        var actual = multipleContentBuilder.ToString();
 
-            // Assert
-            actual.NormalizeLineEndings().Should().NotBeNullOrEmpty().And.NotStartWith("Error:");
-        }
+        // Assert
+        actual.NormalizeLineEndings().Should().NotBeNullOrEmpty();
     }
 }

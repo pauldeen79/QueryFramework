@@ -2,6 +2,8 @@
 
 public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 {
+    public override bool RecurseOnDeleteGeneratedFiles => false;
+
     protected override bool CreateCodeGenerationHeader => true;
     protected override bool EnableNullableContext => true;
     protected override Type RecordCollectionType => typeof(ValueCollection<>);
