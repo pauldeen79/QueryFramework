@@ -216,9 +216,7 @@ internal static class PagedSelectCommandBuilderExtensions
 
         foreach (var parameter in parameterBag.Parameters)
         {
-#pragma warning disable CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
-            instance.AppendParameter(parameter.Key, parameter.Value);
-#pragma warning restore CS8604 // Possible null reference argument. Nullability is not correct, null values are allowed.
+            instance.AppendParameter(parameter.Key, parameter.Value!);
         }
 
         return instance; 
