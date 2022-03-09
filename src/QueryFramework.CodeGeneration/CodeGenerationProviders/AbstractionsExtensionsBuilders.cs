@@ -2,8 +2,8 @@
 
 public class AbstractionsExtensionsBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
-    public override string Path => "QueryFramework.Abstractions\\Extensions";
-    public override string DefaultFileName => "Builders.generated.cs";
+    public override string Path => "QueryFramework.Abstractions/Extensions";
+    public override string DefaultFileName => "Builders.template.generated.cs";
 
     protected override string SetMethodNameFormatString => "With{0}";
 

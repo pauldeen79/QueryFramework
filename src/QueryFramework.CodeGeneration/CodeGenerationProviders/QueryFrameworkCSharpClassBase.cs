@@ -8,6 +8,7 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     protected override bool EnableNullableContext => true;
     protected override Type RecordCollectionType => typeof(ValueCollection<>);
     protected override string SetMethodNameFormatString => string.Empty;
+    protected override string FileNameSuffix => ".template.generated";
 
     protected override string FormatInstanceTypeName(ITypeBase instance, bool forCreate)
     {

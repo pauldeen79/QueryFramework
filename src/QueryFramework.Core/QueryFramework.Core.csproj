@@ -17,4 +17,8 @@
     <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Builders\" />
+  </ItemGroup>
+
 </Project>
