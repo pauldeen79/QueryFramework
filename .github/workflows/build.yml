@@ -34,7 +34,7 @@ jobs:
       - name: Test CodeGeneration
         run: dotnet test QueryFramework.CodeGeneration.sln -c Release
       - name: Restore Main
-        run: dotnet restore
+        run: dotnet restore QueryFramework.sln
       - name: Build Main
         run: dotnet build QueryFramework.sln -c Release --no-restore
       - name: Test Main
