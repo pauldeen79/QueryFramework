@@ -27,9 +27,11 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                     .WithNamespace(@"QueryFramework.Abstractions")
                     .AddProperties(
                         new ClassPropertyBuilder()
+                            .WithHasSetter(false)
                             .WithName(@"Name")
                             .WithTypeName(@"System.String"),
                         new ClassPropertyBuilder()
+                            .WithHasSetter(false)
                             .WithName(@"Value")
                             .WithTypeName(@"System.Object"))
                     .WithName(@"IQueryParameter"),
@@ -37,6 +39,7 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                     .WithNamespace(@"QueryFramework.Abstractions")
                     .AddProperties(
                         new ClassPropertyBuilder()
+                            .WithHasSetter(false)
                             .WithName(@"Name")
                             .WithTypeName(@"System.String"))
                     .WithName(@"IQueryParameterValue"),
@@ -44,9 +47,11 @@ namespace QueryFramework.CodeGeneration.CodeGenerationProviders
                     .WithNamespace(@"QueryFramework.Abstractions")
                     .AddProperties(
                         new ClassPropertyBuilder()
+                            .WithHasSetter(false)
                             .WithName(@"Field")
                             .WithTypeName(@"ExpressionFramework.Abstractions.DomainModel.IExpression"),
                         new ClassPropertyBuilder()
+                            .WithHasSetter(false)
                             .WithName(@"Order")
                             .WithTypeName(@"QueryFramework.Abstractions.QuerySortOrderDirection"))
                     .WithName(@"IQuerySortOrder"),
