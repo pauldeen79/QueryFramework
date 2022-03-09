@@ -2,8 +2,8 @@
 
 public class AbstractionsBuildersInterfaces : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
-    public override string Path => "QueryFramework.Abstractions\\Builders";
-    public override string DefaultFileName => "Interfaces.generated.cs";
+    public override string Path => "QueryFramework.Abstractions/Builders";
+    public override string DefaultFileName => "Interfaces.template.generated.cs";
 
     public override object CreateModel()
         => GetImmutableBuilderClasses

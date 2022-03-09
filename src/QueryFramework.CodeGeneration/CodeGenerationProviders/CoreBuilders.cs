@@ -2,8 +2,8 @@
 
 public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
-    public override string Path => "QueryFramework.Core\\Builders";
-    public override string DefaultFileName => "Builders.generated.cs";
+    public override string Path => "QueryFramework.Core/Builders";
+    public override string DefaultFileName => "Builders.template.generated.cs";
 
     public override object CreateModel()
         => GetImmutableBuilderClasses
