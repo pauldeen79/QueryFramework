@@ -19,13 +19,20 @@ jobs:
       - name: Fetch origin/main
         run: |
           git fetch --no-tags --prune --depth=1 origin main
+      - name: Restore CodeGeneration
+        run: dotnet restore QueryFramework.CodeGeneration.sln
+      - name: Build CodeGeneration
+        run: dotnet build QueryFramework.CodeGeneration.sln -c Release --no-restore
+      - name: Test CodeGeneration
+        run: dotnet test QueryFramework.CodeGeneration.sln -c Release
       - name: sonarscan-dotnet
         uses: highbyte/sonarscan-dotnet@v2.1.2
         with:
           sonarProjectKey: pauldeen79_QueryFramework
           sonarProjectName: QueryFramework
           sonarOrganization: pauldeen79
-          dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnetBuildArguments: QueryFramework.sln
+          dotnetTestArguments: QueryFramework.sln --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
