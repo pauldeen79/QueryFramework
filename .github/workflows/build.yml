@@ -27,21 +27,15 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Restore CodeGeneration
-        run: dotnet restore QueryFramework.CodeGeneration.sln
-      - name: Build CodeGeneration
-        run: dotnet build QueryFramework.CodeGeneration.sln -c Release --no-restore
-      - name: Test CodeGeneration
-        run: dotnet test QueryFramework.CodeGeneration.sln -c Release
-      - name: Restore Main
-        run: dotnet restore QueryFramework.sln
+      - name: Restore
+        run: dotnet restore
       - name: Build Main
-        run: dotnet build QueryFramework.sln -c Release --no-restore
+        run: dotnet build -c Release --no-restore
       - name: Test Main
-        run: dotnet test QueryFramework.sln -c Release
+        run: dotnet test -c Release
       - name: Pack
         if: matrix.os == 'ubuntu-latest'
-        run: dotnet pack QueryFramework.sln -v normal -c Release -o ./artifacts --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID
+        run: dotnet pack -v normal -c Release -o ./artifacts --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID
       - name: Upload Artifact
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
@@ -82,10 +76,8 @@ jobs:
           echo Version: $VERSION
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
-          dotnet restore QueryFramework.CodeGeneration.sln
-          dotnet build QueryFramework.CodeGeneration.sln -c Release --no-restore
-          dotnet test QueryFramework.CodeGeneration.sln -c Release
-          dotnet pack QueryFramework.sln -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
+          dotnet build -c Release
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
           for f in ./nupkg/*.nupkg

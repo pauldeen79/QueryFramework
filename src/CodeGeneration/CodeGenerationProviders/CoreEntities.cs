@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace CodeGeneration.CodeGenerationProviders;
 
-public class CoreRecords : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
+public class CoreEntities : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
     public override string Path => "QueryFramework.Core";
     public override string DefaultFileName => "Entities.template.generated.cs";

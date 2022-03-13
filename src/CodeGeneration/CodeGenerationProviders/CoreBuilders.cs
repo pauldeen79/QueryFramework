@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace CodeGeneration.CodeGenerationProviders;
 
 public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
