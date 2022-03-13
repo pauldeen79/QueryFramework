@@ -50,7 +50,7 @@ public sealed class IntegrationTests : IDisposable
         // Act
         var actual = Directory.GetFiles(_basePath, "*.cs", SearchOption.AllDirectories)
             .Select(x => new FileData(x))
-            .Where(x => !x.FileName.EndsWith(".generated.cs") && !x.FileName.EndsWith("Program.cs") && !x.Directory.Contains($"{_slash}bin") && !x.Directory.Contains($"{_slash}obj"))
+            .Where(x => !x.FileName.EndsWith(".generated.cs") && !x.Directory.Contains($"{_slash}bin") && !x.Directory.Contains($"{_slash}obj"))
             .SelectMany(fileData => fileData.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, fileData)))
             .Where(x => x.Line.StartsWith("namespace") && !x.Line.EndsWith(";"))
             .ToArray();
@@ -133,7 +133,6 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
             .Where(nameof(FileData.FileName).DoesNotEndWith(".generated.cs"))
-            .And(nameof(FileData.FileName).DoesNotEndWith("Program.cs"))
             .And(nameof(FileData.Directory).DoesNotContain($"{_slash}bin"))
             .And(nameof(FileData.Directory).DoesNotContain($"{_slash}obj"))
             .And(nameof(LineData.Line).DoesStartWith("namespace"))

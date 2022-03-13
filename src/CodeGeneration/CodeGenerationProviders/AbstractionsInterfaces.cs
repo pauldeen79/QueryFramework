@@ -1,5 +1,6 @@
 ﻿namespace CodeGeneration.CodeGenerationProviders;
 
+[ExcludeFromCodeCoverage]
 public class AbstractionsInterfaces : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
     public override string Path => "QueryFramework.Abstractions";

@@ -1,5 +1,6 @@
 ﻿namespace CodeGeneration.CodeGenerationProviders;
 
+[ExcludeFromCodeCoverage]
 public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
     public override string Path => "QueryFramework.Core/Builders";
