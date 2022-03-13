@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QueryFramework.CodeGeneration.CodeGenerationProviders
+namespace CodeGeneration.CodeGenerationProviders
 {
 #nullable enable
     public partial class QueryFrameworkCSharpClassBase

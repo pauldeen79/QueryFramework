@@ -1,5 +1,6 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace CodeGeneration.CodeGenerationProviders;
 
+[ExcludeFromCodeCoverage]
 public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 {
     public override bool RecurseOnDeleteGeneratedFiles => false;
