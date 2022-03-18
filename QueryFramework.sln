@@ -29,7 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		ChangeLog.md = ChangeLog.md
-		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers", "src\QueryFramework.QueryParsers\QueryFramework.QueryParsers.csproj", "{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}"
@@ -40,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSearch.Tests", "src\QueryFramework.FileSystemSearch.Tests\QueryFramework.FileSystemSearch.Tests.csproj", "{BE082275-7AB6-434C-A758-5D5B1F74B3B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGeneration", "src\CodeGeneration\CodeGeneration.csproj", "{5C767F78-371E-49B7-BA0A-718E10ABB0C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGeneration", "src\CodeGeneration\CodeGeneration.csproj", "{5C767F78-371E-49B7-BA0A-718E10ABB0C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

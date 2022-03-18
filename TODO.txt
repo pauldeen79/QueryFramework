@@ -1,2 +1,0 @@
--Add functions: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
--Add functionevaluators: And, Or, ConvertToInteger, ConvertToBoolean, ConvertToLongInteger, ConvertToString, Plus, Minus, Concatenate
