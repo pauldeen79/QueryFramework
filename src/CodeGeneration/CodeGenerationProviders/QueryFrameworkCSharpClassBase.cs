@@ -10,6 +10,7 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     protected override Type RecordCollectionType => typeof(ValueCollection<>);
     protected override string SetMethodNameFormatString => string.Empty;
     protected override string FileNameSuffix => ".template.generated";
+    protected override bool UseLazyInitialization => false; // this needs to be disabled, because extension method-based builders currently don't support this
 
     protected override string FormatInstanceTypeName(ITypeBase instance, bool forCreate)
     {
