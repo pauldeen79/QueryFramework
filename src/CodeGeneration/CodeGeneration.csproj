@@ -18,7 +18,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.37" />
+    <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.39" />
   </ItemGroup>
 
 </Project>
