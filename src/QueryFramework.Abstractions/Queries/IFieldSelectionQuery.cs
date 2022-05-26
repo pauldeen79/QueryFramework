@@ -4,5 +4,5 @@ public interface IFieldSelectionQuery : ISingleEntityQuery
 {
     bool Distinct { get; }
     bool GetAllFields { get; }
-    ValueCollection<IExpression> Fields { get; }
+    IReadOnlyCollection<IExpression> Fields { get; }
 }

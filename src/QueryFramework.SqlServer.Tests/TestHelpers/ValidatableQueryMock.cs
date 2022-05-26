@@ -6,9 +6,9 @@ internal class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
 
     public int? Offset { get; set; }
 
-    public ValueCollection<ICondition> Conditions { get; set; }
+    public IReadOnlyCollection<ICondition> Conditions { get; set; }
 
-    public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
+    public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

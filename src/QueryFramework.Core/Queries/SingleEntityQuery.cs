@@ -23,6 +23,6 @@ public record SingleEntityQuery : ISingleEntityQuery
 
     public int? Limit { get; }
     public int? Offset { get; }
-    public ValueCollection<ICondition> Conditions { get; }
-    public ValueCollection<IQuerySortOrder> OrderByFields { get; }
+    public IReadOnlyCollection<ICondition> Conditions { get; }
+    public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

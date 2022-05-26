@@ -2,5 +2,5 @@
 
 public interface IParameterizedQuery : ISingleEntityQuery
 {
-    ValueCollection<IQueryParameter> Parameters { get; }
+    IReadOnlyCollection<IQueryParameter> Parameters { get; }
 }

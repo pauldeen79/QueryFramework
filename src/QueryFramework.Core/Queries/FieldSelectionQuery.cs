@@ -34,7 +34,7 @@ public record FieldSelectionQuery : IFieldSelectionQuery
     public int? Offset { get; }
     public bool Distinct { get; }
     public bool GetAllFields { get; }
-    public ValueCollection<IExpression> Fields { get; }
-    public ValueCollection<ICondition> Conditions { get; }
-    public ValueCollection<IQuerySortOrder> OrderByFields { get; }
+    public IReadOnlyCollection<IExpression> Fields { get; }
+    public IReadOnlyCollection<ICondition> Conditions { get; }
+    public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

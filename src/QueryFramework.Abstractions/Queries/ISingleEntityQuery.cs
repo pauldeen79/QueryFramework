@@ -4,6 +4,6 @@ public interface ISingleEntityQuery
 {
     int? Limit { get; }
     int? Offset { get; }
-    ValueCollection<ICondition> Conditions { get; }
-    ValueCollection<IQuerySortOrder> OrderByFields { get; }
+    IReadOnlyCollection<ICondition> Conditions { get; }
+    IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

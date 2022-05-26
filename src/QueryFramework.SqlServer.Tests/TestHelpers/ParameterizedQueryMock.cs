@@ -9,9 +9,9 @@ internal class ParameterizedQueryMock : IParameterizedQuery
         Parameters = new ValueCollection<IQueryParameter>(parameters.ToList());
     }
 
-    public ValueCollection<IQueryParameter> Parameters { get; set; }
+    public IReadOnlyCollection<IQueryParameter> Parameters { get; set; }
     public int? Limit { get; set; }
     public int? Offset { get; set; }
-    public ValueCollection<ICondition> Conditions { get; set; }
-    public ValueCollection<IQuerySortOrder> OrderByFields { get; set; }
+    public IReadOnlyCollection<ICondition> Conditions { get; set; }
+    public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
 }
