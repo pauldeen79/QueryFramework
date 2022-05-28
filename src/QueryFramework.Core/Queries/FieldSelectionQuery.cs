@@ -24,9 +24,9 @@ public record FieldSelectionQuery : IFieldSelectionQuery
         Offset = offset;
         Distinct = distinct;
         GetAllFields = getAllFields;
-        Fields = new ValueCollection<IExpression>(fields);
-        Conditions = new ValueCollection<ICondition>(conditions);
-        OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields);
+        Fields = new ReadOnlyValueCollection<IExpression>(fields);
+        Conditions = new ReadOnlyValueCollection<ICondition>(conditions);
+        OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>(orderByFields);
         Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
     }
 

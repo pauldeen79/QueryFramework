@@ -20,9 +20,9 @@ public class DatabaseCommandBuilderExtensionsTests
                       .Returns<string>(x => x);
         _queryMock = new Mock<IGroupingQuery>();
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ValueCollection<IExpression>());
+                  .Returns(new ReadOnlyValueCollection<IExpression>());
         _queryMock.SetupGet(x => x.HavingFields)
-                  .Returns(new ValueCollection<ICondition>());
+                  .Returns(new ReadOnlyValueCollection<ICondition>());
         _evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         _parameterBag = new ParameterBag();
         DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(_evaluatorMock, _parameterBag);
@@ -312,7 +312,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field").Build() }));
         _builder.From("MyTable");
 
         // Act
@@ -327,7 +327,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field1").Build(),
+                  .Returns(new ReadOnlyValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field1").Build(),
                                                                     new FieldExpressionBuilder().WithFieldName("Field2").Build() }));
         _builder.From("MyTable");
 
@@ -343,7 +343,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<IExpression>(new[] { new FieldExpressionBuilder().WithFieldName("Field").Build() }));
         _builder.From("MyTable");
         _fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                       .Returns<string>(x => x + "A");
@@ -360,7 +360,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.HavingFields)
-                  .Returns(new ValueCollection<ICondition>(new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field"))
+                  .Returns(new ReadOnlyValueCollection<ICondition>(new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field"))
                                                                                          .WithOperator(Operator.Equal)
                                                                                          .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                                                                          .Build() }));
@@ -378,7 +378,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.HavingFields)
-                  .Returns(new ValueCollection<ICondition>(new[]
+                  .Returns(new ReadOnlyValueCollection<ICondition>(new[]
                   {
                       new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field1")).WithOperator(Operator.Equal).WithRightExpression(new ConstantExpressionBuilder().WithValue("value1")).Build(),
                       new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field2")).WithOperator(Operator.Equal).WithRightExpression(new ConstantExpressionBuilder().WithValue("value2")).Build()

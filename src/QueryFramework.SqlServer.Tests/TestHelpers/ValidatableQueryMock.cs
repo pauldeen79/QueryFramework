@@ -24,7 +24,7 @@ internal class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
 
     public ValidatableQueryMock()
     {
-        Conditions = new ValueCollection<ICondition>();
-        OrderByFields = new ValueCollection<IQuerySortOrder>();
+        Conditions = new ReadOnlyValueCollection<ICondition>();
+        OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>();
     }
 }

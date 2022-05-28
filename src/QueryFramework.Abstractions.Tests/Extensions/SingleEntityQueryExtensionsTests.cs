@@ -64,9 +64,9 @@ public class SingleEntityQueryExtensionsTests
 
         public int? Offset { get; set; }
 
-        public IReadOnlyCollection<ICondition> Conditions { get; set; } = new ValueCollection<ICondition>();
+        public IReadOnlyCollection<ICondition> Conditions { get; set; } = new ReadOnlyValueCollection<ICondition>();
 
-        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; } = new ValueCollection<IQuerySortOrder>();
+        public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; } = new ReadOnlyValueCollection<IQuerySortOrder>();
 
         public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
 

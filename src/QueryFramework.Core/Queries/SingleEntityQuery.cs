@@ -16,8 +16,8 @@ public record SingleEntityQuery : ISingleEntityQuery
     {
         Limit = limit;
         Offset = offset;
-        Conditions = new ValueCollection<ICondition>(conditions);
-        OrderByFields = new ValueCollection<IQuerySortOrder>(orderByFields);
+        Conditions = new ReadOnlyValueCollection<ICondition>(conditions);
+        OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>(orderByFields);
         Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
     }
 
