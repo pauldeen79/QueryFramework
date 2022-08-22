@@ -5,7 +5,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueryFrameworkFileSystemSearch(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddQueryFrameworkInMemory()
-            .Chain(x =>
+            .With(x =>
             {
                 if (!x.Any(y => y.ImplementationType == typeof(DefaultFileDataProvider)))
                 {

@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
         => serviceCollection
             .AddExpressionFramework()
             .AddCrossCuttingDataSql()
-            .Chain(x =>
+            .With(x =>
             {
                 customConfigurationAction.Invoke(x);
                 if (!x.Any(y => y.ImplementationType == typeof(QueryDatabaseCommandProvider)))

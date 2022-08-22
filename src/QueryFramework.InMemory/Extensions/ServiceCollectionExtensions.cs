@@ -5,7 +5,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueryFrameworkInMemory(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddExpressionFramework()
-            .Chain(x =>
+            .With(x =>
             {
                 x.TryAddSingleton<IPaginator, DefaultPaginator>();
                 x.TryAddSingleton<IDataFactory, DefaultDataFactory>();

@@ -4,7 +4,7 @@ public static class SingleEntityQueryBuilderExtensions
 {
     public static T Where<T>(this T instance, params IConditionBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Chain(x => x.Conditions.AddRange(additionalConditions));
+        => instance.With(x => x.Conditions.AddRange(additionalConditions));
 
     public static T Where<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
         where T : ISingleEntityQueryBuilderBase
@@ -40,7 +40,7 @@ public static class SingleEntityQueryBuilderExtensions
 
     public static T OrderBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalOrderByFields)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Chain(x => x.OrderByFields.AddRange(additionalOrderByFields));
+        => instance.With(x => x.OrderByFields.AddRange(additionalOrderByFields));
 
     public static T OrderBy<T>(this T instance, IEnumerable<IQuerySortOrderBuilder> additionalOrderByFields)
         where T : ISingleEntityQueryBuilderBase
@@ -92,11 +92,11 @@ public static class SingleEntityQueryBuilderExtensions
 
     public static T Offset<T>(this T instance, int? offset)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Chain(x => x.Offset = offset);
+        => instance.With(x => x.Offset = offset);
 
     public static T Limit<T>(this T instance, int? limit)
         where T : ISingleEntityQueryBuilderBase
-        => instance.Chain(x => x.Limit = limit);
+        => instance.With(x => x.Limit = limit);
 
     public static T Skip<T>(this T instance, int? offset)
         where T : ISingleEntityQueryBuilderBase

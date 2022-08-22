@@ -55,5 +55,5 @@ public static class FieldSelectionQueryBuilderExtensions
 
     public static T Distinct<T>(this T instance, bool distinct = true)
         where T : IFieldSelectionQueryBuilder
-        => instance.Chain(x => x.Distinct = distinct);
+        => instance.With(x => x.Distinct = distinct);
 }
