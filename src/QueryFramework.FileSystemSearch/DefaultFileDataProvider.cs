@@ -94,7 +94,7 @@ public class DefaultFileDataProvider : IDataProvider
             )
             .Select(x => x.Condition);
         result = fileData
-            .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, x)))
+            .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber + 1, x)))
             .Where(x => _conditionEvaluator.Evaluate(x, lineDataConditions))
             .Cast<TResult>();
         return true;
