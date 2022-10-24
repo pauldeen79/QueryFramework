@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.23" />
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.7.23" />
+    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.25" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.7.25" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Core" Version="0.2.19" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
