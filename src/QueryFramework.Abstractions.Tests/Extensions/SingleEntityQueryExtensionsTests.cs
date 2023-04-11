@@ -58,7 +58,7 @@ public class SingleEntityQueryExtensionsTests
         actual.Should().Be("default");
     }
 
-    private class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
+    private sealed class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
     {
         public int? Limit { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
 
-internal class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
+internal sealed class ValidatableQueryMock : ISingleEntityQuery, IValidatableObject
 {
     public int? Limit { get; set; }
 

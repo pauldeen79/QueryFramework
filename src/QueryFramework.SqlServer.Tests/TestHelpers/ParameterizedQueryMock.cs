@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
 
-internal class ParameterizedQueryMock : IParameterizedQuery
+internal sealed class ParameterizedQueryMock : IParameterizedQuery
 {
     public ParameterizedQueryMock(IEnumerable<IQueryParameter> parameters)
     {
