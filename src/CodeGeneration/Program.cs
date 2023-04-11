@@ -3,10 +3,15 @@
 [ExcludeFromCodeCoverage]
 internal static class Program
 {
+    private static string GetFullBasePath()
+        => Directory.GetCurrentDirectory().EndsWith("QueryFramework")
+            ? Path.Combine(Directory.GetCurrentDirectory(), @"src/")
+            : Path.Combine(Directory.GetCurrentDirectory(), @"../");
+
     private static void Main(string[] args)
     {
         // Setup code generation
-        var basePath = Path.Combine(Directory.GetCurrentDirectory(), @"../");
+        var basePath = GetFullBasePath();
         var generateMultipleFiles = true;
         var dryRun = false;
         var multipleContentBuilder = new MultipleContentBuilder { BasePath = basePath };
