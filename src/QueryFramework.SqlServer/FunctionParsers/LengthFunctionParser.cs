@@ -4,7 +4,7 @@ public class LengthFunctionParser : IFunctionParser
 {
     public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is LengthFunction f)
+        if (function is LengthFunction)
         {
             sqlExpression = "LEN({0})";
             return true;

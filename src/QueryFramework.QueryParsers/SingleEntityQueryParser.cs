@@ -27,7 +27,9 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         var itemCountIsCorrect = (items.Length - 3) % 4 == 0;
         if (!itemCountIsCorrect)
         {
+#pragma warning disable S1168 // Empty arrays and collections should be returned instead of null
             return default;
+#pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
         }
         var result = new List<IConditionBuilder>();
         for (int i = 0; i < items.Length && itemCountIsCorrect; i += 4)

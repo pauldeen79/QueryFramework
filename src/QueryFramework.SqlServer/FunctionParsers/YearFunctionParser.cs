@@ -4,7 +4,7 @@ public class YearFunctionParser : IFunctionParser
 {
     public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is YearFunction f)
+        if (function is YearFunction)
         {
             sqlExpression = "YEAR({0})";
             return true;

@@ -70,7 +70,7 @@ public sealed class IntegrationTests : IDisposable
         var dict = actual.CommandParameters as IDictionary<string, object>;
         dict.Should().NotBeNull();
         dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo(new[] { "@p0" });
+        dict?.Keys.Should().BeEquivalentTo("@p0");
         dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
     }
 
@@ -92,7 +92,7 @@ public sealed class IntegrationTests : IDisposable
         var dict = actual.CommandParameters as IDictionary<string, object>;
         dict.Should().NotBeNull();
         dict.Should().HaveCount(2);
-        dict?.Keys.Should().BeEquivalentTo(new[] { "@p0", "@p1" });
+        dict?.Keys.Should().BeEquivalentTo("@p0", "@p1");
         dict?.Values.Should().BeEquivalentTo(new[] { "Value1", "Value2" });
     }
 

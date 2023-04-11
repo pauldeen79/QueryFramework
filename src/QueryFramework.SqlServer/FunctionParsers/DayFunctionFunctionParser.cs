@@ -4,7 +4,7 @@ public class DayFunctionFunctionParser : IFunctionParser
 {
     public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is DayFunction f)
+        if (function is DayFunction)
         {
             sqlExpression = "DAY({0})";
             return true;

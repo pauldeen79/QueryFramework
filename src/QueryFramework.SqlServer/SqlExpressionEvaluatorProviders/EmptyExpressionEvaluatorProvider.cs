@@ -4,7 +4,7 @@ public class EmptyExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
     public bool TryGetLengthExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, out string? result)
     {
-        if (!(expression is IEmptyExpression emptyExpression))
+        if (!(expression is IEmptyExpression))
         {
             result = null;
             return false;

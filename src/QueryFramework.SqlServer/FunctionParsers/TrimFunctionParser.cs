@@ -4,7 +4,7 @@ public class TrimFunctionParser : IFunctionParser
 {
     public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is TrimFunction f)
+        if (function is TrimFunction)
         {
             sqlExpression = "TRIM({0})";
             return true;

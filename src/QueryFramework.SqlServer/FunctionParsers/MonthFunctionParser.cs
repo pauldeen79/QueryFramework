@@ -4,7 +4,7 @@ public class MonthFunctionParser : IFunctionParser
 {
     public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is MonthFunction f)
+        if (function is MonthFunction)
         {
             sqlExpression = "MONTH({0})";
             return true;
