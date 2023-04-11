@@ -18,7 +18,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.25" />
+    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.30" />
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.48" />
   </ItemGroup>
 
