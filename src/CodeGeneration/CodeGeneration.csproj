@@ -13,10 +13,6 @@
     <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet $(TargetDir)CodeGeneration.dll" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="pauldeen79.CrossCutting.Common" Version="2.7.30" />
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.3.48" />
