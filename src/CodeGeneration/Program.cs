@@ -6,7 +6,7 @@ internal static class Program
     private static string GetFullBasePath()
         => Directory.GetCurrentDirectory().EndsWith("QueryFramework")
             ? Path.Combine(Directory.GetCurrentDirectory(), @"src/")
-            : Path.Combine(Directory.GetCurrentDirectory(), @"../");
+            : Path.Combine(Directory.GetCurrentDirectory(), @"../../../../");
 
     private static void Main(string[] args)
     {
