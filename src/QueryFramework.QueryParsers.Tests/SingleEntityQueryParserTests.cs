@@ -35,11 +35,11 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, $"MyFieldName {@operator} {value}");
 
         // Assert
-        actual.Conditions.Should().HaveCount(1);
-        var conditionField = actual.Conditions.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        actual.Filter.Should().HaveCount(1);
+        var conditionField = actual.Filter.First().LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.First().RightExpression as ConstantExpressionBuilder)?.Value;
         conditionField?.FieldName.Should().Be("MyFieldName");
-        actual.Conditions.First().Operator.Should().Be(expectedOperator);
+        actual.Filter.First().Operator.Should().Be(expectedOperator);
         conditionValue.Should().Be(value == "NULL" ? null : value);
     }
 
@@ -54,11 +54,11 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, $"MyFieldName = \"My Value\"");
 
         // Assert
-        actual.Conditions.Should().HaveCount(1);
-        var conditionField = actual.Conditions.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        actual.Filter.Should().HaveCount(1);
+        var conditionField = actual.Filter.First().LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.First().RightExpression as ConstantExpressionBuilder)?.Value;
         conditionField?.FieldName.Should().Be("MyFieldName");
-        actual.Conditions.First().Operator.Should().Be(Operator.Equal);
+        actual.Filter.First().Operator.Should().Be(Operator.Equal);
         conditionValue.Should().Be("My Value");
     }
 
@@ -73,7 +73,7 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, "First Second");
 
         // Assert
-        actual.Conditions.Should().HaveCount(2);
+        actual.Filter.Should().HaveCount(2);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, "MyFieldName = MyFirstValue AND MyOtherFieldName ? MySecondValue");
 
         // Assert
-        actual.Conditions.Should().HaveCount(7);
+        actual.Filter.Should().HaveCount(7);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, string.Empty);
 
         // Assert
-        actual.Conditions.Should().BeEmpty();
+        actual.Filter.Should().BeEmpty();
     }
 
     private static SingleEntityQueryParser<ISingleEntityQueryBuilder, FieldExpressionBuilder> CreateSut()

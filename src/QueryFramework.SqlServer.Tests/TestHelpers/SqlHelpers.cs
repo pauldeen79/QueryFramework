@@ -2,7 +2,7 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe(IExpressionBuilder expression, string expectedSqlForExpression)
+    internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression)
     {
         // Arrange & Act
         var actual = GetExpressionCommand
@@ -10,14 +10,13 @@ internal static class SqlHelpers
             new SingleEntityQueryBuilder()
                 .Where
                 (
-                    new ConditionBuilder()
+                    new SingleEvaluatableBuilder()
                         .WithLeftExpression(expression)
-                        .WithOperator(Operator.Equal)
+                        .WithOperator(new EqualsOperatorBuilder())
                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
                 )
                 .Build()
         ).CommandText;
-
 
         // Assert
         actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");

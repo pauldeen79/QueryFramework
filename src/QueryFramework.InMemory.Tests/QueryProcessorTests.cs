@@ -18,10 +18,10 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder
+            .Where(new SingleEvaluatableBuilder
             {
                 LeftExpression = new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)),
-                Operator = (Operator)99
+                Operator = new UnsupportedOperatorBuilder()
             }).Build();
 
         // Act & Assert
@@ -59,9 +59,9 @@ public sealed class QueryProcessorTests : IDisposable
         functionMock.Setup(x => x.ToBuilder()).Returns(functionBuilderMock.Object);
 
         var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder()
+            .Where(new SingleEvaluatableBuilder()
                 .WithLeftExpression(new FieldExpressionBuilder()
-                    .WithFieldName(nameof(MyClass.Property))
+                    .WithFieldName(nameof(MyClass.Property)))
                     .WithFunction(functionBuilderMock.Object))
                 .WithOperator(Operator.Equal)
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("something")))
@@ -578,10 +578,9 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property))
-                                                                .WithFunction(new LengthFunctionBuilder()))
-                .WithOperator(Operator.Equal)
+            .Where(new SingleEvaluatableBuilder()
+                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property))))
+                .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build();
 
@@ -665,7 +664,7 @@ public sealed class QueryProcessorTests : IDisposable
                     conditionEvaluator.Evaluate
                     (
                         item,
-                        query.Conditions
+                        query.Filter
                     )
                 )
             )
@@ -680,5 +679,18 @@ public sealed class QueryProcessorTests : IDisposable
     {
         public string? Property { get; set; }
         public string? Property2 { get; set; }
+    }
+
+    public class UnsupportedOperatorBuilder : OperatorBuilder
+    {
+        public override Operator Build() => new UnsupportedOperator();
+    }
+
+    public record UnsupportedOperator : Operator
+    {
+        protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -15,14 +15,14 @@ public class QueryProcessor : IQueryProcessor
         where TResult : class
         => _paginator.GetPagedData
         (
-            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
+            new SingleEntityQuery(null, null, query.Filter, query.OrderByFields),
             GetData<TResult>(query)
         ).ToList();
 
     public TResult? FindOne<TResult>(ISingleEntityQuery query) where TResult : class
         => _paginator.GetPagedData
         (
-            new SingleEntityQuery(null, null, query.Conditions, query.OrderByFields),
+            new SingleEntityQuery(null, null, query.Filter, query.OrderByFields),
             GetData<TResult>(query)
         ).FirstOrDefault();
 

@@ -2,37 +2,37 @@
 
 public static class SingleEntityQueryBuilderExtensions
 {
-    public static T Where<T>(this T instance, params IConditionBuilder[] additionalConditions)
+    public static T Where<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
-        => instance.With(x => x.Conditions.AddRange(additionalConditions));
+        => instance.With(x => x.Filter.AddConditions(additionalConditions));
 
-    public static T Where<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
+    public static T Where<T>(this T instance, IEnumerable<ComposableEvaluatableBuilder> additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.ToArray());
 
-    public static T Or<T>(this T instance, params IConditionBuilder[] additionalConditions)
+    public static T Or<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.Or)));
 
-    public static T Or<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
+    public static T Or<T>(this T instance, IEnumerable<ComposableEvaluatableBuilder> additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Or(additionalConditions.ToArray());
 
-    public static T And<T>(this T instance, params IConditionBuilder[] additionalConditions)
+    public static T And<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.And)));
 
-    public static T And<T>(this T instance, IEnumerable<IConditionBuilder> additionalConditions)
+    public static T And<T>(this T instance, IEnumerable<ComposableEvaluatableBuilder> additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.And(additionalConditions.ToArray());
 
-    public static T AndAny<T>(this T instance, params IConditionBuilder[] additionalConditions)
+    public static T AndAny<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.Select((a, index) => a.WithStartGroup(index == 0)
                                                                      .WithEndGroup(index + 1 == additionalConditions.Length)
                                                                      .WithCombination(index == 0 ? Combination.And : Combination.Or)));
 
-    public static T OrAll<T>(this T instance, params IConditionBuilder[] additionalConditions)
+    public static T OrAll<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : ISingleEntityQueryBuilderBase
         => instance.Where(additionalConditions.Select((a, index) => a.WithStartGroup(index == 0)
                                                                      .WithEndGroup(index + 1 == additionalConditions.Length)
@@ -50,7 +50,7 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithField(s)));
 
-    public static T OrderBy<T>(this T instance, params IExpressionBuilder[] additionalSortOrders)
+    public static T OrderBy<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
             => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Ascending))));
 
@@ -60,9 +60,9 @@ public static class SingleEntityQueryBuilderExtensions
 
     public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(new FieldExpression(s, null), QuerySortOrderDirection.Descending))));
+        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(new FieldExpression(new ContextExpression(), new ConstantExpression(s)), QuerySortOrderDirection.Descending))));
 
-    public static T OrderByDescending<T>(this T instance, params IExpressionBuilder[] additionalSortOrders)
+    public static T OrderByDescending<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Descending))));
 
@@ -74,7 +74,7 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderBy(additionalSortOrders);
 
-    public static T ThenBy<T>(this T instance, params IExpressionBuilder[] additionalSortOrders)
+    public static T ThenBy<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderBy(additionalSortOrders);
 
@@ -86,7 +86,7 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderByDescending(additionalSortOrders);
 
-    public static T ThenByDescending<T>(this T instance, params IExpressionBuilder[] additionalSortOrders)
+    public static T ThenByDescending<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderByDescending(additionalSortOrders);
 

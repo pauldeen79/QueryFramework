@@ -17,7 +17,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             .Replace("\t", " ")
             .SafeSplit(' ', '\"', '\"');
 
-        builder.Conditions = PerformQuerySearch(items) ?? PerformSimpleSearch(items);
+        builder.Filter = PerformQuerySearch(items) ?? PerformSimpleSearch(items);
 
         return builder;
     }

@@ -5,7 +5,7 @@ global using System.IO;
 global using System.Linq;
 global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
-global using ExpressionFramework.Abstractions.DomainModel;
+global using ExpressionFramework.Domain;
 global using FluentAssertions;
 global using ModelFramework.CodeGeneration.CodeGenerationProviders;
 global using Moq;

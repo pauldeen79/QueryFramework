@@ -49,7 +49,7 @@ namespace CodeGeneration.CodeGenerationProviders
                         new ClassPropertyBuilder()
                             .WithHasSetter(false)
                             .WithName(@"Field")
-                            .WithTypeName(@"ExpressionFramework.Abstractions.DomainModel.IExpression"),
+                            .WithTypeName(@"ExpressionFramework.Domain.Expression"),
                         new ClassPropertyBuilder()
                             .WithHasSetter(false)
                             .WithName(@"Order")

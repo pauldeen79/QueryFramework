@@ -1,4 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Tests.Extensions;
+﻿using ExpressionFramework.Domain.Evaluatables;
+
+namespace QueryFramework.Abstractions.Tests.Extensions;
 
 public class SingleEntityQueryExtensionsTests
 {
@@ -64,7 +66,7 @@ public class SingleEntityQueryExtensionsTests
 
         public int? Offset { get; set; }
 
-        public IReadOnlyCollection<ICondition> Conditions { get; set; } = new ReadOnlyValueCollection<ICondition>();
+        public ComposedEvaluatable Filter { get; set; } = new(Enumerable.Empty<ComposableEvaluatable>());
 
         public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; } = new ReadOnlyValueCollection<IQuerySortOrder>();
 

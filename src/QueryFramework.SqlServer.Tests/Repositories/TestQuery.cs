@@ -6,7 +6,7 @@ public record TestQuery : SingleEntityQuery, ITestQuery
     {
     }
 
-    public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Conditions, source.OrderByFields)
+    public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Filter, source.OrderByFields)
     {
     }
 

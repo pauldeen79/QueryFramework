@@ -9,7 +9,7 @@ public class SingleEntityQueryBuilderTests
         var sut = new SingleEntityQueryBuilder();
 
         // Assert
-        sut.Conditions.Should().BeEmpty();
+        sut.Filter.Conditions.Should().BeEmpty();
         sut.Limit.Should().BeNull();
         sut.Offset.Should().BeNull();
         sut.OrderByFields.Should().BeEmpty();
@@ -19,9 +19,9 @@ public class SingleEntityQueryBuilderTests
     public void Can_Construct_SingleEntityQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-                                                       .WithOperator(Operator.Equal)
-                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                                   .WithOperator(new EqualsOperatorBuilder())
+                                                                   .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
         var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
@@ -29,14 +29,14 @@ public class SingleEntityQueryBuilderTests
         // Act
         var sut = new SingleEntityQueryBuilder
         {
-            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
+            Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset
         };
 
         // Assert
-        sut.Conditions.Should().BeEquivalentTo(conditions);
+        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
         sut.Limit.Should().Be(limit);
         sut.Offset.Should().Be(offset);
         sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
@@ -46,15 +46,15 @@ public class SingleEntityQueryBuilderTests
     public void Can_Build_Entity_From_Builder()
     {
         // Arrange
-        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-                                                       .WithOperator(Operator.Equal)
-                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+                                                                   .WithOperator(new EqualsOperatorBuilder())
+                                                                   .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
         var sut = new SingleEntityQueryBuilder
         {
-            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
+            Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset
@@ -67,7 +67,7 @@ public class SingleEntityQueryBuilderTests
         actual.Should().NotBeNull();
         actual.Limit.Should().Be(sut.Limit);
         actual.Offset.Should().Be(sut.Offset);
-        actual.Conditions.Should().HaveCount(sut.Conditions.Count);
+        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count());
         actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
     }
 }

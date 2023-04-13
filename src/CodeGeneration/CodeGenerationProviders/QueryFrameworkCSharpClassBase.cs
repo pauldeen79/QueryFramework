@@ -29,11 +29,11 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
         foreach (var property in classBuilder.Properties)
         {
             var typeName = property.TypeName.FixTypeName();
-            if (typeName.StartsWith("ExpressionFramework.Abstractions.DomainModel.I", StringComparison.InvariantCulture))
+            if (typeName.StartsWith("ExpressionFramework.Domain.", StringComparison.InvariantCulture))
             {
                 property.ConvertSinglePropertyToBuilderOnBuilder
                 (
-                    typeName.Replace("ExpressionFramework.Abstractions.DomainModel.", "ExpressionFramework.Abstractions.DomainModel.Builders.") + "Builder",
+                    typeName.Replace("ExpressionFramework.Domain.", "ExpressionFramework.Domain.Builders.") + "Builder",
                     GetCustomBuilderConstructorInitializeExpression(property, typeName)
                 );
 
@@ -44,11 +44,11 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     private static string GetBuilderInitialization(string typeName)
     {
-        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression")
+        if (typeName == "ExpressionFramework.Domain.Expression")
         {
-            return "new ExpressionFramework.Core.DomainModel.Builders.EmptyExpressionBuilder()";
+            return "new ExpressionFramework.Domain.Builders.Expressions.EmptyExpressionBuilder()";
         }
-        return "new " + typeName.Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder()";
+        return "new " + typeName.Replace("ExpressionFramework.Domain.", "ExpressionFramework.Domain.Builders.") + "Builder()";
     }
 
     protected override IEnumerable<ClassMethodBuilder> CreateExtraOverloads(IClass c)
@@ -62,20 +62,20 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
                 .WithTypeName($"{c.Name}Builder")
                 .AddParameter("instance", $"{c.Name}Builder")
                 .AddParameter("fieldName", typeof(string))
-                .AddLiteralCodeStatements("instance.Field = new FieldExpressionBuilder().WithFieldName(fieldName);",
+                .AddLiteralCodeStatements("instance.Field = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new ConstantExpressionBuilder().WithValue(fieldName));",
                                           "return instance;");
         }
     }
 
     private static string GetCustomBuilderConstructorInitializeExpression(ClassPropertyBuilder property, string typeName)
     {
-        if (typeName == "ExpressionFramework.Abstractions.DomainModel.IExpression")
+        if (typeName == "ExpressionFramework.Domain.Expression")
         {
-            return "{0} = source.{0}.ToBuilder()";
+            return "{0} = ExpressionBuilderFactory.Create(source.{0})";
         }
 
         return property.IsNullable
-            ? "{0} = source.{0} == null ? null : new " + typeName.Replace("QueryFramework.Abstractions.I", "QueryFramework.Core.Builders.").Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder" + "(source.{0})"
-            : "{0} = new " + typeName.Replace("QueryFramework.Abstractions.I", "QueryFramework.Core.Builders.").Replace("ExpressionFramework.Abstractions.DomainModel.I", "ExpressionFramework.Core.DomainModel.Builders.") + "Builder" + "(source.{0})";
+            ? "{0} = source.{0} == null ? null : new " + typeName.Replace("QueryFramework.Abstractions.I", "QueryFramework.Core.Builders.").Replace("ExpressionFramework.Domain.", "ExpressionFramework.Domain.Builders.") + "Builder" + "(source.{0})"
+            : "{0} = new " + typeName.Replace("QueryFramework.Abstractions.I", "QueryFramework.Core.Builders.").Replace("ExpressionFramework.Domain.", "ExpressionFramework.Domain.Builders.") + "Builder" + "(source.{0})";
     }
 }

@@ -9,7 +9,7 @@ public class FieldSelectionQueryBuilderTests
         var sut = new FieldSelectionQueryBuilder();
 
         // Assert
-        sut.Conditions.Should().BeEmpty();
+        sut.Filter.Conditions.Should().BeEmpty();
         sut.Distinct.Should().BeFalse();
         sut.Fields.Should().BeEmpty();
         sut.GetAllFields.Should().BeFalse();
@@ -22,9 +22,9 @@ public class FieldSelectionQueryBuilderTests
     public void Can_Construct_FieldSelectionQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-                                                       .WithOperator(Operator.Equal)
-                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+                                                                   .WithOperator(new EqualsOperatorBuilder())
+                                                                   .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
         var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
@@ -35,17 +35,17 @@ public class FieldSelectionQueryBuilderTests
         // Act
         var sut = new FieldSelectionQueryBuilder
         {
-            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
+            Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
             GetAllFields = getAllFields,
-            Fields = fields.Cast<IExpressionBuilder>().ToList()
+            Fields = fields.Cast<ExpressionBuilder>().ToList()
         };
 
         // Assert
-        sut.Conditions.Should().BeEquivalentTo(conditions);
+        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
         sut.Distinct.Should().Be(distinct);
         sut.Fields.Should().BeEquivalentTo(fields);
         sut.GetAllFields.Should().Be(getAllFields);
@@ -58,24 +58,24 @@ public class FieldSelectionQueryBuilderTests
     public void Can_Build_Entity_From_Builder()
     {
         // Arrange
-        var conditions = new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
-                                                       .WithOperator(Operator.Equal)
-                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+                                                                   .WithOperator(new EqualsOperatorBuilder())
+                                                                   .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field")) };
         var limit = 1;
         var offset = 2;
         var distinct = true;
         var getAllFields = true;
-        var fields = new[] { new FieldExpressionBuilder().WithFieldName("field") };
+        var fields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field") };
         var sut = new FieldSelectionQueryBuilder
         {
-            Conditions = conditions.Cast<IConditionBuilder>().ToList(),
+            Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
             OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
             GetAllFields = getAllFields,
-            Fields = fields.Cast<IExpressionBuilder>().ToList()
+            Fields = fields.Cast<ExpressionBuilder>().ToList()
         };
 
         // Act
@@ -87,7 +87,7 @@ public class FieldSelectionQueryBuilderTests
         actual.GetAllFields.Should().Be(sut.GetAllFields);
         actual.Limit.Should().Be(sut.Limit);
         actual.Offset.Should().Be(sut.Offset);
-        actual.Conditions.Should().HaveCount(sut.Conditions.Count);
+        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count());
         actual.Fields.Should().HaveCount(sut.Fields.Count);
         actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
     }

@@ -4,18 +4,18 @@ public sealed class SingleEntityQueryBuilder : ISingleEntityQueryBuilder
 {
     public int? Limit { get; set; }
     public int? Offset { get; set; }
-    public List<IConditionBuilder> Conditions { get; set; }
+    public ComposedEvaluatableBuilder Filter { get; set; }
     public List<IQuerySortOrderBuilder> OrderByFields { get; set; }
 
     public SingleEntityQueryBuilder()
     {
-        Conditions = new List<IConditionBuilder>();
-        OrderByFields = new List<IQuerySortOrderBuilder>();
+        Filter = new();
+        OrderByFields = new();
     }
 
     public ISingleEntityQuery Build()
         => new SingleEntityQuery(Limit,
                                  Offset,
-                                 Conditions.Select(x => x.Build()),
+                                 Filter.BuildTyped(),
                                  OrderByFields.Select(x => x.Build()));
 }

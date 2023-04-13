@@ -21,7 +21,7 @@ public class DatabaseCommandBuilderExtensionsTests
         _queryMock = new Mock<IGroupingQuery>();
         _queryMock.SetupGet(x => x.GroupByFields)
                   .Returns(new ReadOnlyValueCollection<IExpression>());
-        _queryMock.SetupGet(x => x.HavingFields)
+        _queryMock.SetupGet(x => x.GroupByFilter)
                   .Returns(new ReadOnlyValueCollection<ICondition>());
         _evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         _parameterBag = new ParameterBag();
@@ -359,7 +359,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Having_Adds_Single_Condition()
     {
         // Arrange
-        _queryMock.SetupGet(x => x.HavingFields)
+        _queryMock.SetupGet(x => x.GroupByFilter)
                   .Returns(new ReadOnlyValueCollection<ICondition>(new[] { new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field"))
                                                                                          .WithOperator(Operator.Equal)
                                                                                          .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
@@ -377,7 +377,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Having_Adds_Multiple_Conditions()
     {
         // Arrange
-        _queryMock.SetupGet(x => x.HavingFields)
+        _queryMock.SetupGet(x => x.GroupByFilter)
                   .Returns(new ReadOnlyValueCollection<ICondition>(new[]
                   {
                       new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("Field1")).WithOperator(Operator.Equal).WithRightExpression(new ConstantExpressionBuilder().WithValue("value1")).Build(),
@@ -393,7 +393,7 @@ public class DatabaseCommandBuilderExtensionsTests
     }
 
     [Fact]
-    public void Having_Does_Not_Append_Anything_When_HavingFields_Is_Null()
+    public void Having_Does_Not_Append_Anything_When_GroupByFilter_Is_Null()
     {
         // Arrange
         _builder.From("MyTable");
@@ -406,7 +406,7 @@ public class DatabaseCommandBuilderExtensionsTests
     }
 
     [Fact]
-    public void Having_Does_Not_Append_Anything_When_HavingFields_Is_Empty()
+    public void Having_Does_Not_Append_Anything_When_GroupByFilter_Is_Empty()
     {
         // Arrange
         _builder.From("MyTable");

@@ -6,181 +6,181 @@ public static class StringExtensions
     /// <summary>Creates a query condition builder with the Contains operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesContain(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.Contains)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesContain(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new StringContainsOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the EndsWith operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesEndWith(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.EndsWith)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesEndWith(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new EndsWithOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the Equal operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsEqualTo(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.Equal)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsEqualTo(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new EqualsOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the GreterOrEqualThan operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsGreaterOrEqualThan(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.GreaterOrEqual)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsGreaterOrEqualThan(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsGreaterOrEqualOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the GreaterThan operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsGreaterThan(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.Greater)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsGreaterThan(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsGreaterOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the IsNotNull operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNotNull(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNotNull);
+    public static ComposableEvaluatableBuilder IsNotNull(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsNotNullOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsNotNullOrEmpty operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNotNullOrEmpty(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNotNullOrEmpty);
+    public static ComposableEvaluatableBuilder IsNotNullOrEmpty(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new  IsNotNullOrEmptyOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsNotNullOrWhiteSpace operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNotNullOrWhiteSpace(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNotNullOrWhiteSpace);
+    public static ComposableEvaluatableBuilder IsNotNullOrWhiteSpace(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsNotNullOrWhiteSpaceOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsNull operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNull(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNull);
+    public static ComposableEvaluatableBuilder IsNull(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                         .WithOperator(new IsNullOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsNullOrEmpty operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNullOrEmpty(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNullOrEmpty);
+    public static ComposableEvaluatableBuilder IsNullOrEmpty(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                         .WithOperator(new IsNullOrEmptyOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsNullOrWhiteSpace operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
-    public static IConditionBuilder IsNullOrWhiteSpace(this string fieldName)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.IsNullOrWhiteSpace);
+    public static ComposableEvaluatableBuilder IsNullOrWhiteSpace(this string fieldName)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsNullOrWhiteSpaceOperatorBuilder());
 
     /// <summary>Creates a query condition builder with the IsLowerOrEqualThan operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsSmallerOrEqualThan(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.SmallerOrEqual)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsSmallerOrEqualThan(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsSmallerOrEqualOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the IsLowerThan operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsSmallerThan(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.Smaller)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsSmallerThan(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new IsSmallerOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the NotContains operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesNotContain(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.NotContains)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesNotContain(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new StringNotContainsOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the NotEndsWith operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesNotEndWith(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.NotEndsWith)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesNotEndWith(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new NotEndsWithOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the NotEqual operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder IsNotEqualTo(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.NotEqual)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder IsNotEqualTo(this string fieldName, object? value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new NotEqualsOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the NotStartsWith operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesNotStartWith(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.NotStartsWith)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesNotStartWith(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new NotStartsWithOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
 
     /// <summary>Creates a query condition builder with the StartsWith operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     /// <param name="value">The value.</param>
-    public static IConditionBuilder DoesStartWith(this string fieldName, object? value)
-        => new ConditionBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
-                                 .WithOperator(Operator.StartsWith)
-                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
+    public static ComposableEvaluatableBuilder DoesStartWith(this string fieldName, string value)
+        => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName(fieldName))
+                                             .WithOperator(new StartsWithOperatorBuilder())
+                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue(value));
     #endregion
 
     #region Built-in functions
     /// <summary>Gets the length of this field.</summary>
-    public static IExpressionBuilder Len(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new LengthFunctionBuilder());
+    public static ExpressionBuilder Len(this string fieldName)
+        => new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Trims the value of this field.</summary>
-    public static IExpressionBuilder SqlTrim(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new TrimFunctionBuilder());
+    public static ExpressionBuilder SqlTrim(this string fieldName)
+        => new TrimExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the upper-cased value of this field.</summary>
-    public static IExpressionBuilder Upper(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new UpperFunctionBuilder());
+    public static ExpressionBuilder Upper(this string fieldName)
+        => new ToUpperCaseExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the lower-cased value of this field.</summary>
-    public static IExpressionBuilder Lower(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new LowerFunctionBuilder());
+    public static ExpressionBuilder Lower(this string fieldName)
+        => new ToLowerCaseExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the left part of this expression.</summary>
     /// <param name="length">Number of positions</param>
-    public static IExpressionBuilder Left(this string fieldName, int length)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new LeftFunctionBuilder().WithLength(length));
+    public static ExpressionBuilder Left(this string fieldName, int length)
+        => new LeftExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)).WithLengthExpression(new ConstantExpressionBuilder().WithValue(length));
 
     /// <summary>Gets the right part of this expression.</summary>
     /// <param name="length">Number of positions</param>
-    public static IExpressionBuilder Right(this string fieldName, int length)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new RightFunctionBuilder().WithLength(length));
+    public static ExpressionBuilder Right(this string fieldName, int length)
+        => new RightExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)).WithLengthExpression(new ConstantExpressionBuilder().WithValue(length));
 
     /// <summary>Gets the year of this date field.</summary>
-    public static IExpressionBuilder Year(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new YearFunctionBuilder());
+    public static ExpressionBuilder Year(this string fieldName)
+        => new YearExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the month of this date field.</summary>
-    public static IExpressionBuilder Month(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new MonthFunctionBuilder());
+    public static ExpressionBuilder Month(this string fieldName)
+        => new MonthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the day of this date expression.</summary>
-    public static IExpressionBuilder Day(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new DayFunctionBuilder());
+    public static ExpressionBuilder Day(this string fieldName)
+        => new DayExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the count of this field.</summary>
-    public static IExpressionBuilder Count(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new CountFunctionBuilder());
+    public static ExpressionBuilder Count(this string fieldName)
+        => new CountExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the sum of this field.</summary>
-    public static IExpressionBuilder Sum(this string fieldName)
-        => new FieldExpressionBuilder().WithFieldName(fieldName).WithFunction(new SumFunctionBuilder());
+    public static ExpressionBuilder Sum(this string fieldName)
+        => new SumExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
     #endregion
 }

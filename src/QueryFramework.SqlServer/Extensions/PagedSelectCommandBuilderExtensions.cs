@@ -74,7 +74,7 @@ internal static class PagedSelectCommandBuilderExtensions
                                                     ISqlExpressionEvaluator evaluator,
                                                     ParameterBag parameterBag)
     {
-        if (!query.Conditions.Any() && string.IsNullOrEmpty(settings.DefaultWhere))
+        if (!query.Filter.Any() && string.IsNullOrEmpty(settings.DefaultWhere))
         {
             return instance;
         }
@@ -84,7 +84,7 @@ internal static class PagedSelectCommandBuilderExtensions
             instance.Where(settings.DefaultWhere);
         }
 
-        foreach (var queryCondition in query.Conditions)
+        foreach (var queryCondition in query.Filter)
         {
             instance.AppendQueryCondition
             (
@@ -131,12 +131,12 @@ internal static class PagedSelectCommandBuilderExtensions
                                                      ISqlExpressionEvaluator evaluator,
                                                      ParameterBag parameterBag)
     {
-        if (groupingQuery == null || !groupingQuery.HavingFields.Any())
+        if (groupingQuery == null || !groupingQuery.GroupByFilter.Any())
         {
             return instance;
         }
 
-        foreach (var having in groupingQuery.HavingFields.Select((x, index) => new { Item = x, Index = index }))
+        foreach (var having in groupingQuery.GroupByFilter.Select((x, index) => new { Item = x, Index = index }))
         {
             if (having.Index > 0)
             {
