@@ -47,8 +47,8 @@ public class DefaultFileDataProvider : IDataProvider
             new
             {
                 Condition = x,
-                LeftFieldName = x.LeftExpression.GetFieldName(),
-                RightFieldName = x.RightExpression?.TryGetFieldName()
+                LeftFieldName = x.LeftExpression.TryGetFieldName(),
+                RightFieldName = x.RightExpression.TryGetFieldName()
             });
 
         var noDataConditions = conditions

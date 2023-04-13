@@ -77,7 +77,7 @@ public class QueryConditionExtensionsTests
     private static void AssertQueryCondition(Func<ExpressionBuilder, EvaluatableBuilder> func, Type expectedOperatorType)
     {
         // Arrange
-        var queryExpression = new FieldExpressionBuilder().WithFieldName("fieldName");
+        var queryExpression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("fieldName");
 
         // Act
         var actual = func(queryExpression);

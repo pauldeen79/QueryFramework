@@ -1,6 +1,4 @@
-﻿using ExpressionFramework.Domain.Evaluatables;
-
-namespace QueryFramework.Abstractions.Tests.Extensions;
+﻿namespace QueryFramework.Abstractions.Tests.Extensions;
 
 public class SingleEntityQueryExtensionsTests
 {

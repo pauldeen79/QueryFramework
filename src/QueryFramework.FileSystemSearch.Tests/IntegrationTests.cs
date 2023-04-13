@@ -173,8 +173,8 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder().WithLeftExpression(new ConstantExpressionBuilder().WithValue(1))
-                                                    .WithOperator(new EqualsOperatorBuilder())
-                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
+                                                     .WithOperator(new EqualsOperatorBuilder())
+                                                     .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build());
         var processor = CreateSut();
 

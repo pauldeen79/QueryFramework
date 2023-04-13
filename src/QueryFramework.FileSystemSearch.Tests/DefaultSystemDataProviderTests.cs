@@ -53,11 +53,9 @@ public class DefaultSystemDataProviderTests
         fileDataMock.SetupGet(x => x.Lines).Returns(lines);
         var fileData = new[] { fileDataMock.Object }.AsEnumerable();
         fileDataProviderMock.Setup(x => x.Get(It.IsAny<IFileSystemQuery>())).Returns(fileData);
-        var conditionEvaluatorMock = new Mock<IConditionEvaluator>();
-        conditionEvaluatorMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IEnumerable<ICondition>>())).Returns(true);
 
         // Act
-        var actual = new DefaultFileDataProvider(conditionEvaluatorMock.Object, fileDataProviderMock.Object)
+        var actual = new DefaultFileDataProvider(fileDataProviderMock.Object)
             .TryGetData<ILineData>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert

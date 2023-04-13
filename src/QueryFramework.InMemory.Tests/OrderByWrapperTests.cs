@@ -1,6 +1,4 @@
-﻿using ExpressionFramework.Domain.Builders.Expressions;
-
-namespace QueryFramework.InMemory.Tests;
+﻿namespace QueryFramework.InMemory.Tests;
 
 public class OrderByWrapperTests
 {
@@ -10,7 +8,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -28,7 +26,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), direction) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), direction) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -46,7 +44,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), direction) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), direction) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -64,7 +62,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "b" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), direction) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), direction) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -80,7 +78,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -96,7 +94,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -112,7 +110,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -128,7 +126,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -144,7 +142,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -160,7 +158,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -176,7 +174,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -192,7 +190,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -208,7 +206,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -224,7 +222,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -240,7 +238,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property))).Build(), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrder(new FieldExpressionBuilder().WithExpression(new ConstantExpressionBuilder()).WithFieldName(nameof(MyClass.Property)).Build(), QuerySortOrderDirection.Ascending) };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act

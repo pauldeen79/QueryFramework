@@ -18,9 +18,9 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(new SingleEvaluatableBuilder
+            .Where(new ComposableEvaluatableBuilder
             {
-                LeftExpression = new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)),
+                LeftExpression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property)),
                 Operator = new UnsupportedOperatorBuilder()
             }).Build();
 
@@ -53,17 +53,13 @@ public sealed class QueryProcessorTests : IDisposable
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
-        var functionMock = new Mock<IExpressionFunction>();
-        var functionBuilderMock = new Mock<IExpressionFunctionBuilder>();
-        functionBuilderMock.Setup(x => x.Build()).Returns(functionMock.Object);
-        functionMock.Setup(x => x.ToBuilder()).Returns(functionBuilderMock.Object);
 
         var query = new SingleEntityQueryBuilder()
-            .Where(new SingleEvaluatableBuilder()
+            .Where(new ComposableEvaluatableBuilder()
                 .WithLeftExpression(new FieldExpressionBuilder()
+                    .WithExpression(new ContextExpressionBuilder())
                     .WithFieldName(nameof(MyClass.Property)))
-                    .WithFunction(functionBuilderMock.Object))
-                .WithOperator(Operator.Equal)
+                .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("something")))
             .Build();
 
@@ -578,7 +574,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(new SingleEvaluatableBuilder()
+            .Where(new ComposableEvaluatableBuilder()
                 .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property))))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
@@ -654,19 +650,11 @@ public sealed class QueryProcessorTests : IDisposable
 
     private IQueryProcessor CreateSut(MyClass[] items)
     {
-        var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>
         (
             query => items.Where
             (
-                item => Convert.ToBoolean
-                (
-                    conditionEvaluator.Evaluate
-                    (
-                        item,
-                        query.Filter
-                    )
-                )
+                item => query.Filter.Evaluate(item).Value
             )
         );
         _dataProviderMock.ReturnValue = true;
