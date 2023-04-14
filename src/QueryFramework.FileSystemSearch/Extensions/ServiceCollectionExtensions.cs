@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
                 if (!x.Any(y => y.ImplementationType == typeof(DefaultFileDataProvider)))
                 {
                     x.AddSingleton<IDataProvider, DefaultFileDataProvider>();
+                    x.AddSingleton<IContextDataProvider, DefaultFileDataProvider>();
                 }
                 x.TryAddSingleton<IFileDataProvider, FileSystemFileDataProvider>();
             });

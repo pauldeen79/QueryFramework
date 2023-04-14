@@ -3,12 +3,14 @@
 public sealed class QueryProcessorTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private readonly DataProviderMock _dataProviderMock = new DataProviderMock();
+    private readonly DataProviderMock _dataProviderMock = new();
+    private readonly ContextDataProviderMock _contextDataProviderMock = new();
 
     public QueryProcessorTests()
         => _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkInMemory()
             .AddSingleton<IDataProvider>(_dataProviderMock)
+            .AddSingleton<IContextDataProvider>(_contextDataProviderMock)
             .BuildServiceProvider();
 
     [Fact]
@@ -89,6 +91,24 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act
         var actual = sut.FindPaged<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(1);
+        actual.First().Property.Should().Be("B");
+    }
+
+    [Fact]
+    public void Can_FindPaged_On_InMemoryList_With_One_Equals_Condition_Using_Context()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateContextSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context))))
+            .Build();
+
+        // Act
+        var actual = sut.FindPaged<MyClass>(query, "B");
 
         // Assert
         actual.Should().HaveCount(1);
@@ -618,24 +638,49 @@ public sealed class QueryProcessorTests : IDisposable
         return _serviceProvider.GetRequiredService<IQueryProcessor>();
     }
 
+    private IContextQueryProcessor CreateContextSut(MyClass[] items)
+    {
+        _contextDataProviderMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable?>
+        (
+            (query, ctx) => items.Where
+            (
+                item =>query.Filter.Evaluate(new SurrogateContext(item, ctx)).GetValueOrThrow("Evaluation failed")
+            )
+        );
+        _contextDataProviderMock.ReturnValue = true;
+        return _serviceProvider.GetRequiredService<IContextQueryProcessor>();
+    }
+
     public void Dispose() => _serviceProvider.Dispose();
 
-    public class MyClass
+    public sealed class MyClass
     {
         public string? Property { get; set; }
         public string? Property2 { get; set; }
     }
 
-    public class UnsupportedOperatorBuilder : OperatorBuilder
+    public sealed class UnsupportedOperatorBuilder : OperatorBuilder
     {
         public override Operator Build() => new UnsupportedOperator();
     }
 
-    public record UnsupportedOperator : Operator
+    public sealed record UnsupportedOperator : Operator
     {
         protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
         {
             throw new NotImplementedException();
         }
+    }
+
+    private sealed record SurrogateContext
+    {
+        public SurrogateContext(MyClass item, object? context)
+        {
+            Item = item;
+            Context = context;
+        }
+
+        public MyClass Item { get; }
+        public object? Context { get; }
     }
 }

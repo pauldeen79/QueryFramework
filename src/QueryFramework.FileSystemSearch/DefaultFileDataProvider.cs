@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.FileSystemSearch;
 
-public class DefaultFileDataProvider : IDataProvider
+public class DefaultFileDataProvider : IContextDataProvider
 {
     private static readonly string[] _fileDataFields = new[]
     {
@@ -26,7 +26,11 @@ public class DefaultFileDataProvider : IDataProvider
         _fileDataProvider = fileDataProvider;
     }
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
+    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result)
+        where TResult : class
+        => TryGetData(query, default, out result);
+
+    public bool TryGetData<TResult>(ISingleEntityQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
         if (fileSystemQuery is null)
@@ -60,7 +64,7 @@ public class DefaultFileDataProvider : IDataProvider
             .Select(x => x.Condition)
             .ToArray();
 
-        if (noDataConditions.Length > 0 && !new ComposedEvaluatable(noDataConditions).Evaluate(null).Value)
+        if (noDataConditions.Length > 0 && !new ComposedEvaluatable(noDataConditions).Evaluate(context).Value)
         {
             result = Enumerable.Empty<TResult>();
             return true;

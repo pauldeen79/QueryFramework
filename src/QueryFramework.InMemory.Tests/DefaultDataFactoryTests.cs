@@ -9,7 +9,7 @@ public class DefaultDataFactoryTests
         var providerMock = new DataProviderMock();
         providerMock.ReturnValue = true;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => null);
-        var sut = new DefaultDataFactory(new[] { providerMock });
+        var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
         var query = new SingleEntityQuery();
 
         // Act
@@ -19,13 +19,29 @@ public class DefaultDataFactoryTests
     }
 
     [Fact]
+    public void Create_Throws_When_Context_Aware_Provider_Returns_Null_Result()
+    {
+        // Arrange
+        var providerMock = new ContextDataProviderMock();
+        providerMock.ReturnValue = true;
+        providerMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable<object>?>((_, _) => null);
+        var sut = new DefaultDataFactory(Enumerable.Empty<IDataProvider>(), new[] { providerMock });
+        var query = new SingleEntityQuery();
+
+        // Act
+        sut.Invoking(x => x.GetData<object>(query, default))
+           .Should().ThrowExactly<InvalidOperationException>()
+           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.ContextDataProviderMock] for data type [System.Object] provided an empty result");
+    }
+
+    [Fact]
     public void Create_Throws_When_No_Provider_Returns_True()
     {
         // Arrange
         var providerMock = new DataProviderMock();
         providerMock.ReturnValue = false;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => null);
-        var sut = new DefaultDataFactory(new[] { providerMock });
+        var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
         var query = new SingleEntityQuery();
 
         // Act
@@ -42,11 +58,29 @@ public class DefaultDataFactoryTests
         var data = Enumerable.Empty<object>();
         providerMock.ReturnValue = true;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => data);
-        var sut = new DefaultDataFactory(new[] { providerMock });
+        var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
         var query = new SingleEntityQuery();
 
         // Act
         var actual = sut.GetData<object>(query);
+
+        // Assert
+        actual.Should().BeSameAs(data);
+    }
+
+    [Fact]
+    public void Create_Returns_Result_Of_Provider_With_Context_When_Provider_Returns_True()
+    {
+        // Arrange
+        var providerMock = new ContextDataProviderMock();
+        var data = Enumerable.Empty<object>();
+        providerMock.ReturnValue = true;
+        providerMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable<object>?>((_, ctx) => ctx as IEnumerable<object> ?? Enumerable.Range(1, 10).Cast<object>());
+        var sut = new DefaultDataFactory(Enumerable.Empty<IDataProvider>(), new[] { providerMock });
+        var query = new SingleEntityQuery();
+
+        // Act
+        var actual = sut.GetData<object>(query, data);
 
         // Assert
         actual.Should().BeSameAs(data);
