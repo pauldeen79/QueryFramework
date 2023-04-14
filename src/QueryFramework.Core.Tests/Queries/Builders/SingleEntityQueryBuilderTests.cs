@@ -19,7 +19,7 @@ public class SingleEntityQueryBuilderTests
     public void Can_Construct_SingleEntityQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
                                                                    .WithOperator(new EqualsOperatorBuilder())
                                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
         var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field") };
