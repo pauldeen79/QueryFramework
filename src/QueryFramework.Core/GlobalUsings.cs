@@ -3,6 +3,7 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Linq;
 global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
+global using ExpressionFramework.Domain;
 global using ExpressionFramework.Domain.Builders;
 global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Builders.Expressions;

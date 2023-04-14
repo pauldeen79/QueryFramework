@@ -10,6 +10,10 @@ public static class GroupingQueryBuilderExtensions
         where T : IGroupingQueryBuilder
         => instance.GroupBy(additionalFieldNames.Select(s => new FieldExpressionBuilder().WithFieldName(s)));
 
+    public static T GroupBy<T>(this T instance, IEnumerable<string> additionalFieldNames)
+        where T : IGroupingQueryBuilder
+        => instance.GroupBy(additionalFieldNames.ToArray());
+
     public static T GroupBy<T>(this T instance, IEnumerable<ExpressionBuilder> additionalFieldNames)
         where T : IGroupingQueryBuilder
         => instance.GroupBy(additionalFieldNames.ToArray());
