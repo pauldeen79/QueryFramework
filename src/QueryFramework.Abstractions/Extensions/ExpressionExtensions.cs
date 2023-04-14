@@ -42,7 +42,7 @@ public static class ExpressionExtensions
 
         if (expression is ContextExpression)
         {
-            return context?.ToString() ?? string.Empty;
+            return context?.ToString();
         }
 
         return default;
