@@ -29,7 +29,7 @@ public class DefaultFileDataProvider : IDataProvider
     public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
-        if (fileSystemQuery == null)
+        if (fileSystemQuery is null)
         {
             result = default;
             return false;

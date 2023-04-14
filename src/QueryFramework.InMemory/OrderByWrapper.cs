@@ -17,15 +17,15 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
         {
             var currentValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
             var otherValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
-            if (currentValue == null && otherValue == null)
+            if (currentValue is null && otherValue is null)
             {
                 continue;
             }
-            if (currentValue == null)
+            if (currentValue is null)
             {
                 return CompareToCurrentNull(orderByField);
             }
-            if (otherValue == null)
+            if (otherValue is null)
             {
                 return CompareToOtherNull(orderByField);
             }

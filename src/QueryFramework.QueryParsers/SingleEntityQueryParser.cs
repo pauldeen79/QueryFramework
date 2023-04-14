@@ -53,7 +53,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             }
 
             var queryOperator = GetQueryOperator(@operator);
-            if (queryOperator == null)
+            if (queryOperator is null)
             {
                 return default;
             }
@@ -72,7 +72,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     }
 
     private FieldExpressionBuilder GetField(string fieldName)
-        => _defaultFieldExpressionBuilderFactory == null
+        => _defaultFieldExpressionBuilderFactory is null
             ? new TQueryExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)
             : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
@@ -99,7 +99,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
     private ComposableEvaluatableBuilder CreateQueryCondition(string value, bool startsWithPlusOrMinus, bool startsWithMinus)
         => new ComposableEvaluatableBuilder
         {
-            LeftExpression = _defaultFieldExpressionBuilderFactory == null
+            LeftExpression = _defaultFieldExpressionBuilderFactory is null
                 ? new TQueryExpressionBuilder()
                 : _defaultFieldExpressionBuilderFactory.Invoke(),
             RightExpression = new ConstantExpressionBuilder().WithValue(startsWithPlusOrMinus

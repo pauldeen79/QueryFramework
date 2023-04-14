@@ -11,10 +11,7 @@ public class FileData : IFileData
     {
         get
         {
-            if (_lines == null)
-            {
-                _lines = File.ReadAllLines(FullPath);
-            }
+            _lines ??= File.ReadAllLines(FullPath);
             return _lines;
         }
     }
