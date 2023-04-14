@@ -3,29 +3,29 @@
 public class SingleEntityQueryParserTests
 {
     [Theory]
-    [InlineData("CONTAINS", "MyValue", Operator.Contains)]
-    [InlineData("ENDSWITH", "MyValue", Operator.EndsWith)]
-    [InlineData("\"ENDS WITH\"", "MyValue", Operator.EndsWith)]
-    [InlineData("=", "MyValue", Operator.Equal)]
-    [InlineData("==", "MyValue", Operator.Equal)]
-    [InlineData(">=", "MyValue", Operator.GreaterOrEqual)]
-    [InlineData(">", "MyValue", Operator.Greater)]
-    [InlineData("\"IS NOT\"", "NULL", Operator.IsNotNull)]
-    [InlineData("IS", "NULL", Operator.IsNull)]
-    [InlineData("<=", "MyValue", Operator.SmallerOrEqual)]
-    [InlineData("<", "MyValue", Operator.Smaller)]
-    [InlineData("NOTCONTAINS", "MyValue", Operator.NotContains)]
-    [InlineData("\"NOT CONTAINS\"", "MyValue", Operator.NotContains)]
-    [InlineData("NOTENDSWITH", "MyValue", Operator.NotEndsWith)]
-    [InlineData("\"NOT ENDS WITH\"", "MyValue", Operator.NotEndsWith)]
-    [InlineData("<>", "MyValue", Operator.NotEqual)]
-    [InlineData("!=", "MyValue", Operator.NotEqual)]
-    [InlineData("#", "MyValue", Operator.NotEqual)]
-    [InlineData("NOTSTARTSWITH", "MyValue", Operator.NotStartsWith)]
-    [InlineData("\"NOT STARTS WITH\"", "MyValue", Operator.NotStartsWith)]
-    [InlineData("STARTSWITH", "MyValue", Operator.StartsWith)]
-    [InlineData("\"STARTS WITH\"", "MyValue", Operator.StartsWith)]
-    public void Can_Parse_EntityQuery_With_Operator(string @operator, string value, Operator expectedOperator)
+    [InlineData("CONTAINS", "MyValue", typeof(StringContainsOperatorBuilder))]
+    [InlineData("ENDSWITH", "MyValue", typeof(EndsWithOperatorBuilder))]
+    [InlineData("\"ENDS WITH\"", "MyValue", typeof(EndsWithOperatorBuilder))]
+    [InlineData("=", "MyValue", typeof(EqualsOperatorBuilder))]
+    [InlineData("==", "MyValue", typeof(EqualsOperatorBuilder))]
+    [InlineData(">=", "MyValue", typeof(IsGreaterOrEqualOperatorBuilder))]
+    [InlineData(">", "MyValue", typeof(IsGreaterOperatorBuilder))]
+    [InlineData("\"IS NOT\"", "NULL", typeof(IsNotNullOperatorBuilder))]
+    [InlineData("IS", "NULL", typeof(IsNullOperatorBuilder))]
+    [InlineData("<=", "MyValue", typeof(IsSmallerOrEqualOperatorBuilder))]
+    [InlineData("<", "MyValue", typeof(IsSmallerOperatorBuilder))]
+    [InlineData("NOTCONTAINS", "MyValue", typeof(StringNotContainsOperatorBuilder))]
+    [InlineData("\"NOT CONTAINS\"", "MyValue", typeof(StringNotContainsOperatorBuilder))]
+    [InlineData("NOTENDSWITH", "MyValue", typeof(NotEndsWithOperatorBuilder))]
+    [InlineData("\"NOT ENDS WITH\"", "MyValue", typeof(NotEndsWithOperatorBuilder))]
+    [InlineData("<>", "MyValue", typeof(NotEqualsOperatorBuilder))]
+    [InlineData("!=", "MyValue", typeof(NotEqualsOperatorBuilder))]
+    [InlineData("#", "MyValue", typeof(NotEqualsOperatorBuilder))]
+    [InlineData("NOTSTARTSWITH", "MyValue", typeof(NotStartsWithOperatorBuilder))]
+    [InlineData("\"NOT STARTS WITH\"", "MyValue", typeof(NotStartsWithOperatorBuilder))]
+    [InlineData("STARTSWITH", "MyValue", typeof(StartsWithOperatorBuilder))]
+    [InlineData("\"STARTS WITH\"", "MyValue", typeof(StartsWithOperatorBuilder))]
+    public void Can_Parse_EntityQuery_With_Operator(string @operator, string value, Type expectedOperatorBuilder)
     {
         // Arrange
         var builder = new SingleEntityQueryBuilder();
@@ -35,11 +35,11 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, $"MyFieldName {@operator} {value}");
 
         // Assert
-        actual.Filter.Should().HaveCount(1);
-        var conditionField = actual.Filter.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Filter.First().RightExpression as ConstantExpressionBuilder)?.Value;
-        conditionField?.FieldName.Should().Be("MyFieldName");
-        actual.Filter.First().Operator.Should().Be(expectedOperator);
+        actual.Filter.Conditions.Should().HaveCount(1);
+        var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        ((ConstantExpressionBuilder)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
+        actual.Filter.Conditions.First().Operator.Should().BeOfType(expectedOperatorBuilder);
         conditionValue.Should().Be(value == "NULL" ? null : value);
     }
 
@@ -54,11 +54,11 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, $"MyFieldName = \"My Value\"");
 
         // Assert
-        actual.Filter.Should().HaveCount(1);
-        var conditionField = actual.Filter.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Filter.First().RightExpression as ConstantExpressionBuilder)?.Value;
-        conditionField?.FieldName.Should().Be("MyFieldName");
-        actual.Filter.First().Operator.Should().Be(Operator.Equal);
+        actual.Filter.Conditions.Should().HaveCount(1);
+        var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        ((ConstantExpressionBuilder)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
+        actual.Filter.Conditions.First().Operator.Should().BeOfType<EqualsOperatorBuilder>();
         conditionValue.Should().Be("My Value");
     }
 
@@ -73,7 +73,7 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, "First Second");
 
         // Assert
-        actual.Filter.Should().HaveCount(2);
+        actual.Filter.Conditions.Should().HaveCount(2);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, "MyFieldName = MyFirstValue AND MyOtherFieldName ? MySecondValue");
 
         // Assert
-        actual.Filter.Should().HaveCount(7);
+        actual.Filter.Conditions.Should().HaveCount(7);
     }
 
     [Fact]
@@ -101,9 +101,9 @@ public class SingleEntityQueryParserTests
         var actual = sut.Parse(builder, string.Empty);
 
         // Assert
-        actual.Filter.Should().BeEmpty();
+        actual.Filter.Conditions.Should().BeEmpty();
     }
 
     private static SingleEntityQueryParser<ISingleEntityQueryBuilder, FieldExpressionBuilder> CreateSut()
-        => new(() => new FieldExpressionBuilder().WithFieldName("PrefilledField"));
+        => new(() => new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new ConstantExpressionBuilder().WithValue("PrefilledField")));
 }
