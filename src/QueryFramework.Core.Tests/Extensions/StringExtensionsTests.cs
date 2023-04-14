@@ -74,7 +74,7 @@ public class StringExtensionsTests
     public void Can_Create_QueryCondition_Using_DoesStartWith()
         => QueryConditionTest(x => x.DoesStartWith("value"), typeof(StartsWithOperator));
 
-    private static void QueryConditionTest(Func<string, EvaluatableBuilder> func, Type expectedOperatorType)
+    private static void QueryConditionTest(Func<string, ComposableEvaluatableBuilder> func, Type expectedOperatorType)
     {
         // Arrange
         var queryExpressionFieldName = "fieldname";
@@ -83,11 +83,9 @@ public class StringExtensionsTests
         var actual = func(queryExpressionFieldName);
 
         // Assert
-        var single = actual as SingleEvaluatableBuilder;
-        var composable = actual as ComposableEvaluatableBuilder;
-        var leftExpression = single?.LeftExpression ?? composable?.LeftExpression;
-        var rightExpression = single?.RightExpression ?? composable?.RightExpression;
-        var @operator = single?.Operator ?? composable?.Operator;
+        var leftExpression = actual.LeftExpression;
+        var rightExpression = actual.RightExpression;
+        var @operator = actual.Operator;
         var field = leftExpression as FieldExpressionBuilder;
         var value = (rightExpression as ConstantExpressionBuilder)?.Value;
         ((ConstantExpressionBuilder)field!.FieldNameExpression).Value.Should().Be("fieldname");

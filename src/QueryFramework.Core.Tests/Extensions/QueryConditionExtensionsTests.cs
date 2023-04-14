@@ -74,7 +74,7 @@ public class QueryConditionExtensionsTests
     public void Can_Create_QueryCondition_Using_DoesStartWith()
         => AssertQueryCondition(x => x.DoesStartWith("value"), typeof(StartsWithOperator));
 
-    private static void AssertQueryCondition(Func<ExpressionBuilder, EvaluatableBuilder> func, Type expectedOperatorType)
+    private static void AssertQueryCondition(Func<ExpressionBuilder, ComposableEvaluatableBuilder> func, Type expectedOperatorType)
     {
         // Arrange
         var queryExpression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("fieldName");
@@ -83,9 +83,9 @@ public class QueryConditionExtensionsTests
         var actual = func(queryExpression);
 
         // Assert
-        var leftExpression = actual.GetLeftExpression();
-        var rightExpression = actual.TryGetRightExpression();
-        var @operator = actual.GetOperator();
+        var leftExpression = actual.LeftExpression;
+        var rightExpression = actual.RightExpression;
+        var @operator = actual.Operator;
         var field = leftExpression as FieldExpressionBuilder;
         var value = (rightExpression as ConstantExpressionBuilder)?.Value;
         ((ConstantExpressionBuilder)field!.FieldNameExpression).Value.Should().Be("fieldName");
