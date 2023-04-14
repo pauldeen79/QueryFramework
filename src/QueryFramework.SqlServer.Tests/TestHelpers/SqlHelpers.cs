@@ -2,7 +2,7 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression)
+    internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression, object? context)
     {
         // Arrange & Act
         var actual = GetExpressionCommand
@@ -15,14 +15,15 @@ internal static class SqlHelpers
                         .WithOperator(new EqualsOperatorBuilder())
                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
                 )
-                .Build()
+                .Build(),
+            context
         ).CommandText;
 
         // Assert
         actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
-    internal static IDatabaseCommand GetExpressionCommand(ISingleEntityQuery query)
+    internal static IDatabaseCommand GetExpressionCommand(ISingleEntityQuery query, object? context)
     {
         // Arrange
         var settingsMock = new Mock<IPagedDatabaseEntityRetrieverSettings>();
@@ -44,9 +45,9 @@ internal static class SqlHelpers
             .AddSingleton(settingsProviderMock.Object)
             .AddSingleton(queryFieldInfoFactory.Object)
             .BuildServiceProvider();
-        var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<ISingleEntityQuery>>();
+        var provider = serviceProvider.GetRequiredService<IContextDatabaseCommandProvider<ISingleEntityQuery>>();
 
         // Act
-        return provider.Create(query, DatabaseOperation.Select);
+        return provider.Create(query, DatabaseOperation.Select, context);
     }
 }

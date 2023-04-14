@@ -12,7 +12,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Len();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LEN(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LEN(Field)", default);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Len();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LEN(TRIM(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LEN(TRIM(Field))", default);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Trim();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "TRIM(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "TRIM(Field)", default);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Trim();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "TRIM(UPPER(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "TRIM(UPPER(Field))", default);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Upper();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "UPPER(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "UPPER(Field)", default);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Upper();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "UPPER(TRIM(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "UPPER(TRIM(Field))", default);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Lower();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LOWER(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LOWER(Field)", default);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Lower();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LOWER(TRIM(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LOWER(TRIM(Field))", default);
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Left(2);
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LEFT(Field, 2)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LEFT(Field, 2)", default);
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Left(2);
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "LEFT(TRIM(Field), 2)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "LEFT(TRIM(Field), 2)", default);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Right(2);
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "RIGHT(Field, 2)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "RIGHT(Field, 2)", default);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Right(2);
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "RIGHT(TRIM(Field), 2)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "RIGHT(TRIM(Field), 2)", default);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Year();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "YEAR(Field)", default);
     }
 
     [Fact]
@@ -181,7 +181,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Month();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "MONTH(Field)", default);
     }
 
     [Fact]
@@ -194,7 +194,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Day();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "DAY(Field)", default);
     }
 
     [Fact]
@@ -207,7 +207,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Count();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(Field)", default);
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Count();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(TRIM(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(TRIM(Field))", default);
     }
 
     [Fact]
@@ -233,7 +233,7 @@ public class ExpressionExtensionsTests
         var actual = sut.Sum();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(Field)");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(Field)", default);
     }
 
     [Fact]
@@ -246,6 +246,6 @@ public class ExpressionExtensionsTests
         var actual = sut.Sum();
 
         // Assert
-        SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(TRIM(Field))");
+        SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(TRIM(Field))", default);
     }
 }

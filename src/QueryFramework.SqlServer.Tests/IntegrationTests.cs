@@ -62,7 +62,34 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
+
+        // Assert
+        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
+        actual.CommandParameters.Should().NotBeNull();
+        var dict = actual.CommandParameters as IDictionary<string, object>;
+        dict.Should().NotBeNull();
+        dict.Should().HaveCount(1);
+        dict?.Keys.Should().BeEquivalentTo("@p0");
+        dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
+    }
+
+
+    [Fact]
+    public void Can_Get_SqlStatement_For_Single_Expression_With_Use_Of_Context()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder()
+            //.Where("Field1".IsEqualTo("Value"))
+            .Where(new ComposableEvaluatableBuilder()
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new ConstantExpressionBuilder().WithValue("Field1")))
+                .WithOperator(new EqualsOperatorBuilder())
+                .WithRightExpression(new ContextExpressionBuilder())
+            )
+            .Build();
+
+        // Act
+        var actual = SqlHelpers.GetExpressionCommand(query, "Value");
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
@@ -84,7 +111,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
@@ -106,7 +133,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
@@ -127,7 +154,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query);
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
