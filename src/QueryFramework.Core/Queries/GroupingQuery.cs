@@ -15,16 +15,6 @@ public record GroupingQuery : SingleEntityQuery, IGroupingQuery
         GroupByFilter = groupByFilter;
     }
 
-    protected GroupingQuery(
-        SingleEntityQuery original,
-        ComposedEvaluatable groupByFilter,
-        IEnumerable<Expression> groupByFields)
-        : base(original)
-    {
-        GroupByFields = new ReadOnlyValueCollection<Expression>(groupByFields);
-        GroupByFilter = groupByFilter;
-    }
-
     public IReadOnlyCollection<Expression> GroupByFields { get; }
 
     public ComposedEvaluatable GroupByFilter { get; }
