@@ -12,8 +12,6 @@ internal static class Program
     {
         // Setup code generation
         var basePath = GetFullBasePath();
-        Console.WriteLine($"Current directory is {Directory.GetCurrentDirectory()}");
-        Console.WriteLine($"Basepath is {basePath}");
         var generateMultipleFiles = true;
         var dryRun = false;
         var multipleContentBuilder = new MultipleContentBuilder { BasePath = basePath };
