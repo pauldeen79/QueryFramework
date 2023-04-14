@@ -12,25 +12,6 @@ public sealed class QueryProcessorTests : IDisposable
             .BuildServiceProvider();
 
     [Fact]
-    public void Unsupported_Query_Operator_Throws_On_FindPAged()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new ComposableEvaluatableBuilder
-            {
-                LeftExpression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property)),
-                Operator = new UnsupportedOperatorBuilder()
-            }).Build();
-
-        // Act & Assert
-        sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .And.Message.Should().StartWith("Unsupported operator: 99");
-    }
-
-    [Fact]
     public void Unknown_FieldName_Throws_On_FindPaged()
     {
         // Arrange
@@ -42,32 +23,8 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act & Assert
         sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .WithParameterName("fieldName")
-           .And.Message.Should().StartWith("Fieldname [UnknownField] is not found on type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass]");
-    }
-
-    [Fact]
-    public void Unsupported_Function_Throws_On_FindPaged()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateSut(items);
-
-        var query = new SingleEntityQueryBuilder()
-            .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder()
-                    .WithExpression(new ContextExpressionBuilder())
-                    .WithFieldName(nameof(MyClass.Property)))
-                .WithOperator(new EqualsOperatorBuilder())
-                .WithRightExpression(new ConstantExpressionBuilder().WithValue("something")))
-            .Build();
-
-        // Act & Assert
-        sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .WithParameterName("expression")
-           .And.Message.Should().StartWith("Unsupported function: [IExpressionFunctionProxy]");
+           .Should().Throw<InvalidOperationException>()
+           .WithMessage("Evaluation failed");
     }
 
     [Fact]
@@ -575,7 +532,7 @@ public sealed class QueryProcessorTests : IDisposable
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property))))
+                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property))))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build();
@@ -654,7 +611,7 @@ public sealed class QueryProcessorTests : IDisposable
         (
             query => items.Where
             (
-                item => query.Filter.Evaluate(item).Value
+                item => query.Filter.Evaluate(item).GetValueOrThrow("Evaluation failed")
             )
         );
         _dataProviderMock.ReturnValue = true;

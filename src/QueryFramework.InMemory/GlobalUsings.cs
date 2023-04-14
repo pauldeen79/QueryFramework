@@ -5,6 +5,7 @@ global using System.Runtime.CompilerServices;
 global using CrossCutting.Common.Extensions;
 global using CrossCutting.Data.Abstractions;
 global using CrossCutting.Data.Core;
+global using ExpressionFramework.Domain.Expressions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using QueryFramework.Abstractions;

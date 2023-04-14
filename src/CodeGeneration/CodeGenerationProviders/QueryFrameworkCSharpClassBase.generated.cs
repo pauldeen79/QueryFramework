@@ -48,8 +48,10 @@ namespace CodeGeneration.CodeGenerationProviders
                     .AddProperties(
                         new ClassPropertyBuilder()
                             .WithHasSetter(false)
-                            .WithName(@"Field")
-                            .WithTypeName(@"ExpressionFramework.Domain.Expression"),
+                            //.WithName(@"Field")
+                            //.WithTypeName(@"ExpressionFramework.Domain.Expressions.FieldExpression"),
+                            .WithName(@"FieldName")
+                            .WithTypeName(@"System.String"),
                         new ClassPropertyBuilder()
                             .WithHasSetter(false)
                             .WithName(@"Order")

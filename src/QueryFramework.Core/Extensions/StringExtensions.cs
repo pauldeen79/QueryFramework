@@ -47,37 +47,43 @@ public static class StringExtensions
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNotNull(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                             .WithOperator(new IsNotNullOperatorBuilder());
+                                             .WithOperator(new IsNotNullOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsNotNullOrEmpty operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNotNullOrEmpty(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                             .WithOperator(new  IsNotNullOrEmptyOperatorBuilder());
+                                             .WithOperator(new  IsNotNullOrEmptyOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsNotNullOrWhiteSpace operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNotNullOrWhiteSpace(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                             .WithOperator(new IsNotNullOrWhiteSpaceOperatorBuilder());
+                                             .WithOperator(new IsNotNullOrWhiteSpaceOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsNull operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNull(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                         .WithOperator(new IsNullOperatorBuilder());
+                                             .WithOperator(new IsNullOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsNullOrEmpty operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNullOrEmpty(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                         .WithOperator(new IsNullOrEmptyOperatorBuilder());
+                                             .WithOperator(new IsNullOrEmptyOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsNullOrWhiteSpace operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>
     public static ComposableEvaluatableBuilder IsNullOrWhiteSpace(this string fieldName)
         => new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
-                                             .WithOperator(new IsNullOrWhiteSpaceOperatorBuilder());
+                                             .WithOperator(new IsNullOrWhiteSpaceOperatorBuilder())
+                                             .WithRightExpression(new EmptyExpressionBuilder());
 
     /// <summary>Creates a query condition builder with the IsLowerOrEqualThan operator, using the specified values.</summary>
     /// <param name="fieldName">Name of the field.</param>

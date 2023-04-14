@@ -2,8 +2,7 @@
 
 internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<OrderByWrapper>, IComparable
 {
-    public OrderByWrapper(object wrappedItem,
-                          IReadOnlyCollection<IQuerySortOrder> orderByFields)
+    public OrderByWrapper(object wrappedItem, IReadOnlyCollection<IQuerySortOrder> orderByFields)
     {
         WrappedItem = wrappedItem;
         OrderByFields = orderByFields;
@@ -16,8 +15,8 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
     {
         foreach (var orderByField in OrderByFields)
         {
-            var currentValue = orderByField.Field.Evaluate(WrappedItem) as IComparable;
-            var otherValue = orderByField.Field.Evaluate(other.WrappedItem);
+            var currentValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
+            var otherValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
             if (currentValue == null && otherValue == null)
             {
                 continue;
@@ -56,7 +55,7 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
         var hashCode = -521269828;
         foreach (var orderByField in OrderByFields)
         {
-            hashCode = hashCode * -1521134295 + orderByField.Field.Evaluate(WrappedItem)?.GetHashCode() ?? 0;
+            hashCode = hashCode * -1521134295 + orderByField.FieldName?.GetHashCode() ?? 0;
         }
         return hashCode;
     }

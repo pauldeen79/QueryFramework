@@ -8,7 +8,7 @@ public record FieldSelectionQuery : IFieldSelectionQuery
                                         false,
                                         new ComposedEvaluatable(Enumerable.Empty<ComposableEvaluatable>()),
                                         Enumerable.Empty<IQuerySortOrder>(),
-                                        Enumerable.Empty<Expression>())
+                                        Enumerable.Empty<string>())
     {
     }
 
@@ -18,13 +18,13 @@ public record FieldSelectionQuery : IFieldSelectionQuery
                                bool getAllFields,
                                ComposedEvaluatable filter,
                                IEnumerable<IQuerySortOrder> orderByFields,
-                               IEnumerable<Expression> fields)
+                               IEnumerable<string> fieldNames)
     {
         Limit = limit;
         Offset = offset;
         Distinct = distinct;
         GetAllFields = getAllFields;
-        Fields = new ReadOnlyValueCollection<Expression>(fields);
+        FieldNames = new ReadOnlyValueCollection<string>(fieldNames);
         Filter = filter;
         OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>(orderByFields);
         Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
@@ -34,7 +34,7 @@ public record FieldSelectionQuery : IFieldSelectionQuery
     public int? Offset { get; }
     public bool Distinct { get; }
     public bool GetAllFields { get; }
-    public IReadOnlyCollection<Expression> Fields { get; }
+    public IReadOnlyCollection<string> FieldNames { get; }
     public ComposedEvaluatable Filter { get; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

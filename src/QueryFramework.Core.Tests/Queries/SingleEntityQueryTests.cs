@@ -26,7 +26,7 @@ public class SingleEntityQueryTests
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
         };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field")
                                                                .WithOrder(QuerySortOrderDirection.Ascending)
                                                                .Build() };
         var limit = 1;

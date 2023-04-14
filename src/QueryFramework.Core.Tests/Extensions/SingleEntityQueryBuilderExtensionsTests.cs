@@ -3,7 +3,7 @@
 public class SingleEntityQueryBuilderExtensionsTests
 {
     [Fact]
-    public void Can_Use_Where_With_QueryConditionBuilder_To_Add_Condition()
+    public void Can_Use_Where_With_ComposableEvaluatableBuilder_To_Add_Condition()
     {
         // Arrange
         var sut = new SingleEntityQueryBuilder();
@@ -40,63 +40,15 @@ public class SingleEntityQueryBuilderExtensionsTests
 
         // Assert
         actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
+        var field0 = actual.OrderByFields.ElementAt(0).FieldName;
+        var field1 = actual.OrderByFields.ElementAt(1).FieldName;
+        var field2 = actual.OrderByFields.ElementAt(2).FieldName;
+        field0.Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
+        field1.Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
+        field2.Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
-    }
-
-    [Fact]
-    public void Can_Use_OrderBy_With_QueryExpressionBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder();
-
-        // Act
-        var actual = sut.OrderBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"),
-                                 new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2"),
-                                 new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
-    }
-
-    [Fact]
-    public void Can_Use_OrderBy_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder();
-
-        // Act
-        var actual = sut.OrderBy(new QuerySortOrderBuilder().WithField("Field1"),
-                                 new QuerySortOrderBuilder().WithField("Field2"),
-                                 new QuerySortOrderBuilder().WithField("Field3").WithOrder(QuerySortOrderDirection.Descending));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 
     [Fact]
@@ -110,62 +62,14 @@ public class SingleEntityQueryBuilderExtensionsTests
 
         // Assert
         actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
+        var field0 = actual.OrderByFields.ElementAt(0).FieldName;
+        var field1 = actual.OrderByFields.ElementAt(1).FieldName;
+        var field2 = actual.OrderByFields.ElementAt(2).FieldName;
+        field0.Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
+        field1.Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
-    }
-
-    [Fact]
-    public void Can_Use_OrderByDescending_With_QueryExpressionBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder();
-
-        // Act
-        var actual = sut.OrderByDescending(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"),
-                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2"),
-                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
-    }
-
-    [Fact]
-    public void Can_Use_OrderByDescending_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder();
-
-        // Act
-        var actual = sut.OrderByDescending(new QuerySortOrderBuilder().WithField("Field1"),
-                                           new QuerySortOrderBuilder().WithField("Field2"),
-                                           new QuerySortOrderBuilder().WithField("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
+        field2.Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 
@@ -180,61 +84,15 @@ public class SingleEntityQueryBuilderExtensionsTests
 
         // Assert
         actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
+        var field0 = actual.OrderByFields.ElementAt(0).FieldName;
+        var field1 = actual.OrderByFields.ElementAt(1).FieldName;
+        var field2 = actual.OrderByFields.ElementAt(2).FieldName;
+        field0.Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
+        field1.Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
+        field2.Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
-    }
-
-    [Fact]
-    public void Can_Use_ThenBy_With_QueryExpressionBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder().OrderBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"));
-
-        // Act
-        var actual = sut.ThenBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2"),
-                                new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
-    }
-
-    [Fact]
-    public void Can_Use_ThenBy_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder().WithField("Field1"));
-
-        // Act
-        var actual = sut.ThenBy(new QuerySortOrderBuilder().WithField("Field2"),
-                                new QuerySortOrderBuilder().WithField("Field3").WithOrder(QuerySortOrderDirection.Descending));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 
     [Fact]
@@ -248,60 +106,14 @@ public class SingleEntityQueryBuilderExtensionsTests
 
         // Assert
         actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
+        var field0 = actual.OrderByFields.ElementAt(0).FieldName;
+        var field1 = actual.OrderByFields.ElementAt(1).FieldName;
+        var field2 = actual.OrderByFields.ElementAt(2).FieldName;
+        field0.Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
+        field1.Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
-    }
-
-    [Fact]
-    public void Can_Use_ThenByDescending_With_QueryExpressionBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder().OrderByDescending(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"))
-                                                .ThenBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2"));
-
-        // Act
-        var actual = sut.ThenByDescending(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Descending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
-        actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
-    }
-
-    [Fact]
-    public void Can_Use_ThenByDescending_With_QuerySortOrderBuilders_To_Add_OrderByClauses()
-    {
-        // Arrange
-        var sut = new SingleEntityQueryBuilder().OrderBy(new QuerySortOrderBuilder().WithField("Field1"),
-                                                         new QuerySortOrderBuilder().WithField("Field2"));
-
-        // Act
-        var actual = sut.ThenByDescending(new QuerySortOrderBuilder().WithField("Field3"));
-
-        // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields.ElementAt(0).Field as FieldExpressionBuilder;
-        var field1 = actual.OrderByFields.ElementAt(1).Field as FieldExpressionBuilder;
-        var field2 = actual.OrderByFields.ElementAt(2).Field as FieldExpressionBuilder;
-        ((ConstantExpressionBuilder)field0!.FieldNameExpression).Value.Should().Be("Field1");
-        actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field1!.FieldNameExpression).Value.Should().Be("Field2");
-        actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        ((ConstantExpressionBuilder)field2!.FieldNameExpression).Value.Should().Be("Field3");
+        field2.Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 

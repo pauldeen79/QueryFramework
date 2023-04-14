@@ -48,23 +48,15 @@ public static class SingleEntityQueryBuilderExtensions
 
     public static T OrderBy<T>(this T instance, params string[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithField(s)));
-
-    public static T OrderBy<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
-        where T : ISingleEntityQueryBuilderBase
-            => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Ascending))));
+        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithFieldName(s)));
 
     public static T OrderByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(new QuerySortOrder(so.Field.Build(), QuerySortOrderDirection.Descending))));
+        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(new QuerySortOrder(so.FieldName, QuerySortOrderDirection.Descending))));
 
     public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(new FieldExpression(new ContextExpression(), new ConstantExpression(s)), QuerySortOrderDirection.Descending))));
-
-    public static T OrderByDescending<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
-        where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s.Build(), QuerySortOrderDirection.Descending))));
+        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder(new QuerySortOrder(s, QuerySortOrderDirection.Descending))));
 
     public static T ThenBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
@@ -74,19 +66,11 @@ public static class SingleEntityQueryBuilderExtensions
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderBy(additionalSortOrders);
 
-    public static T ThenBy<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
-        where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders);
-
     public static T ThenByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderByDescending(additionalSortOrders);
 
     public static T ThenByDescending<T>(this T instance, params string[] additionalSortOrders)
-        where T : ISingleEntityQueryBuilderBase
-        => instance.OrderByDescending(additionalSortOrders);
-
-    public static T ThenByDescending<T>(this T instance, params ExpressionBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
         => instance.OrderByDescending(additionalSortOrders);
 

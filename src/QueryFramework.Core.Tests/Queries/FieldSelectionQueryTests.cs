@@ -11,7 +11,7 @@ public class FieldSelectionQueryTests
         // Assert
         sut.Filter.Conditions.Should().BeEmpty();
         sut.Distinct.Should().BeFalse();
-        sut.Fields.Should().BeEmpty();
+        sut.FieldNames.Should().BeEmpty();
         sut.GetAllFields.Should().BeFalse();
         sut.Limit.Should().BeNull();
         sut.Offset.Should().BeNull();
@@ -29,14 +29,14 @@ public class FieldSelectionQueryTests
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
         };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field")
                                                                .WithOrder(QuerySortOrderDirection.Ascending)
                                                                .Build() };
         var limit = 1;
         var offset = 2;
         var distinct = true;
         var getAllFields = true;
-        var fields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field").Build() };
+        var fields = new[] { "field" };
 
         // Act
         var sut = new FieldSelectionQuery(limit, offset, distinct, getAllFields, new ComposedEvaluatableBuilder().AddConditions(conditions).BuildTyped(), orderByFields, fields);
@@ -44,7 +44,7 @@ public class FieldSelectionQueryTests
         // Assert
         sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
         sut.Distinct.Should().Be(distinct);
-        sut.Fields.Should().BeEquivalentTo(fields);
+        sut.FieldNames.Should().BeEquivalentTo(fields);
         sut.GetAllFields.Should().Be(getAllFields);
         sut.Limit.Should().Be(limit);
         sut.Offset.Should().Be(offset);

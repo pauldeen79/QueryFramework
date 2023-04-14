@@ -22,7 +22,7 @@ public class SingleEntityQueryBuilderTests
         var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithFieldName("field"))
                                                                    .WithOperator(new EqualsOperatorBuilder())
                                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithFieldName("field")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field") };
         var limit = 1;
         var offset = 2;
 
@@ -49,7 +49,7 @@ public class SingleEntityQueryBuilderTests
         var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
                                                                    .WithOperator(new EqualsOperatorBuilder())
                                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithField(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field")) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field") };
         var limit = 1;
         var offset = 2;
         var sut = new SingleEntityQueryBuilder

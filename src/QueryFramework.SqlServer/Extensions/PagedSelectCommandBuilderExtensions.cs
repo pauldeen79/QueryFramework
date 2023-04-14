@@ -28,7 +28,7 @@ internal static class PagedSelectCommandBuilderExtensions
                                                                                   ISqlExpressionEvaluator evaluator,
                                                                                   ParameterBag parameterBag)
     {
-        foreach (var expression in fieldSelectionQuery.Fields.Select((x, index) => new { Item = x, Index = index }))
+        foreach (var expression in fieldSelectionQuery.FieldNames.Select((x, index) => new { Item = x, Index = index }))
         {
             if (expression.Index > 0)
             {
