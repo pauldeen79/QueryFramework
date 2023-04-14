@@ -10,7 +10,7 @@ internal static class SqlHelpers
             new SingleEntityQueryBuilder()
                 .Where
                 (
-                    new SingleEvaluatableBuilder()
+                    new ComposableEvaluatableBuilder()
                         .WithLeftExpression(expression)
                         .WithOperator(new EqualsOperatorBuilder())
                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))

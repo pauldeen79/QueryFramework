@@ -39,16 +39,17 @@ public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<I
         }
         var fieldInfo = _fieldInfoFactory.Create(source);
         var parameterBag = new ParameterBag();
+        var context = default(object?); // TODO: Allow injection of context into this provider
         return new PagedSelectCommandBuilder()
-            .Select(settings, fieldInfo, fieldSelectionQuery, _evaluator, parameterBag)
+            .Select(settings, fieldInfo, fieldSelectionQuery, _evaluator, parameterBag, context)
             .Top(source, settings)
             .Offset(source)
             .Distinct(fieldSelectionQuery)
             .From(source, settings)
-            .Where(source, settings, fieldInfo, _evaluator, parameterBag)
-            .GroupBy(groupingQuery, fieldInfo, _evaluator, parameterBag)
-            .Having(groupingQuery, fieldInfo, _evaluator, parameterBag)
-            .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag)
+            .Where(source, settings, fieldInfo, _evaluator, parameterBag, context)
+            .GroupBy(groupingQuery, fieldInfo, _evaluator, parameterBag, context)
+            .Having(groupingQuery, fieldInfo, _evaluator, parameterBag, context)
+            .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag, context)
             .WithParameters(parameterizedQuery, parameterBag)
             .Build();
     }

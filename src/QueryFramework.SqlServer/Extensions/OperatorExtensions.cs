@@ -13,12 +13,12 @@ public static class OperatorExtensions
     public static string ToSql(this Operator instance)
         => instance switch
         {
-            Operator.Equal => "=",
-            Operator.GreaterOrEqual => ">=",
-            Operator.Greater => ">",
-            Operator.SmallerOrEqual => "<=",
-            Operator.Smaller => "<",
-            Operator.NotEqual => "<>",
+            EqualsOperator => "=",
+            IsGreaterOrEqualOperator => ">=",
+            IsGreaterOperator => ">",
+            IsSmallerOrEqualOperator => "<=",
+            IsSmallerOperator => "<",
+            NotEqualsOperator => "<>",
             _ => throw new ArgumentOutOfRangeException(nameof(instance), $"Unsupported query operator: {instance}"),
         };
 
@@ -27,9 +27,9 @@ public static class OperatorExtensions
     /// </summary>
     /// <param name="instance">The instance.</param>
     public static string ToNot(this Operator instance)
-        => instance.In(Operator.NotContains,
-                       Operator.NotEndsWith,
-                       Operator.NotStartsWith)
+        => instance.GetType().In(typeof(StringNotContainsOperator),
+                                 typeof(NotEndsWithOperator),
+                                 typeof(NotStartsWithOperator))
             ? "NOT "
             : string.Empty;
 }

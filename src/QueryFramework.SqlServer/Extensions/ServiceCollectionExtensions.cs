@@ -8,7 +8,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection,
                                                                 Action<IServiceCollection> customConfigurationAction)
         => serviceCollection
-            .AddExpressionFramework()
             .AddCrossCuttingDataSql()
             .With(x =>
             {

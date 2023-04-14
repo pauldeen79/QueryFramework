@@ -2,6 +2,6 @@
 
 public interface ISqlExpressionEvaluator
 {
-    string GetSqlExpression(IExpression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag);
-    string GetLengthExpression(IExpression expression, IQueryFieldInfo fieldInfo);
+    string GetSqlExpression(Expression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context);
+    string GetLengthExpression(Expression expression, IQueryFieldInfo fieldInfo, object? context);
 }

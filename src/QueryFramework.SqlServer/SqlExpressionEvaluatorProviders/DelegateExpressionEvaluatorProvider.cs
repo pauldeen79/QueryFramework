@@ -2,32 +2,27 @@
 
 public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
-    private readonly IExpressionEvaluator _expressionEvaluator;
-
-    public DelegateExpressionEvaluatorProvider(IExpressionEvaluator expressionEvaluator)
-        => _expressionEvaluator = expressionEvaluator;
-
-    public bool TryGetLengthExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, out string? result)
+    public bool TryGetLengthExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
     {
-        if (!(expression is IDelegateExpression delegateExpression))
+        if (!(expression is DelegateExpression delegateExpression))
         {
             result = null;
             return false;
         }
 
-        result = delegateExpression.ValueDelegate.Invoke(null, expression, _expressionEvaluator).ToStringWithNullCheck().Length.ToString();
+        result = delegateExpression.Value.Invoke(context).ToStringWithNullCheck().Length.ToString();
         return true;
     }
 
-    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, out string? result)
+    public bool TryGetSqlExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
     {
-        if (!(expression is IDelegateExpression delegateExpression))
+        if (!(expression is DelegateExpression delegateExpression))
         {
             result = null;
             return false;
         }
 
-        result = parameterBag.CreateQueryParameterName(delegateExpression.ValueDelegate.Invoke(null, expression, _expressionEvaluator));
+        result = parameterBag.CreateQueryParameterName(delegateExpression.Value.Invoke(context));
         return true;
     }
 }

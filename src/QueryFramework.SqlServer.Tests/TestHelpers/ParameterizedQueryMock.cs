@@ -4,7 +4,7 @@ internal sealed class ParameterizedQueryMock : IParameterizedQuery
 {
     public ParameterizedQueryMock(IEnumerable<IQueryParameter> parameters)
     {
-        Conditions = new ReadOnlyValueCollection<ICondition>();
+        Filter = new(Enumerable.Empty<ComposableEvaluatable>());
         OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>();
         Parameters = new ReadOnlyValueCollection<IQueryParameter>(parameters.ToList());
     }
@@ -12,6 +12,6 @@ internal sealed class ParameterizedQueryMock : IParameterizedQuery
     public IReadOnlyCollection<IQueryParameter> Parameters { get; set; }
     public int? Limit { get; set; }
     public int? Offset { get; set; }
-    public IReadOnlyCollection<ICondition> Conditions { get; set; }
+    public ComposedEvaluatable Filter { get; set; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
 }

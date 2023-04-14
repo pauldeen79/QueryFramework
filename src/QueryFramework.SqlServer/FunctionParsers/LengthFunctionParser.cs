@@ -2,9 +2,9 @@
 
 public class LengthFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is LengthFunction)
+        if (expression is StringLengthExpression)
         {
             sqlExpression = "LEN({0})";
             return true;

@@ -10,11 +10,11 @@ internal static class DefaultSqlExpressionEvaluatorHelper
                                                     new ConstantExpressionEvaluatorProvider() },
             Enumerable.Empty<IFunctionParser>()
         );
-        evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<ParameterBag>()))
-                     .Returns<IExpression, IQueryFieldInfo, ParameterBag>((expression, fieldInfo, _)
-                      => evaluator.GetSqlExpression(expression, fieldInfo, parameterBag));
-        evaluatorMock.Setup(x => x.GetLengthExpression(It.IsAny<IExpression>(), It.IsAny<IQueryFieldInfo>()))
-                     .Returns<IExpression, IQueryFieldInfo>((expression, fieldInfo)
-                      => evaluator.GetLengthExpression(expression, fieldInfo));
+        evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<Expression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<ParameterBag>(), It.IsAny<object?>()))
+                     .Returns<Expression, IQueryFieldInfo, ParameterBag, object?>((expression, fieldInfo, _, context)
+                      => evaluator.GetSqlExpression(expression, fieldInfo, parameterBag, context));
+        evaluatorMock.Setup(x => x.GetLengthExpression(It.IsAny<Expression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<object?>()))
+                     .Returns<Expression, IQueryFieldInfo, object?>((expression, fieldInfo, context)
+                      => evaluator.GetLengthExpression(expression, fieldInfo, context));
     }
 }

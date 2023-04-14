@@ -2,9 +2,9 @@
 
 public class ConstantExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
-    public bool TryGetLengthExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, out string? result)
+    public bool TryGetLengthExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
     {
-        if (!(expression is IConstantExpression constantExpression))
+        if (!(expression is ConstantExpression constantExpression))
         {
             result = null;
             return false;
@@ -14,9 +14,9 @@ public class ConstantExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
         return true;
     }
 
-    public bool TryGetSqlExpression(IExpression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, out string? result)
+    public bool TryGetSqlExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
     {
-        if (!(expression is IConstantExpression constantExpression))
+        if (!(expression is ConstantExpression constantExpression))
         {
             result = null;
             return false;

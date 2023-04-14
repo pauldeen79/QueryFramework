@@ -2,9 +2,9 @@
 
 public class LowerFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is LowerFunction)
+        if (expression is ToLowerCaseExpression)
         {
             sqlExpression = "LOWER({0})";
             return true;

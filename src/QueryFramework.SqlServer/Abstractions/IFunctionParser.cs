@@ -2,5 +2,5 @@
 
 public interface IFunctionParser
 {
-    bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression);
+    bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression);
 }

@@ -2,9 +2,9 @@
 
 public class UpperFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is UpperFunction)
+        if (expression is ToUpperCaseExpression)
         {
             sqlExpression = "UPPER({0})";
             return true;

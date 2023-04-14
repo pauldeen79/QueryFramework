@@ -6,17 +6,17 @@ internal sealed class ValidatableQueryMock : ISingleEntityQuery, IValidatableObj
 
     public int? Offset { get; set; }
 
-    public IReadOnlyCollection<ICondition> Conditions { get; set; }
+    public ComposedEvaluatable Filter{ get; set; }
 
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (Limit == null)
+        if (Limit is null)
         {
             yield return new ValidationResult("Limit is required", new[] { nameof(Limit) });
         }
-        if (Offset == null)
+        if (Offset is null)
         {
             yield return new ValidationResult("Offset is required", new[] { nameof(Offset) });
         }
@@ -24,7 +24,7 @@ internal sealed class ValidatableQueryMock : ISingleEntityQuery, IValidatableObj
 
     public ValidatableQueryMock()
     {
-        Conditions = new ReadOnlyValueCollection<ICondition>();
+        Filter = new(Enumerable.Empty<ComposableEvaluatable>());
         OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>();
     }
 }

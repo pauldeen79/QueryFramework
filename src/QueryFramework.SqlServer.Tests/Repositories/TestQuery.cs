@@ -10,7 +10,7 @@ public record TestQuery : SingleEntityQuery, ITestQuery
     {
     }
 
-    public TestQuery(int? limit, int? offset, IEnumerable<ICondition> conditions, IEnumerable<IQuerySortOrder> orderByFields) : base(limit, offset, conditions, orderByFields)
+    public TestQuery(int? limit, int? offset, ComposedEvaluatable filter, IEnumerable<IQuerySortOrder> orderByFields) : base(limit, offset, filter, orderByFields)
     {
     }
 }

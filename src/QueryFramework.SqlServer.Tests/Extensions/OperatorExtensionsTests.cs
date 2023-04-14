@@ -5,57 +5,85 @@ public class OperatorExtensionsTests
     [Fact]
     public void ToSql_Throws_On_Invalid_Operator()
     {
+        // Arrange
+        var @operator = new UnsupportedOperator();
+        
         // Act & Assert
-        ((Operator)99).Invoking(x => x.ToSql())
-                      .Should().Throw<ArgumentOutOfRangeException>();
+        @operator.Invoking(x => x.ToSql())
+                 .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData(Operator.Contains)]
-    [InlineData(Operator.EndsWith)]
-    [InlineData(Operator.IsNotNull)]
-    [InlineData(Operator.IsNotNullOrEmpty)]
-    [InlineData(Operator.IsNull)]
-    [InlineData(Operator.IsNullOrEmpty)]
-    [InlineData(Operator.NotContains)]
-    [InlineData(Operator.NotEndsWith)]
-    [InlineData(Operator.NotStartsWith)]
-    [InlineData(Operator.StartsWith)]
-    public void ToSql_Throws_On_Unsupported_Operator(Operator input)
+    [InlineData(typeof(StringContainsOperatorBuilder))]
+    [InlineData(typeof(EndsWithOperatorBuilder))]
+    [InlineData(typeof(IsNotNullOperatorBuilder))]
+    [InlineData(typeof(IsNotNullOrEmptyOperatorBuilder))]
+    [InlineData(typeof(IsNullOperatorBuilder))]
+    [InlineData(typeof(IsNullOrEmptyOperatorBuilder))]
+    [InlineData(typeof(StringNotContainsOperatorBuilder))]
+    [InlineData(typeof(NotEndsWithOperatorBuilder))]
+    [InlineData(typeof(NotStartsWithOperatorBuilder))]
+    [InlineData(typeof(StartsWithOperatorBuilder))]
+    public void ToSql_Throws_On_Unsupported_Operator(Type input)
     {
+        // Arrange
+        var @operator = ((OperatorBuilder)Activator.CreateInstance(input)!).Build();
+
         // Act & Assert
-        input.Invoking(x => x.ToSql())
-             .Should().Throw<ArgumentOutOfRangeException>();
+        @operator.Invoking(x => x.ToSql())
+                 .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData(Operator.Equal, "=")]
-    [InlineData(Operator.GreaterOrEqual, ">=")]
-    [InlineData(Operator.Greater, ">")]
-    [InlineData(Operator.SmallerOrEqual, "<=")]
-    [InlineData(Operator.Smaller, "<")]
-    [InlineData(Operator.NotEqual, "<>")]
-    public void ToSql_Converts_Valid_Operator_Correctly(Operator input, string expectedOutput)
+    [InlineData(typeof(EqualsOperatorBuilder), "=")]
+    [InlineData(typeof(IsGreaterOrEqualOperatorBuilder), ">=")]
+    [InlineData(typeof(IsGreaterOperatorBuilder), ">")]
+    [InlineData(typeof(IsSmallerOrEqualOperatorBuilder), "<=")]
+    [InlineData(typeof(IsSmallerOperatorBuilder), "<")]
+    [InlineData(typeof(NotEqualsOperatorBuilder), "<>")]
+    public void ToSql_Converts_Valid_Operator_Correctly(Type input, string expectedOutput)
     {
+        // Arrange
+        var @operator = ((OperatorBuilder)Activator.CreateInstance(input)!).Build();
+
         // Act
-        var actual = input.ToSql();
+        var actual = @operator.ToSql();
 
         // Assert
         actual.Should().Be(expectedOutput);
     }
 
     [Theory]
-    [InlineData(Operator.NotContains, "NOT ")]
-    [InlineData(Operator.NotEndsWith, "NOT ")]
-    [InlineData(Operator.NotStartsWith, "NOT ")]
-    [InlineData(Operator.Equal, "")]
-    [InlineData(Operator.Contains, "")]
-    public void ToNot_Returns_Correct_Result(Operator input, string expectedOutput)
+    [InlineData(typeof(StringNotContainsOperatorBuilder), "NOT ")]
+    [InlineData(typeof(NotEndsWithOperatorBuilder), "NOT ")]
+    [InlineData(typeof(NotStartsWithOperatorBuilder), "NOT ")]
+    [InlineData(typeof(EqualsOperatorBuilder), "")]
+    [InlineData(typeof(StringContainsOperatorBuilder), "")]
+    public void ToNot_Returns_Correct_Result(Type input, string expectedOutput)
     {
+        // Arrange
+        var @operator = ((OperatorBuilder)Activator.CreateInstance(input)!).Build();
+
         // Act
-        var actual = input.ToNot();
+        var actual  = @operator.ToNot();
 
         // Assert
         actual.Should().Be(expectedOutput);
+    }
+
+    private sealed record UnsupportedOperator : Operator
+    {
+        public UnsupportedOperator()
+        {
+        }
+
+        public UnsupportedOperator(Operator original) : base(original)
+        {
+        }
+
+        protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

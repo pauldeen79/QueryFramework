@@ -2,11 +2,11 @@
 
 public class LeftFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is LeftFunction f)
+        if (expression is LeftExpression f)
         {
-            sqlExpression = $"LEFT({{0}}, {f.Length})";
+            sqlExpression = $"LEFT({{0}}, {f.LengthExpression.Evaluate().Value})";
             return true;
         }
 

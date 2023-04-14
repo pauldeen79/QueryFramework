@@ -12,33 +12,40 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         _functionParsers = functionParsers;
     }
 
-    public string GetSqlExpression(IExpression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag)
+    public string GetSqlExpression(Expression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context)
     {
         var result = default(string?);
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(expression, this, fieldInfo, parameterBag, out var providerResult))
+            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(expression, this, fieldInfo, parameterBag, context, out var providerResult))
             {
                 result = providerResult ?? string.Empty;
                 break;
             }
         }
 
-        if (result == null)
+        Expression? innerExpression = null;
+
+        if (result is null)
         {
-            throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
+            innerExpression = expression.TryGetInnerExpression();
+            if (innerExpression is null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
+            }
+
+            var innerResult = GetSqlExpression(innerExpression, fieldInfo, parameterBag, context);
+            result = TryGetSqlExpression(expression)?.Replace("{0}", innerResult) ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
         }
 
-        return expression.Function == null
-            ? result
-            : GetSqlExpression(expression.Function, nameof(expression)).Replace("{0}", result);
+        return result;
     }
 
-    public string GetLengthExpression(IExpression expression, IQueryFieldInfo fieldInfo)
+    public string GetLengthExpression(Expression expression, IQueryFieldInfo fieldInfo, object? context)
     {
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (sqlExpressionEvaluatorProvider.TryGetLengthExpression(expression, this, fieldInfo, out var providerResult))
+            if (sqlExpressionEvaluatorProvider.TryGetLengthExpression(expression, this, fieldInfo, context, out var providerResult))
             {
                 return providerResult ?? string.Empty;
             }
@@ -47,25 +54,16 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
     }
 
-    private string GetSqlExpression(IExpressionFunction function, string paramName)
+    private string? TryGetSqlExpression(Expression expression)
     {
-        var inner = function.InnerFunction != null
-            ? GetSqlExpression(function.InnerFunction, paramName)
-            : string.Empty;
-
         foreach (var parser in _functionParsers)
         {
-            if (parser.TryParse(function, this, out var sqlExpression))
+            if (parser.TryParse(expression, this, out var sqlExpression))
             {
-                return Combine(sqlExpression, inner);
+                return sqlExpression;
             }
         }
 
-        throw new ArgumentOutOfRangeException(paramName, $"Unsupported function: [{function.GetType().Name}]");
+        return default;
     }
-
-    private static string Combine(string sqlExpression, string inner)
-        => inner.Length > 0
-            ? sqlExpression.Replace("{0}", inner)
-            : sqlExpression;
 }
