@@ -29,22 +29,5 @@ public static class ExpressionExtensions
         };
 
     public static string? TryGetValue(this Expression expression, object? context)
-    {
-        if (expression is ConstantExpression c)
-        {
-            return c.Value?.ToString();
-        }
-
-        if (expression is DelegateExpression d)
-        {
-            return d.Value(context)?.ToString();
-        }
-
-        if (expression is ContextExpression)
-        {
-            return context?.ToString();
-        }
-
-        return default;
-    }
+        => expression.Evaluate(context).Value?.ToString();
 }
