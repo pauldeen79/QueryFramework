@@ -47,9 +47,7 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
         // we might have to move this to the base class
         if (typeName.GetNamespaceWithDefault() == Constants.Namespaces.Abstractions)
         {
-            /// option 1: return $"{Constants.Namespaces.CoreBuilders}.{typeName.GetClassName()}";
-            /// option 2:
-            return "{7}." + typeName.GetClassName();
+            return $"{Constants.Namespaces.CoreBuilders}.{typeName.GetClassName().Substring(1)}";
         }
 
         return base.ReplaceWithBuilderNamespaces(typeName);
