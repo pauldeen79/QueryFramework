@@ -1,6 +1,4 @@
-﻿using ModelFramework.Common.Extensions;
-
-namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
