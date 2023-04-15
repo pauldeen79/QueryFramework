@@ -28,6 +28,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored code to fit FileSystemSearch on top of QueryFramework. As a result, this version is not backwards compatible with earlier versions.
 
 ### TODO
-- Upgrade ModelFramework.CodeGeneration to latest version
-- Create models in CodeGeneration project
-- Remove code generation of CSharpExpressionDumper models in CodeGeneration project
+- Generate query stuff, sounds like normal record/builder stuff?

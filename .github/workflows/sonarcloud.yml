@@ -22,9 +22,9 @@ jobs:
       - name: Restore
         run: dotnet restore
       - name: Build code generation
-        run: dotnet build src/CodeGeneration/CodeGeneration.csproj -c Release --no-restore
+        run: dotnet build src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -c Release --no-restore
       - name: Run code generation
-        run: dotnet src/CodeGeneration/bin/Release/net7.0/CodeGeneration.dll
+        run: dotnet src/QueryFramework.CodeGeneration/bin/Release/net7.0/QueryFramework.CodeGeneration.dll
       - name: sonarscan-dotnet
         uses: highbyte/sonarscan-dotnet@v2.2.2
         with:

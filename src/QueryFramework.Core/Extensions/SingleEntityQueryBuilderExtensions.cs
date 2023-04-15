@@ -52,7 +52,7 @@ public static class SingleEntityQueryBuilderExtensions
 
     public static T OrderByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase
-        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(new QuerySortOrder(so.FieldName, QuerySortOrderDirection.Descending))));
+        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder(new QuerySortOrder(so.FieldName.ToString(), QuerySortOrderDirection.Descending))));
 
     public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
         where T : ISingleEntityQueryBuilderBase

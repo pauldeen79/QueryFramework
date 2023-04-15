@@ -26,6 +26,7 @@ global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
 global using QueryFramework.Abstractions;
+global using QueryFramework.Abstractions.Domains;
 global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Core;

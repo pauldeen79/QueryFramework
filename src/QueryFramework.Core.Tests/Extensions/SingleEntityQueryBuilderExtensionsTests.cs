@@ -43,11 +43,11 @@ public class SingleEntityQueryBuilderExtensionsTests
         var field0 = actual.OrderByFields.ElementAt(0).FieldName;
         var field1 = actual.OrderByFields.ElementAt(1).FieldName;
         var field2 = actual.OrderByFields.ElementAt(2).FieldName;
-        field0.Should().Be("Field1");
+        field0.ToString().Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.Should().Be("Field2");
+        field1.ToString().Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.Should().Be("Field3");
+        field2.ToString().Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
     }
 
@@ -65,11 +65,11 @@ public class SingleEntityQueryBuilderExtensionsTests
         var field0 = actual.OrderByFields.ElementAt(0).FieldName;
         var field1 = actual.OrderByFields.ElementAt(1).FieldName;
         var field2 = actual.OrderByFields.ElementAt(2).FieldName;
-        field0.Should().Be("Field1");
+        field0.ToString().Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Descending);
-        field1.Should().Be("Field2");
+        field1.ToString().Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Descending);
-        field2.Should().Be("Field3");
+        field2.ToString().Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 
@@ -87,11 +87,11 @@ public class SingleEntityQueryBuilderExtensionsTests
         var field0 = actual.OrderByFields.ElementAt(0).FieldName;
         var field1 = actual.OrderByFields.ElementAt(1).FieldName;
         var field2 = actual.OrderByFields.ElementAt(2).FieldName;
-        field0.Should().Be("Field1");
+        field0.ToString().Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.Should().Be("Field2");
+        field1.ToString().Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.Should().Be("Field3");
+        field2.ToString().Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Ascending);
     }
 
@@ -109,11 +109,11 @@ public class SingleEntityQueryBuilderExtensionsTests
         var field0 = actual.OrderByFields.ElementAt(0).FieldName;
         var field1 = actual.OrderByFields.ElementAt(1).FieldName;
         var field2 = actual.OrderByFields.ElementAt(2).FieldName;
-        field0.Should().Be("Field1");
+        field0.ToString().Should().Be("Field1");
         actual.OrderByFields.ElementAt(0).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.Should().Be("Field2");
+        field1.ToString().Should().Be("Field2");
         actual.OrderByFields.ElementAt(1).Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.Should().Be("Field3");
+        field2.ToString().Should().Be("Field3");
         actual.OrderByFields.ElementAt(2).Order.Should().Be(QuerySortOrderDirection.Descending);
     }
 
