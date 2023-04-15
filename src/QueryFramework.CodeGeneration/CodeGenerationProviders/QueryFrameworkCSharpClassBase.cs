@@ -1,4 +1,6 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿using ModelFramework.Common.Extensions;
+
+namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
@@ -23,11 +25,33 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     {
         if (instance.Namespace == Constants.Namespaces.Abstractions || instance.Namespace == Constants.Namespaces.Core)
         {
+            if (instance.Name == nameof(IQuerySortOrder))
+            {
+                // HACK: Fix typename being used as a type... No way to detect this, other than using an escape with known type names :(
+                return forCreate
+                    ? $"{Constants.Namespaces.Core}.{instance.Name.Substring(1)}"
+                    : $"{Constants.Namespaces.Abstractions}.{instance.Name}";
+            }
+
             return forCreate
                 ? $"{Constants.Namespaces.Core}.{instance.Name}"
                 : $"{Constants.Namespaces.Abstractions}.I{instance.Name}";
         }
 
         return string.Empty;
+    }
+
+    protected override string ReplaceWithBuilderNamespaces(string typeName)
+    {
+        // note that this is only needed if you use properties of the QueryFramework namespace.
+        // we might have to move this to the base class
+        if (typeName.GetNamespaceWithDefault() == Constants.Namespaces.Abstractions)
+        {
+            /// option 1: return $"{Constants.Namespaces.CoreBuilders}.{typeName.GetClassName()}";
+            /// option 2:
+            return "{7}." + typeName.GetClassName();
+        }
+
+        return base.ReplaceWithBuilderNamespaces(typeName);
     }
 }

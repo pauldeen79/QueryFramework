@@ -8,6 +8,6 @@ public class AbstractionsInterfaces : QueryFrameworkCSharpClassBase, ICodeGenera
     public override object CreateModel()
         => GetCoreModels().Select(x => x.ToInterfaceBuilder()
                                         .WithPartial()
-                                        .WithName($"I{x.Name}") //TODO: Review how to fix this
+                                        .WithName($"I{x.Name}")
                                         .Build());
 }

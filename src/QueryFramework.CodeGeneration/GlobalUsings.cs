@@ -10,6 +10,7 @@ global using ModelFramework.Objects.Contracts;
 global using ModelFramework.Objects.Extensions;
 global using ModelFramework.Objects.Settings;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
+global using QueryFramework.CodeGeneration.Models;
 global using QueryFramework.CodeGeneration.Models.Domains;
 global using TextTemplateTransformationFramework.Runtime;
 global using TextTemplateTransformationFramework.Runtime.CodeGeneration;
