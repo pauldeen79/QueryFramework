@@ -15,7 +15,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             .Replace("\r\n", " ")
             .Replace("\n", " ")
             .Replace("\t", " ")
-            .SafeSplit(' ', '\"', '\"');
+            .SplitDelimited(' ', '\"');
 
         builder.Filter = new ComposedEvaluatableBuilder().AddConditions(PerformQuerySearch(items) ?? PerformSimpleSearch(items));
 

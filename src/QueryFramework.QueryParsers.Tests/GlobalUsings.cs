@@ -5,5 +5,4 @@ global using ExpressionFramework.Domain.Builders.Operators;
 global using FluentAssertions;
 global using QueryFramework.Abstractions.Queries.Builders;
 global using QueryFramework.Core.Queries.Builders;
-global using QueryFramework.QueryParsers.Extensions;
 global using Xunit;
