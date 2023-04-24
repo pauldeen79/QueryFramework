@@ -16,7 +16,7 @@ internal static class Program
         var generateMultipleFiles = true;
         var dryRun = false;
         var multipleContentBuilder = new MultipleContentBuilder { BasePath = basePath };
-        var settings = new CodeGenerationSettings(basePath, generateMultipleFiles, false, dryRun);
+        var settings = new CodeGenerationSettings(basePath, generateMultipleFiles, dryRun);
 
         // Generate code
         var generationTypeNames = new[] { "Entities", "Builders", "BuilderFactory" };
