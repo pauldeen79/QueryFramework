@@ -10,7 +10,7 @@ internal static class Program
         var basePath = currentDirectory switch
         {
             var x when x.EndsWith(Constants.ProjectName) => Path.Combine(currentDirectory, @"src/"),
-            var x when x.EndsWith("QueryFramework.Abstractions") => Path.Combine(currentDirectory, @"../"),
+            var x when x.EndsWith(Constants.Namespaces.Abstractions) => Path.Combine(currentDirectory, @"../"),
             _ => Path.Combine(currentDirectory, @"../../../../")
         };
         var generateMultipleFiles = true;
