@@ -19,7 +19,7 @@ internal static class Program
         var settings = new CodeGenerationSettings(basePath, generateMultipleFiles, false, dryRun);
 
         // Generate code
-        var generationTypeNames = new[] { "Entities", "Builders" };
+        var generationTypeNames = new[] { "Entities", "Builders", "BuilderFactory" };
         var generators = typeof(QueryFrameworkCSharpClassBase).Assembly.GetExportedTypes().Where(x => x.BaseType == typeof(QueryFrameworkCSharpClassBase)).ToArray();
         var generationTypes = generators.Where(x => x.Name.EndsWithAny(generationTypeNames));
         var scaffoldingTypes = generators.Where(x => !x.Name.EndsWithAny(generationTypeNames));
