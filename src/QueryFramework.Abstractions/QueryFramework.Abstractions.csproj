@@ -25,8 +25,4 @@
     <Folder Include="Builders\" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="dotnet run --project $(SolutionDir)src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj" />
-  </Target>
-
 </Project>

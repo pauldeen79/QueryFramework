@@ -18,4 +18,8 @@
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.6.59" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet $(TargetDir)QueryFramework.CodeGeneration.dll" />
+  </Target>
+
 </Project>
