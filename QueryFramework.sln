@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Abstractions", "src\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj", "{37F2C3EC-A077-4994-8CE3-2B6666065B32}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9294DCF9-A401-4588-A332-81C6AC69B492} = {9294DCF9-A401-4588-A332-81C6AC69B492}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Abstractions.Tests", "src\QueryFramework.Abstractions.Tests\QueryFramework.Abstractions.Tests.csproj", "{BFF4C951-CE52-41AF-B8EF-55DA4AB8C7B3}"
 EndProject

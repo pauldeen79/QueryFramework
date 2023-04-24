@@ -7,9 +7,12 @@ internal static class Program
     {
         // Setup code generation
         var currentDirectory = Directory.GetCurrentDirectory();
-        var basePath = currentDirectory.EndsWith(Constants.ProjectName)
-            ? Path.Combine(currentDirectory, @"src/")
-            : Path.Combine(currentDirectory, @"../../../../");
+        var basePath = currentDirectory switch
+        {
+            var x when x.EndsWith(Constants.ProjectName) => Path.Combine(currentDirectory, @"src/"),
+            var x when x.EndsWith("QueryFramework.Abstractions") => Path.Combine(currentDirectory, @"../"),
+            _ => Path.Combine(currentDirectory, @"../../../../")
+        };
         var generateMultipleFiles = true;
         var dryRun = false;
         var multipleContentBuilder = new MultipleContentBuilder { BasePath = basePath };
@@ -37,5 +40,7 @@ internal static class Program
                 Console.WriteLine(content.FileName);
             }
         }
+
+        Thread.Sleep(500); // Wait for all files to be generated
     }
 }

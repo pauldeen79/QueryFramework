@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -24,5 +24,9 @@
   <ItemGroup>
     <Folder Include="Builders\" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet run --project $(SolutionDir)src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj" />
+  </Target>
 
 </Project>
