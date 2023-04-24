@@ -31,9 +31,9 @@ jobs:
         run: dotnet restore
       - name: Force first-time run of code generation
         run: dotnet run --project src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-      - name: Build Main
+      - name: Build
         run: dotnet build -c Release --no-restore
-      - name: Test Main
+      - name: Test
         run: dotnet test -c Release
   #    - name: Pack
   #      if: matrix.os == 'ubuntu-latest'
