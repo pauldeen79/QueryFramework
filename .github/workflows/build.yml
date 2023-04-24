@@ -30,11 +30,11 @@ jobs:
       - name: Restore
         run: dotnet restore
       - name: Force first-time run of code generation
-        run: dotnet run --project src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+        run: dotnet run --no-restore --project src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: Build
         run: dotnet build -c Release --no-restore
       - name: Test
-        run: dotnet test -c Release
+        run: dotnet test -c Release --no-restore
   #    - name: Pack
   #      if: matrix.os == 'ubuntu-latest'
   #      run: dotnet pack -v normal -c Release -o ./artifacts --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID
