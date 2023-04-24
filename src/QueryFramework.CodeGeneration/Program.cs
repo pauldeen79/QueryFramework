@@ -40,7 +40,5 @@ internal static class Program
                 Console.WriteLine(content.FileName);
             }
         }
-
-        Thread.Sleep(500); // Wait for all files to be generated
     }
 }
