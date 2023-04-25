@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="2.7.35" />
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Sql" Version="2.7.35" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="2.7.36" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Sql" Version="2.7.36" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
