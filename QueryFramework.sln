@@ -5,15 +5,12 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Abstractions", "src\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj", "{37F2C3EC-A077-4994-8CE3-2B6666065B32}"
 	ProjectSection(ProjectDependencies) = postProject
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8} = {5C767F78-371E-49B7-BA0A-718E10ABB0C8}
+		{9294DCF9-A401-4588-A332-81C6AC69B492} = {9294DCF9-A401-4588-A332-81C6AC69B492}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Abstractions.Tests", "src\QueryFramework.Abstractions.Tests\QueryFramework.Abstractions.Tests.csproj", "{BFF4C951-CE52-41AF-B8EF-55DA4AB8C7B3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Core", "src\QueryFramework.Core\QueryFramework.Core.csproj", "{EF08B480-AEDF-4220-B824-BF7305732F78}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8} = {5C767F78-371E-49B7-BA0A-718E10ABB0C8}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.Core.Tests", "src\QueryFramework.Core.Tests\QueryFramework.Core.Tests.csproj", "{BFBEAB57-3C17-42C7-A0D2-5C6D04C79B9C}"
 EndProject
@@ -29,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		ChangeLog.md = ChangeLog.md
+		TODO.md = TODO.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.QueryParsers", "src\QueryFramework.QueryParsers\QueryFramework.QueryParsers.csproj", "{F6ACB7A7-3A89-489D-9F30-11BF88177E3B}"
@@ -39,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSearch.Tests", "src\QueryFramework.FileSystemSearch.Tests\QueryFramework.FileSystemSearch.Tests.csproj", "{BE082275-7AB6-434C-A758-5D5B1F74B3B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGeneration", "src\CodeGeneration\CodeGeneration.csproj", "{5C767F78-371E-49B7-BA0A-718E10ABB0C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration", "src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj", "{9294DCF9-A401-4588-A332-81C6AC69B492}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,10 +93,10 @@ Global
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE082275-7AB6-434C-A758-5D5B1F74B3B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C767F78-371E-49B7-BA0A-718E10ABB0C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9294DCF9-A401-4588-A332-81C6AC69B492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9294DCF9-A401-4588-A332-81C6AC69B492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9294DCF9-A401-4588-A332-81C6AC69B492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9294DCF9-A401-4588-A332-81C6AC69B492}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

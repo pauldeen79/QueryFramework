@@ -3,12 +3,12 @@
 public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
 {
     public FileSystemQuery(string path, string searchPattern, SearchOption searchOption)
-        : this(path, searchPattern, searchOption, null, null, Enumerable.Empty<ICondition>(), Enumerable.Empty<IQuerySortOrder>())
+        : this(path, searchPattern, searchOption, null, null, new ComposedEvaluatable(Enumerable.Empty<ComposableEvaluatable>()), Enumerable.Empty<IQuerySortOrder>())
     {
     }
 
     public FileSystemQuery(string path, string searchPattern, SearchOption searchOption, ISingleEntityQuery source)
-        : this(path, searchPattern, searchOption, source.Limit, source.Offset, source.Conditions, source.OrderByFields)
+        : this(path, searchPattern, searchOption, source.Limit, source.Offset, source.Filter, source.OrderByFields)
     {
     }
 
@@ -17,9 +17,9 @@ public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
                            SearchOption searchOption,
                            int? limit,
                            int? offset,
-                           IEnumerable<ICondition> conditions,
+                           ComposedEvaluatable filter,
                            IEnumerable<IQuerySortOrder> orderByFields)
-        : base(limit, offset, conditions, orderByFields)
+        : base(limit, offset, filter, orderByFields)
     {
         Path = path;
         SearchPattern = searchPattern;

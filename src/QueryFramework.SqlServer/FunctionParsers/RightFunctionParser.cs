@@ -2,11 +2,11 @@
 
 public class RightFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is RightFunction f)
+        if (expression is RightExpression f)
         {
-            sqlExpression = $"RIGHT({{0}}, {f.Length})";
+            sqlExpression = $"RIGHT({{0}}, {f.LengthExpression.Evaluate().Value})";
             return true;
         }
 

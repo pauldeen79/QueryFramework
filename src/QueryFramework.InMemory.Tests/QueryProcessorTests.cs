@@ -3,32 +3,15 @@
 public sealed class QueryProcessorTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private readonly DataProviderMock _dataProviderMock = new DataProviderMock();
+    private readonly DataProviderMock _dataProviderMock = new();
+    private readonly ContextDataProviderMock _contextDataProviderMock = new();
 
     public QueryProcessorTests()
         => _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkInMemory()
             .AddSingleton<IDataProvider>(_dataProviderMock)
+            .AddSingleton<IContextDataProvider>(_contextDataProviderMock)
             .BuildServiceProvider();
-
-    [Fact]
-    public void Unsupported_Query_Operator_Throws_On_FindPAged()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder
-            {
-                LeftExpression = new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property)),
-                Operator = (Operator)99
-            }).Build();
-
-        // Act & Assert
-        sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .And.Message.Should().StartWith("Unsupported operator: 99");
-    }
 
     [Fact]
     public void Unknown_FieldName_Throws_On_FindPaged()
@@ -42,36 +25,8 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act & Assert
         sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .WithParameterName("fieldName")
-           .And.Message.Should().StartWith("Fieldname [UnknownField] is not found on type [QueryFramework.InMemory.Tests.QueryProcessorTests+MyClass]");
-    }
-
-    [Fact]
-    public void Unsupported_Function_Throws_On_FindPaged()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateSut(items);
-        var functionMock = new Mock<IExpressionFunction>();
-        var functionBuilderMock = new Mock<IExpressionFunctionBuilder>();
-        functionBuilderMock.Setup(x => x.Build()).Returns(functionMock.Object);
-        functionMock.Setup(x => x.ToBuilder()).Returns(functionBuilderMock.Object);
-
-        var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder()
-                    .WithFieldName(nameof(MyClass.Property))
-                    .WithFunction(functionBuilderMock.Object))
-                .WithOperator(Operator.Equal)
-                .WithRightExpression(new ConstantExpressionBuilder().WithValue("something")))
-            .Build();
-
-        // Act & Assert
-        sut.Invoking(x => x.FindPaged<MyClass>(query))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .WithParameterName("expression")
-           .And.Message.Should().StartWith("Unsupported function: [IExpressionFunctionProxy]");
+           .Should().Throw<InvalidOperationException>()
+           .WithMessage("Evaluation failed");
     }
 
     [Fact]
@@ -136,6 +91,24 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act
         var actual = sut.FindPaged<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(1);
+        actual.First().Property.Should().Be("B");
+    }
+
+    [Fact]
+    public void Can_FindPaged_On_InMemoryList_With_One_Equals_Condition_Using_Context()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateContextSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context))))
+            .Build();
+
+        // Act
+        var actual = sut.FindPaged<MyClass>(query, "B");
 
         // Assert
         actual.Should().HaveCount(1);
@@ -578,10 +551,9 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A2" }, new MyClass { Property = "B23" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(new ConditionBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithFieldName(nameof(MyClass.Property))
-                                                                .WithFunction(new LengthFunctionBuilder()))
-                .WithOperator(Operator.Equal)
+            .Where(new ComposableEvaluatableBuilder()
+                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property))))
+                .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build();
 
@@ -655,30 +627,60 @@ public sealed class QueryProcessorTests : IDisposable
 
     private IQueryProcessor CreateSut(MyClass[] items)
     {
-        var conditionEvaluator = _serviceProvider.GetRequiredService<IConditionEvaluator>();
         _dataProviderMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable?>
         (
             query => items.Where
             (
-                item => Convert.ToBoolean
-                (
-                    conditionEvaluator.Evaluate
-                    (
-                        item,
-                        query.Conditions
-                    )
-                )
+                item => query.Filter.Evaluate(item).GetValueOrThrow("Evaluation failed")
             )
         );
         _dataProviderMock.ReturnValue = true;
         return _serviceProvider.GetRequiredService<IQueryProcessor>();
     }
 
+    private IContextQueryProcessor CreateContextSut(MyClass[] items)
+    {
+        _contextDataProviderMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable?>
+        (
+            (query, ctx) => items.Where
+            (
+                item =>query.Filter.Evaluate(new SurrogateContext(item, ctx)).GetValueOrThrow("Evaluation failed")
+            )
+        );
+        _contextDataProviderMock.ReturnValue = true;
+        return _serviceProvider.GetRequiredService<IContextQueryProcessor>();
+    }
+
     public void Dispose() => _serviceProvider.Dispose();
 
-    public class MyClass
+    public sealed class MyClass
     {
         public string? Property { get; set; }
         public string? Property2 { get; set; }
+    }
+
+    public sealed class UnsupportedOperatorBuilder : OperatorBuilder
+    {
+        public override Operator Build() => new UnsupportedOperator();
+    }
+
+    public sealed record UnsupportedOperator : Operator
+    {
+        protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed record SurrogateContext
+    {
+        public SurrogateContext(MyClass item, object? context)
+        {
+            Item = item;
+            Context = context;
+        }
+
+        public MyClass Item { get; }
+        public object? Context { get; }
     }
 }

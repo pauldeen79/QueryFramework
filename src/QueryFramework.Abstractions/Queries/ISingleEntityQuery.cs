@@ -4,6 +4,6 @@ public interface ISingleEntityQuery
 {
     int? Limit { get; }
     int? Offset { get; }
-    IReadOnlyCollection<ICondition> Conditions { get; }
+    ComposedEvaluatable Filter { get; }
     IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

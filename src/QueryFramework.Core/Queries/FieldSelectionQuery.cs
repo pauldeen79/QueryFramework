@@ -6,9 +6,9 @@ public record FieldSelectionQuery : IFieldSelectionQuery
                                         null,
                                         false,
                                         false,
-                                        Enumerable.Empty<ICondition>(),
+                                        new ComposedEvaluatable(Enumerable.Empty<ComposableEvaluatable>()),
                                         Enumerable.Empty<IQuerySortOrder>(),
-                                        Enumerable.Empty<IExpression>())
+                                        Enumerable.Empty<string>())
     {
     }
 
@@ -16,16 +16,16 @@ public record FieldSelectionQuery : IFieldSelectionQuery
                                int? offset,
                                bool distinct,
                                bool getAllFields,
-                               IEnumerable<ICondition> conditions,
+                               ComposedEvaluatable filter,
                                IEnumerable<IQuerySortOrder> orderByFields,
-                               IEnumerable<IExpression> fields)
+                               IEnumerable<string> fieldNames)
     {
         Limit = limit;
         Offset = offset;
         Distinct = distinct;
         GetAllFields = getAllFields;
-        Fields = new ReadOnlyValueCollection<IExpression>(fields);
-        Conditions = new ReadOnlyValueCollection<ICondition>(conditions);
+        FieldNames = new ReadOnlyValueCollection<string>(fieldNames);
+        Filter = filter;
         OrderByFields = new ReadOnlyValueCollection<IQuerySortOrder>(orderByFields);
         Validator.ValidateObject(this, new ValidationContext(this, null, null), true);
     }
@@ -34,7 +34,7 @@ public record FieldSelectionQuery : IFieldSelectionQuery
     public int? Offset { get; }
     public bool Distinct { get; }
     public bool GetAllFields { get; }
-    public IReadOnlyCollection<IExpression> Fields { get; }
-    public IReadOnlyCollection<ICondition> Conditions { get; }
+    public IReadOnlyCollection<string> FieldNames { get; }
+    public ComposedEvaluatable Filter { get; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

@@ -2,9 +2,9 @@
 
 public class SumFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is SumFunction)
+        if (expression is SumExpression)
         {
             sqlExpression = "SUM({0})";
             return true;

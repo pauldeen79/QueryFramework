@@ -8,7 +8,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueryFrameworkSqlServer(this IServiceCollection serviceCollection,
                                                                 Action<IServiceCollection> customConfigurationAction)
         => serviceCollection
-            .AddExpressionFramework()
             .AddCrossCuttingDataSql()
             .With(x =>
             {
@@ -16,15 +15,18 @@ public static class ServiceCollectionExtensions
                 if (!x.Any(y => y.ImplementationType == typeof(QueryDatabaseCommandProvider)))
                 {
                     x.AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
+                     .AddSingleton<IContextDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
                      .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
+                     .AddSingleton<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
                      .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
                      .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
                      .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()
                      .AddSingleton<ISqlExpressionEvaluator, DefaultSqlExpressionEvaluator>()
-                     .AddSingleton<ISqlExpressionEvaluatorProvider, FieldExpressionEvaluatorProvider>()
                      .AddSingleton<ISqlExpressionEvaluatorProvider, ConstantExpressionEvaluatorProvider>()
+                     .AddSingleton<ISqlExpressionEvaluatorProvider, ContextExpressionEvaluatorProvider>()
                      .AddSingleton<ISqlExpressionEvaluatorProvider, DelegateExpressionEvaluatorProvider>()
                      .AddSingleton<ISqlExpressionEvaluatorProvider, EmptyExpressionEvaluatorProvider>()
+                     .AddSingleton<ISqlExpressionEvaluatorProvider, FieldExpressionEvaluatorProvider>()
                      .AddSingleton<IQueryProcessor, DefaultQueryProcessor>()
                      .AddSingleton<IFunctionParser, CountFunctionFunctionParser>()
                      .AddSingleton<IFunctionParser, DayFunctionFunctionParser>()

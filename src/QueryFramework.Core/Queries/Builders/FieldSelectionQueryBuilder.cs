@@ -6,15 +6,15 @@ public sealed class FieldSelectionQueryBuilder : IFieldSelectionQueryBuilder
     public int? Offset { get; set; }
     public bool Distinct { get; set; }
     public bool GetAllFields { get; set; }
-    public List<IExpressionBuilder> Fields { get; set; }
-    public List<IConditionBuilder> Conditions { get; set; }
+    public List<string> FieldNames { get; set; }
+    public ComposedEvaluatableBuilder Filter { get; set; }
     public List<IQuerySortOrderBuilder> OrderByFields { get; set; }
 
     public FieldSelectionQueryBuilder()
     {
-        Fields = new List<IExpressionBuilder>();
-        Conditions = new List<IConditionBuilder>();
-        OrderByFields = new List<IQuerySortOrderBuilder>();
+        FieldNames = new();
+        Filter = new();
+        OrderByFields = new();
     }
 
     public IFieldSelectionQuery Build()
@@ -22,7 +22,7 @@ public sealed class FieldSelectionQueryBuilder : IFieldSelectionQueryBuilder
                                    Offset,
                                    Distinct,
                                    GetAllFields,
-                                   Conditions.Select(x => x.Build()),
+                                   Filter.BuildTyped(),
                                    OrderByFields.Select(x => x.Build()),
-                                   Fields.Select(x => x.Build()));
+                                   FieldNames);
 }

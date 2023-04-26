@@ -21,10 +21,8 @@ jobs:
           git fetch --no-tags --prune --depth=1 origin main
       - name: Restore
         run: dotnet restore
-      - name: Build code generation
-        run: dotnet build src/CodeGeneration/CodeGeneration.csproj -c Release --no-restore
-      - name: Run code generation
-        run: dotnet src/CodeGeneration/bin/Release/net7.0/CodeGeneration.dll
+      - name: Force first-time run of code generation
+        run: dotnet run --no-restore --project src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: sonarscan-dotnet
         uses: highbyte/sonarscan-dotnet@v2.2.2
         with:

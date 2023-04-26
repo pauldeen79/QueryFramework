@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2023-04-14
+
+### Changed
+- Upgraded to latest version of ExpressionFramework, causing some breaking changes in our own models.
+
 ### Changed
 - Refactored code, so evaluation of values on in memory data (run-time objects) can be used separately. As a result, some classes have been renamed and/or moved, and this version is not backwards compatible with earlier versions.
 

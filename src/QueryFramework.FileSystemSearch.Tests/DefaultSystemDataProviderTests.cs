@@ -6,7 +6,7 @@ public class DefaultSystemDataProviderTests
     public void GetData_Returns_Null_When_Query_Is_Not_FileSystemQuery()
     {
         // Act
-        var actual = new DefaultFileDataProvider(new Mock<IConditionEvaluator>().Object, new Mock<IFileDataProvider>().Object)
+        var actual = new DefaultFileDataProvider(new Mock<IFileDataProvider>().Object)
             .TryGetData<FileData>(new SingleEntityQuery(), out var result);
 
         // Assert
@@ -18,7 +18,7 @@ public class DefaultSystemDataProviderTests
     public void GetData_Returns_Null_When_Data_Is_Not_FileData_Or_LineData()
     {
         // Act
-        var actual = new DefaultFileDataProvider(new Mock<IConditionEvaluator>().Object, new Mock<IFileDataProvider>().Object)
+        var actual = new DefaultFileDataProvider(new Mock<IFileDataProvider>().Object)
             .TryGetData<object>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
@@ -33,11 +33,9 @@ public class DefaultSystemDataProviderTests
         var fileDataProviderMock = new Mock<IFileDataProvider>();
         var data = new[] { new Mock<IFileData>().Object }.AsEnumerable();
         fileDataProviderMock.Setup(x => x.Get(It.IsAny<IFileSystemQuery>())).Returns(data);
-        var conditionEvaluatorMock = new Mock<IConditionEvaluator>();
-        conditionEvaluatorMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IEnumerable<ICondition>>())).Returns(true);
 
         // Act
-        var actual = new DefaultFileDataProvider(conditionEvaluatorMock.Object, fileDataProviderMock.Object)
+        var actual = new DefaultFileDataProvider(fileDataProviderMock.Object)
             .TryGetData<IFileData>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
@@ -55,11 +53,9 @@ public class DefaultSystemDataProviderTests
         fileDataMock.SetupGet(x => x.Lines).Returns(lines);
         var fileData = new[] { fileDataMock.Object }.AsEnumerable();
         fileDataProviderMock.Setup(x => x.Get(It.IsAny<IFileSystemQuery>())).Returns(fileData);
-        var conditionEvaluatorMock = new Mock<IConditionEvaluator>();
-        conditionEvaluatorMock.Setup(x => x.Evaluate(It.IsAny<object?>(), It.IsAny<IEnumerable<ICondition>>())).Returns(true);
 
         // Act
-        var actual = new DefaultFileDataProvider(conditionEvaluatorMock.Object, fileDataProviderMock.Object)
+        var actual = new DefaultFileDataProvider(fileDataProviderMock.Object)
             .TryGetData<ILineData>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert

@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.FileSystemSearch;
 
-public class DefaultFileDataProvider : IDataProvider
+public class DefaultFileDataProvider : IContextDataProvider
 {
     private static readonly string[] _fileDataFields = new[]
     {
@@ -19,20 +19,21 @@ public class DefaultFileDataProvider : IDataProvider
         nameof(ILineData.LineNumber)
     };
 
-    private readonly IConditionEvaluator _conditionEvaluator;
     private readonly IFileDataProvider _fileDataProvider;
 
-    public DefaultFileDataProvider(IConditionEvaluator conditionEvaluator,
-                                   IFileDataProvider fileDataProvider)
+    public DefaultFileDataProvider(IFileDataProvider fileDataProvider)
     {
-        _conditionEvaluator = conditionEvaluator;
         _fileDataProvider = fileDataProvider;
     }
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result) where TResult : class
+    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result)
+        where TResult : class
+        => TryGetData(query, default, out result);
+
+    public bool TryGetData<TResult>(ISingleEntityQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
-        if (fileSystemQuery == null)
+        if (fileSystemQuery is null)
         {
             result = default;
             return false;
@@ -45,13 +46,13 @@ public class DefaultFileDataProvider : IDataProvider
             return false;
         }
 
-        var conditions = query.Conditions
+        var conditions = query.Filter.Conditions
             .Select(x =>
             new
             {
                 Condition = x,
-                LeftFieldName = (x.LeftExpression as IFieldExpression)?.FieldName,
-                RightFieldName = (x.RightExpression as IFieldExpression)?.FieldName
+                LeftFieldName = x.LeftExpression.TryGetFieldName(),
+                RightFieldName = x.RightExpression.TryGetFieldName()
             });
 
         var noDataConditions = conditions
@@ -63,7 +64,7 @@ public class DefaultFileDataProvider : IDataProvider
             .Select(x => x.Condition)
             .ToArray();
 
-        if (noDataConditions.Length > 0 && !_conditionEvaluator.Evaluate(null, noDataConditions))
+        if (noDataConditions.Length > 0 && !new ComposedEvaluatable(noDataConditions).Evaluate(context).Value)
         {
             result = Enumerable.Empty<TResult>();
             return true;
@@ -77,7 +78,7 @@ public class DefaultFileDataProvider : IDataProvider
             )
             .Select(x => x.Condition);
         var fileData = _fileDataProvider.Get(fileSystemQuery)
-            .Where(x => _conditionEvaluator.Evaluate(x, fileDataConditions))
+            .Where(x => new ComposedEvaluatable(fileDataConditions).Evaluate(x).Value)
             .ToArray();
 
         if (typeof(IFileData).IsAssignableFrom(typeof(TResult)))
@@ -95,7 +96,7 @@ public class DefaultFileDataProvider : IDataProvider
             .Select(x => x.Condition);
         result = fileData
             .SelectMany(x => x.Lines.Select((line, lineNumber) => new LineData(line, lineNumber + 1, x)))
-            .Where(x => _conditionEvaluator.Evaluate(x, lineDataConditions))
+            .Where(x => new ComposedEvaluatable(lineDataConditions).Evaluate(x).Value)
             .Cast<TResult>();
         return true;
     }

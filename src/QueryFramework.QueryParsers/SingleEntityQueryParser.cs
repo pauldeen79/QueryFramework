@@ -15,14 +15,14 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             .Replace("\r\n", " ")
             .Replace("\n", " ")
             .Replace("\t", " ")
-            .SafeSplit(' ', '\"', '\"');
+            .SplitDelimited(' ', '\"');
 
-        builder.Conditions = PerformQuerySearch(items) ?? PerformSimpleSearch(items);
+        builder.Filter = new ComposedEvaluatableBuilder().AddConditions(PerformQuerySearch(items) ?? PerformSimpleSearch(items));
 
         return builder;
     }
 
-    private List<IConditionBuilder>? PerformQuerySearch(string[] items)
+    private List<ComposableEvaluatableBuilder>? PerformQuerySearch(string[] items)
     {
         var itemCountIsCorrect = (items.Length - 3) % 4 == 0;
         if (!itemCountIsCorrect)
@@ -31,7 +31,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             return default;
 #pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
         }
-        var result = new List<IConditionBuilder>();
+        var result = new List<ComposableEvaluatableBuilder>();
         for (int i = 0; i < items.Length && itemCountIsCorrect; i += 4)
         {
             //verify that:
@@ -53,16 +53,16 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
             }
 
             var queryOperator = GetQueryOperator(@operator);
-            if (queryOperator == null)
+            if (queryOperator is null)
             {
                 return default;
             }
 
-            var condition = new ConditionBuilder
+            var condition = new ComposableEvaluatableBuilder
             {
                 LeftExpression = GetField(fieldName),
-                Operator = queryOperator.Value,
-                RightExpression = new ConstantExpressionBuilder().WithValue(GetValue(queryOperator.Value, fieldValue))
+                Operator = queryOperator,
+                RightExpression = new ConstantExpressionBuilder().WithValue(GetValue(queryOperator, fieldValue))
             };
 
             result.Add(condition);
@@ -71,17 +71,17 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         return result;
     }
 
-    private IExpressionBuilder GetField(string fieldName)
-        => _defaultFieldExpressionBuilderFactory == null
-            ? new TQueryExpressionBuilder().WithFieldName(fieldName)
+    private FieldExpressionBuilder GetField(string fieldName)
+        => _defaultFieldExpressionBuilderFactory is null
+            ? new TQueryExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)
             : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
 
-    private object? GetValue(Operator queryOperator, object fieldValue)
-        => queryOperator == Operator.IsNull || queryOperator == Operator.IsNotNull
+    private object? GetValue(OperatorBuilder queryOperator, object fieldValue)
+        => queryOperator is IsNullOperatorBuilder || queryOperator is IsNotNullOperatorBuilder
             ? null
             : fieldValue;
 
-    private List<IConditionBuilder> PerformSimpleSearch(string[] items)
+    private List<ComposableEvaluatableBuilder> PerformSimpleSearch(string[] items)
         => items
             .Where(x => !string.IsNullOrEmpty(x))
             .Select((x, i) => new
@@ -96,54 +96,54 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                                                  item.StartsWithMinus))
             .ToList();
 
-    private IConditionBuilder CreateQueryCondition(string value, bool startsWithPlusOrMinus, bool startsWithMinus)
-        => new ConditionBuilder
+    private ComposableEvaluatableBuilder CreateQueryCondition(string value, bool startsWithPlusOrMinus, bool startsWithMinus)
+        => new ComposableEvaluatableBuilder
         {
-            LeftExpression = _defaultFieldExpressionBuilderFactory == null
+            LeftExpression = _defaultFieldExpressionBuilderFactory is null
                 ? new TQueryExpressionBuilder()
                 : _defaultFieldExpressionBuilderFactory.Invoke(),
             RightExpression = new ConstantExpressionBuilder().WithValue(startsWithPlusOrMinus
                 ? value.Substring(1)
                 : value),
             Operator = startsWithMinus
-                ? Operator.NotContains
-                : Operator.Contains
+                ? new StringNotContainsOperatorBuilder()
+                : new StringContainsOperatorBuilder()
         };
 
-    private static Operator? GetQueryOperator(string @operator)
+    private static OperatorBuilder? GetQueryOperator(string @operator)
         => @operator.ToUpper(CultureInfo.InvariantCulture) switch
         {
             var x when
                     x == "=" ||
-                    x == "==" => Operator.Equal,
+                    x == "==" => new EqualsOperatorBuilder(),
             var x when
                     x == "<>" ||
                     x == "!=" ||
-                    x == "#" => Operator.NotEqual,
-            "<" => Operator.Smaller,
-            ">" => Operator.Greater,
-            "<=" => Operator.SmallerOrEqual,
-            ">=" => Operator.GreaterOrEqual,
-            "CONTAINS" => Operator.Contains,
+                    x == "#" => new NotEqualsOperatorBuilder(),
+            "<" => new IsSmallerOperatorBuilder(),
+            ">" => new IsGreaterOperatorBuilder(),
+            "<=" => new IsSmallerOrEqualOperatorBuilder(),
+            ">=" => new IsGreaterOrEqualOperatorBuilder(),
+            "CONTAINS" => new StringContainsOperatorBuilder(),
             var x when
                     x == "NOTCONTAINS" ||
-                    x == "NOT CONTAINS" => Operator.NotContains,
-            "IS" => Operator.IsNull,
+                    x == "NOT CONTAINS" => new StringNotContainsOperatorBuilder(),
+            "IS" => new IsNullOperatorBuilder(),
             var x when
                     x == "ISNOT" ||
-                    x == "IS NOT" => Operator.IsNotNull,
+                    x == "IS NOT" => new IsNotNullOperatorBuilder(),
             var x when
                 x == "STARTS WITH" ||
-                x == "STARTSWITH" => Operator.StartsWith,
+                x == "STARTSWITH" => new StartsWithOperatorBuilder(),
             var x when
                     x == "ENDS WITH" ||
-                    x == "ENDSWITH" => Operator.EndsWith,
+                    x == "ENDSWITH" => new EndsWithOperatorBuilder(),
             var x when
                 x == "NOT STARTS WITH" ||
-                x == "NOTSTARTSWITH" => Operator.NotStartsWith,
+                x == "NOTSTARTSWITH" => new NotStartsWithOperatorBuilder(),
             var x when
                 x == "NOT ENDS WITH" ||
-                x == "NOTENDSWITH" => Operator.NotEndsWith,
+                x == "NOTENDSWITH" => new NotEndsWithOperatorBuilder(),
             _ => null // Unknown operator
         };
 }

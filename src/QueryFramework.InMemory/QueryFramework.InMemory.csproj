@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="2.7.30" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="2.7.37" />
   </ItemGroup>
 
   <ItemGroup>

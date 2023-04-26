@@ -2,36 +2,19 @@
 
 public static class FieldSelectionQueryBuilderExtensions
 {
-    public static T Select<T>(this T instance, params IExpressionBuilder[] additionalFieldNames)
+    public static T Select<T>(this T instance, params string[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder
     {
         instance.GetAllFields = false;
-        instance.Fields.AddRange(additionalFieldNames);
+        instance.FieldNames.AddRange(additionalFieldNames);
         return instance;
     }
-
-    public static T Select<T>(this T instance, IEnumerable<IExpressionBuilder> additionalFieldNames)
-        where T : IFieldSelectionQueryBuilder
-        => instance.Select(additionalFieldNames.ToArray());
-
-    public static T Select<T>(this T instance, params string[] additionalFieldNames)
-        where T : IFieldSelectionQueryBuilder
-        => instance.Select(additionalFieldNames.Select(s => new FieldExpressionBuilder().WithFieldName(s)));
 
     public static T SelectAll<T>(this T instance)
         where T : IFieldSelectionQueryBuilder
     {
         instance.GetAllFields = true;
-        instance.Fields.Clear();
-        return instance;
-    }
-
-    public static T SelectDistinct<T>(this T instance, params IExpressionBuilder[] additionalFieldNames)
-        where T : IFieldSelectionQueryBuilder
-    {
-        instance.Distinct = true;
-        instance.GetAllFields = false;
-        instance.Fields.AddRange(additionalFieldNames);
+        instance.FieldNames.Clear();
         return instance;
     }
 
@@ -48,7 +31,7 @@ public static class FieldSelectionQueryBuilderExtensions
         instance.GetAllFields = getAllFields;
         if (getAllFields)
         {
-            instance.Fields.Clear();
+            instance.FieldNames.Clear();
         }
         return instance;
     }

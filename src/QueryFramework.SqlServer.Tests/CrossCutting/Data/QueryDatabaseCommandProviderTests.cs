@@ -20,18 +20,19 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         var settings = settingsMock.Object;
         settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
                             .Returns(true);
-        var pagedProviderMock = Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
+        var pagedProviderMock = Fixture.Freeze<Mock<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
         pagedProviderMock.Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(),
                                                    It.IsAny<DatabaseOperation>(),
                                                    It.IsAny<int>(),
-                                                   It.IsAny<int>()))
-                         .Returns<ISingleEntityQuery, DatabaseOperation, int, int>((source, operation, offset, pageSize)
+                                                   It.IsAny<int>(),
+                                                   It.IsAny<object?>()))
+                         .Returns<ISingleEntityQuery, DatabaseOperation, int, int, object?>((source, operation, offset, pageSize, context)
                          => new QueryPagedDatabaseCommandProvider
                          (
                              fieldInfoFactory.Object,
                              new[] { settingsProviderMock.Object },
                              evaluatorMock.Object
-                         ).CreatePaged(source, operation, offset, pageSize));
+                         ).CreatePaged(source, operation, offset, pageSize, context));
     }
 
     [Theory]

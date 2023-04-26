@@ -2,9 +2,9 @@
 
 public class TrimFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is TrimFunction)
+        if (expression is TrimExpression)
         {
             sqlExpression = "TRIM({0})";
             return true;

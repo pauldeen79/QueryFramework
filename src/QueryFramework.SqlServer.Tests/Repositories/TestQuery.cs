@@ -6,11 +6,11 @@ public record TestQuery : SingleEntityQuery, ITestQuery
     {
     }
 
-    public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Conditions, source.OrderByFields)
+    public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Filter, source.OrderByFields)
     {
     }
 
-    public TestQuery(int? limit, int? offset, IEnumerable<ICondition> conditions, IEnumerable<IQuerySortOrder> orderByFields) : base(limit, offset, conditions, orderByFields)
+    public TestQuery(int? limit, int? offset, ComposedEvaluatable filter, IEnumerable<IQuerySortOrder> orderByFields) : base(limit, offset, filter, orderByFields)
     {
     }
 }

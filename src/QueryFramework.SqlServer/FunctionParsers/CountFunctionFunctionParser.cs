@@ -2,9 +2,9 @@
 
 public class CountFunctionFunctionParser : IFunctionParser
 {
-    public bool TryParse(IExpressionFunction function, ISqlExpressionEvaluator evaluator, out string sqlExpression)
+    public bool TryParse(Expression expression, ISqlExpressionEvaluator evaluator, out string sqlExpression)
     {
-        if (function is CountFunction)
+        if (expression is CountExpression)
         {
             sqlExpression = "COUNT({0})";
             return true;

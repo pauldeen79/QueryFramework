@@ -2,34 +2,30 @@
 
 internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<OrderByWrapper>, IComparable
 {
-    public OrderByWrapper(object wrappedItem,
-                          IReadOnlyCollection<IQuerySortOrder> orderByFields,
-                          IExpressionEvaluator expressionEvaluator)
+    public OrderByWrapper(object wrappedItem, IReadOnlyCollection<IQuerySortOrder> orderByFields)
     {
         WrappedItem = wrappedItem;
         OrderByFields = orderByFields;
-        ExpressionEvaluator = expressionEvaluator;
     }
 
     public object WrappedItem { get; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
-    public IExpressionEvaluator ExpressionEvaluator { get; }
 
     public int CompareTo(OrderByWrapper other)
     {
         foreach (var orderByField in OrderByFields)
         {
-            var currentValue = ExpressionEvaluator.Evaluate(WrappedItem, orderByField.Field) as IComparable;
-            var otherValue = ExpressionEvaluator.Evaluate(other.WrappedItem, orderByField.Field);
-            if (currentValue == null && otherValue == null)
+            var currentValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
+            var otherValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
+            if (currentValue is null && otherValue is null)
             {
                 continue;
             }
-            if (currentValue == null)
+            if (currentValue is null)
             {
                 return CompareToCurrentNull(orderByField);
             }
-            if (otherValue == null)
+            if (otherValue is null)
             {
                 return CompareToOtherNull(orderByField);
             }
@@ -59,7 +55,7 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
         var hashCode = -521269828;
         foreach (var orderByField in OrderByFields)
         {
-            hashCode = hashCode * -1521134295 + ExpressionEvaluator.Evaluate(WrappedItem, orderByField.Field)?.GetHashCode() ?? 0;
+            hashCode = hashCode * -1521134295 + orderByField.FieldName?.GetHashCode() ?? 0;
         }
         return hashCode;
     }
