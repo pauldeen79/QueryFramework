@@ -18,7 +18,6 @@ public class AbstractionsBuildersInterfaces : QueryFrameworkCSharpClassBase, ICo
                   .WithPartial()
                   .WithNamespace(Constants.Namespaces.AbstractionsBuilders)
                   .WithName($"I{x.Name}")
-                  .With(x => x.Methods.RemoveAll(y => y.Static))
                   .Build()
         )
         .ToArray();

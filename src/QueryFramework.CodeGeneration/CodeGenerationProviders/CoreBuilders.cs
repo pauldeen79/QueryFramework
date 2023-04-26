@@ -12,8 +12,5 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvid
             Constants.Namespaces.Core,
             Constants.Namespaces.CoreBuilders,
             $"{Constants.Namespaces.AbstractionsBuilders}.I{{0}}"
-        )
-        .Cast<IClass>()
-        .Select(x => new ClassBuilder(x).With(y => y.Methods.RemoveAll(z => z.Static)).Build())
-        .ToArray();
+        );
 }
