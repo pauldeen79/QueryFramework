@@ -11,7 +11,7 @@ internal static class Program
         {
             var x when x.EndsWith(Constants.ProjectName) => Path.Combine(currentDirectory, @"src/"),
             var x when x.EndsWith(Constants.Namespaces.Abstractions) => Path.Combine(currentDirectory, @"../"),
-            var x when x.EndsWith("QueryFramework.CodeGeneration") => Path.Combine(currentDirectory, @"../"),
+            var x when x.EndsWith($"{Constants.ProjectName}.CodeGeneration") => Path.Combine(currentDirectory, @"../"),
             _ => Path.Combine(currentDirectory, @"../../../../")
         };
         var generateMultipleFiles = true;
@@ -36,10 +36,6 @@ internal static class Program
         {
             Console.WriteLine($"Code generation completed, check the output in {basePath}");
             Console.WriteLine($"Generated files: {multipleContentBuilder.Contents.Count()}");
-            foreach (var content in multipleContentBuilder.Contents)
-            {
-                Console.WriteLine(content.FileName);
-            }
         }
     }
 }
