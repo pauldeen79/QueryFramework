@@ -18,7 +18,6 @@
     <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.7.52" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.4.7" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.4.7" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
