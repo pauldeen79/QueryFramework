@@ -14,6 +14,11 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
 
     public string GetSqlExpression(Expression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context)
     {
+        if (expression is IUntypedExpressionProvider untypedProvider)
+        {
+            expression = untypedProvider.ToUntyped();
+        }
+
         var result = default(string?);
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
@@ -31,11 +36,6 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
             innerExpression = expression.TryGetInnerExpression();
             if (innerExpression is null)
             {
-                result = TryGetSqlExpression(expression);
-                if (result != null)
-                {
-                    return result;
-                }
                 throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
             }
 
@@ -48,6 +48,11 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
 
     public string GetLengthExpression(Expression expression, IQueryFieldInfo fieldInfo, object? context)
     {
+        if (expression is IUntypedExpressionProvider untypedProvider)
+        {
+            expression = untypedProvider.ToUntyped();
+        }
+
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
             if (sqlExpressionEvaluatorProvider.TryGetLengthExpression(expression, this, fieldInfo, context, out var providerResult))
