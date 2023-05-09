@@ -21,7 +21,7 @@ public class SingleEntityQueryBuilderExtensionsTests
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
         var value = (firstCondition.RightExpression as ConstantExpressionBuilder)?.Value;
-        ((ConstantExpressionBuilder)field!.FieldNameExpression).Value.Should().Be("field");
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
         firstCondition.Operator.Should().BeOfType<IsGreaterOperatorBuilder>();
         firstCondition.StartGroup.Should().BeTrue();
         firstCondition.EndGroup.Should().BeTrue();

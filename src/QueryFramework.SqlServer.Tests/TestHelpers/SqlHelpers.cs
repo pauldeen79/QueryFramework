@@ -2,6 +2,9 @@
 
 internal static class SqlHelpers
 {
+    internal static void ExpressionSqlShouldBe<T>(ITypedExpressionBuilder<T> expression, string expectedSqlForExpression, object? context)
+        => ExpressionSqlShouldBe(new ExpressionBuilderWrapper<T>(expression), expectedSqlForExpression, context);
+
     internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression, object? context)
     {
         // Arrange & Act

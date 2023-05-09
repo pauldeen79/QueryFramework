@@ -6,7 +6,7 @@ public class LeftFunctionParser : IFunctionParser
     {
         if (expression is LeftExpression f)
         {
-            sqlExpression = $"LEFT({{0}}, {f.LengthExpression.Evaluate().Value})";
+            sqlExpression = $"LEFT({{0}}, {f.LengthExpression.EvaluateTyped().Value})";
             return true;
         }
 

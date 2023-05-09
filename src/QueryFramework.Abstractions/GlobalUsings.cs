@@ -7,6 +7,7 @@ global using ExpressionFramework.Domain;
 global using ExpressionFramework.Domain.Builders;
 global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Builders.Expressions;
+global using ExpressionFramework.Domain.Contracts;
 global using ExpressionFramework.Domain.Evaluatables;
 global using ExpressionFramework.Domain.Expressions;
 global using QueryFramework.Abstractions.Builders;

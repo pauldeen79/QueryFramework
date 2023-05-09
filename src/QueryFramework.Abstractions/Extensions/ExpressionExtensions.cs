@@ -7,27 +7,19 @@ public static class ExpressionExtensions
         ?? throw new NotSupportedException($"Expression type {instance.GetType().FullName} is not supported. Only ConstantExpression and DelegateExpression are supported");
     
     public static string? TryGetFieldName(this Expression instance, object? context = null)
-        => instance is FieldExpression f
-            ? f.FieldNameExpression.TryGetValue(context)
-            : null;
-
-    public static Expression? TryGetInnerExpression(this Expression instance)
         => instance switch
         {
-            LeftExpression l => l.Expression,
-            RightExpression r => r.Expression,
-            CountExpression c => c.Expression,
-            SumExpression s => s.Expression,
-            ToLowerCaseExpression l => l.Expression,
-            ToUpperCaseExpression u => u.Expression,
-            StringLengthExpression l => l.Expression,
-            DayExpression d => d.Expression,
-            MonthExpression m => m.Expression,
-            YearExpression y => y.Expression,
-            TrimExpression t => t.Expression,
+            FieldExpression f => f.FieldNameExpression.TryGetValue(context),
+            TypedFieldExpression<string> t => t.FieldNameExpression.TryGetValue(context),
             _ => null
         };
 
+    public static Expression? TryGetInnerExpression(this Expression instance)
+        => instance.GetPrimaryExpression().Value;
+
     public static string? TryGetValue(this Expression expression, object? context)
         => expression.Evaluate(context).Value?.ToString();
+
+    public static T? TryGetValue<T>(this ITypedExpression<T> expression, object? context)
+        => expression.EvaluateTyped(context).Value;
 }

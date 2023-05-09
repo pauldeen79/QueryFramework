@@ -31,6 +31,11 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
             innerExpression = expression.TryGetInnerExpression();
             if (innerExpression is null)
             {
+                result = TryGetSqlExpression(expression);
+                if (result != null)
+                {
+                    return result;
+                }
                 throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
             }
 

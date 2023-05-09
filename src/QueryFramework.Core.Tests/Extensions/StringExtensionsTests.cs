@@ -88,7 +88,7 @@ public class StringExtensionsTests
         var @operator = actual.Operator;
         var field = leftExpression as FieldExpressionBuilder;
         var value = (rightExpression as ConstantExpressionBuilder)?.Value;
-        ((ConstantExpressionBuilder)field!.FieldNameExpression).Value.Should().Be("fieldname");
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("fieldname");
         if (expectedOperatorType == typeof(IsNullOperator)
             || expectedOperatorType == typeof(IsNullOrEmptyOperator)
             || expectedOperatorType == typeof(IsNullOrWhiteSpaceOperator)

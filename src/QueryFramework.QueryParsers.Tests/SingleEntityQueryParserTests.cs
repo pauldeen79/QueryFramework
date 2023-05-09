@@ -38,7 +38,7 @@ public class SingleEntityQueryParserTests
         actual.Filter.Conditions.Should().HaveCount(1);
         var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
         var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
-        ((ConstantExpressionBuilder)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
+        ((TypedConstantExpressionBuilder<string>)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
         actual.Filter.Conditions.First().Operator.Should().BeOfType(expectedOperatorBuilder);
         conditionValue.Should().Be(value == "NULL" ? null : value);
     }
@@ -57,7 +57,7 @@ public class SingleEntityQueryParserTests
         actual.Filter.Conditions.Should().HaveCount(1);
         var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
         var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
-        ((ConstantExpressionBuilder)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
+        ((TypedConstantExpressionBuilder<string>)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
         actual.Filter.Conditions.First().Operator.Should().BeOfType<EqualsOperatorBuilder>();
         conditionValue.Should().Be("My Value");
     }
@@ -105,5 +105,7 @@ public class SingleEntityQueryParserTests
     }
 
     private static SingleEntityQueryParser<ISingleEntityQueryBuilder, FieldExpressionBuilder> CreateSut()
-        => new(() => new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new ConstantExpressionBuilder().WithValue("PrefilledField")));
+        => new(() => new FieldExpressionBuilder()
+            .WithExpression(new ContextExpressionBuilder())
+            .WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("PrefilledField")));
 }

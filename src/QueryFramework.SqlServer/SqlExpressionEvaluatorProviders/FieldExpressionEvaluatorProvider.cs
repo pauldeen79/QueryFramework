@@ -4,6 +4,11 @@ public class FieldExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
     public bool TryGetLengthExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
     {
+        if (expression is IUntypedExpressionProvider x)
+        {
+            expression = x.ToUntyped();
+        }
+
         if (!(expression is FieldExpression fieldExpression))
         {
             result = null;
@@ -22,6 +27,11 @@ public class FieldExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 
     public bool TryGetSqlExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
     {
+        if (expression is IUntypedExpressionProvider x)
+        {
+            expression = x.ToUntyped();
+        }
+
         if (!(expression is FieldExpression fieldExpression))
         {
             result = null;

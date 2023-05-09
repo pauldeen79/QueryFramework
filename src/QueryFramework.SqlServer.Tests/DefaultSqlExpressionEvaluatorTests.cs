@@ -48,7 +48,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var sut = CreateSut();
 
         // Act
-        var actual = sut.GetSqlExpression(new StringLengthExpression(new ConstantExpression(expressionResult)), _fieldInfoMock.Object, _parameterBag, null);
+        var actual = sut.GetSqlExpression(new StringLengthExpression(new TypedConstantExpression<string>(expressionResult)), _fieldInfoMock.Object, _parameterBag, null);
 
         // Assert
         actual.Should().Be("Function(result)");

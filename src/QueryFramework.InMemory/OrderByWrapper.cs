@@ -15,8 +15,8 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
     {
         foreach (var orderByField in OrderByFields)
         {
-            var currentValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
-            var otherValue = new FieldExpression(new ContextExpression(), new ConstantExpression(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
+            var currentValue = new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
+            var otherValue = new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
             if (currentValue is null && otherValue is null)
             {
                 continue;

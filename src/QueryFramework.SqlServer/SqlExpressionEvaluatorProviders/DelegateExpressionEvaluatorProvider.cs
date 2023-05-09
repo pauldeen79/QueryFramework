@@ -4,6 +4,11 @@ public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
 {
     public bool TryGetLengthExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
     {
+        if (expression is IUntypedExpressionProvider x)
+        {
+            expression = x.ToUntyped();
+        }
+
         if (!(expression is DelegateExpression delegateExpression))
         {
             result = null;
@@ -16,6 +21,11 @@ public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
 
     public bool TryGetSqlExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
     {
+        if (expression is IUntypedExpressionProvider x)
+        {
+            expression = x.ToUntyped();
+        }
+
         if (!(expression is DelegateExpression delegateExpression))
         {
             result = null;
