@@ -22,7 +22,7 @@ public class SingleEntityQueryTests
         var conditions = new[]
         {
             new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field"))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
         };
@@ -48,13 +48,13 @@ public class SingleEntityQueryTests
         // Arrange
         var q1 = new SingleEntityQuery(5, 64, new ComposedEvaluatableBuilder()
             .AddConditions(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("A")))
             .BuildTyped(), Enumerable.Empty<IQuerySortOrder>());
         var q2 = new SingleEntityQuery(5, 64, new ComposedEvaluatableBuilder()
             .AddConditions(new ComposableEvaluatableBuilder()
-                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                                         .WithOperator(new EqualsOperatorBuilder())
                                                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("A")))
             .BuildTyped(), Enumerable.Empty<IQuerySortOrder>());

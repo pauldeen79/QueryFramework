@@ -104,7 +104,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateContextSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context))))
+            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(nameof(SurrogateContext.Context))))
             .Build();
 
         // Act

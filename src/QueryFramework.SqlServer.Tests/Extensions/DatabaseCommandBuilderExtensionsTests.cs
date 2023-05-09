@@ -312,7 +312,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field").Build() }));
         _builder.From("MyTable");
 
         // Act
@@ -327,8 +327,8 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1").Build(),
-                                                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field1").Build(),
+                                                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field2").Build() }));
         _builder.From("MyTable");
 
         // Act
@@ -343,7 +343,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFields)
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field").Build() }));
         _builder.From("MyTable");
         _fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>()))
                       .Returns<string>(x => x + "A");
@@ -360,7 +360,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.SetupGet(x => x.GroupByFilter)
-                  .Returns(new ComposedEvaluatable(new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                  .Returns(new ComposedEvaluatable(new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                                                                              .WithOperator(new EqualsOperatorBuilder())
                                                                                              .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                                                                              .BuildTyped() }));
@@ -380,8 +380,8 @@ public class DatabaseCommandBuilderExtensionsTests
         _queryMock.SetupGet(x => x.GroupByFilter)
                   .Returns(new ComposedEvaluatable(new[]
                   {
-                      new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value1")).BuildTyped(),
-                      new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value2")).BuildTyped()
+                      new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field1")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value1")).BuildTyped(),
+                      new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field2")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value2")).BuildTyped()
                   }));
         _builder.From("MyTable");
 
@@ -425,7 +425,7 @@ public class DatabaseCommandBuilderExtensionsTests
         _builder.From("MyTable");
 
         // Act
-        _  = _builder.AppendQueryCondition(new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+        _  = _builder.AppendQueryCondition(new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                                                              .WithOperator(new IsGreaterOperatorBuilder())
                                                                              .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                                                              .BuildTyped(),
@@ -449,7 +449,7 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Act
         _builder.AppendQueryCondition(new ComposableEvaluatableBuilder()
-                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                         .WithOperator(new IsGreaterOperatorBuilder())
                                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                         .BuildTyped(),
@@ -473,7 +473,7 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Act
         _builder.Invoking(x => x.AppendQueryCondition(new ComposableEvaluatableBuilder()
-                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                                         .WithOperator(new IsGreaterOperatorBuilder())
                                                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                                         .BuildTyped(),
@@ -500,7 +500,7 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Act
         _builder.AppendQueryCondition(new ComposableEvaluatableBuilder()
-                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                         .WithOperator((OperatorBuilder)Activator.CreateInstance(operatorBuilderType)!)
                                         .WithRightExpression(new EmptyExpressionBuilder())
                                         .BuildTyped(),
@@ -534,7 +534,7 @@ public class DatabaseCommandBuilderExtensionsTests
 
         // Act
         _builder.AppendQueryCondition(new ComposableEvaluatableBuilder()
-                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Field"))
                                         .WithOperator((OperatorBuilder)Activator.CreateInstance(operatorBuilderType)!)
                                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
                                         .BuildTyped(),

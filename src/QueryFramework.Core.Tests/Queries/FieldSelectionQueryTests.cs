@@ -25,7 +25,7 @@ public class FieldSelectionQueryTests
         var conditions = new[]
         {
             new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field"))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
         };

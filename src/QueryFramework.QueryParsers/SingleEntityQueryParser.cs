@@ -73,8 +73,8 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
 
     private FieldExpressionBuilder GetField(string fieldName)
         => _defaultFieldExpressionBuilderFactory is null
-            ? new TQueryExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)
-            : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldName(fieldName);
+            ? new TQueryExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(fieldName)
+            : _defaultFieldExpressionBuilderFactory.Invoke().WithFieldNameExpression(fieldName);
 
     private object? GetValue(OperatorBuilder queryOperator, object fieldValue)
         => queryOperator is IsNullOperatorBuilder || queryOperator is IsNotNullOperatorBuilder
