@@ -207,47 +207,47 @@ public static class ExpressionBuilderExtensions
 
     #region Built-in functions
     /// <summary>Gets the length of this expression.</summary>
-    public static ExpressionBuilder Len(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<int> Len(this ITypedExpressionBuilder<string> instance)
         => new StringLengthExpressionBuilder().WithExpression(instance);
 
     /// <summary>Trims the value of this expression.</summary>
-    public static ExpressionBuilder Trim(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<string> Trim(this ITypedExpressionBuilder<string> instance)
         => new TrimExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the upper-cased value of this expression.</summary>
-    public static ExpressionBuilder Upper(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<string> Upper(this ITypedExpressionBuilder<string> instance)
         => new ToUpperCaseExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the lower-cased value of this expression.</summary>
-    public static ExpressionBuilder Lower(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<string> Lower(this ITypedExpressionBuilder<string> instance)
         => new ToLowerCaseExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the left part of this expression.</summary>
-    public static ExpressionBuilder Left(this ExpressionBuilder instance, int length)
-        => new LeftExpressionBuilder().WithExpression(instance).WithLengthExpression(new ConstantExpressionBuilder().WithValue(length));
+    public static ITypedExpressionBuilder<string> Left(this ITypedExpressionBuilder<string> instance, int length)
+        => new LeftExpressionBuilder().WithExpression(instance).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the right part of this expression.</summary>
-    public static ExpressionBuilder Right(this ExpressionBuilder instance, int length)
-        => new RightExpressionBuilder().WithExpression(instance).WithLengthExpression(new ConstantExpressionBuilder().WithValue(length));
+    public static ITypedExpressionBuilder<string> Right(this ITypedExpressionBuilder<string> instance, int length)
+        => new RightExpressionBuilder().WithExpression(instance).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the year of this date expression.</summary>
-    public static ExpressionBuilder Year(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<int> Year(this ITypedExpressionBuilder<DateTime> instance)
         => new YearExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the month of this date expression.</summary>
-    public static ExpressionBuilder Month(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<int> Month(this ITypedExpressionBuilder<DateTime> instance)
         => new MonthExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the day of this date expression.</summary>
-    public static ExpressionBuilder Day(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<int> Day(this ITypedExpressionBuilder<DateTime> instance)
         => new DayExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the count of this expression.</summary>
-    public static ExpressionBuilder Count(this ExpressionBuilder instance)
+    public static ITypedExpressionBuilder<int> Count(this ITypedExpressionBuilder<IEnumerable> instance)
         => new CountExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the sum of this expression.</summary>
-    public static ExpressionBuilder Sum(this ExpressionBuilder instance)
+    public static ExpressionBuilder Sum(this ITypedExpressionBuilder<IEnumerable> instance)
         => new SumExpressionBuilder().WithExpression(instance);
     #endregion
 }

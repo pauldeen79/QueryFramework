@@ -102,4 +102,30 @@ public class ExpressionExtensionsTests
         // Act
         input.Invoking(x => x.GetFieldName()).Should().Throw<NotSupportedException>();
     }
+
+    [Fact]
+    public void GetFieldName_Returns_FieldName_On_Untyped_FieldExpression()
+    {
+        // Arrange
+        var input = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Name").Build();
+
+        // Act
+        var name = input.GetFieldName();
+
+        // Assert
+        name.Should().Be("Name");
+    }
+
+    [Fact]
+    public void GetFieldName_Returns_FieldName_On_Typed_FieldExpression()
+    {
+        // Arrange
+        var input = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Name").Build();
+
+        // Act
+        var name = input.GetFieldName();
+
+        // Assert
+        name.Should().Be("Name");
+    }
 }

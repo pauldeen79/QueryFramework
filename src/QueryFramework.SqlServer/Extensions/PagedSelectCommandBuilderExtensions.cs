@@ -37,7 +37,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.Select(", ");
             }
 
-            instance.Select(evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new ConstantExpression(expression.Item)), fieldInfo, parameterBag, context));
+            instance.Select(evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(expression.Item)), fieldInfo, parameterBag, context));
         }
 
         return instance;
@@ -96,7 +96,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 evaluator,
                 parameterBag,
                 context,
-                queryCondition.Combination == Combination.And
+                (queryCondition.Combination ?? Combination.And) == Combination.And
                     ? instance.And
                     : instance.Or
             );
@@ -146,7 +146,7 @@ internal static class PagedSelectCommandBuilderExtensions
         {
             if (having.Index > 0)
             {
-                instance.Having($" {having.Item.Combination.ToSql()} ");
+                instance.Having($" {(having.Item.Combination ?? Combination.And).ToSql()} ");
             }
             instance.AppendQueryCondition
             (
@@ -200,7 +200,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.OrderBy(", ");
             }
 
-            instance.OrderBy($"{evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new ConstantExpression(querySortOrder.Item.FieldName)), fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
+            instance.OrderBy($"{evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(querySortOrder.Item.FieldName)), fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
         }
 
         if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
@@ -241,7 +241,7 @@ internal static class PagedSelectCommandBuilderExtensions
     {
         var builder = new StringBuilder();
 
-        if (condition.StartGroup)
+        if (condition.StartGroup == true)
         {
             builder.Append("(");
         }
@@ -278,7 +278,7 @@ internal static class PagedSelectCommandBuilderExtensions
 
         AppendOperatorAndValue(condition, fieldInfo, builder, evaluator, parameterBag, context);
 
-        if (condition.EndGroup)
+        if (condition.EndGroup == true)
         {
             builder.Append(")");
         }

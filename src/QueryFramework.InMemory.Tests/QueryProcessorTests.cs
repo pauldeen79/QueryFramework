@@ -552,7 +552,7 @@ public sealed class QueryProcessorTests : IDisposable
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property))))
+                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property))))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build();

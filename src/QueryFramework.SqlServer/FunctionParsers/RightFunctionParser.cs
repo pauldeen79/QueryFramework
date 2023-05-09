@@ -6,7 +6,7 @@ public class RightFunctionParser : IFunctionParser
     {
         if (expression is RightExpression f)
         {
-            sqlExpression = $"RIGHT({{0}}, {f.LengthExpression.Evaluate().Value})";
+            sqlExpression = $"RIGHT({{0}}, {f.LengthExpression.EvaluateTyped().Value})";
             return true;
         }
 

@@ -10,6 +10,7 @@ global using CrossCutting.Data.Core;
 global using CrossCutting.Data.Sql.Builders;
 global using CrossCutting.Data.Sql.Extensions;
 global using ExpressionFramework.Domain;
+global using ExpressionFramework.Domain.Contracts;
 global using ExpressionFramework.Domain.Domains;
 global using ExpressionFramework.Domain.Evaluatables;
 global using ExpressionFramework.Domain.Expressions;

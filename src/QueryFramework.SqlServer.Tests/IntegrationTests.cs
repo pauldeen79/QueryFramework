@@ -74,14 +74,13 @@ public sealed class IntegrationTests : IDisposable
         dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
     }
 
-
     [Fact]
     public void Can_Get_SqlStatement_For_Single_Expression_With_Use_Of_Context()
     {
         // Arrange
         var query = new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new ConstantExpressionBuilder().WithValue("Field1")))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ContextExpressionBuilder())
             )
