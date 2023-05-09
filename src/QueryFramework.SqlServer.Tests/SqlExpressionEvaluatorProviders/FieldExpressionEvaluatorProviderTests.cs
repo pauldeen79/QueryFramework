@@ -25,7 +25,7 @@ public class FieldExpressionEvaluatorProviderTests
     {
         // Arrange
         var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Test").Build();
+        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Test").Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x.ToUpperInvariant());
@@ -44,7 +44,7 @@ public class FieldExpressionEvaluatorProviderTests
     {
         // Arrange
         var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Test").Build();
+        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Test").Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         var parameterBag = new ParameterBag();
@@ -77,7 +77,7 @@ public class FieldExpressionEvaluatorProviderTests
     {
         // Arrange
         var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Test").Build();
+        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Test").Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
         fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
@@ -95,7 +95,7 @@ public class FieldExpressionEvaluatorProviderTests
     {
         // Arrange
         var sut = new FieldExpressionEvaluatorProvider();
-        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("Test").Build();
+        var expression = new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Test").Build();
         var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
         var fieldInfoMock = new Mock<IQueryFieldInfo>();
 

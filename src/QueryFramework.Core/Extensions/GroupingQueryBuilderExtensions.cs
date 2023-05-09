@@ -8,7 +8,7 @@ public static class GroupingQueryBuilderExtensions
 
     public static T GroupBy<T>(this T instance, params string[] additionalFieldNames)
         where T : IGroupingQueryBuilder
-        => instance.GroupBy(additionalFieldNames.Select(s => new FieldExpressionBuilder().WithFieldNameExpression(s)));
+        => instance.GroupBy(additionalFieldNames.Select(s => new FieldExpressionBuilder().WithFieldName(s)));
 
     public static T GroupBy<T>(this T instance, IEnumerable<string> additionalFieldNames)
         where T : IGroupingQueryBuilder

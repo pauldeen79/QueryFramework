@@ -6,7 +6,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Len_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Len();
@@ -19,7 +19,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Len_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Len();
@@ -32,7 +32,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Trim_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Trim();
@@ -45,7 +45,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Trim_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Upper();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Upper();
 
         // Act
         var actual = sut.Trim();
@@ -58,7 +58,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Upper_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Upper();
@@ -71,7 +71,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Upper_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Upper();
@@ -84,7 +84,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Lower_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Lower();
@@ -97,7 +97,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Lower_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Lower();
@@ -110,7 +110,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Left_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Left(2);
@@ -123,7 +123,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Left_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Left(2);
@@ -136,7 +136,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Right_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Right(2);
@@ -149,7 +149,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Right_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Right(2);
@@ -162,7 +162,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Year_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Year();
@@ -175,7 +175,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Month_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Month();
@@ -188,7 +188,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Day_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Day();
@@ -201,7 +201,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Count_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Build());
+        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build());
 
         // Act
         var actual = sut.Count();
@@ -214,7 +214,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Sum_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<IEnumerable>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field"));
+        var sut = new TypedFieldExpressionBuilder<IEnumerable>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Sum();
@@ -227,7 +227,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Sum_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field")).Trim().Build().ToUntyped());
+        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim().Build().ToUntyped());
 
         // Act
         var actual = sut.Sum();

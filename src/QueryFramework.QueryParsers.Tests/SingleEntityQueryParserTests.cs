@@ -107,5 +107,5 @@ public class SingleEntityQueryParserTests
     private static SingleEntityQueryParser<ISingleEntityQueryBuilder, FieldExpressionBuilder> CreateSut()
         => new(() => new FieldExpressionBuilder()
             .WithExpression(new ContextExpressionBuilder())
-            .WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("PrefilledField")));
+            .WithFieldName("PrefilledField"));
 }

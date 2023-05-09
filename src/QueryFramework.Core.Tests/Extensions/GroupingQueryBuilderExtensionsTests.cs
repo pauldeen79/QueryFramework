@@ -9,7 +9,7 @@ public class GroupingQueryBuilderExtensionsTests
         var sut = new GroupingQueryBuilder();
 
         // Act
-        var result = sut.GroupBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("MyField"));
+        var result = sut.GroupBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("MyField"));
 
         // Assert
         result.GroupByFields.Should().HaveCount(1);
@@ -22,7 +22,7 @@ public class GroupingQueryBuilderExtensionsTests
         var sut = new GroupingQueryBuilder();
 
         // Act
-        var result = sut.GroupBy(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("MyField") }.AsEnumerable());
+        var result = sut.GroupBy(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("MyField") }.AsEnumerable());
 
         // Assert
         result.GroupByFields.Should().HaveCount(1);

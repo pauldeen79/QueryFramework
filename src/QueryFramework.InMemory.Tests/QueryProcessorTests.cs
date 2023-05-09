@@ -104,7 +104,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateContextSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(nameof(SurrogateContext.Context))))
+            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context))))
             .Build();
 
         // Act
@@ -552,7 +552,7 @@ public sealed class QueryProcessorTests : IDisposable
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(nameof(MyClass.Property))))
+                .WithLeftExpression(new StringLengthExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(MyClass.Property))))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
             .Build();

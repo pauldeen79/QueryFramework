@@ -21,11 +21,11 @@ public class GroupingQueryBuilderTests
     public void Can_Construct_GroupingQueryBuilder_With_Custom_Values()
     {
         // Arrange
-        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field"))
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
                                                                    .WithOperator(new EqualsOperatorBuilder())
                                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
         var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field") };
-        var groupByFields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field") };
+        var groupByFields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field") };
         var limit = 1;
         var offset = 2;
 
@@ -53,11 +53,11 @@ public class GroupingQueryBuilderTests
     public void Can_Build_Entity_From_Builder()
     {
         // Arrange
-        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field"))
+        var conditions = new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
                                                                    .WithOperator(new EqualsOperatorBuilder())
                                                                    .WithRightExpression(new ConstantExpressionBuilder().WithValue("value")) };
         var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field") };
-        var groupByFields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field") };
+        var groupByFields = new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field") };
         var limit = 1;
         var offset = 2;
         var sut = new GroupingQueryBuilder

@@ -80,7 +80,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new SingleEntityQueryBuilder()
             .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression(new TypedConstantExpressionBuilder<string>().WithValue("Field1")))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"))
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ContextExpressionBuilder())
             )

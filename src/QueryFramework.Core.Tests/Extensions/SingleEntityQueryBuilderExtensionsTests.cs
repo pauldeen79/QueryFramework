@@ -9,7 +9,7 @@ public class SingleEntityQueryBuilderExtensionsTests
         var sut = new SingleEntityQueryBuilder();
 
         // Act
-        var actual = sut.Where(new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldNameExpression("field"))
+        var actual = sut.Where(new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
                                                                  .WithOperator(new IsGreaterOperatorBuilder())
                                                                  .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
                                                                  .WithStartGroup()
