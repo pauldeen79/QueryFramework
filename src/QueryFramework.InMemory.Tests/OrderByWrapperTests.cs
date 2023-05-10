@@ -153,6 +153,43 @@ public class OrderByWrapperTests
     }
 
     [Fact]
+    public void GetHashCode_Returns_Correct_Result_On_Equal_Objects()
+    {
+        // Arrange
+        var data = new MyClass { Property = "a" };
+        var other = new MyClass { Property = "a" };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
+        var sutData = new OrderByWrapper(data, orderByFields);
+        var sutOther = new OrderByWrapper(other, orderByFields);
+
+        // Act
+        var actualHash = sutData.GetHashCode();
+        var otherHash = sutOther.GetHashCode();
+
+        // Assert
+        actualHash.Should().Be(otherHash);
+    }
+
+    [Fact]
+    public void GetHashCode_Returns_Correct_Result_On_Unequal_Objects()
+    {
+        // Arrange
+        var data = new MyClass { Property = "a" };
+        var other = new MyClass { Property = "a" };
+        var orderByFieldsData = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
+        var orderByFieldsOther = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Descending).Build() };
+        var sutData = new OrderByWrapper(data, orderByFieldsData);
+        var sutOther = new OrderByWrapper(other, orderByFieldsOther);
+
+        // Act
+        var actualHash = sutData.GetHashCode();
+        var otherHash = sutOther.GetHashCode();
+
+        // Assert
+        actualHash.Should().NotBe(otherHash);
+    }
+
+    [Fact]
     public void Operator_Equals_Returns_Correct_Result()
     {
         // Arrange

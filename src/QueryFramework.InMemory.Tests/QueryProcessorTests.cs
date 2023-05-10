@@ -481,13 +481,31 @@ public sealed class QueryProcessorTests : IDisposable
     }
 
     [Fact]
-    public void Can_FindOne_On_InMemoryList_With_OrderByDescending()
+    public void Can_FindOne_On_InMemoryList_With_OrderByDescending_Using_String_Extension()
     {
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
             .OrderByDescending(nameof(MyClass.Property))
+            .Build();
+
+        // Act
+        var actual = sut.FindOne<MyClass>(query);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual?.Property.Should().Be("C");
+    }
+
+    [Fact]
+    public void Can_FindOne_On_InMemoryList_With_OrderByDescending_Using_QuerySortOrderBuilder_Extension()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" }, new MyClass { Property = "C" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .OrderByDescending(new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)))
             .Build();
 
         // Act
