@@ -15,8 +15,8 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
     {
         foreach (var orderByField in OrderByFields)
         {
-            var currentValue = new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(orderByField.FieldName)).Evaluate(WrappedItem).Value as IComparable;
-            var otherValue = new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(orderByField.FieldName)).Evaluate(other.WrappedItem).Value;
+            var currentValue = orderByField.FieldNameExpression.Evaluate(WrappedItem).Value as IComparable;
+            var otherValue = orderByField.FieldNameExpression.Evaluate(other.WrappedItem).Value;
             if (currentValue is null && otherValue is null)
             {
                 continue;
@@ -55,7 +55,8 @@ internal sealed class OrderByWrapper : IComparable<OrderByWrapper>, IEquatable<O
         var hashCode = -521269828;
         foreach (var orderByField in OrderByFields)
         {
-            hashCode = hashCode * -1521134295 + orderByField.FieldName?.GetHashCode() ?? 0;
+            hashCode = hashCode * -1521134295 + orderByField.FieldNameExpression.GetHashCode();
+            hashCode = hashCode * -1521134295 + orderByField.Order.GetHashCode();
         }
         return hashCode;
     }

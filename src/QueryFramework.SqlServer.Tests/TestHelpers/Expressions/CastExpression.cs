@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
+﻿namespace QueryFramework.SqlServer.Tests.TestHelpers.Expressions;
 
-internal sealed record CastExpression<T> : Expression, ITypedExpression<T>
+public sealed record CastExpression<T> : Expression, ITypedExpression<T>
 {
     private readonly Expression _sourceExpression;
 

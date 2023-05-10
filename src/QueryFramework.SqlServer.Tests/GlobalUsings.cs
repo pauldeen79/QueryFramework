@@ -42,4 +42,5 @@ global using QueryFramework.SqlServer.Extensions;
 global using QueryFramework.SqlServer.SqlExpressionEvaluatorProviders;
 global using QueryFramework.SqlServer.Tests.Repositories;
 global using QueryFramework.SqlServer.Tests.TestHelpers;
+global using QueryFramework.SqlServer.Tests.TestHelpers.Expressions;
 global using Xunit;
