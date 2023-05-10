@@ -179,5 +179,30 @@ public sealed class IntegrationTests : IDisposable
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
     }
 
+    [Fact]
+    public void Can_Get_SqlStatement_For_OrderBy_Clause_With_SqlInjection_Safe_Code()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder()
+            .OrderBy(new QuerySortOrderBuilder()
+                .WithFieldNameExpression(new ToUpperCaseExpressionBuilder()
+                    .WithExpression(new TypedConstantExpressionBuilder<string>()
+                        .WithValue("Sql injection, here we go")
+                    )
+                )).Build();
+
+        // Act
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
+
+        // Assert
+        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(@p0) ASC");
+        actual.CommandParameters.Should().NotBeNull();
+        var dict = actual.CommandParameters as IDictionary<string, object>;
+        dict.Should().NotBeNull();
+        dict.Should().HaveCount(1);
+        dict?.Keys.Should().BeEquivalentTo("@p0");
+        dict?.Values.Should().BeEquivalentTo(new[] { "Sql injection, here we go" });
+    }
+
     public void Dispose() => _serviceProvider.Dispose();
 }
