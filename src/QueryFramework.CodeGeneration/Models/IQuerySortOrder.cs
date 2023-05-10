@@ -3,7 +3,7 @@
 public interface IQuerySortOrder
 {
     [Required]
-    ITypedExpression<string> FieldNameExpression { get; }
+    Expression FieldNameExpression { get; }
 
     QuerySortOrderDirection Order { get; }
 }
