@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Core.Expressions;
+﻿namespace QueryFramework.SqlServer.Tests.TestHelpers.Expressions;
 
 public sealed class CastExpressionBuilder<T> : ITypedExpressionBuilder<T>
 {
