@@ -159,5 +159,25 @@ public sealed class IntegrationTests : IDisposable
         actual.CommandParameters.Should().NotBeNull();
     }
 
+    [Fact]
+    public void Can_Get_SqlStatement_For_OrderBy_Clause_With_Function()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder()
+            .OrderBy(new QuerySortOrderBuilder()
+                .WithFieldNameExpression(new ToUpperCaseExpressionBuilder()
+                    .WithExpression(new TypedFieldExpressionBuilder<string>()
+                        .WithExpression(new ContextExpressionBuilder())
+                        .WithFieldNameExpression("Field1")
+                    )
+                )).Build();
+
+        // Act
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
+
+        // Assert
+        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
+    }
+
     public void Dispose() => _serviceProvider.Dispose();
 }

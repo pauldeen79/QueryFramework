@@ -9,8 +9,12 @@ public static class ExpressionExtensions
     public static string? TryGetFieldName(this Expression instance, object? context = null)
         => instance switch
         {
+            ConstantExpression c => c.Value?.ToString(),
+            DelegateExpression d => d.Value(context)?.ToString(),
             FieldExpression f => f.FieldNameExpression.TryGetValue(context),
             TypedFieldExpression<string> t => t.FieldNameExpression.TryGetValue(context),
+            TypedConstantExpression<string> c => c.Value,
+            TypedDelegateExpression<string> d => d.Value(context),
             _ => null
         };
 

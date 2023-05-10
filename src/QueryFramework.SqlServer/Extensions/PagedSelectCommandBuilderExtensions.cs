@@ -200,7 +200,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.OrderBy(", ");
             }
 
-            instance.OrderBy($"{evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(querySortOrder.Item.FieldName)), fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
+            instance.OrderBy($"{evaluator.GetSqlExpression(querySortOrder.Item.FieldNameExpression, fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
         }
 
         if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))

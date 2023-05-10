@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
+﻿namespace QueryFramework.Core.Expressions;
 
-internal sealed class CastExpressionBuilder<T> : ITypedExpressionBuilder<T>
+public sealed class CastExpressionBuilder<T> : ITypedExpressionBuilder<T>
 {
     private readonly Expression _expression;
 

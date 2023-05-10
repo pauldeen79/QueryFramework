@@ -8,7 +8,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -26,7 +26,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = null };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(direction).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -44,7 +44,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = null };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(direction).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -62,7 +62,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "b" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), direction) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(direction).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -78,7 +78,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -94,7 +94,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -110,7 +110,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -126,7 +126,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -142,7 +142,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -158,7 +158,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -174,7 +174,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "a" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -190,7 +190,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -206,7 +206,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -222,7 +222,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
@@ -238,7 +238,7 @@ public class OrderByWrapperTests
         // Arrange
         var data = new MyClass { Property = "a" };
         var other = new MyClass { Property = "b" };
-        var orderByFields = new[] { new QuerySortOrder(nameof(MyClass.Property), QuerySortOrderDirection.Ascending) };
+        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName(nameof(MyClass.Property)).WithOrder(QuerySortOrderDirection.Ascending).Build() };
         var sut = new OrderByWrapper(data, orderByFields);
 
         // Act
