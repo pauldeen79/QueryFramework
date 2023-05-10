@@ -201,7 +201,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Count_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build());
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
         var actual = sut.Count();
@@ -227,7 +227,7 @@ public class ExpressionExtensionsTests
     public void Can_Use_Sum_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new CastExpressionBuilder<IEnumerable>(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim().Build().ToUntyped());
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
         var actual = sut.Sum();

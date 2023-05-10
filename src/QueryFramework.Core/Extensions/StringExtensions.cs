@@ -144,45 +144,45 @@ public static class StringExtensions
 
     #region Built-in functions
     /// <summary>Gets the length of this field.</summary>
-    public static ITypedExpressionBuilder<int> Len(this string fieldName)
+    public static ExpressionBuilder Len(this string fieldName)
         => new StringLengthExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Trims the value of this field.</summary>
-    public static ITypedExpressionBuilder<string> SqlTrim(this string fieldName)
+    public static ExpressionBuilder SqlTrim(this string fieldName)
         => new TrimExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the upper-cased value of this field.</summary>
-    public static ITypedExpressionBuilder<string> Upper(this string fieldName)
+    public static ExpressionBuilder Upper(this string fieldName)
         => new ToUpperCaseExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the lower-cased value of this field.</summary>
-    public static ITypedExpressionBuilder<string> Lower(this string fieldName)
+    public static ExpressionBuilder Lower(this string fieldName)
         => new ToLowerCaseExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the left part of this expression.</summary>
     /// <param name="length">Number of positions</param>
-    public static ITypedExpressionBuilder<string> Left(this string fieldName, int length)
+    public static ExpressionBuilder Left(this string fieldName, int length)
         => new LeftExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the right part of this expression.</summary>
     /// <param name="length">Number of positions</param>
-    public static ITypedExpressionBuilder<string> Right(this string fieldName, int length)
+    public static ExpressionBuilder Right(this string fieldName, int length)
         => new RightExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName)).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the year of this date field.</summary>
-    public static ITypedExpressionBuilder<int> Year(this string fieldName)
+    public static ExpressionBuilder Year(this string fieldName)
         => new YearExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the month of this date field.</summary>
-    public static ITypedExpressionBuilder<int> Month(this string fieldName)
+    public static ExpressionBuilder Month(this string fieldName)
         => new MonthExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the day of this date expression.</summary>
-    public static ITypedExpressionBuilder<int> Day(this string fieldName)
+    public static ExpressionBuilder Day(this string fieldName)
         => new DayExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<DateTime>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the count of this field.</summary>
-    public static ITypedExpressionBuilder<int> Count(this string fieldName)
+    public static ExpressionBuilder Count(this string fieldName)
         => new CountExpressionBuilder().WithExpression(new TypedFieldExpressionBuilder<IEnumerable>().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName));
 
     /// <summary>Gets the sum of this field.</summary>

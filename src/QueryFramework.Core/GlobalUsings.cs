@@ -21,4 +21,5 @@ global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Abstractions.Queries.Builders;
 global using QueryFramework.Core.Builders;
+global using QueryFramework.Core.Expressions;
 global using QueryFramework.Core.Extensions;
