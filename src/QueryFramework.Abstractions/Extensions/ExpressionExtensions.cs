@@ -2,6 +2,9 @@
 
 public static class ExpressionExtensions
 {
+    public static string GetFieldName<T>(this ITypedExpression<T> instance, object? context = null)
+        => instance.ToUntyped().GetFieldName(context);
+
     public static string GetFieldName(this Expression instance, object? context = null)
         => instance.TryGetFieldName(context)
         ?? throw new NotSupportedException($"Expression type {instance.GetType().FullName} is not supported. Only ConstantExpression and DelegateExpression are supported");

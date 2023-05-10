@@ -6,6 +6,7 @@ global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Domain;
 global using ExpressionFramework.Domain.Builders.Expressions;
+global using ExpressionFramework.Domain.Contracts;
 global using ModelFramework.CodeGeneration.CodeGenerationProviders;
 global using ModelFramework.Common;
 global using ModelFramework.Common.Extensions;

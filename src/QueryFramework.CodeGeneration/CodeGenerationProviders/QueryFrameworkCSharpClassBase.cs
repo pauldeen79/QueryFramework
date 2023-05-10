@@ -19,25 +19,26 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     protected override IEnumerable<KeyValuePair<string, string>> GetCustomBuilderNamespaceMapping()
     {
+        yield return new KeyValuePair<string, string>(typeof(ITypedExpression<>).Namespace!, $"{typeof(Expression).Namespace}.Contracts");
         yield return new KeyValuePair<string, string>(typeof(Expression).Namespace!, $"{typeof(Expression).Namespace}.Builders");
     }
 
     protected override void FixImmutableBuilderProperty(ClassPropertyBuilder property, string typeName)
     {
-        if (typeName == typeof(Expression).FullName)
+        if (typeName == typeof(ITypedExpression<string>).FullName.FixTypeName())
         {
             property.ConvertSinglePropertyToBuilderOnBuilder
             (
                 !string.IsNullOrEmpty(typeName.GetGenericArguments())
                     ? $"{GetBuilderNamespace(typeName.WithoutProcessedGenerics())}.{typeName.WithoutProcessedGenerics().GetClassName()}Builder<{typeName.GetGenericArguments()}>"
                     : $"{GetBuilderNamespace(typeName)}.{typeName.GetClassName()}Builder",
-                GetCustomBuilderConstructorInitializeExpressionForSingleProperty(property, typeName),
-                GetCustomBuilderMethodParameterExpression(typeName)
+                GetCustomBuilderConstructorInitializeExpressionForSingleProperty(property, typeof(Expression).FullName!),
+                "{0}{2}.Build()"
             );
 
             if (!property.IsNullable)
             {
-                property.SetDefaultValueForBuilderClassConstructor(new Literal($"new {typeof(EmptyExpressionBuilder).FullName}()"));
+                property.SetDefaultValueForBuilderClassConstructor(new Literal($"new {typeof(DefaultExpressionBuilder<string>).FullName.FixTypeName()}()"));
             }
         }
         else
@@ -48,10 +49,10 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     private string GetCustomBuilderConstructorInitializeExpressionForSingleProperty(ClassPropertyBuilder property, string typeName)
         => property.IsNullable
-            ? "{0} = source.{0} == null ? null : " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})"
-            : "{0} = " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})";
-    // When lazy initialization has been fixed, use this instead:
+            ? "{0} = source.{0} == null ? null : " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.CreateTyped<" + property.TypeName.ToString().GetGenericArguments().FixTypeName() + ">(source.{0})"
+            : "{0} = " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.CreateTyped<" + property.TypeName.ToString().GetGenericArguments().FixTypeName() + ">(source.{0})";
+        // When lazy initialization has been fixed, use this instead:
         ///=> property.IsNullable
-        ///    ? "_{1}Delegate = new (() => source.{0} == null ? null : " + GetBuilderNamespace(typeName) + "." + GetEntityClassName(typeName) + "BuilderFactory.Create(source.{0}))"
-        ///    : "_{1}Delegate = new (() => " + GetBuilderNamespace(typeName) + "." + GetEntityClassName(typeName) + "BuilderFactory.Create(source.{0}))";
+        ///    ? "_{1}Delegate = new (() => source.{0} == null ? null : " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create<" + property.TypeName.ToString().GetGenericArguments().FixTypeName() + ">(source.{0}))"
+        ///    : "_{1}Delegate = new (() => " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create<" + property.TypeName.ToString().GetGenericArguments().FixTypeName() + ">(source.{0}))";
 }
