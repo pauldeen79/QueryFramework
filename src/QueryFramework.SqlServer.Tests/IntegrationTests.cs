@@ -170,7 +170,8 @@ public sealed class IntegrationTests : IDisposable
                         .WithExpression(new ContextExpressionBuilder())
                         .WithFieldNameExpression("Field1")
                     )
-                )).Build();
+                )
+            ).Build();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -189,7 +190,8 @@ public sealed class IntegrationTests : IDisposable
                     .WithExpression(new TypedConstantExpressionBuilder<string>()
                         .WithValue("Sql injection, here we go")
                     )
-                )).Build();
+                )
+            ).Build();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -202,6 +204,28 @@ public sealed class IntegrationTests : IDisposable
         dict.Should().HaveCount(1);
         dict?.Keys.Should().BeEquivalentTo("@p0");
         dict?.Values.Should().BeEquivalentTo(new[] { "Sql injection, here we go" });
+    }
+
+    [Fact]
+    public void Can_Get_SqlStatement_For_OrderBy_Clause_With_DefaultExpression()
+    {
+        // Arrange
+        var query = new SingleEntityQueryBuilder()
+            .OrderBy(new QuerySortOrderBuilder()
+                .WithFieldNameExpression(new DefaultExpressionBuilder<string>())
+            ).Build();
+
+        // Act
+        var actual = SqlHelpers.GetExpressionCommand(query, default);
+
+        // Assert
+        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY @p0 ASC");
+        actual.CommandParameters.Should().NotBeNull();
+        var dict = actual.CommandParameters as IDictionary<string, object>;
+        dict.Should().NotBeNull();
+        dict.Should().HaveCount(1);
+        dict?.Keys.Should().BeEquivalentTo("@p0");
+        dict?.Values.Should().BeEquivalentTo(new object?[] { null });
     }
 
     public void Dispose() => _serviceProvider.Dispose();
