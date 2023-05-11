@@ -201,10 +201,10 @@ public class ExpressionExtensionsTests
     public void Can_Use_Count_Function_On_Basic_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Cast<IEnumerable>();
 
         // Act
-        var actual = sut.Cast<IEnumerable>().Count();
+        var actual = sut.Count();
 
         // Assert
         SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(Field)", default);
@@ -227,10 +227,10 @@ public class ExpressionExtensionsTests
     public void Can_Use_Sum_Function_On_Expression_With_Existing_Expression()
     {
         // Arrange
-        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
+        var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim().Cast<string, IEnumerable>();
 
         // Act
-        var actual = sut.Cast<string, IEnumerable>().Sum();
+        var actual = sut.Sum();
 
         // Assert
         SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(TRIM(Field))", default);
