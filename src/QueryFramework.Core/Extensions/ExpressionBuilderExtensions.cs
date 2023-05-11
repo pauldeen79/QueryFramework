@@ -5,6 +5,9 @@ public static class ExpressionBuilderExtensions
     public static ITypedExpressionBuilder<T> Cast<T>(this ExpressionBuilder builder)
         => new CastExpressionBuilder<T>(builder);
 
+    public static ITypedExpressionBuilder<TTarget> Cast<TSource, TTarget>(this ITypedExpressionBuilder<TSource> builder)
+        => new CastExpressionBuilder<TTarget>(builder as ExpressionBuilder ?? throw new ArgumentOutOfRangeException(nameof(builder), "Could not convert typed expression builder to expression builder"));
+
     #region Generated code
     /// <summary>Creates a query condition builder with the Contains query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
@@ -210,47 +213,47 @@ public static class ExpressionBuilderExtensions
 
     #region Built-in functions
     /// <summary>Gets the length of this expression.</summary>
-    public static ExpressionBuilder Len(this ExpressionBuilder instance)
-        => new StringLengthExpressionBuilder().WithExpression(instance.Cast<string>());
+    public static ITypedExpressionBuilder<int> Len(this ITypedExpressionBuilder<string> instance)
+        => new StringLengthExpressionBuilder().WithExpression(instance);
 
     /// <summary>Trims the value of this expression.</summary>
-    public static ExpressionBuilder Trim(this ExpressionBuilder instance)
-        => new TrimExpressionBuilder().WithExpression(instance.Cast<string>());
+    public static ITypedExpressionBuilder<string> Trim(this ITypedExpressionBuilder<string> instance)
+        => new TrimExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the upper-cased value of this expression.</summary>
-    public static ExpressionBuilder Upper(this ExpressionBuilder instance)
-        => new ToUpperCaseExpressionBuilder().WithExpression(instance.Cast<string>());
+    public static ITypedExpressionBuilder<string> Upper(this ITypedExpressionBuilder<string> instance)
+        => new ToUpperCaseExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the lower-cased value of this expression.</summary>
-    public static ExpressionBuilder Lower(this ExpressionBuilder instance)
-        => new ToLowerCaseExpressionBuilder().WithExpression(instance.Cast<string>());
+    public static ITypedExpressionBuilder<string> Lower(this ITypedExpressionBuilder<string> instance)
+        => new ToLowerCaseExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the left part of this expression.</summary>
-    public static ExpressionBuilder Left(this ExpressionBuilder instance, int length)
-        => new LeftExpressionBuilder().WithExpression(instance.Cast<string>()).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
+    public static ITypedExpressionBuilder<string> Left(this ITypedExpressionBuilder<string> instance, int length)
+        => new LeftExpressionBuilder().WithExpression(instance).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the right part of this expression.</summary>
-    public static ExpressionBuilder Right(this ExpressionBuilder instance, int length)
-        => new RightExpressionBuilder().WithExpression(instance.Cast<string>()).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
+    public static ITypedExpressionBuilder<string> Right(this ITypedExpressionBuilder<string> instance, int length)
+        => new RightExpressionBuilder().WithExpression(instance).WithLengthExpression(new TypedConstantExpressionBuilder<int>().WithValue(length));
 
     /// <summary>Gets the year of this date expression.</summary>
-    public static ExpressionBuilder Year(this ExpressionBuilder instance)
-        => new YearExpressionBuilder().WithExpression(instance.Cast<DateTime>());
+    public static ITypedExpressionBuilder<int> Year(this ITypedExpressionBuilder<DateTime> instance)
+        => new YearExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the month of this date expression.</summary>
-    public static ExpressionBuilder Month(this ExpressionBuilder instance)
-        => new MonthExpressionBuilder().WithExpression(instance.Cast<DateTime>());
+    public static ITypedExpressionBuilder<int> Month(this ITypedExpressionBuilder<DateTime> instance)
+        => new MonthExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the day of this date expression.</summary>
-    public static ExpressionBuilder Day(this ExpressionBuilder instance)
-        => new DayExpressionBuilder().WithExpression(instance.Cast<DateTime>());
+    public static ITypedExpressionBuilder<int> Day(this ITypedExpressionBuilder<DateTime> instance)
+        => new DayExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the count of this expression.</summary>
-    public static ExpressionBuilder Count(this ExpressionBuilder instance)
-        => new CountExpressionBuilder().WithExpression(instance.Cast<IEnumerable>());
+    public static ITypedExpressionBuilder<int> Count(this ITypedExpressionBuilder<IEnumerable> instance)
+        => new CountExpressionBuilder().WithExpression(instance);
 
     /// <summary>Gets the sum of this expression.</summary>
-    public static ExpressionBuilder Sum(this ExpressionBuilder instance)
-        => new SumExpressionBuilder().WithExpression(instance.Cast<IEnumerable>());
+    public static ExpressionBuilder Sum(this ITypedExpressionBuilder<IEnumerable> instance)
+        => new SumExpressionBuilder().WithExpression(instance);
     #endregion
 }

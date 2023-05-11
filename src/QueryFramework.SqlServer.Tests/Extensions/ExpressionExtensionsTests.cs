@@ -204,7 +204,7 @@ public class ExpressionExtensionsTests
         var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field");
 
         // Act
-        var actual = sut.Count();
+        var actual = sut.Cast<IEnumerable>().Count();
 
         // Assert
         SqlHelpers.ExpressionSqlShouldBe(actual, "COUNT(Field)", default);
@@ -230,7 +230,7 @@ public class ExpressionExtensionsTests
         var sut = new TypedFieldExpressionBuilder<string>().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Trim();
 
         // Act
-        var actual = sut.Sum();
+        var actual = sut.Cast<string, IEnumerable>().Sum();
 
         // Assert
         SqlHelpers.ExpressionSqlShouldBe(actual, "SUM(TRIM(Field))", default);
