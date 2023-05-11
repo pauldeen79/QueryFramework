@@ -2,6 +2,14 @@
 
 public static class ExpressionBuilderExtensions
 {
+    public static ITypedExpressionBuilder<T> Cast<T>(this ExpressionBuilder builder)
+        => new CastExpressionBuilder<T>().WithSourceExpression(builder);
+
+    public static ITypedExpressionBuilder<TTarget> Cast<TSource, TTarget>(this ITypedExpressionBuilder<TSource> builder)
+        => new CastExpressionBuilder<TTarget>()
+            .WithSourceExpression(builder as ExpressionBuilder
+                ?? new InvalidExpressionBuilder().WithErrorMessageExpression("Could not convert typed expression builder to expression builder"));
+
     #region Generated code
     /// <summary>Creates a query condition builder with the Contains query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>

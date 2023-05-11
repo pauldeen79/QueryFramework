@@ -4,7 +4,7 @@ public static class ExpressionExtensions
 {
     public static string GetFieldName(this Expression instance, object? context = null)
         => instance.TryGetFieldName(context)
-        ?? throw new NotSupportedException($"Expression type {instance.GetType().FullName} is not supported. Only ConstantExpression and DelegateExpression are supported");
+        ?? throw new NotSupportedException($"Expression type {instance.GetType().FullName} is not supported. Only FieldExpression and TypedFieldExpression<string> are supported");
     
     public static string? TryGetFieldName(this Expression instance, object? context = null)
         => instance switch
@@ -15,7 +15,7 @@ public static class ExpressionExtensions
         };
 
     public static Expression? TryGetInnerExpression(this Expression instance)
-        => instance.GetPrimaryExpression().Value;
+        => instance.GetSingleContainedExpression().Value;
 
     public static string? TryGetValue(this Expression expression, object? context)
         => expression.Evaluate(context).Value?.ToString();
