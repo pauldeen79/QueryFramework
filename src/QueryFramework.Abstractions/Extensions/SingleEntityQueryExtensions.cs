@@ -3,7 +3,7 @@
 public static class SingleEntityQueryExtensions
 {
     public static T Validate<T>(this T instance)
-        where T : ISingleEntityQuery
+        where T : IQuery
     {
         if (instance is IValidatableObject validatableQuery)
         {
@@ -17,7 +17,7 @@ public static class SingleEntityQueryExtensions
         return instance;
     }
 
-    public static string GetTableName(this ISingleEntityQuery instance, string tableName)
+    public static string GetTableName(this IQuery instance, string tableName)
         => instance is IDataObjectNameQuery dataObjectNameQuery && !string.IsNullOrEmpty(dataObjectNameQuery.DataObjectName)
             ? dataObjectNameQuery.DataObjectName
             : tableName;

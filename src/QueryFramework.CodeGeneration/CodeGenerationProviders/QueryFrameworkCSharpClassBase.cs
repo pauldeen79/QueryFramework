@@ -11,14 +11,16 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     protected override Type RecordCollectionType => typeof(IReadOnlyCollection<>);
     protected override Type RecordConcreteCollectionType => typeof(ReadOnlyValueCollection<>);
     protected override string SetMethodNameFormatString => string.Empty;
+    protected override string AddMethodNameFormatString => string.Empty;
     protected override string ProjectName => Constants.ProjectName;
-    protected override Type BuilderClassCollectionType => typeof(IEnumerable<>);
+    protected override Type BuilderClassCollectionType => typeof(List<>);
     protected override ArgumentValidationType ValidateArgumentsInConstructor => ArgumentValidationType.Shared;
     protected override bool InheritFromInterfaces => true;
     protected override bool UseLazyInitialization => false; // this needs to be disabled, because extension method-based builders currently don't support this
 
     protected override IEnumerable<KeyValuePair<string, string>> GetCustomBuilderNamespaceMapping()
     {
+        yield return new KeyValuePair<string, string>(typeof(ComposedEvaluatable).Namespace!, $"{typeof(Evaluatable).Namespace}.Builders.Evaluatables");
         yield return new KeyValuePair<string, string>(typeof(Expression).Namespace!, $"{typeof(Expression).Namespace}.Builders");
     }
 

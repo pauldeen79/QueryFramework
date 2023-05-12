@@ -1,7 +1,7 @@
 ﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
-public class AbstractionsBuildersInterfaces : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
+public class AbstractionsCoreBuildersInterfaces : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
     public override string Path => $"{Constants.Namespaces.Abstractions}/Builders";
 
