@@ -35,6 +35,9 @@ jobs:
         run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test -c Release --no-restore
+      - name: Statistics
+        shell: pwsh
+        run: ./csharp-stats.ps1
   #    - name: Pack
   #      if: matrix.os == 'ubuntu-latest'
   #      run: dotnet pack -v normal -c Release -o ./artifacts --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID
