@@ -32,6 +32,11 @@ Command to install t4plus:
 dotnet tool install --global pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd --version 0.2.3
 ```
 
+Command to build code generation project (example where you are in the root directory):
+```bash
+dotnet build ./src/ExpressionFramework.CodeGeneration/ExpressionFramework.CodeGeneration.csproj
+```
+
 Command to run code generation (example where you are in the root directory):
 ```bash
 t4plus assembly -a ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/QueryFramework.CodeGeneration.dll -p . -u ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/
@@ -43,4 +48,10 @@ You can use the following post build event in the code generation project to run
 <Target Name="PostBuild" AfterTargets="PostBuildEvent">
   <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../ -u $(TargetDir)" />
 </Target>
+```
+
+Note that if you use a post build event, this will cause SonarCloud to fail because t4plus is not available in the docker image where the code analysis runs. To fix this, you need the following PowerShell script:
+
+```powershell
+((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
 ```
