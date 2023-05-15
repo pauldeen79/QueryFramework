@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(SolutionDir)src -u $(TargetDir)" />
+    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../src -u $(TargetDir)" />
   </Target>
 
 </Project>
