@@ -36,7 +36,7 @@ jobs:
       - name: Build code generation artifacts
         run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: Run code generation
-        run: t4plus assembly -a ${{ env.GITHUB_WORKSPACE }}/src/QueryFramework.CodeGenertion/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p . -u src/QueryFramework.CodeGenertion/bin/release/net7.0/
+        run: t4plus assembly -a $GITHUB_WORKSPACE/src/QueryFramework.CodeGenertion/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p . -u src/QueryFramework.CodeGenertion/bin/release/net7.0/
 
       # option 2: post build event (which needs to be removed in Sonar build pipeline at least)
       #- name: Force first-time run of code generation
@@ -97,7 +97,7 @@ jobs:
           echo Clean Version: $VERSION
           dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
           dotnet build -c Release src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-          t4plus assembly -a ${{ env.GITHUB_WORKSPACE }}/src/QueryFramework.CodeGenertion/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p . -u src/QueryFramework.CodeGenertion/bin/release/net7.0/
+          t4plus assembly -a $GITHUB_WORKSPACE/src/QueryFramework.CodeGenertion/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p . -u src/QueryFramework.CodeGenertion/bin/release/net7.0/
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
