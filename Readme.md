@@ -24,8 +24,18 @@ See unit tests for more examples.
 # Code generation
 
 I am currently not storing generated files in the code repository.
-To generate, you have to trigger the t4plus dotnet tool from either Visual Studio (hit F5) or a command prompt.
+To generate, you have to trigger the code generation tool from either Visual Studio (hit F5) or a command prompt.
 This will replace all generated code.
+
+I am using t4plus, which is a dotnet global tool, so it can run on all environments.
+The models and code generation are stored in an assembly which is also added to the solution.
+Note that there is no project reference to this project, it is only needed at build time.
+
+At this moment, I am not using automatic code generation after changing code generation models or providers.
+This can be enabled, but is a bit cumbersome in build pipelines.
+First, the file system isn't updated fast enough, so the build will not succeed on a fresh cloned instance.
+Second, Sonar runs the post build command in a Docker image, and this image doesn't know how to load the code generation tool.
+Because of these problems, I have commented the post build event. You may uncomment it if you find yourself constantly re-generating stuff.
 
 Command to install t4plus:
 ```bash

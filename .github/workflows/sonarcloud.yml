@@ -23,11 +23,20 @@ jobs:
         run: dotnet restore
       - name: Install T4Plus
         run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
-      - name: Force first-time run of code generation
-        run: dotnet build --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-      - name: Remove post build event
-        shell: pwsh
-        run: ((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+
+      # option 1: no post build event
+      - name: Build code generation artifacts
+        run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+      - name: Run code generation
+        run: t4plus assembly -a src/QueryFramework.CodeGenertion/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p . -u src/QueryFramework.CodeGenertion/bin/release/net7.0/
+
+      # option 2: post build event (which needs to be removed in Sonar build pipeline at least)
+      #- name: Force first-time run of code generation
+      #  run: dotnet build --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+      #- name: Remove post build event
+      #  shell: pwsh
+      #  run: ((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+
       - name: sonarscan-dotnet
         uses: highbyte/sonarscan-dotnet@v2.2.2
         with:

@@ -19,8 +19,8 @@
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.6.76" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../ -u $(TargetDir)" />
-  </Target>
+  </Target>-->
 
 </Project>
