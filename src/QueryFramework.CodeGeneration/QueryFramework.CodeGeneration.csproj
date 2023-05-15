@@ -16,11 +16,11 @@
   <ItemGroup>
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.5.9" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.5.9" />
-    <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.6.75" />
+    <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.6.76" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../src -u $(TargetDir)" />
+    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../../src -u $(TargetDir)" />
   </Target>
 
 </Project>
