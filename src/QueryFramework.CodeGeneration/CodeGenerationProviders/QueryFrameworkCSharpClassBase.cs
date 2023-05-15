@@ -8,6 +8,8 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     public override void Initialize(bool generateMultipleFiles, bool skipWhenFileExists, string basePath)
     {
+        // first argument: force generating multiple files
+        // second argument: force to always overwrite existing files (in other words: use generation instead of scaffolding)
         base.Initialize(true, false, basePath);
     }
 
