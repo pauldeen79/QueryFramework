@@ -25,6 +25,8 @@ jobs:
         run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
       - name: Force first-time run of code generation
         run: dotnet build --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+      - name: Remove post build event
+        run: ((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: sonarscan-dotnet
         uses: highbyte/sonarscan-dotnet@v2.2.2
         with:
