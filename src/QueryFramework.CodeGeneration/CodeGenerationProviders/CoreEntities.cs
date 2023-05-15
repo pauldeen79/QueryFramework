@@ -1,7 +1,7 @@
 ﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
-public class CoreEntities : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
+public class CoreEntities : QueryFrameworkCSharpClassBase
 {
     public override string Path => Constants.Namespaces.Core;
 
