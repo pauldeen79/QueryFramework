@@ -32,7 +32,15 @@ Command to install t4plus:
 dotnet tool install --global pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd --version 0.2.3
 ```
 
-Command to run code generation:
+Command to run code generation (example where you are in the root directory):
 ```bash
-dotnet build ./src/ExpressionFramework.CodeGeneration/ExpressionFramework.CodeGeneration.csproj
+t4plus assembly -a ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/QueryFramework.CodeGeneration.dll -p . -u ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/
+```
+
+You can use the following post build event in the code generation project to run it automatically after changing code generation models or providers:
+
+```xml
+<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../ -u $(TargetDir)" />
+</Target>
 ```
