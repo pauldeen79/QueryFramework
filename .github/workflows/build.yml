@@ -30,7 +30,7 @@ jobs:
       - name: Restore
         run: dotnet restore
       - name: Install T4Plus
-        run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
+        run: dotnet tool install pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
       - name: Force first-time run of code generation
         run: dotnet build --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: Build
