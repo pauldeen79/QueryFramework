@@ -1,9 +1,11 @@
 # QueryFramework
+
 Abstraction for executing SELECT queries on Sql Server, built on top of System.Data. (IDbConnection)
 
 Fluent extensions to build queries.
 
 Example using in-memory query provider:
+
 ```C#
 var items = new[]
 {
@@ -38,19 +40,24 @@ Second, Sonar runs the post build command in a Docker image, and this image does
 Because of these problems, I have commented the post build event. You may uncomment it if you find yourself constantly re-generating stuff.
 
 Command to install t4plus:
+
 ```bash
 dotnet tool install --global pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd --version 0.2.3
 ```
 
 Command to build code generation project (example where you are in the root directory):
+
 ```bash
-dotnet build ./src/ExpressionFramework.CodeGeneration/ExpressionFramework.CodeGeneration.csproj
+dotnet build -c Debug src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
 ```
 
 Command to run code generation (example where you are in the root directory):
-```bash
-t4plus assembly -a ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/QueryFramework.CodeGeneration.dll -p . -u ./src/QueryFramework.CodeGenertion/bin/debug/net7.0/
+
+```powershell
+Invoke-Expression "t4plus assembly -a $(Resolve-Path "src/QueryFramework.CodeGeneration/bin/Debug/net7.0/QueryFramework.CodeGeneration.dll") -p $(Resolve-Path "src") -u $(Resolve-Path "src/QueryFramework.CodeGeneration/bin/Debug/net7.0")"
 ```
+
+Note that the -a argument of the t4plus assembly command currently requires a fully qualified path to the code generation assembly.
 
 You can use the following post build event in the code generation project to run it automatically after changing code generation models or providers:
 
