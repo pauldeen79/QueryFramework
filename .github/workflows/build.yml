@@ -98,7 +98,7 @@ jobs:
           dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
           dotnet restore
           dotnet build -c Release src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-          t4plus assembly -a src/QueryFramework.CodeGeneration/bin/release/net7.0/QueryFramework.CodeGeneration.dll -p src/
+          t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net7.0/QueryFramework.CodeGeneration.dll -p src/
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
