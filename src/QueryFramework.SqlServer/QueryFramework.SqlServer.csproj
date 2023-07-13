@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,17 +6,12 @@
     <Nullable>enable</Nullable>
     <PackageId>pauldeen79.QueryFramework.SqlServer</PackageId>
     <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
-    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Default\**" />
     <EmbeddedResource Remove="Default\**" />
     <None Remove="Default\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
 
   <ItemGroup>
