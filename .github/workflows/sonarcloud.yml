@@ -33,6 +33,11 @@ jobs:
         run: |
           dotnet tool install --global dotnet-sonarscanner
 
+      - name: Restore
+        run: dotnet restore
+      - name: Install T4Plus
+        run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
+
       # option 1: no post build event
       - name: Build code generation artifacts
         run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
@@ -52,6 +57,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet-sonarscanner begin /k:"pauldeen79_QueryFramework" /n:"QueryFramework" /o:"pauldeen79" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
-          dotnet build
-          dotnet test --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet build --no-restore
+          dotnet test --no-restore --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
