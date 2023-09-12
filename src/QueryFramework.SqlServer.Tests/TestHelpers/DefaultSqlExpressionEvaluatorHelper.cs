@@ -2,7 +2,7 @@
 
 internal static class DefaultSqlExpressionEvaluatorHelper
 {
-    internal static void UseRealSqlExpressionEvaluator(Mock<ISqlExpressionEvaluator> evaluatorMock, ParameterBag parameterBag)
+    internal static void UseRealSqlExpressionEvaluator(ISqlExpressionEvaluator evaluatorMock, ParameterBag parameterBag)
     {
         var evaluator = new DefaultSqlExpressionEvaluator
         (
@@ -10,11 +10,11 @@ internal static class DefaultSqlExpressionEvaluatorHelper
                                                     new ConstantExpressionEvaluatorProvider() },
             Enumerable.Empty<IFunctionParser>()
         );
-        evaluatorMock.Setup(x => x.GetSqlExpression(It.IsAny<Expression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<ParameterBag>(), It.IsAny<object?>()))
-                     .Returns<Expression, IQueryFieldInfo, ParameterBag, object?>((expression, fieldInfo, _, context)
-                      => evaluator.GetSqlExpression(expression, fieldInfo, parameterBag, context));
-        evaluatorMock.Setup(x => x.GetLengthExpression(It.IsAny<Expression>(), It.IsAny<IQueryFieldInfo>(), It.IsAny<object?>()))
-                     .Returns<Expression, IQueryFieldInfo, object?>((expression, fieldInfo, context)
-                      => evaluator.GetLengthExpression(expression, fieldInfo, context));
+        evaluatorMock.GetSqlExpression(Arg.Any<Expression>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), Arg.Any<object?>())
+                     .Returns(x
+                      => evaluator.GetSqlExpression(x.ArgAt<Expression>(0), x.ArgAt<IQueryFieldInfo>(1), parameterBag, x.ArgAt<object?>(3)));
+        evaluatorMock.GetLengthExpression(Arg.Any<Expression>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<object?>())
+                     .Returns(x
+                      => evaluator.GetLengthExpression(x.ArgAt<Expression>(0), x.ArgAt<IQueryFieldInfo>(1), x.ArgAt<object?>(2)));
     }
 }

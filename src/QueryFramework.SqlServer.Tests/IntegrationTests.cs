@@ -4,19 +4,18 @@ public sealed class IntegrationTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
     private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();
-    private readonly Mock<IDatabaseEntityRetriever<TestEntity>> _retrieverMock;
+    private readonly IDatabaseEntityRetriever<TestEntity> _retrieverMock;
 
     public IntegrationTests()
     {
-        _retrieverMock = new Mock<IDatabaseEntityRetriever<TestEntity>>();
-        var databaseEntityRetrieverProviderMock = new Mock<IDatabaseEntityRetrieverProvider>();
-        var retriever = _retrieverMock.Object;
-        databaseEntityRetrieverProviderMock.Setup(x => x.TryCreate(It.IsAny<ISingleEntityQuery>(), out retriever))
-                                           .Returns(true);
+        _retrieverMock = Substitute.For<IDatabaseEntityRetriever<TestEntity>>();
+        var databaseEntityRetrieverProviderMock = Substitute.For<IDatabaseEntityRetrieverProvider>();
+        databaseEntityRetrieverProviderMock.TryCreate(Arg.Any<ISingleEntityQuery>(), out Arg.Any<IDatabaseEntityRetriever<TestEntity>?>())
+                                           .Returns(x => { x[1] = _retrieverMock; return true; });
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer(x =>
-                x.AddSingleton(_retrieverMock.Object)
-                 .AddSingleton(databaseEntityRetrieverProviderMock.Object)
+                x.AddSingleton(_retrieverMock)
+                 .AddSingleton(databaseEntityRetrieverProviderMock)
                  .AddSingleton<IPagedDatabaseEntityRetrieverSettingsProvider, TestEntityQueryProcessorSettingsProvider>()
             ).BuildServiceProvider();
     }
@@ -27,7 +26,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new TestQuery();
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        _retrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
+        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
                       .Returns(expectedResult);
 
         // Act
@@ -43,7 +42,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).Build());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        _retrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>()))
+        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
                       .Returns(expectedResult);
 
         // Act

@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests;
+namespace QueryFramework.SqlServer.Tests;
 
 public class DefaultQueryFieldInfoFactoryTests
 {
@@ -39,8 +39,8 @@ public class DefaultQueryFieldInfoFactoryTests
     {
         // Arrange
         var providerMock = new QueryFieldInfoProviderMock();
-        var queryFieldInfoMock = new Mock<IQueryFieldInfo>();
-        var queryFieldInfo = queryFieldInfoMock.Object;
+        var queryFieldInfoMock = Substitute.For<IQueryFieldInfo>();
+        var queryFieldInfo = queryFieldInfoMock;
         providerMock.ReturnValue = true;
         providerMock.ResultDelegate = new Func<ISingleEntityQuery, IQueryFieldInfo?>(_ => queryFieldInfo);
         var sut = new DefaultQueryFieldInfoFactory(new[] { providerMock });

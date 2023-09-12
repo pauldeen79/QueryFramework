@@ -6,9 +6,9 @@ public class TestRepositoryTests : TestBase<TestRepository>
     public void Can_Add_Entity()
     {
         // Arrange
-        Fixture.Freeze<Mock<IDatabaseCommandProcessor<TestEntity>>>()
-            .Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
-            .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
+        Fixture.Freeze<IDatabaseCommandProcessor<TestEntity>>()
+            .ExecuteCommand(Arg.Any<IDatabaseCommand>(), Arg.Any<TestEntity>())
+            .Returns(x => { x.ArgAt<TestEntity>(1).Id = 1; return new DatabaseCommandResult<TestEntity>(x.ArgAt<TestEntity>(1)); });
         var entity = new TestEntity { Name = "Test" };
 
         // Act
@@ -26,9 +26,9 @@ public class TestRepositoryTests : TestBase<TestRepository>
     public void Can_Update_Entity()
     {
         // Arrange
-        Fixture.Freeze<Mock<IDatabaseCommandProcessor<TestEntity>>>()
-            .Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
-            .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 1; return new DatabaseCommandResult<TestEntity>(x); });
+        Fixture.Freeze<IDatabaseCommandProcessor<TestEntity>>()
+            .ExecuteCommand(Arg.Any<IDatabaseCommand>(), Arg.Any<TestEntity>())
+            .Returns(x => { x.ArgAt<TestEntity>(1).Id = 1; return new DatabaseCommandResult<TestEntity>(x.ArgAt<TestEntity>(1)); });
         var entity = new TestEntity { Name = "Test" };
 
         // Act
@@ -46,9 +46,9 @@ public class TestRepositoryTests : TestBase<TestRepository>
     public void Can_Delete_Entity()
     {
         // Arrange
-        Fixture.Freeze<Mock<IDatabaseCommandProcessor<TestEntity>>>()
-            .Setup(x => x.ExecuteCommand(It.IsAny<IDatabaseCommand>(), It.IsAny<TestEntity>()))
-            .Returns<IDatabaseCommand, TestEntity>((_, x) => { x.Id = 2; return new DatabaseCommandResult<TestEntity>(x); });
+        Fixture.Freeze<IDatabaseCommandProcessor<TestEntity>>()
+            .ExecuteCommand(Arg.Any<IDatabaseCommand>(), Arg.Any<TestEntity>())
+            .Returns(x => { x.ArgAt<TestEntity>(1).Id = 2; return new DatabaseCommandResult<TestEntity>(x.ArgAt<TestEntity>(1)); });
         var entity = new TestEntity { Id = 1, Name = "Test" };
 
         // Act
@@ -66,8 +66,8 @@ public class TestRepositoryTests : TestBase<TestRepository>
     public void Can_Find_Entity()
     {
         // Arrange
-        Fixture.Freeze<Mock<IDatabaseEntityRetriever<TestEntity>>>()
-            .Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>()))
+        Fixture.Freeze<IDatabaseEntityRetriever<TestEntity>>()
+            .FindOne(Arg.Any<IDatabaseCommand>())
             .Returns(new TestEntity { Id = 1, Name = "Test" });
 
         // Act
@@ -86,8 +86,8 @@ public class TestRepositoryTests : TestBase<TestRepository>
     public void Can_FindUsingCommand()
     {
         // Arrange
-        Fixture.Freeze<Mock<IDatabaseEntityRetriever<TestEntity>>>()
-            .Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>()))
+        Fixture.Freeze<IDatabaseEntityRetriever<TestEntity>>()
+            .FindOne(Arg.Any<IDatabaseCommand>())
             .Returns(new TestEntity { Id = 1, Name = "Test" });
 
         // Act
