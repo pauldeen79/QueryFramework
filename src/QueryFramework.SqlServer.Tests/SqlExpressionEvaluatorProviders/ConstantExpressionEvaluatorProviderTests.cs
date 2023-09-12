@@ -8,12 +8,12 @@ public class ConstantExpressionEvaluatorProviderTests
         // Arrange
         var sut = new ConstantExpressionEvaluatorProvider();
         var expression = new EmptyExpressionBuilder().Build();
-        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
-        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
+        var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
         var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, parameterBag, default, out var result);
+        var actual = sut.TryGetSqlExpression(expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -26,13 +26,13 @@ public class ConstantExpressionEvaluatorProviderTests
         // Arrange
         var sut = new ConstantExpressionEvaluatorProvider();
         var expression = new ConstantExpressionBuilder().WithValue("Test").Build();
-        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
-        var fieldInfoMock = new Mock<IQueryFieldInfo>();
-        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
+        var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
+        fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>()).Returns(x => x.ArgAt<string>(0));
         var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, parameterBag, default, out var result);
+        var actual = sut.TryGetSqlExpression(expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
 
         // Assert
         actual.Should().BeTrue();
@@ -45,11 +45,11 @@ public class ConstantExpressionEvaluatorProviderTests
         // Arrange
         var sut = new ConstantExpressionEvaluatorProvider();
         var expression = new EmptyExpressionBuilder().Build();
-        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
-        var fieldInfoMock = new Mock<IQueryFieldInfo>();
+        var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
+        var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
 
         // Act
-        var actual = sut.TryGetLengthExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, default, out var result);
+        var actual = sut.TryGetLengthExpression(expression, evaluatorMock, fieldInfoMock, default, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -62,12 +62,12 @@ public class ConstantExpressionEvaluatorProviderTests
         // Arrange
         var sut = new ConstantExpressionEvaluatorProvider();
         var expression = new ConstantExpressionBuilder().WithValue("Test").Build();
-        var evaluatorMock = new Mock<ISqlExpressionEvaluator>();
-        var fieldInfoMock = new Mock<IQueryFieldInfo>();
-        fieldInfoMock.Setup(x => x.GetDatabaseFieldName(It.IsAny<string>())).Returns<string>(x => x);
+        var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
+        var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
+        fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>()).Returns(x => x.ArgAt<string>(0));
 
         // Act
-        var actual = sut.TryGetLengthExpression(expression, evaluatorMock.Object, fieldInfoMock.Object, default, out var result);
+        var actual = sut.TryGetLengthExpression(expression, evaluatorMock, fieldInfoMock, default, out var result);
 
         // Assert
         actual.Should().BeTrue();

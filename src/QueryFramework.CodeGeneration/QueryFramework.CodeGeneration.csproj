@@ -1,26 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.5.9" />
-    <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.5.9" />
+    <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.5.14" />
+    <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.5.14" />
     <PackageReference Include="pauldeen79.ModelFramework.CodeGeneration" Version="0.6.76" />
   </ItemGroup>
 
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../ -u $(TargetDir)" />
+    <Exec Command="t4plus assembly -a $(TargetDir)QueryFramework.CodeGeneration.dll -p $(TargetDir)../../../../" />
   </Target>-->
 
 </Project>

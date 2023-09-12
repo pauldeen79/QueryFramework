@@ -7,32 +7,31 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public QueryDatabaseCommandProviderTests()
     {
         // Use real query expression evaluator
-        var evaluatorMock = Fixture.Freeze<Mock<ISqlExpressionEvaluator>>();
+        var evaluatorMock = Fixture.Freeze<ISqlExpressionEvaluator>();
         DefaultSqlExpressionEvaluatorHelper.UseRealSqlExpressionEvaluator(evaluatorMock, _parameterBag);
         // Use real paged database command provider
-        var settingsProviderMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettingsProvider>>();
-        var settingsMock = Fixture.Create<Mock<IPagedDatabaseEntityRetrieverSettings>>();
-        settingsMock.SetupGet(x => x.TableName)
+        var settingsProviderMock = Fixture.Create<IPagedDatabaseEntityRetrieverSettingsProvider>();
+        var settingsMock = Fixture.Create<IPagedDatabaseEntityRetrieverSettings>();
+        settingsMock.TableName
                     .Returns("MyTable");
-        var fieldInfoFactory = new Mock<IQueryFieldInfoFactory>();
-        fieldInfoFactory.Setup(x => x.Create(It.IsAny<ISingleEntityQuery>()))
+        var fieldInfoFactory = Substitute.For<IQueryFieldInfoFactory>();
+        fieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
                         .Returns(new DefaultQueryFieldInfo());
-        var settings = settingsMock.Object;
-        settingsProviderMock.Setup(x => x.TryGet<ISingleEntityQuery>(out settings))
-                            .Returns(true);
-        var pagedProviderMock = Fixture.Freeze<Mock<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>>>();
-        pagedProviderMock.Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(),
-                                                   It.IsAny<DatabaseOperation>(),
-                                                   It.IsAny<int>(),
-                                                   It.IsAny<int>(),
-                                                   It.IsAny<object?>()))
-                         .Returns<ISingleEntityQuery, DatabaseOperation, int, int, object?>((source, operation, offset, pageSize, context)
+        settingsProviderMock.TryGet<ISingleEntityQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
+                            .Returns(x => { x[0] = settingsMock; return true; });
+        var pagedProviderMock = Fixture.Freeze<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>>();
+        pagedProviderMock.CreatePaged(Arg.Any<ISingleEntityQuery>(),
+                                      Arg.Any<DatabaseOperation>(),
+                                      Arg.Any<int>(),
+                                      Arg.Any<int>(),
+                                      Arg.Any<object?>())
+                         .Returns(x
                          => new QueryPagedDatabaseCommandProvider
                          (
-                             fieldInfoFactory.Object,
-                             new[] { settingsProviderMock.Object },
-                             evaluatorMock.Object
-                         ).CreatePaged(source, operation, offset, pageSize, context));
+                             fieldInfoFactory,
+                             new[] { settingsProviderMock },
+                             evaluatorMock
+                         ).CreatePaged(x.ArgAt<ISingleEntityQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3), x.ArgAt<object?>(4)));
     }
 
     [Theory]
@@ -43,7 +42,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.Create(new Mock<ISingleEntityQuery>().Object, operation))
+        Sut.Invoking(x => x.Create(Substitute.For<ISingleEntityQuery>(), operation))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.ParamName.Should().Be("operation");
     }

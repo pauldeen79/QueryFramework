@@ -6,12 +6,7 @@
     <Nullable>enable</Nullable>
     <PackageId>pauldeen79.QueryFramework.Core</PackageId>
     <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
-    <CodeAnalysisRuleSet>..\..\.sonarlint\pauldeen79_queryframeworkcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\.sonarlint\pauldeen79_queryframework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />

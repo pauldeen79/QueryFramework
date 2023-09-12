@@ -4,8 +4,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 {
     public DefaultQueryProcessorTests()
     {
-        Fixture.Freeze<Mock<IPagedDatabaseCommandProvider<ISingleEntityQuery>>>()
-               .Setup(x => x.CreatePaged(It.IsAny<ISingleEntityQuery>(), DatabaseOperation.Select, It.IsAny<int>(), It.IsAny<int>()))
+        Fixture.Freeze<IPagedDatabaseCommandProvider<ISingleEntityQuery>>()
+               .CreatePaged(Arg.Any<ISingleEntityQuery>(), DatabaseOperation.Select, Arg.Any<int>(), Arg.Any<int>())
                .Returns(new PagedDatabaseCommand(new SqlTextCommand("SELECT ...", DatabaseOperation.Select),
                                                  new SqlTextCommand("SELECT COUNT(*)...", DatabaseOperation.Select),
                                                  0,
@@ -73,20 +73,20 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 
     private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)
     {
-        var retrieverMock = Fixture.Freeze<Mock<IDatabaseEntityRetriever<MyEntity>>>();
+        var retrieverMock = Fixture.Freeze<IDatabaseEntityRetriever<MyEntity>>();
 
         // For FindOne/FindMany
-        retrieverMock.Setup(x => x.FindOne(It.IsAny<IDatabaseCommand>())).Returns(data.FirstOrDefault());
-        retrieverMock.Setup(x => x.FindMany(It.IsAny<IDatabaseCommand>())).Returns(data.ToList());
+        retrieverMock.FindOne(Arg.Any<IDatabaseCommand>()).Returns(data.FirstOrDefault());
+        retrieverMock.FindMany(Arg.Any<IDatabaseCommand>()).Returns(data.ToList());
 
         // For FindPaged
-        retrieverMock.Setup(x => x.FindPaged(It.IsAny<IPagedDatabaseCommand>()))
-                                  .Returns<IPagedDatabaseCommand>(command => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), command.Offset, command.PageSize));
+        retrieverMock.FindPaged(Arg.Any<IPagedDatabaseCommand>())
+                     .Returns(x => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), x.ArgAt<IPagedDatabaseCommand>(0).Offset, x.ArgAt<IPagedDatabaseCommand>(0).PageSize));
 
         // Hook up the database entity retriever to the SQL Database processor
-        var result = retrieverMock.Object;
-        Fixture.Freeze<Mock<IDatabaseEntityRetrieverFactory>>()
-               .Setup(x => x.Create<MyEntity>(It.IsAny<ISingleEntityQuery>()))
+        var result = retrieverMock;
+        Fixture.Freeze<IDatabaseEntityRetrieverFactory>()
+               .Create<MyEntity>(Arg.Any<ISingleEntityQuery>())
                .Returns(result);
     }
 }

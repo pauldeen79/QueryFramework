@@ -21,11 +21,11 @@ public class SingleEntityQueryExtensionsTests
     public void GetTableName_Returns_DataObjectName_When_Available_And_Filled()
     {
         // Arrange
-        var sut = new Mock<IDataObjectNameQuery>();
-        sut.SetupGet(x => x.DataObjectName).Returns("custom");
+        var sut = Substitute.For<IDataObjectNameQuery>();
+        sut.DataObjectName.Returns("custom");
 
         // Act
-        var actual = sut.Object.GetTableName("default");
+        var actual = sut.GetTableName("default");
 
         // Assert
         actual.Should().Be("custom");
@@ -35,11 +35,11 @@ public class SingleEntityQueryExtensionsTests
     public void GetTableName_Returns_TableName_When_DataObjectName_Is_Available_And_Not_Filled()
     {
         // Arrange
-        var sut = new Mock<IDataObjectNameQuery>();
-        sut.SetupGet(x => x.DataObjectName).Returns(string.Empty);
+        var sut = Substitute.For<IDataObjectNameQuery>();
+        sut.DataObjectName.Returns(string.Empty);
 
         // Act
-        var actual = sut.Object.GetTableName("default");
+        var actual = sut.GetTableName("default");
 
         // Assert
         actual.Should().Be("default");
@@ -49,10 +49,10 @@ public class SingleEntityQueryExtensionsTests
     public void GetTableName_Returns_TableName_When_DataObjectName_Is_Not_Available()
     {
         // Arrange
-        var sut = new Mock<ISingleEntityQuery>();
+        var sut = Substitute.For<ISingleEntityQuery>();
 
         // Act
-        var actual = sut.Object.GetTableName("default");
+        var actual = sut.GetTableName("default");
 
         // Assert
         actual.Should().Be("default");
