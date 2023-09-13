@@ -13,7 +13,7 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.FieldNames.Should().HaveCount(1);
-        var field = actual.FieldNames.First();
+        var field = actual.FieldNames[0];
         field.Should().Be("FieldName");
         actual.Distinct.Should().BeFalse();
     }
@@ -29,9 +29,9 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.FieldNames.Should().HaveCount(2);
-        var firstField = actual.FieldNames.First();
+        var firstField = actual.FieldNames[0];
         firstField.Should().Be("FieldName1");
-        var lastField = actual.FieldNames.Last();
+        var lastField = actual.FieldNames[actual.FieldNames.Count - 1];
         lastField.Should().Be("FieldName2");
         actual.Distinct.Should().BeFalse();
     }
@@ -61,7 +61,7 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.FieldNames.Should().HaveCount(1);
-        var field = actual.FieldNames.First();
+        var field = actual.FieldNames[0];
         field.Should().Be("FieldName");
         actual.Distinct.Should().BeTrue();
     }
@@ -77,9 +77,9 @@ public class FieldSelectionQueryBuilderExtensionsTests
 
         // Assert
         actual.FieldNames.Should().HaveCount(2);
-        var firstField = actual.FieldNames.First();
+        var firstField = actual.FieldNames[0];
         firstField.Should().Be("FieldName1");
-        var lastField = actual.FieldNames.Last();
+        var lastField = actual.FieldNames[actual.FieldNames.Count - 1];
         lastField.Should().Be("FieldName2");
         actual.Distinct.Should().BeTrue();
     }

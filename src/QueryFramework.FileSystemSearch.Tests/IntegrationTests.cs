@@ -24,8 +24,8 @@ public sealed class IntegrationTests : IDisposable
 
         // Assert
         actual.Should().ContainSingle();
-        actual.First().Directory.Should().EndWith("FileSystemSearch.Tests");
-        actual.First().FileName.Should().Be("IntegrationTests.cs");
+        actual[0].Directory.Should().EndWith("FileSystemSearch.Tests");
+        actual[0].FileName.Should().Be("IntegrationTests.cs");
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public sealed class IntegrationTests : IDisposable
 
         // Assert
         actual.Should().ContainSingle();
-        actual.First().Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_Linq)}() //*");
+        actual[0].Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_Linq)}() //*");
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public sealed class IntegrationTests : IDisposable
             .Select(x => new FileData(x))
             .Where(x => !x.FileName.EndsWith(".generated.cs") && !x.Directory.Contains($"{_slash}bin") && !x.Directory.Contains($"{_slash}obj"))
             .SelectMany(fileData => fileData.Lines.Select((line, lineNumber) => new LineData(line, lineNumber, fileData)))
-            .Where(x => x.Line.StartsWith("namespace") && !x.Line.EndsWith(";"))
+            .Where(x => x.Line.StartsWith("namespace") && !x.Line.EndsWith(';'))
             .ToArray();
 
         // Assert

@@ -45,11 +45,11 @@ public class FieldSelectionQueryTests
         var sut = new FieldSelectionQueryBuilder()
             .WithLimit(limit)
             .WithOffset(offset)
+            .WithOrderByFields(orderByFields)
             //TODO: Find out why With methods are  missing in the code generation?
             .Chain(x => x.Distinct = distinct)
             .Chain(x => x.GetAllFields = getAllFields)
             .Chain(x => x.Filter.AddConditions(conditions))
-            .WithOrderByFields(orderByFields)
             .Chain(x => x.FieldNames.AddRange(fields));
 
         // Assert
