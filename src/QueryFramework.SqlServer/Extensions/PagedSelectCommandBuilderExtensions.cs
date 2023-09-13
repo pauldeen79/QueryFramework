@@ -215,7 +215,7 @@ internal static class PagedSelectCommandBuilderExtensions
                                                              IParameterizedQuery? parameterizedQuery,
                                                              ParameterBag parameterBag)
     {
-        if (parameterizedQuery != null)
+        if (parameterizedQuery is not null)
         {
             foreach (var parameter in parameterizedQuery.Parameters)
             {

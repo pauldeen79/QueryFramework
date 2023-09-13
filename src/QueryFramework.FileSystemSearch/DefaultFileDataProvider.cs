@@ -23,6 +23,8 @@ public class DefaultFileDataProvider : IContextDataProvider
 
     public DefaultFileDataProvider(IFileDataProvider fileDataProvider)
     {
+        ArgumentGuard.IsNotNull(fileDataProvider, nameof(fileDataProvider));
+
         _fileDataProvider = fileDataProvider;
     }
 
@@ -102,5 +104,5 @@ public class DefaultFileDataProvider : IContextDataProvider
     }
 
     private static bool IsValidForFields(string? fieldName, IEnumerable<string> validFieldNames)
-        => fieldName != null && validFieldNames.Contains(fieldName);
+        => fieldName is not null && validFieldNames.Contains(fieldName);
 }
