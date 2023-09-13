@@ -17,6 +17,7 @@ public class AbstractionsQueryExtensionsBuilders : QueryFrameworkCSharpClassBase
         ).Select(x => new ClassBuilder(x)
             .Chain(y =>
             {
+                // hacking here... code generation doesn't work out of the box :(
                 foreach (var method in y.Methods.Where(z => z.Name.ToString().StartsWith("With") && z.Parameters.Count == 2 && z.Parameters[1].TypeName.ToString().Contains("System.Collections.Generic.")))
                 {
                     method.CodeStatements.OfType<LiteralCodeStatementBuilder>().First().Statement.Replace(";", ".ToList();");
