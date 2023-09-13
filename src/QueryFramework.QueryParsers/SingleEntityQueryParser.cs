@@ -1,7 +1,7 @@
 ﻿namespace QueryFramework.QueryParsers;
 
 public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : IQueryParser<TQueryBuilder>
-    where TQueryBuilder : ISingleEntityQueryBuilder
+    where TQueryBuilder : IQueryBuilder
     where TQueryExpressionBuilder : FieldExpressionBuilder, new()
 {
     private readonly Func<TQueryExpressionBuilder>? _defaultFieldExpressionBuilderFactory;

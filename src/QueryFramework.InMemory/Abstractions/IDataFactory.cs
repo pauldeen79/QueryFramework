@@ -2,5 +2,5 @@
 
 public interface IDataFactory
 {
-    IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query) where TResult : class;
+    IEnumerable<TResult> GetData<TResult>(IQuery query) where TResult : class;
 }

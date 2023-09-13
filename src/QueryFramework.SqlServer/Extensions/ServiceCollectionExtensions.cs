@@ -14,10 +14,10 @@ public static class ServiceCollectionExtensions
                 customConfigurationAction.Invoke(x);
                 if (!x.Any(y => y.ImplementationType == typeof(QueryDatabaseCommandProvider)))
                 {
-                    x.AddSingleton<IDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
-                     .AddSingleton<IContextDatabaseCommandProvider<ISingleEntityQuery>, QueryDatabaseCommandProvider>()
-                     .AddSingleton<IPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
-                     .AddSingleton<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>, QueryPagedDatabaseCommandProvider>()
+                    x.AddSingleton<IDatabaseCommandProvider<IQuery>, QueryDatabaseCommandProvider>()
+                     .AddSingleton<IContextDatabaseCommandProvider<IQuery>, QueryDatabaseCommandProvider>()
+                     .AddSingleton<IPagedDatabaseCommandProvider<IQuery>, QueryPagedDatabaseCommandProvider>()
+                     .AddSingleton<IContextPagedDatabaseCommandProvider<IQuery>, QueryPagedDatabaseCommandProvider>()
                      .AddSingleton<IQueryFieldInfoFactory, DefaultQueryFieldInfoFactory>()
                      .AddSingleton<IQueryFieldInfoProvider, DefaultQueryFieldInfoProvider>()
                      .AddSingleton<IDatabaseEntityRetrieverFactory, DefaultDatabaseEntityRetrieverFactory>()

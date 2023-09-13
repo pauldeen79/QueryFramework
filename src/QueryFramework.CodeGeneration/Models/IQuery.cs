@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Queries;
+﻿namespace QueryFramework.CodeGeneration.Models;
 
-public interface ISingleEntityQuery
+public interface IQuery
 {
     int? Limit { get; }
     int? Offset { get; }

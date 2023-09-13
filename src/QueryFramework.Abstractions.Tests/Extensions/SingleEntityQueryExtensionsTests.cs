@@ -6,7 +6,7 @@ public class SingleEntityQueryExtensionsTests
     public void Validate_Validates_Instance()
     {
         // Arrange
-        var sut = new SingleEntityQueryMock
+        var sut = new MyQueryMock
         {
             ValidationResultValue = new[] { new ValidationResult("kaboom") }
         };
@@ -49,7 +49,7 @@ public class SingleEntityQueryExtensionsTests
     public void GetTableName_Returns_TableName_When_DataObjectName_Is_Not_Available()
     {
         // Arrange
-        var sut = Substitute.For<ISingleEntityQuery>();
+        var sut = Substitute.For<IQuery>();
 
         // Act
         var actual = sut.GetTableName("default");
@@ -58,7 +58,7 @@ public class SingleEntityQueryExtensionsTests
         actual.Should().Be("default");
     }
 
-    private sealed class SingleEntityQueryMock : ISingleEntityQuery, IValidatableObject
+    private sealed class MyQueryMock : IQuery, IValidatableObject
     {
         public int? Limit { get; set; }
 

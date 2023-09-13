@@ -1,16 +1,16 @@
 ﻿namespace QueryFramework.SqlServer.CrossCutting.Data;
 
-public class QueryDatabaseCommandProvider : IContextDatabaseCommandProvider<ISingleEntityQuery>
+public class QueryDatabaseCommandProvider : IContextDatabaseCommandProvider<IQuery>
 {
-    private readonly IContextPagedDatabaseCommandProvider<ISingleEntityQuery> _pagedDatabaseCommandProvider;
+    private readonly IContextPagedDatabaseCommandProvider<IQuery> _pagedDatabaseCommandProvider;
 
-    public QueryDatabaseCommandProvider(IContextPagedDatabaseCommandProvider<ISingleEntityQuery> pagedDatabaseCommandProvider)
+    public QueryDatabaseCommandProvider(IContextPagedDatabaseCommandProvider<IQuery> pagedDatabaseCommandProvider)
         => _pagedDatabaseCommandProvider = pagedDatabaseCommandProvider;
 
-    public IDatabaseCommand Create(ISingleEntityQuery source, DatabaseOperation operation)
+    public IDatabaseCommand Create(IQuery source, DatabaseOperation operation)
         => Create(source, operation, default);
 
-    public IDatabaseCommand Create(ISingleEntityQuery source, DatabaseOperation operation, object? context)
+    public IDatabaseCommand Create(IQuery source, DatabaseOperation operation, object? context)
     {
         if (operation != DatabaseOperation.Select)
         {

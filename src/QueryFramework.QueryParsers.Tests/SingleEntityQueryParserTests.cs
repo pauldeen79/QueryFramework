@@ -104,7 +104,7 @@ public class SingleEntityQueryParserTests
         actual.Filter.Conditions.Should().BeEmpty();
     }
 
-    private static SingleEntityQueryParser<ISingleEntityQueryBuilder, FieldExpressionBuilder> CreateSut()
+    private static SingleEntityQueryParser<IQueryBuilder, FieldExpressionBuilder> CreateSut()
         => new(() => new FieldExpressionBuilder()
             .WithExpression(new ContextExpressionBuilder())
             .WithFieldName("PrefilledField"));

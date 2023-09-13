@@ -71,7 +71,7 @@ public class GroupingQueryBuilderTests
         };
 
         // Act
-        var actual = sut.Build();
+        var actual = sut.BuildTyped();
 
         // Assert
         actual.Should().NotBeNull();

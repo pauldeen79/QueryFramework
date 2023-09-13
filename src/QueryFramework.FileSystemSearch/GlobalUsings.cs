@@ -2,13 +2,13 @@
 global using System.Collections.Generic;
 global using System.IO;
 global using System.Linq;
+global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Domain.Evaluatables;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Extensions;
-global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Core.Queries;
 global using QueryFramework.FileSystemSearch.Abstractions;
 global using QueryFramework.FileSystemSearch.Entities;

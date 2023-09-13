@@ -7,7 +7,7 @@ public class DefaultQueryFieldInfoFactory : IQueryFieldInfoFactory
     public DefaultQueryFieldInfoFactory(IEnumerable<IQueryFieldInfoProvider> providers)
         => _providers = providers;
 
-    public IQueryFieldInfo Create(ISingleEntityQuery query)
+    public IQueryFieldInfo Create(IQuery query)
     {
         foreach (var provider in _providers)
         {

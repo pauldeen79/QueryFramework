@@ -2,5 +2,5 @@
 
 public interface IQueryFieldInfoFactory
 {
-    IQueryFieldInfo Create(ISingleEntityQuery query);
+    IQueryFieldInfo Create(IQuery query);
 }

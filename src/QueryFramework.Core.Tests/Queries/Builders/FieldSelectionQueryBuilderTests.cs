@@ -79,7 +79,7 @@ public class FieldSelectionQueryBuilderTests
         };
 
         // Act
-        var actual = sut.Build();
+        var actual = sut.BuildTyped();
 
         // Assert
         actual.Should().NotBeNull();

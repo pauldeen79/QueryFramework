@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Queries;
+﻿namespace QueryFramework.CodeGeneration.Models.Queries;
 
-public interface IGroupingQuery : ISingleEntityQuery
+public interface IGroupingQuery : IQuery
 {
     IReadOnlyCollection<Expression> GroupByFields { get; }
     ComposedEvaluatable GroupByFilter { get; }

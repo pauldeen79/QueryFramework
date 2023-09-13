@@ -11,11 +11,11 @@ public class DefaultDataFactory : IContextDataFactory
         _contextProviders = contextProviders;
     }
 
-    public IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query)
+    public IEnumerable<TResult> GetData<TResult>(IQuery query)
         where TResult : class
         => GetData<TResult>(query, default);
 
-    public IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query, object? context)
+    public IEnumerable<TResult> GetData<TResult>(IQuery query, object? context)
         where TResult : class
     {
         foreach (var provider in _contextProviders)

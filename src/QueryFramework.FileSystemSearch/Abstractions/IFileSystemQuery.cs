@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.FileSystemSearch.Abstractions;
 
-public interface IFileSystemQuery : ISingleEntityQuery
+public interface IFileSystemQuery : IQuery
 {
     string Path { get; }
     string SearchPattern { get; }

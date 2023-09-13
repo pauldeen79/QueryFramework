@@ -23,14 +23,16 @@ public class DefaultFileDataProvider : IContextDataProvider
 
     public DefaultFileDataProvider(IFileDataProvider fileDataProvider)
     {
+        ArgumentGuard.IsNotNull(fileDataProvider, nameof(fileDataProvider));
+
         _fileDataProvider = fileDataProvider;
     }
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result)
+    public bool TryGetData<TResult>(IQuery query, out IEnumerable<TResult>? result)
         where TResult : class
         => TryGetData(query, default, out result);
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
+    public bool TryGetData<TResult>(IQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
         if (fileSystemQuery is null)
@@ -102,5 +104,5 @@ public class DefaultFileDataProvider : IContextDataProvider
     }
 
     private static bool IsValidForFields(string? fieldName, IEnumerable<string> validFieldNames)
-        => fieldName != null && validFieldNames.Contains(fieldName);
+        => fieldName is not null && validFieldNames.Contains(fieldName);
 }

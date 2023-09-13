@@ -1,4 +1,4 @@
-namespace QueryFramework.SqlServer.Tests;
+﻿namespace QueryFramework.SqlServer.Tests;
 
 public class DefaultDatabaseEntityRetrieverFactoryTests
 {
@@ -8,9 +8,9 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         // Arrange
         var providerMock = new DatabaseEntityRetrieverProviderMock<object>();
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IDatabaseEntityRetriever<object>?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IDatabaseEntityRetriever<object>?>(_ => null);
         var sut = new DefaultDatabaseEntityRetrieverFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         sut.Invoking(x => x.Create<object>(query))
@@ -24,9 +24,9 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         // Arrange
         var providerMock = new DatabaseEntityRetrieverProviderMock<object>();
         providerMock.ReturnValue = false;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IDatabaseEntityRetriever<object>?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IDatabaseEntityRetriever<object>?>(_ => null);
         var sut = new DefaultDatabaseEntityRetrieverFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         sut.Invoking(x => x.Create<object>(query))
@@ -42,9 +42,9 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         var settingsMock = Substitute.For<IDatabaseEntityRetriever<object>>();
         var settings = settingsMock;
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IDatabaseEntityRetriever<object>?>(_ => settings);
+        providerMock.ResultDelegate = new Func<IQuery, IDatabaseEntityRetriever<object>?>(_ => settings);
         var sut = new DefaultDatabaseEntityRetrieverFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         var actual = sut.Create<object>(query);

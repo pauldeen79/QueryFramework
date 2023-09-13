@@ -18,14 +18,16 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     protected override Type RecordCollectionType => typeof(IReadOnlyCollection<>);
     protected override Type RecordConcreteCollectionType => typeof(ReadOnlyValueCollection<>);
     protected override string SetMethodNameFormatString => string.Empty;
+    protected override string AddMethodNameFormatString => string.Empty;
     protected override string ProjectName => Constants.ProjectName;
-    protected override Type BuilderClassCollectionType => typeof(IEnumerable<>);
+    protected override Type BuilderClassCollectionType => typeof(List<>);
     protected override ArgumentValidationType ValidateArgumentsInConstructor => ArgumentValidationType.Shared;
     protected override bool InheritFromInterfaces => true;
     protected override bool UseLazyInitialization => false; // this needs to be disabled, because extension method-based builders currently don't support this
 
     protected override IEnumerable<KeyValuePair<string, string>> GetCustomBuilderNamespaceMapping()
     {
+        yield return new KeyValuePair<string, string>(typeof(ComposedEvaluatable).Namespace!, $"{typeof(Evaluatable).Namespace}.Builders.Evaluatables");
         yield return new KeyValuePair<string, string>(typeof(Expression).Namespace!, $"{typeof(Expression).Namespace}.Builders");
     }
 
@@ -55,8 +57,8 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     private string GetCustomBuilderConstructorInitializeExpressionForSingleProperty(ClassPropertyBuilder property, string typeName)
         => property.IsNullable
-            ? "{0} = source.{0} == null ? null : " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})"
-            : "{0} = " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})";
+            ? $"{{0}} = source.{{0}} == null ? null : {GetBuilderNamespace(typeName)}.{nameof(ExpressionBuilderFactory)}.Create(source.{{0}})"
+            : $"{{0}} = {GetBuilderNamespace(typeName)}.{nameof(ExpressionBuilderFactory)}.Create(source.{{0}})";
     // When lazy initialization has been fixed, use this instead:
         ///=> property.IsNullable
         ///    ? "_{1}Delegate = new (() => source.{0} == null ? null : " + GetBuilderNamespace(typeName) + "." + GetEntityClassName(typeName) + "BuilderFactory.Create(source.{0}))"

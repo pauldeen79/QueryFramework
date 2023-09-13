@@ -15,12 +15,12 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         settingsMock.TableName
                     .Returns("MyTable");
         var fieldInfoFactory = Substitute.For<IQueryFieldInfoFactory>();
-        fieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
+        fieldInfoFactory.Create(Arg.Any<IQuery>())
                         .Returns(new DefaultQueryFieldInfo());
-        settingsProviderMock.TryGet<ISingleEntityQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
+        settingsProviderMock.TryGet<IQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
                             .Returns(x => { x[0] = settingsMock; return true; });
-        var pagedProviderMock = Fixture.Freeze<IContextPagedDatabaseCommandProvider<ISingleEntityQuery>>();
-        pagedProviderMock.CreatePaged(Arg.Any<ISingleEntityQuery>(),
+        var pagedProviderMock = Fixture.Freeze<IContextPagedDatabaseCommandProvider<IQuery>>();
+        pagedProviderMock.CreatePaged(Arg.Any<IQuery>(),
                                       Arg.Any<DatabaseOperation>(),
                                       Arg.Any<int>(),
                                       Arg.Any<int>(),
@@ -31,7 +31,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
                              fieldInfoFactory,
                              new[] { settingsProviderMock },
                              evaluatorMock
-                         ).CreatePaged(x.ArgAt<ISingleEntityQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3), x.ArgAt<object?>(4)));
+                         ).CreatePaged(x.ArgAt<IQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3), x.ArgAt<object?>(4)));
     }
 
     [Theory]
@@ -42,7 +42,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.Create(Substitute.For<ISingleEntityQuery>(), operation))
+        Sut.Invoking(x => x.Create(Substitute.For<IQuery>(), operation))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.ParamName.Should().Be("operation");
     }
@@ -51,7 +51,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public void Create_With_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
     {
         // Act
-        var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(), DatabaseOperation.Select);
+        var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(), DatabaseOperation.Select);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");

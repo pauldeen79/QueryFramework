@@ -19,7 +19,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     public void CreatePaged_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.CreatePaged(Substitute.For<ISingleEntityQuery>(), operation, 0, 0))
+        Sut.Invoking(x => x.CreatePaged(Substitute.For<IQuery>(), operation, 0, 0))
            .Should().Throw<ArgumentOutOfRangeException>()
            .And.ParamName.Should().Be("operation");
     }
@@ -32,18 +32,18 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         settingsMock.TableName
                     .Returns("MyTable");
         var settingsProviderMock = Fixture.Freeze<IPagedDatabaseEntityRetrieverSettingsProvider>();
-        settingsProviderMock.TryGet<ISingleEntityQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
+        settingsProviderMock.TryGet<IQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
                             .Returns(x => { x[0] = settingsMock; return true; });
         var fieldInfoMock = Fixture.Freeze<IQueryFieldInfo>();
         fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>())
                      .Returns(x => x.ArgAt<string>(0));
         var queryFieldInfo = fieldInfoMock;
         var queryFieldInfoFactory = Fixture.Freeze<IQueryFieldInfoFactory>();
-        queryFieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
+        queryFieldInfoFactory.Create(Arg.Any<IQuery>())
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      0).DataCommand;
@@ -64,18 +64,18 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         settingsMock.OverridePageSize
                     .Returns(pageSize);
         var settingsProviderMock = Fixture.Freeze<IPagedDatabaseEntityRetrieverSettingsProvider>();
-        settingsProviderMock.TryGet<ISingleEntityQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
+        settingsProviderMock.TryGet<IQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
                             .Returns(x => { x[0] = settingsMock; return true; });
         var fieldInfoMock = Fixture.Freeze<IQueryFieldInfo>();
         fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>())
                      .Returns(x => x.ArgAt<string>(0));
         var queryFieldInfo = fieldInfoMock;
         var queryFieldInfoFactory = Fixture.Freeze<IQueryFieldInfoFactory>();
-        queryFieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
+        queryFieldInfoFactory.Create(Arg.Any<IQuery>())
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      pageSize);
@@ -89,7 +89,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     public void CreatePaged_Throws_When_DatabaseOperation_Is_Select_But_No_Database_Entity_Retriever_Provider_Is_Registered()
     {
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
            .Should().ThrowExactly<InvalidOperationException>()
            .And.Message.Should().Be("No database entity retriever provider was found for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
     }
@@ -100,11 +100,11 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
         // Arrange
         var settingsProviderMock = Fixture.Freeze<IPagedDatabaseEntityRetrieverSettingsProvider>();
         IPagedDatabaseEntityRetrieverSettings? settings = null;
-        settingsProviderMock.TryGet<ISingleEntityQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings?>())
+        settingsProviderMock.TryGet<IQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings?>())
                             .Returns(x => { x[0] = settings; return true; });
 
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
            .Should().ThrowExactly<InvalidOperationException>()
            .And.Message.Should().Be("Database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
     }

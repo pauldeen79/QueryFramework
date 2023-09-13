@@ -1,14 +1,14 @@
 ﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
-public class AbstractionsBuildersInterfaces : QueryFrameworkCSharpClassBase
+public class AbstractionsAbstractBuildersInterfaces : QueryFrameworkCSharpClassBase, ICodeGenerationProvider
 {
     public override string Path => $"{Constants.Namespaces.Abstractions}/Builders";
 
     public override object CreateModel()
         => GetImmutableBuilderClasses
         (
-            GetCoreModels(),
+            GetAbstractModels(),
             Constants.Namespaces.Abstractions,
             Constants.Namespaces.AbstractionsBuilders
         )
@@ -18,7 +18,7 @@ public class AbstractionsBuildersInterfaces : QueryFrameworkCSharpClassBase
                   .WithPartial()
                   .WithNamespace(Constants.Namespaces.AbstractionsBuilders)
                   .WithName($"I{x.Name}")
-                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == "Validate"))
+                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == nameof(IValidatableObject.Validate)))
                   .Build()
         )
         .ToArray();

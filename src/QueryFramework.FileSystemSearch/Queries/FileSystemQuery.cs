@@ -7,7 +7,7 @@ public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
     {
     }
 
-    public FileSystemQuery(string path, string searchPattern, SearchOption searchOption, ISingleEntityQuery source)
+    public FileSystemQuery(string path, string searchPattern, SearchOption searchOption, IQuery source)
         : this(path, searchPattern, searchOption, source.Limit, source.Offset, source.Filter, source.OrderByFields)
     {
     }
@@ -21,6 +21,9 @@ public record FileSystemQuery : SingleEntityQuery, IFileSystemQuery
                            IEnumerable<IQuerySortOrder> orderByFields)
         : base(limit, offset, filter, orderByFields)
     {
+        ArgumentGuard.IsNotNull(path, nameof(path));
+        ArgumentGuard.IsNotNull(searchOption, nameof(searchOption));
+
         Path = path;
         SearchPattern = searchPattern;
         SearchOption = searchOption;

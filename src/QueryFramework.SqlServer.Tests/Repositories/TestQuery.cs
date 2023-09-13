@@ -2,11 +2,11 @@
 
 public record TestQuery : SingleEntityQuery, ITestQuery
 {
-    public TestQuery()
+    public TestQuery() : base(null, null, new ComposedEvaluatableBuilder().BuildTyped(), Enumerable.Empty<IQuerySortOrder>())
     {
     }
 
-    public TestQuery(ISingleEntityQuery source) : this(source.Limit, source.Offset, source.Filter, source.OrderByFields)
+    public TestQuery(IQuery source) : this(source.Limit, source.Offset, source.Filter, source.OrderByFields)
     {
     }
 

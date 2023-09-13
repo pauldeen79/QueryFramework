@@ -4,8 +4,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 {
     public DefaultQueryProcessorTests()
     {
-        Fixture.Freeze<IPagedDatabaseCommandProvider<ISingleEntityQuery>>()
-               .CreatePaged(Arg.Any<ISingleEntityQuery>(), DatabaseOperation.Select, Arg.Any<int>(), Arg.Any<int>())
+        Fixture.Freeze<IPagedDatabaseCommandProvider<IQuery>>()
+               .CreatePaged(Arg.Any<IQuery>(), DatabaseOperation.Select, Arg.Any<int>(), Arg.Any<int>())
                .Returns(new PagedDatabaseCommand(new SqlTextCommand("SELECT ...", DatabaseOperation.Select),
                                                  new SqlTextCommand("SELECT COUNT(*)...", DatabaseOperation.Select),
                                                  0,
@@ -19,7 +19,7 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindPaged<MyEntity>(new SingleEntityQuery());
+        var actual = Sut.FindPaged<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
         actual.Should().HaveCount(1);
@@ -64,7 +64,7 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindMany<MyEntity>(new SingleEntityQuery());
+        var actual = Sut.FindMany<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
         actual.Should().HaveCount(1);
@@ -86,7 +86,7 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         // Hook up the database entity retriever to the SQL Database processor
         var result = retrieverMock;
         Fixture.Freeze<IDatabaseEntityRetrieverFactory>()
-               .Create<MyEntity>(Arg.Any<ISingleEntityQuery>())
+               .Create<MyEntity>(Arg.Any<IQuery>())
                .Returns(result);
     }
 }

@@ -7,7 +7,7 @@ public class DefaultDatabaseEntityRetrieverFactory : IDatabaseEntityRetrieverFac
     public DefaultDatabaseEntityRetrieverFactory(IEnumerable<IDatabaseEntityRetrieverProvider> providers)
         => _providers = providers;
 
-    public IDatabaseEntityRetriever<TResult> Create<TResult>(ISingleEntityQuery query) where TResult : class
+    public IDatabaseEntityRetriever<TResult> Create<TResult>(IQuery query) where TResult : class
     {
         foreach (var provider in _providers)
         {

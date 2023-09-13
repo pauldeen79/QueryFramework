@@ -2,10 +2,10 @@
 
 public interface IQueryProcessor
 {
-    TResult? FindOne<TResult>(ISingleEntityQuery query)
+    TResult? FindOne<TResult>(IQuery query)
         where TResult : class;
-    IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query)
+    IReadOnlyCollection<TResult> FindMany<TResult>(IQuery query)
         where TResult : class;
-    IPagedResult<TResult> FindPaged<TResult>(ISingleEntityQuery query)
+    IPagedResult<TResult> FindPaged<TResult>(IQuery query)
         where TResult : class;
 }

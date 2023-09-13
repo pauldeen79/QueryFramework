@@ -1,5 +1,5 @@
 ﻿namespace QueryFramework.SqlServer.Tests.Repositories;
 
-public interface ITestQuery : ISingleEntityQuery
+public interface ITestQuery : IQuery
 {
 }

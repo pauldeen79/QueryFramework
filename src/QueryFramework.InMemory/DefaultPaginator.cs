@@ -2,7 +2,7 @@
 
 public class DefaultPaginator : IPaginator
 {
-    public IEnumerable<T> GetPagedData<T>(ISingleEntityQuery query, IEnumerable<T> filteredRecords)
+    public IEnumerable<T> GetPagedData<T>(IQuery query, IEnumerable<T> filteredRecords)
         where T : class
     {
         IEnumerable<T> result = filteredRecords;
@@ -12,11 +12,11 @@ public class DefaultPaginator : IPaginator
             result = result.OrderBy(x => new OrderByWrapper(x, query.OrderByFields));
         }
 
-        if (query.Offset != null)
+        if (query.Offset is not null)
         {
             result = result.Skip(query.Offset.Value);
         }
-        if (query.Limit != null)
+        if (query.Limit is not null)
         {
             result = result.Take(query.Limit.Value);
         }

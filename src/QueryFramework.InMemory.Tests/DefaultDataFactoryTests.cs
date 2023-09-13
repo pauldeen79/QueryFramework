@@ -8,9 +8,9 @@ public class DefaultDataFactoryTests
         // Arrange
         var providerMock = new DataProviderMock();
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IEnumerable<object>?>(_ => null);
         var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         sut.Invoking(x => x.GetData<object>(query))
@@ -24,9 +24,9 @@ public class DefaultDataFactoryTests
         // Arrange
         var providerMock = new ContextDataProviderMock();
         providerMock.ReturnValue = true;
-        providerMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable<object>?>((_, _) => null);
+        providerMock.ContextResultDelegate = new Func<IQuery, object?, IEnumerable<object>?>((_, _) => null);
         var sut = new DefaultDataFactory(Enumerable.Empty<IDataProvider>(), new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         sut.Invoking(x => x.GetData<object>(query, default))
@@ -40,9 +40,9 @@ public class DefaultDataFactoryTests
         // Arrange
         var providerMock = new DataProviderMock();
         providerMock.ReturnValue = false;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IEnumerable<object>?>(_ => null);
         var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         sut.Invoking(x => x.GetData<object>(query))
@@ -57,9 +57,9 @@ public class DefaultDataFactoryTests
         var providerMock = new DataProviderMock();
         var data = Enumerable.Empty<object>();
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IEnumerable<object>?>(_ => data);
+        providerMock.ResultDelegate = new Func<IQuery, IEnumerable<object>?>(_ => data);
         var sut = new DefaultDataFactory(new[] { providerMock }, Enumerable.Empty<IContextDataProvider>());
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         var actual = sut.GetData<object>(query);
@@ -75,9 +75,9 @@ public class DefaultDataFactoryTests
         var providerMock = new ContextDataProviderMock();
         var data = Enumerable.Empty<object>();
         providerMock.ReturnValue = true;
-        providerMock.ContextResultDelegate = new Func<ISingleEntityQuery, object?, IEnumerable<object>?>((_, ctx) => ctx as IEnumerable<object> ?? Enumerable.Range(1, 10).Cast<object>());
+        providerMock.ContextResultDelegate = new Func<IQuery, object?, IEnumerable<object>?>((_, ctx) => ctx as IEnumerable<object> ?? Enumerable.Range(1, 10).Cast<object>());
         var sut = new DefaultDataFactory(Enumerable.Empty<IDataProvider>(), new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().Build();
 
         // Act
         var actual = sut.GetData<object>(query, data);

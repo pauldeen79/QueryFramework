@@ -16,7 +16,7 @@ public class TestRepositoryTests : TestBase<TestRepository>
 
         // Assert
         entity.Should().NotBeNull();
-        if (entity != null)
+        if (entity is not null)
         {
             entity.Id.Should().Be(1);
         }
@@ -36,7 +36,7 @@ public class TestRepositoryTests : TestBase<TestRepository>
 
         // Assert
         entity.Should().NotBeNull();
-        if (entity != null)
+        if (entity is not null)
         {
             entity.Id.Should().Be(1);
         }
@@ -56,7 +56,7 @@ public class TestRepositoryTests : TestBase<TestRepository>
 
         // Assert
         entity.Should().NotBeNull();
-        if (entity != null)
+        if (entity is not null)
         {
             entity.Id.Should().Be(2);
         }
@@ -75,7 +75,7 @@ public class TestRepositoryTests : TestBase<TestRepository>
 
         // Assert
         entity.Should().NotBeNull();
-        if (entity != null)
+        if (entity is not null)
         {
             entity.Id.Should().Be(1);
             entity.Name.Should().Be("Test");
@@ -95,7 +95,7 @@ public class TestRepositoryTests : TestBase<TestRepository>
 
         // Assert
         entity.Should().NotBeNull();
-        if (entity != null)
+        if (entity is not null)
         {
             entity.Id.Should().Be(1);
             entity.Name.Should().Be("Test");

@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Queries;
+﻿namespace QueryFramework.CodeGeneration.Models.Queries;
 
-public interface IFieldSelectionQuery : ISingleEntityQuery
+public interface IFieldSelectionQuery : IQuery
 {
     bool Distinct { get; }
     bool GetAllFields { get; }
