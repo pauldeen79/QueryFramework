@@ -1,4 +1,4 @@
-namespace QueryFramework.SqlServer.Tests;
+﻿namespace QueryFramework.SqlServer.Tests;
 
 public class DefaultQueryFieldInfoFactoryTests
 {
@@ -8,9 +8,9 @@ public class DefaultQueryFieldInfoFactoryTests
         // Arrange
         var providerMock = new QueryFieldInfoProviderMock();
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IQueryFieldInfo?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IQueryFieldInfo?>(_ => null);
         var sut = new DefaultQueryFieldInfoFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().BuildTyped();
 
         // Act
         sut.Invoking(x => x.Create(query))
@@ -24,9 +24,9 @@ public class DefaultQueryFieldInfoFactoryTests
         // Arrange
         var providerMock = new QueryFieldInfoProviderMock();
         providerMock.ReturnValue = false;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IQueryFieldInfo?>(_ => null);
+        providerMock.ResultDelegate = new Func<IQuery, IQueryFieldInfo?>(_ => null);
         var sut = new DefaultQueryFieldInfoFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().BuildTyped();
 
         // Act
         sut.Invoking(x => x.Create(query))
@@ -42,9 +42,9 @@ public class DefaultQueryFieldInfoFactoryTests
         var queryFieldInfoMock = Substitute.For<IQueryFieldInfo>();
         var queryFieldInfo = queryFieldInfoMock;
         providerMock.ReturnValue = true;
-        providerMock.ResultDelegate = new Func<ISingleEntityQuery, IQueryFieldInfo?>(_ => queryFieldInfo);
+        providerMock.ResultDelegate = new Func<IQuery, IQueryFieldInfo?>(_ => queryFieldInfo);
         var sut = new DefaultQueryFieldInfoFactory(new[] { providerMock });
-        var query = new SingleEntityQuery();
+        var query = new SingleEntityQueryBuilder().BuildTyped();
 
         // Act
         var actual = sut.Create(query);

@@ -2,7 +2,7 @@
 
 public class DefaultPaginator : IPaginator
 {
-    public IEnumerable<T> GetPagedData<T>(ISingleEntityQuery query, IEnumerable<T> filteredRecords)
+    public IEnumerable<T> GetPagedData<T>(IQuery query, IEnumerable<T> filteredRecords)
         where T : class
     {
         IEnumerable<T> result = filteredRecords;

@@ -26,11 +26,11 @@ public class DefaultFileDataProvider : IContextDataProvider
         _fileDataProvider = fileDataProvider;
     }
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, out IEnumerable<TResult>? result)
+    public bool TryGetData<TResult>(IQuery query, out IEnumerable<TResult>? result)
         where TResult : class
         => TryGetData(query, default, out result);
 
-    public bool TryGetData<TResult>(ISingleEntityQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
+    public bool TryGetData<TResult>(IQuery query, object? context, out IEnumerable<TResult>? result) where TResult : class
     {
         var fileSystemQuery = query as IFileSystemQuery;
         if (fileSystemQuery is null)

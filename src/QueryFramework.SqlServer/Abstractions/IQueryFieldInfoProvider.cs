@@ -2,5 +2,5 @@
 
 public interface IQueryFieldInfoProvider
 {
-    bool TryCreate(ISingleEntityQuery query, out IQueryFieldInfo? result);
+    bool TryCreate(IQuery query, out IQueryFieldInfo? result);
 }

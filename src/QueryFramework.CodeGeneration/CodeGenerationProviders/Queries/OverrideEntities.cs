@@ -16,7 +16,17 @@ public class OverrideEntities : QueryFrameworkCSharpClassBase
         .Select
         (
             x => new ClassBuilder(x)
-                .With(y => { if (y.Interfaces.Count > 0) { y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I"); } })
+                .With(y =>
+                {
+                    if (y.Interfaces.Count > 0)
+                    {
+                        y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+                    }
+                    if (!y.Name.ToString().EndsWith("Base"))
+                    {
+                        y.Interfaces.Add($"QueryFramework.Abstractions.Queries.I{y.Name}");
+                    }
+                })
                 .Build()
         ).ToArray();
 }

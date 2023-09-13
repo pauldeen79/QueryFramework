@@ -1,6 +1,4 @@
-﻿using ModelFramework.Objects.CodeStatements.Builders;
-
-namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public class AbstractionsAbstractExtensionsBuilders : QueryFrameworkCSharpClassBase, ICodeGenerationProvider

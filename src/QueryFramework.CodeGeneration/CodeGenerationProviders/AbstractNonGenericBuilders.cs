@@ -30,6 +30,8 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
                                 .Replace("new QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder(x)", "new QuerySortOrderBuilder(x)");
                         }
                     }
+                    
+                    //y.Interfaces.Add($"QueryFramework.Abstractions.Builders.I{y.Name}");
                 })
                 .Build()
         ).ToArray();

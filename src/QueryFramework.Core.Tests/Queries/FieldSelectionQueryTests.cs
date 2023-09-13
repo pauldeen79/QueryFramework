@@ -6,7 +6,7 @@ public class FieldSelectionQueryTests
     public void Can_Construct_FieldSelectionQuery_With_Default_Values()
     {
         // Act
-        var sut = new FieldSelectionQuery();
+        var sut = new FieldSelectionQueryBuilder().BuildTyped();
 
         // Assert
         sut.Filter.Conditions.Should().BeEmpty();
@@ -29,9 +29,12 @@ public class FieldSelectionQueryTests
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
         };
-        var orderByFields = new[] { new QuerySortOrderBuilder().WithFieldName("field")
-                                                               .WithOrder(QuerySortOrderDirection.Ascending)
-                                                               .Build() };
+        var orderByFields = new[]
+        {
+            new QuerySortOrderBuilder()
+                .WithFieldName("field")
+                .WithOrder(QuerySortOrderDirection.Ascending)
+        };
         var limit = 1;
         var offset = 2;
         var distinct = true;
@@ -39,7 +42,15 @@ public class FieldSelectionQueryTests
         var fields = new[] { "field" };
 
         // Act
-        var sut = new FieldSelectionQuery(limit, offset, distinct, getAllFields, new ComposedEvaluatableBuilder().AddConditions(conditions).BuildTyped(), orderByFields, fields);
+        var sut = new FieldSelectionQueryBuilder()
+            .WithLimit(limit)
+            .WithOffset(offset)
+            //TODO: Find out why With methods are  missing in the code generation?
+            .Chain(x => x.Distinct = distinct)
+            .Chain(x => x.GetAllFields = getAllFields)
+            .Chain(x => x.Filter.AddConditions(conditions))
+            .WithOrderByFields(orderByFields)
+            .Chain(x => x.FieldNames.AddRange(fields));
 
         // Assert
         sut.Filter.Conditions.Should().BeEquivalentTo(conditions);

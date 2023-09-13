@@ -3,19 +3,6 @@
 public class SingleEntityQueryTests
 {
     [Fact]
-    public void Can_Construct_SingleEntityQuery_With_Default_Values()
-    {
-        // Act
-        var sut = new SingleEntityQuery();
-
-        // Assert
-        sut.Filter.Conditions.Should().BeEmpty();
-        sut.Limit.Should().BeNull();
-        sut.Offset.Should().BeNull();
-        sut.OrderByFields.Should().BeEmpty();
-    }
-
-    [Fact]
     public void Can_Construct_SingleEntityQuery_With_Custom_Values()
     {
         // Arrange

@@ -66,7 +66,7 @@ public sealed class IntegrationTests : IDisposable
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
             .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
             .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act
@@ -91,7 +91,7 @@ public sealed class IntegrationTests : IDisposable
             .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
             .And(nameof(LineData.Line).DoesContain(nameof(Can_Query_Contents_Using_QueryProcessor)))
             .And(nameof(LineData.Line).DoesEndWith(" //*"))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act
@@ -114,7 +114,7 @@ public sealed class IntegrationTests : IDisposable
             .And(nameof(FileData.Contents).DoesContain("[Fact]"))
             .And(nameof(LineData.Line).DoesContain(nameof(Can_Query_Contents_Using_QueryProcessor)))
             .And(nameof(LineData.Line).DoesEndWith(" //*"))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act
@@ -137,7 +137,7 @@ public sealed class IntegrationTests : IDisposable
             .And(nameof(FileData.Directory).DoesNotContain($"{_slash}obj"))
             .And(nameof(LineData.Line).DoesStartWith("namespace"))
             .And(nameof(LineData.Line).DoesNotEndWith(";"))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act
@@ -157,7 +157,7 @@ public sealed class IntegrationTests : IDisposable
             .And(nameof(FileData.Directory).DoesNotContain($"{_slash}obj"))
             .And(nameof(LineData.Line).DoesStartWith("using "))
             .And(nameof(LineData.Line).DoesEndWith(";"))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act
@@ -175,7 +175,7 @@ public sealed class IntegrationTests : IDisposable
             .Where(new ComposableEvaluatableBuilder().WithLeftExpression(new ConstantExpressionBuilder().WithValue(1))
                                                      .WithOperator(new EqualsOperatorBuilder())
                                                      .WithRightExpression(new ConstantExpressionBuilder().WithValue(2)))
-            .Build());
+            .BuildTyped());
         var processor = CreateSut();
 
         // Act

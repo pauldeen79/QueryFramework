@@ -26,7 +26,7 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                     {
                         y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
                     }
-
+                    y.Interfaces.Add($"QueryFramework.Abstractions.Builders.Queries.I{y.Name}");
                     foreach (var method in y.Methods)
                     {
                         foreach (var statement in method.CodeStatements.OfType<LiteralCodeStatementBuilder>())
@@ -38,6 +38,18 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                                 .Replace(", OrderByFields", ", OrderByFields.Select(x => x.Build())");
                         }
                     }
+
+                    // hacking here... doesn't work out of the box :(
+                    y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+                    y.BaseClass.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+
+                    ////public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);
+                    //y.Methods.Add(new ClassMethodBuilder()
+                    //    .WithName("Validate")
+                    //    .WithTypeName($"{typeof(IEnumerable<>).WithoutGenerics()}<{typeof(ValidationResult).FullName}>")
+                    //    .AddParameter("validationContext", typeof(ValidationContext))
+                    //    .WithAbstract()
+                    //    );
 
                     foreach (var ctor in y.Constructors)
                     {

@@ -39,11 +39,11 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                      .Returns(x => x.ArgAt<string>(0));
         var queryFieldInfo = fieldInfoMock;
         var queryFieldInfoFactory = Fixture.Freeze<IQueryFieldInfoFactory>();
-        queryFieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
+        queryFieldInfoFactory.Create(Arg.Any<IQuery>())
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      0).DataCommand;
@@ -71,11 +71,11 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                      .Returns(x => x.ArgAt<string>(0));
         var queryFieldInfo = fieldInfoMock;
         var queryFieldInfoFactory = Fixture.Freeze<IQueryFieldInfoFactory>();
-        queryFieldInfoFactory.Create(Arg.Any<ISingleEntityQuery>())
+        queryFieldInfoFactory.Create(Arg.Any<IQuery>())
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).Build(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      pageSize);
@@ -89,7 +89,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     public void CreatePaged_Throws_When_DatabaseOperation_Is_Select_But_No_Database_Entity_Retriever_Provider_Is_Registered()
     {
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
            .Should().ThrowExactly<InvalidOperationException>()
            .And.Message.Should().Be("No database entity retriever provider was found for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
     }
@@ -104,7 +104,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                             .Returns(x => { x[0] = settings; return true; });
 
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().Build(), DatabaseOperation.Select, 0, 0))
+        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
            .Should().ThrowExactly<InvalidOperationException>()
            .And.Message.Should().Be("Database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
     }

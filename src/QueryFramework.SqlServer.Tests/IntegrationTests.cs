@@ -10,7 +10,7 @@ public sealed class IntegrationTests : IDisposable
     {
         _retrieverMock = Substitute.For<IDatabaseEntityRetriever<TestEntity>>();
         var databaseEntityRetrieverProviderMock = Substitute.For<IDatabaseEntityRetrieverProvider>();
-        databaseEntityRetrieverProviderMock.TryCreate(Arg.Any<ISingleEntityQuery>(), out Arg.Any<IDatabaseEntityRetriever<TestEntity>?>())
+        databaseEntityRetrieverProviderMock.TryCreate(Arg.Any<IQuery>(), out Arg.Any<IDatabaseEntityRetriever<TestEntity>?>())
                                            .Returns(x => { x[1] = _retrieverMock; return true; });
         _serviceProvider = new ServiceCollection()
             .AddQueryFrameworkSqlServer(x =>
@@ -40,7 +40,7 @@ public sealed class IntegrationTests : IDisposable
     public void Can_Query_Filtered_Records()
     {
         // Arrange
-        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).Build());
+        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).BuildTyped());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
         _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
                       .Returns(expectedResult);
@@ -58,7 +58,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new SingleEntityQueryBuilder()
             .Where("Field1".IsEqualTo("Value"))
-            .Build();
+            .BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -83,7 +83,7 @@ public sealed class IntegrationTests : IDisposable
                 .WithOperator(new EqualsOperatorBuilder())
                 .WithRightExpression(new ContextExpressionBuilder())
             )
-            .Build();
+            .BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, "Value");
@@ -105,7 +105,7 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .Where("Field1".IsEqualTo("Value1"))
             .And("Field2".IsNotEqualTo("Value2"))
-            .Build();
+            .BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -127,7 +127,7 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .Where("Field1".IsEqualTo("Value1"))
             .Or("Field2".IsGreaterThan("Value2"))
-            .Build();
+            .BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -148,7 +148,7 @@ public sealed class IntegrationTests : IDisposable
                 "Field2".IsEqualTo("A"),
                 "Field2".IsEqualTo("B")
             )
-            .Build();
+            .BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -170,7 +170,7 @@ public sealed class IntegrationTests : IDisposable
                         .WithFieldNameExpression("Field1")
                     )
                 )
-            ).Build();
+            ).BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -190,7 +190,7 @@ public sealed class IntegrationTests : IDisposable
                         .WithValue("Sql injection, here we go")
                     )
                 )
-            ).Build();
+            ).BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);
@@ -212,7 +212,7 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .OrderBy(new QuerySortOrderBuilder()
                 .WithFieldNameExpression(new DefaultExpressionBuilder<string>())
-            ).Build();
+            ).BuildTyped();
 
         // Act
         var actual = SqlHelpers.GetExpressionCommand(query, default);

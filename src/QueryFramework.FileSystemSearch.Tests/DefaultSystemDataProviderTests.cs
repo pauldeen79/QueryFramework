@@ -1,4 +1,4 @@
-namespace QueryFramework.FileSystemSearch.Tests;
+﻿namespace QueryFramework.FileSystemSearch.Tests;
 
 public class DefaultSystemDataProviderTests
 {
@@ -7,7 +7,7 @@ public class DefaultSystemDataProviderTests
     {
         // Act
         var actual = new DefaultFileDataProvider(Substitute.For<IFileDataProvider>())
-            .TryGetData<FileData>(new SingleEntityQuery(), out var result);
+            .TryGetData<FileData>(new SingleEntityQueryBuilder().Build(), out var result);
 
         // Assert
         actual.Should().BeFalse();

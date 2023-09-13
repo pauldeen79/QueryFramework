@@ -2,7 +2,7 @@
 
 public record TestQuery : SingleEntityQuery, ITestQuery
 {
-    public TestQuery()
+    public TestQuery() : base(null, null, new ComposedEvaluatableBuilder().BuildTyped(), Enumerable.Empty<IQuerySortOrder>())
     {
     }
 

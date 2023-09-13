@@ -11,11 +11,11 @@ public class QueryProcessor : IContextQueryProcessor
         _dataFactory = dataFactory;
     }
 
-    public IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query)
+    public IReadOnlyCollection<TResult> FindMany<TResult>(IQuery query)
         where TResult : class
         => FindMany<TResult>(query, default);
 
-    public IReadOnlyCollection<TResult> FindMany<TResult>(ISingleEntityQuery query, object? context)
+    public IReadOnlyCollection<TResult> FindMany<TResult>(IQuery query, object? context)
         where TResult : class
         => _paginator.GetPagedData
         (
@@ -23,11 +23,11 @@ public class QueryProcessor : IContextQueryProcessor
             GetData<TResult>(query, context)
         ).ToList();
 
-    public TResult? FindOne<TResult>(ISingleEntityQuery query)
+    public TResult? FindOne<TResult>(IQuery query)
         where TResult : class
         => FindOne<TResult>(query, default);
 
-    public TResult? FindOne<TResult>(ISingleEntityQuery query, object? context)
+    public TResult? FindOne<TResult>(IQuery query, object? context)
         where TResult : class
         => _paginator.GetPagedData
         (
@@ -35,11 +35,11 @@ public class QueryProcessor : IContextQueryProcessor
             GetData<TResult>(query, context)
         ).FirstOrDefault();
 
-    public IPagedResult<TResult> FindPaged<TResult>(ISingleEntityQuery query)
+    public IPagedResult<TResult> FindPaged<TResult>(IQuery query)
         where TResult : class
         => FindPaged<TResult>(query, default);
 
-    public IPagedResult<TResult> FindPaged<TResult>(ISingleEntityQuery query, object? context)
+    public IPagedResult<TResult> FindPaged<TResult>(IQuery query, object? context)
         where TResult : class
     {
         var filteredRecords = GetData<TResult>(query, context).ToArray();
@@ -52,7 +52,7 @@ public class QueryProcessor : IContextQueryProcessor
         );
     }
 
-    private IEnumerable<TResult> GetData<TResult>(ISingleEntityQuery query, object? context)
+    private IEnumerable<TResult> GetData<TResult>(IQuery query, object? context)
         where TResult : class
         => _dataFactory is IContextDataFactory c
             ? c.GetData<TResult>(query, context)

@@ -48,7 +48,7 @@ internal static class PagedSelectCommandBuilderExtensions
         => instance.DistinctValues(fieldSelectionQuery?.Distinct == true);
 
     internal static PagedSelectCommandBuilder Top(this PagedSelectCommandBuilder instance,
-                                                  ISingleEntityQuery query,
+                                                  IQuery query,
                                                   IPagedDatabaseEntityRetrieverSettings settings)
     {
         var limit = query.Limit.IfNotGreaterThan(settings.OverridePageSize);
@@ -59,18 +59,18 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     internal static PagedSelectCommandBuilder Offset(this PagedSelectCommandBuilder instance,
-                                                     ISingleEntityQuery query)
+                                                     IQuery query)
         => query.Offset.GetValueOrDefault() > 0
             ? instance.Skip(query.Offset.GetValueOrDefault())
             : instance;
 
     internal static PagedSelectCommandBuilder From(this PagedSelectCommandBuilder instance,
-                                                   ISingleEntityQuery query,
+                                                   IQuery query,
                                                    IPagedDatabaseEntityRetrieverSettings settings)
         => instance.From(query.GetTableName(settings.TableName));
 
     internal static PagedSelectCommandBuilder Where(this PagedSelectCommandBuilder instance,
-                                                    ISingleEntityQuery query,
+                                                    IQuery query,
                                                     IPagedDatabaseEntityRetrieverSettings settings,
                                                     IQueryFieldInfo fieldInfo,
                                                     ISqlExpressionEvaluator evaluator,
@@ -163,7 +163,7 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     internal static PagedSelectCommandBuilder OrderBy(this PagedSelectCommandBuilder instance,
-                                                      ISingleEntityQuery query,
+                                                      IQuery query,
                                                       IPagedDatabaseEntityRetrieverSettings settings,
                                                       IQueryFieldInfo fieldInfo,
                                                       ISqlExpressionEvaluator evaluator,

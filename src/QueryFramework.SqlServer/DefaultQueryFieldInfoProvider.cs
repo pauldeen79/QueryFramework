@@ -5,7 +5,7 @@
 /// </summary>
 public class DefaultQueryFieldInfoProvider : IQueryFieldInfoProvider
 {
-    public bool TryCreate(ISingleEntityQuery query, out IQueryFieldInfo? result)
+    public bool TryCreate(IQuery query, out IQueryFieldInfo? result)
     {
         result = new DefaultQueryFieldInfo();
         return true;

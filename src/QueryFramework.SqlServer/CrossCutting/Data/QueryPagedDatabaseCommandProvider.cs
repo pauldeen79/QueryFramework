@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.CrossCutting.Data;
 
-public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandProvider<ISingleEntityQuery>
+public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandProvider<IQuery>
 {
     private readonly IQueryFieldInfoFactory _fieldInfoFactory;
     private readonly IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> _settingsProviders;
@@ -15,10 +15,10 @@ public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandPro
         _evaluator = evaluator;
     }
 
-    public IPagedDatabaseCommand CreatePaged(ISingleEntityQuery source, DatabaseOperation operation, int offset, int pageSize)
+    public IPagedDatabaseCommand CreatePaged(IQuery source, DatabaseOperation operation, int offset, int pageSize)
         => CreatePaged(source, operation, offset, pageSize, default);
 
-    public IPagedDatabaseCommand CreatePaged(ISingleEntityQuery source, DatabaseOperation operation, int offset, int pageSize, object? context)
+    public IPagedDatabaseCommand CreatePaged(IQuery source, DatabaseOperation operation, int offset, int pageSize, object? context)
     {
         if (operation != DatabaseOperation.Select)
         {

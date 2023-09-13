@@ -32,7 +32,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Select_Uses_Star_When_Fields_Is_Empty_And_GetAllFields_Returns_Null_And_SelectAll_Is_True()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().SelectAll().Build();
+        var query = new FieldSelectionQueryBuilder().SelectAll().BuildTyped();
         _fieldInfoMock.GetAllFields()
                       .Returns(Enumerable.Empty<string>());
         _builder.From("MyTable");
@@ -48,7 +48,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Select_Uses_GetAllFields_When_Provided()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().SelectAll().Build();
+        var query = new FieldSelectionQueryBuilder().SelectAll().BuildTyped();
         _fieldInfoMock.GetAllFields()
                       .Returns(new[] { "Field1", "Field2", "Field3" });
         _builder.From("MyTable");
@@ -64,7 +64,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Select_Uses_Fields_From_Query_When_GetAllFields_Is_False()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+        var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -78,7 +78,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Select_Uses_GetFieldDelegate_When_Result_Is_Not_Null()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").Build();
+        var query = new FieldSelectionQueryBuilder().Select("Field1", "Field2", "Field3").BuildTyped();
         _fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>())
                       .Returns(x => x.ArgAt<string>(0) + "A");
         _builder.From("MyTable");
@@ -94,7 +94,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Does_Not_Append_Anything_When_Conditions_And_DefaultWhere_Are_Both_Empty()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Build();
+        var query = new FieldSelectionQueryBuilder().BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -108,7 +108,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Single_Condition_Without_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
+        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -122,7 +122,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Single_Condition_With_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).Build();
+        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).BuildTyped();
         _settingsMock.DefaultWhere.Returns("Field IS NOT NULL");
         _builder.From("MyTable");
 
@@ -139,7 +139,7 @@ public class DatabaseCommandBuilderExtensionsTests
         // Arrange
         var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value"))
                                                     .And("Field2".IsNotNull())
-                                                    .Build();
+                                                    .BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -153,7 +153,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Multiple_Conditions_With_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).And("Field2".IsNotNull()).Build();
+        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).And("Field2".IsNotNull()).BuildTyped();
         _settingsMock.DefaultWhere.Returns("Field IS NOT NULL");
         _builder.From("MyTable");
 
@@ -168,7 +168,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Does_Not_Append_Anything_When_Limit_And_Offset_Are_Both_Filled()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Limit(10).Offset(20).Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Limit(10).Offset(20).BuildTyped();
         _settingsMock.DefaultOrderBy.Returns("Ignored");
         _builder.From("MyTable");
 
@@ -183,7 +183,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Does_Not_Append_Anything_When_Query_OrderByFields_Is_Empty()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Build();
+        var query = new FieldSelectionQueryBuilder().BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -197,7 +197,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Appends_Single_OrderBy_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field").BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -211,7 +211,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Appends_Multiple_OrderBy_Clauses()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field1").ThenByDescending("Field2").Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field1").ThenByDescending("Field2").BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -225,7 +225,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Appends_Default_OrderBy_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Build();
+        var query = new FieldSelectionQueryBuilder().BuildTyped();
         _settingsMock.DefaultOrderBy.Returns("Field ASC");
         _builder.From("MyTable");
 
@@ -240,7 +240,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Does_Not_Append_DefaultOrderBy_When_OrderBy_Clause_Is_Present_On_Query()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field").BuildTyped();
         _settingsMock.DefaultOrderBy.Returns("Ignored");
         _builder.From("MyTable");
 
@@ -255,7 +255,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void OrderBy_Appends_Single_OrderBy_Clause_With_GetDatabaseFieldName()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field").BuildTyped();
         _fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>())
                       .Returns(x => x.ArgAt<string>(0) + "A");
         _builder.From("MyTable");
@@ -272,7 +272,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>()).Returns(default(string));
-        var query = new FieldSelectionQueryBuilder().OrderBy("Field").Build();
+        var query = new FieldSelectionQueryBuilder().OrderBy("Field").BuildTyped();
 
         // Act & Assert
         _builder.Invoking(x => x.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag, default))

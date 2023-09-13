@@ -3,28 +3,28 @@
 public class DefaultQueryProcessor : IQueryProcessor
 {
     private readonly IDatabaseEntityRetrieverFactory _databaseEntityRetrieverFactory;
-    private readonly IPagedDatabaseCommandProvider<ISingleEntityQuery> _databaseCommandProvider;
+    private readonly IPagedDatabaseCommandProvider<IQuery> _databaseCommandProvider;
 
     public DefaultQueryProcessor(IDatabaseEntityRetrieverFactory databaseEntityRetrieverFactory,
-                                 IPagedDatabaseCommandProvider<ISingleEntityQuery> databaseCommandProvider)
+                                 IPagedDatabaseCommandProvider<IQuery> databaseCommandProvider)
     {
         _databaseEntityRetrieverFactory = databaseEntityRetrieverFactory;
         _databaseCommandProvider = databaseCommandProvider;
     }
 
-    public IReadOnlyCollection<T> FindMany<T>(ISingleEntityQuery query)
+    public IReadOnlyCollection<T> FindMany<T>(IQuery query)
         where T : class
         => GetRetriever<T>(query).FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
 
-    public T? FindOne<T>(ISingleEntityQuery query)
+    public T? FindOne<T>(IQuery query)
         where T : class
         => GetRetriever<T>(query).FindOne(GenerateCommand(query, 1).DataCommand);
 
-    public IPagedResult<T> FindPaged<T>(ISingleEntityQuery query)
+    public IPagedResult<T> FindPaged<T>(IQuery query)
         where T : class
         => GetRetriever<T>(query).FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
 
-    private IPagedDatabaseCommand GenerateCommand(ISingleEntityQuery query, int limit)
+    private IPagedDatabaseCommand GenerateCommand(IQuery query, int limit)
         => _databaseCommandProvider.CreatePaged
         (
             query.Validate(),
@@ -33,7 +33,7 @@ public class DefaultQueryProcessor : IQueryProcessor
             limit
         );
 
-    private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>(ISingleEntityQuery query)
+    private IDatabaseEntityRetriever<TResult> GetRetriever<TResult>(IQuery query)
         where TResult : class
         => _databaseEntityRetrieverFactory.Create<TResult>(query);
 }

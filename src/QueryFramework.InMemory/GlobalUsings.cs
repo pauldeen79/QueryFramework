@@ -9,6 +9,5 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Domains;
-global using QueryFramework.Abstractions.Queries;
 global using QueryFramework.Core.Queries;
 global using QueryFramework.InMemory.Abstractions;
