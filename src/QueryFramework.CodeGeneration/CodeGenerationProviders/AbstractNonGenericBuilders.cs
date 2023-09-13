@@ -13,5 +13,24 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
         => GetImmutableNonGenericBuilderClasses(
             GetAbstractModels(),
             Constants.Namespaces.Core,
-            Constants.Namespaces.CoreBuilders);
+            Constants.Namespaces.CoreBuilders)
+        // hacking here... code generation doesn't work out of the box :(
+        .Cast<IClass>()
+        .Select
+        (
+            x => new ClassBuilder(x)
+                .With(y =>
+                {
+                    foreach (var ctor in y.Constructors)
+                    {
+                        foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
+                        {
+                            // hacking here... doesn't work out of the box :(
+                            statement.Statement
+                                .Replace("new QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder(x)", "new QuerySortOrderBuilder(x)");
+                        }
+                    }
+                })
+                .Build()
+        ).ToArray();
 }
