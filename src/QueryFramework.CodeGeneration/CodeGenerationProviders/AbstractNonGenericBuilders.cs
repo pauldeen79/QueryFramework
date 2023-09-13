@@ -31,7 +31,6 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
                         }
                     }
                     
-                    //y.Interfaces.Add($"QueryFramework.Abstractions.Builders.I{y.Name}");
                 })
                 .Build()
         ).ToArray();

@@ -43,14 +43,6 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                     y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
                     y.BaseClass.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
 
-                    ////public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);
-                    //y.Methods.Add(new ClassMethodBuilder()
-                    //    .WithName("Validate")
-                    //    .WithTypeName($"{typeof(IEnumerable<>).WithoutGenerics()}<{typeof(ValidationResult).FullName}>")
-                    //    .AddParameter("validationContext", typeof(ValidationContext))
-                    //    .WithAbstract()
-                    //    );
-
                     foreach (var ctor in y.Constructors)
                     {
                         foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
