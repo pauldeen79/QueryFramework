@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Abstractions.Tests.Extensions;
 
-public class SingleEntityQueryExtensionsTests
+public class QueryExtensionsTests
 {
     [Fact]
     public void Validate_Validates_Instance()

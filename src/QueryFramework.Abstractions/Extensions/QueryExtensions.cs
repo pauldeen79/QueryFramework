@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Abstractions.Extensions;
 
-public static class SingleEntityQueryExtensions
+public static class QueryExtensions
 {
     public static T Validate<T>(this T instance)
         where T : IQuery
