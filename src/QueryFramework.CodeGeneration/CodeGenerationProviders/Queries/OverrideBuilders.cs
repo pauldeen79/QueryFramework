@@ -14,7 +14,7 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
         => GetImmutableBuilderClasses(
             GetOverrideModels(typeof(IQuery)),
             Constants.Namespaces.CoreQueries,
-            CurrentNamespace)
+            base.CurrentNamespace)
         // hacking here... code generation doesn't work out of the box :(
         .Cast<IClass>()
         .Select
@@ -27,33 +27,43 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                         y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
                     }
                     y.Interfaces.Add($"QueryFramework.Abstractions.Builders.Queries.I{y.Name}");
-                    foreach (var method in y.Methods)
-                    {
-                        foreach (var statement in method.CodeStatements.OfType<LiteralCodeStatementBuilder>())
-                        {
-                            // hacking here... doesn't work out of the box :(
-                            statement.Statement
-                                .Replace("GroupByFilter?.Build()", "GroupByFilter?.BuildTyped()")
-                                .Replace("Filter?.Build()", "Filter?.BuildTyped()")
-                                .Replace(", OrderByFields", ", OrderByFields.Select(x => x.Build())");
-                        }
-                    }
-
-                    // hacking here... doesn't work out of the box :(
-                    y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
                     y.BaseClass.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
 
-                    foreach (var ctor in y.Constructors)
-                    {
-                        foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
-                        {
-                            // hacking here... doesn't work out of the box :(
-                            statement.Statement
-                                .Replace("new ExpressionFramework.Domain.Builders.ExpressionBuilder(x)", "ExpressionBuilderFactory.Create(x)")
-                                .Replace("new QueryFramework.Abstractions.Builders.IQueryParameterBuilder(x)", "new QueryParameterBuilder(x)");
-                        }
-                    }
+                    FixMethods(y);
+                    FixConstructors(y);
                 })
                 .Build()
         ).ToArray();
+
+    private static void FixConstructors(ClassBuilder y)
+    {
+        foreach (var ctor in y.Constructors)
+        {
+            foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
+            {
+                // hacking here... doesn't work out of the box :(
+                statement.Statement
+                    .Replace("new ExpressionFramework.Domain.Builders.ExpressionBuilder(x)", "ExpressionBuilderFactory.Create(x)")
+                    .Replace("new QueryFramework.Abstractions.Builders.IQueryParameterBuilder(x)", "new QueryParameterBuilder(x)");
+            }
+        }
+    }
+
+    private static void FixMethods(ClassBuilder y)
+    {
+        foreach (var method in y.Methods)
+        {
+            foreach (var statement in method.CodeStatements.OfType<LiteralCodeStatementBuilder>())
+            {
+                // hacking here... doesn't work out of the box :(
+                statement.Statement
+                    .Replace("GroupByFilter?.Build()", "GroupByFilter?.BuildTyped()")
+                    .Replace("Filter?.Build()", "Filter?.BuildTyped()")
+                    .Replace(", OrderByFields", ", OrderByFields.Select(x => x.Build())");
+            }
+        }
+
+        // hacking here... doesn't work out of the box :(
+        y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+    }
 }
