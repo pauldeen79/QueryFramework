@@ -57,8 +57,8 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
 
     private string GetCustomBuilderConstructorInitializeExpressionForSingleProperty(ClassPropertyBuilder property, string typeName)
         => property.IsNullable
-            ? "{0} = source.{0} == null ? null : " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})"
-            : "{0} = " + GetBuilderNamespace(typeName) + ".ExpressionBuilderFactory.Create(source.{0})";
+            ? $"{{0}} = source.{{0}} == null ? null : {GetBuilderNamespace(typeName)}.{nameof(ExpressionBuilderFactory)}.Create(source.{{0}})"
+            : $"{{0}} = {GetBuilderNamespace(typeName)}.{nameof(ExpressionBuilderFactory)}.Create(source.{{0}})";
     // When lazy initialization has been fixed, use this instead:
         ///=> property.IsNullable
         ///    ? "_{1}Delegate = new (() => source.{0} == null ? null : " + GetBuilderNamespace(typeName) + "." + GetEntityClassName(typeName) + "BuilderFactory.Create(source.{0}))"

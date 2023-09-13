@@ -20,11 +20,11 @@ public class OverrideEntities : QueryFrameworkCSharpClassBase
                 {
                     if (y.Interfaces.Count > 0)
                     {
-                        y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+                        y.Interfaces[0] = y.Interfaces[0].Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
                     }
                     if (!y.Name.ToString().EndsWith("Base"))
                     {
-                        y.Interfaces.Add($"QueryFramework.Abstractions.Queries.I{y.Name}");
+                        y.Interfaces.Add($"{Constants.Namespaces.AbstractionsQueries}.I{y.Name}");
                     }
                 })
                 .Build()

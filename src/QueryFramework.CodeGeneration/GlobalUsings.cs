@@ -5,6 +5,7 @@ global using System.Linq;
 global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
 global using ExpressionFramework.Domain;
+global using ExpressionFramework.Domain.Builders;
 global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Evaluatables;
 global using ModelFramework.CodeGeneration.CodeGenerationProviders;

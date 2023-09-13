@@ -18,7 +18,7 @@ public class AbstractionsAbstractBuildersInterfaces : QueryFrameworkCSharpClassB
                   .WithPartial()
                   .WithNamespace(Constants.Namespaces.AbstractionsBuilders)
                   .WithName($"I{x.Name}")
-                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == "Validate"))
+                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == nameof(IValidatableObject.Validate)))
                   .Build()
         )
         .ToArray();

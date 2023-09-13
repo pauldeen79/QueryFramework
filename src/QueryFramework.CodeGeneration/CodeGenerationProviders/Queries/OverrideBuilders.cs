@@ -24,10 +24,10 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                 {
                     if (y.Interfaces.Count > 0)
                     {
-                        y.Interfaces[0] = y.Interfaces[0].Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+                        y.Interfaces[0] = y.Interfaces[0].Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
                     }
-                    y.Interfaces.Add($"QueryFramework.Abstractions.Builders.Queries.I{y.Name}");
-                    y.BaseClass.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+                    y.Interfaces.Add($"{Constants.Namespaces.AbstractionsBuildersQueries}.I{y.Name}");
+                    y.BaseClass.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
 
                     FixMethods(y);
                     FixConstructors(y);
@@ -41,10 +41,9 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
         {
             foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
             {
-                // hacking here... doesn't work out of the box :(
                 statement.Statement
                     .Replace("new ExpressionFramework.Domain.Builders.ExpressionBuilder(x)", "ExpressionBuilderFactory.Create(x)")
-                    .Replace("new QueryFramework.Abstractions.Builders.IQueryParameterBuilder(x)", "new QueryParameterBuilder(x)");
+                    .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}.");
             }
         }
     }
@@ -55,7 +54,6 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
         {
             foreach (var statement in method.CodeStatements.OfType<LiteralCodeStatementBuilder>())
             {
-                // hacking here... doesn't work out of the box :(
                 statement.Statement
                     .Replace("GroupByFilter?.Build()", "GroupByFilter?.BuildTyped()")
                     .Replace("Filter?.Build()", "Filter?.BuildTyped()")
@@ -63,7 +61,6 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
             }
         }
 
-        // hacking here... doesn't work out of the box :(
-        y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace("QueryFramework.Core.Queries.", "QueryFramework.Abstractions.Queries.I");
+        y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
     }
 }

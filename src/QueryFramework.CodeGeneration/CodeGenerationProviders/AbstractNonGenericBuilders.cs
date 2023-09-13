@@ -27,7 +27,7 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
                         {
                             // hacking here... doesn't work out of the box :(
                             statement.Statement
-                                .Replace("new QueryFramework.Abstractions.Builders.IQuerySortOrderBuilder(x)", "new QuerySortOrderBuilder(x)");
+                                .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}.");
                         }
                     }
                     

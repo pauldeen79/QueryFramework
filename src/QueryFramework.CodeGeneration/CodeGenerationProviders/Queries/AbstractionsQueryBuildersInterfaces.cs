@@ -18,7 +18,7 @@ public class AbstractionsQueryBuildersInterfaces : QueryFrameworkCSharpClassBase
                   .WithPartial()
                   .WithNamespace(Constants.Namespaces.AbstractionsBuildersQueries)
                   .WithName($"I{x.Name}")
-                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == "Validate"))
+                  .Chain(x => x.Methods.RemoveAll(y => y.Name.ToString() == nameof(IValidatableObject.Validate)))
                   .Chain(x => x.Interfaces[0] = Constants.TypeNames.IQueryBuilder) // hacking here... code generation doesn't work out of the box :(
                   .Chain(x => x.Properties.RemoveAll(x => typeof(IQuery).GetProperties().Select(y => y.Name).Contains(x.Name.ToString()))) // hacking here... code generation doesn't work out of the box :(
                   .Chain(x => x.Methods.First(x => x.Name.ToString() == "Build").WithTypeName($"{Constants.Namespaces.AbstractionsQueries}.{x.Name.ToString().ReplaceSuffix("Builder", string.Empty, StringComparison.InvariantCulture)}").WithName("BuildTyped"))
