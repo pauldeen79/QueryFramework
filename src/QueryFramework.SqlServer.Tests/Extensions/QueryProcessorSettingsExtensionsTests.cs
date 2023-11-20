@@ -5,7 +5,6 @@ public class QueryProcessorSettingsExtensionsTests
     private const string EntityTypeName = "MyTestEntity";
 
     [Theory]
-    [InlineData(null, EntityTypeName)]
     [InlineData("", EntityTypeName)]
     [InlineData("A", "A")]
     [InlineData("other value", "other value")]

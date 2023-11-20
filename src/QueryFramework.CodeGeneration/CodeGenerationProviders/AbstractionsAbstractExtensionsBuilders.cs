@@ -15,12 +15,12 @@ public class AbstractionsAbstractExtensionsBuilders : QueryFrameworkCSharpClassB
             Constants.Namespaces.AbstractionsExtensions,
             Constants.Namespaces.AbstractionsBuilders
         ).Select(x => new ClassBuilder(x)
-            .With(x => x.Methods.ForEach(y => y.Parameters.ForEach(z => z.TypeName.Replace($"{typeof(IReadOnlyCollection<>).WithoutGenerics()}<", $"{typeof(IEnumerable<>).WithoutGenerics()}<")))) // hacking here... code generation doesn't work out of the box :(
             .With(x => x.Methods.ForEach(y =>
             {
                 // hacking here... code generation doesn't work out of the box :(
-                foreach (var parameter in y.Parameters.Where(z => z.TypeName.ToString().Contains($"{typeof(IEnumerable<>).WithoutGenerics()}<")))
+                foreach (var parameter in y.Parameters.Where(z => z.TypeName.ToString().Contains($"{typeof(IReadOnlyCollection<>).WithoutGenerics()}<")))
                 {
+                    parameter.TypeName = parameter.TypeName.Replace($"{typeof(IReadOnlyCollection<>).WithoutGenerics()}<", $"{typeof(IEnumerable<>).WithoutGenerics()}<");
                     foreach (var literalCodeStatement in y.CodeStatements.OfType<LiteralCodeStatementBuilder>().Where(z => z.Statement.ToString().Contains($"instance.{parameter.Name} = ", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         literalCodeStatement.WithStatement($"instance.{parameter.Name.ToString().Substring(0, 1).ToUpperInvariant()}{parameter.Name.ToString().Substring(1)} = new {typeof(List<>).WithoutGenerics()}<{parameter.TypeName.ToString().GetGenericArguments()}>({parameter.Name});");

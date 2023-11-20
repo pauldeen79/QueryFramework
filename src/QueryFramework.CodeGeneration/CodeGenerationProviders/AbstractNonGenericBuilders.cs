@@ -26,8 +26,8 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
                         foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
                         {
                             // hacking here... doesn't work out of the box :(
-                            statement.Statement
-                                .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}.");
+                            statement.WithStatement(statement.Statement
+                                .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}."));
                         }
                     }
                     

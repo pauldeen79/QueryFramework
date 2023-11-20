@@ -26,7 +26,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - name: Restore
         run: dotnet restore
       - name: Install T4Plus
@@ -36,7 +36,7 @@ jobs:
       - name: Build code generation artifacts
         run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
       - name: Run code generation
-        run: t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net7.0/QueryFramework.CodeGeneration.dll -p src/
+        run: t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
 
       # option 2: post build event (which needs to be removed in Sonar build pipeline at least)
       #- name: Force first-time run of code generation
@@ -87,7 +87,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - name: Create Release NuGet package
         run: |
           arrTag=(${GITHUB_REF//\// })
@@ -98,7 +98,7 @@ jobs:
           dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
           dotnet restore
           dotnet build -c Release src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-          t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net7.0/QueryFramework.CodeGeneration.dll -p src/
+          t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
