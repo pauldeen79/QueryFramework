@@ -32,7 +32,7 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
 #pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
         }
         var result = new List<ComposableEvaluatableBuilder>();
-        for (int i = 0; i < items.Length && itemCountIsCorrect; i += 4)
+        for (int i = 0; i < items.Length; i += 4)
         {
             //verify that:
             //-items[i] needs to be a valid fieldname
@@ -111,33 +111,35 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
         };
 
     private static OperatorBuilder? GetQueryOperator(string @operator)
+// False positive
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
         => @operator.ToUpper(CultureInfo.InvariantCulture) switch
         {
             var x when
-                    x == "=" ||
-                    x == "==" => new EqualsOperatorBuilder(),
+                x == "=" ||
+                x == "==" => new EqualsOperatorBuilder(),
             var x when
-                    x == "<>" ||
-                    x == "!=" ||
-                    x == "#" => new NotEqualsOperatorBuilder(),
+                x == "<>" ||
+                x == "!=" ||
+                x == "#" => new NotEqualsOperatorBuilder(),
             "<" => new IsSmallerOperatorBuilder(),
             ">" => new IsGreaterOperatorBuilder(),
             "<=" => new IsSmallerOrEqualOperatorBuilder(),
             ">=" => new IsGreaterOrEqualOperatorBuilder(),
             "CONTAINS" => new StringContainsOperatorBuilder(),
             var x when
-                    x == "NOTCONTAINS" ||
-                    x == "NOT CONTAINS" => new StringNotContainsOperatorBuilder(),
+                x == "NOTCONTAINS" ||
+                x == "NOT CONTAINS" => new StringNotContainsOperatorBuilder(),
             "IS" => new IsNullOperatorBuilder(),
             var x when
-                    x == "ISNOT" ||
-                    x == "IS NOT" => new IsNotNullOperatorBuilder(),
+                x == "ISNOT" ||
+                x == "IS NOT" => new IsNotNullOperatorBuilder(),
             var x when
                 x == "STARTS WITH" ||
                 x == "STARTSWITH" => new StartsWithOperatorBuilder(),
             var x when
-                    x == "ENDS WITH" ||
-                    x == "ENDSWITH" => new EndsWithOperatorBuilder(),
+                x == "ENDS WITH" ||
+                x == "ENDSWITH" => new EndsWithOperatorBuilder(),
             var x when
                 x == "NOT STARTS WITH" ||
                 x == "NOTSTARTSWITH" => new NotStartsWithOperatorBuilder(),
@@ -146,4 +148,5 @@ public class SingleEntityQueryParser<TQueryBuilder, TQueryExpressionBuilder> : I
                 x == "NOTENDSWITH" => new NotEndsWithOperatorBuilder(),
             _ => null // Unknown operator
         };
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
 }
