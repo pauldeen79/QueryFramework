@@ -20,7 +20,9 @@ public class AbstractionsQueryExtensionsBuilders : QueryFrameworkCSharpClassBase
                 // hacking here... code generation doesn't work out of the box :(
                 foreach (var method in y.Methods.Where(z => z.Name.ToString().StartsWith("With") && z.Parameters.Count == 2 && z.Parameters[1].TypeName.ToString().Contains("System.Collections.Generic.")))
                 {
-                    method.CodeStatements.OfType<LiteralCodeStatementBuilder>().First().Statement.Replace(";", ".ToList();");
+                    method.Parameters.ForEach(parameter => parameter.TypeName = parameter.TypeName.Replace($"{typeof(IReadOnlyCollection<>).WithoutGenerics()}<", $"{typeof(IEnumerable<>).WithoutGenerics()}<"));
+                    var x = method.CodeStatements.OfType<LiteralCodeStatementBuilder>().First();
+                    x.WithStatement(x.Statement.Replace(";", ".ToList();"));
                 }
 
                 y.Methods.RemoveAll(z => typeof(IQuery).GetProperties().Select(p => $"With{p.Name}").Contains(z.Name.ToString()));

@@ -27,7 +27,7 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
                         y.Interfaces[0] = y.Interfaces[0].Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
                     }
                     y.Interfaces.Add($"{Constants.Namespaces.AbstractionsBuildersQueries}.I{y.Name}");
-                    y.BaseClass.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
+                    y.WithBaseClass(y.BaseClass.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I"));
 
                     FixMethods(y);
                     FixConstructors(y);
@@ -41,9 +41,9 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
         {
             foreach (var statement in ctor.CodeStatements.OfType<LiteralCodeStatementBuilder>())
             {
-                statement.Statement
+                statement.WithStatement(statement.Statement
                     .Replace("new ExpressionFramework.Domain.Builders.ExpressionBuilder(x)", "ExpressionBuilderFactory.Create(x)")
-                    .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}.");
+                    .Replace($"new {Constants.Namespaces.AbstractionsBuilders}.I", $"new {Constants.Namespaces.CoreBuilders}."));
             }
         }
     }
@@ -54,13 +54,14 @@ public class OverrideBuilders : QueryFrameworkCSharpClassBase
         {
             foreach (var statement in method.CodeStatements.OfType<LiteralCodeStatementBuilder>())
             {
-                statement.Statement
+                statement.WithStatement(statement.Statement
                     .Replace("GroupByFilter?.Build()", "GroupByFilter?.BuildTyped()")
                     .Replace("Filter?.Build()", "Filter?.BuildTyped()")
-                    .Replace(", OrderByFields", ", OrderByFields.Select(x => x.Build())");
+                    /*.Replace(", OrderByFields", ", OrderByFields.Select(x => x.Build())")*/);
             }
         }
 
-        y.Methods.Find(z => z.Name.ToString() == "BuildTyped")!.TypeName.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I");
+        var z = y.Methods.Find(z => z.Name.ToString() == "BuildTyped");
+        z!.WithTypeName(z.TypeName.Replace($"{Constants.Namespaces.CoreQueries}.", $"{Constants.Namespaces.AbstractionsQueries}.I"));
     }
 }

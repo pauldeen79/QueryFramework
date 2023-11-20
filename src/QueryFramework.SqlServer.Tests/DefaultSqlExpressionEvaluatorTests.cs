@@ -82,6 +82,8 @@ public class DefaultSqlExpressionEvaluatorTests
         actual.Should().Be(result);
     }
 
-    private ISqlExpressionEvaluator CreateSut() => new DefaultSqlExpressionEvaluator(new[] { _expressionEvaluatorProviderMock },
-                                                                                     new[] { _functionParserMock });
+    private DefaultSqlExpressionEvaluator CreateSut()
+        => new DefaultSqlExpressionEvaluator(
+            new[] { _expressionEvaluatorProviderMock },
+            new[] { _functionParserMock });
 }

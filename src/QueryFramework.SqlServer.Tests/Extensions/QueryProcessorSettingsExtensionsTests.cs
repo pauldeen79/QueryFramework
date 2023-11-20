@@ -10,7 +10,7 @@ public class QueryProcessorSettingsExtensionsTests
     [InlineData("A", "A")]
     [InlineData("other value", "other value")]
     [InlineData(" ", " ")]
-    public void WithDefaultTableName_Returns_Correct_Result(string input, string expectedOutput)
+    public void WithDefaultTableName_Returns_Correct_Result(string? input, string expectedOutput)
     {
         // Arrange
         var sut = new PagedDatabaseEntityRetrieverSettings(input, "", "", "", null);
