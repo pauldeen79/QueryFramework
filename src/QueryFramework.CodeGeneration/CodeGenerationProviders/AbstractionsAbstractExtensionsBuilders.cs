@@ -26,6 +26,7 @@ public class AbstractionsAbstractExtensionsBuilders : QueryFrameworkCSharpClassB
                         literalCodeStatement.WithStatement($"instance.{parameter.Name.ToString().Substring(0, 1).ToUpperInvariant()}{parameter.Name.ToString().Substring(1)} = new {typeof(List<>).WithoutGenerics()}<{parameter.TypeName.ToString().GetGenericArguments()}>({parameter.Name});");
                     }
                 }
+                y.GenericTypeArgumentConstraints = y.GenericTypeArgumentConstraints.Select(z => z.Replace("where T : ", "where T : I", StringComparison.Ordinal)).ToList();
             }))
             .Build()
         ).ToArray();

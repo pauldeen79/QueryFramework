@@ -25,6 +25,18 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
     protected override bool InheritFromInterfaces => true;
     protected override bool UseLazyInitialization => false; // this needs to be disabled, because extension method-based builders currently don't support this
 
+    // Hacking because Models.Queries is not treated as Abstractions...
+    protected override bool IsMemberValid(IParentTypeContainer parentNameContainer, INameContainer nameContainer, ITypeBase typeBase)
+        => parentNameContainer is not null
+        && typeBase is not null
+        && (string.IsNullOrEmpty(parentNameContainer.ParentTypeFullName)
+            || (BaseClass is not null && !BaseClass.Properties.Any(x => x.Name == nameContainer.Name))
+            || parentNameContainer.ParentTypeFullName.GetClassName().In(typeBase.Name, $"I{typeBase.Name}")
+            || Array.Exists(GetModelAbstractBaseTyped(), x => x == parentNameContainer.ParentTypeFullName.GetClassName())
+            || (parentNameContainer.ParentTypeFullName.StartsWith($"{CodeGenerationRootNamespace}.Models.Abstractions.") && typeBase.Namespace == RootNamespace)
+            || (parentNameContainer.ParentTypeFullName.StartsWith($"{CodeGenerationRootNamespace}.Models.Queries.") && typeBase.Namespace == RootNamespace)
+        );
+
     protected override IEnumerable<KeyValuePair<string, string>> GetCustomBuilderNamespaceMapping()
     {
         yield return new KeyValuePair<string, string>(typeof(ComposedEvaluatable).Namespace!, $"{typeof(Evaluatable).Namespace}.Builders.Evaluatables");

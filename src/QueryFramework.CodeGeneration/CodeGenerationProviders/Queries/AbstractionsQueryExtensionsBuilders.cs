@@ -26,6 +26,7 @@ public class AbstractionsQueryExtensionsBuilders : QueryFrameworkCSharpClassBase
                 }
 
                 y.Methods.RemoveAll(z => typeof(IQuery).GetProperties().Select(p => $"With{p.Name}").Contains(z.Name.ToString()));
+                y.Methods.ForEach(z => z.GenericTypeArgumentConstraints = z.GenericTypeArgumentConstraints.Select(a => a.Replace("where T : ", "where T : I", StringComparison.Ordinal)).ToList());
             })
             .Build()
         ).ToArray();

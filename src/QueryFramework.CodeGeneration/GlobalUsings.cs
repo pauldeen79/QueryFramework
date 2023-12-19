@@ -10,6 +10,7 @@ global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Evaluatables;
 global using ModelFramework.CodeGeneration.CodeGenerationProviders;
 global using ModelFramework.Common;
+global using ModelFramework.Common.Contracts;
 global using ModelFramework.Common.Extensions;
 global using ModelFramework.Objects.Builders;
 global using ModelFramework.Objects.CodeStatements.Builders;

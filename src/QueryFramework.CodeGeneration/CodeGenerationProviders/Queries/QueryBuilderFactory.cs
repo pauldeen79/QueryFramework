@@ -6,7 +6,7 @@ public class QueryBuilderFactory : QueryFrameworkCSharpClassBase
     public override string Path => $"{Constants.Namespaces.Core}/Builders";
 
     public override object CreateModel()
-        => CreateBuilderFactoryModels(
+        => CreateBuilderFactories(
             GetOverrideModels(typeof(IQuery)),
             new(
                 Constants.Namespaces.CoreBuilders,
