@@ -11,5 +11,15 @@ public class AbstractEntities : QueryFrameworkCSharpClassBase
     protected override ArgumentValidationType ValidateArgumentsInConstructor => ArgumentValidationType.None; // not needed for abstract entities, because each derived class will do its own validation
 
     public override object CreateModel()
-        => GetImmutableClasses(GetAbstractModels(), Constants.Namespaces.Core);
+        => GetImmutableClasses(GetAbstractModels(), Constants.Namespaces.Core)
+            .OfType<IClass>()
+            .Select(x => new ClassBuilder(x)
+                .AddMethods(new ClassMethodBuilder()
+                    .WithName("ToBuilder")
+                    .WithAbstract()
+                    .WithTypeName($"{Constants.Namespaces.CoreBuilders}.{x.Name}Builder")
+                )
+                .BuildTyped()
+            )
+            .ToArray();
 }

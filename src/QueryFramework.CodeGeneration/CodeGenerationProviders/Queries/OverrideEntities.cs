@@ -27,6 +27,8 @@ public class OverrideEntities : QueryFrameworkCSharpClassBase
                         y.Interfaces.Add($"{Constants.Namespaces.AbstractionsQueries}.I{y.Name}");
                     }
                 })
-                .Build()
-        ).ToArray();
+                .BuildTyped()
+        )
+        .Select(x => FixOverrideEntity(x, "Query", $"{Constants.Namespaces.CoreBuilders}.Queries"))
+        .ToArray();
 }

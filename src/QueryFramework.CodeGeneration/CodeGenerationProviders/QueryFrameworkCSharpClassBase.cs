@@ -67,6 +67,21 @@ public abstract partial class QueryFrameworkCSharpClassBase : CSharpClassBase
         }
     }
 
+    protected IClass FixOverrideEntity(IClass cls, string entityName, string buildersNamespace)
+    {
+        cls = cls.IsNotNull(nameof(cls));
+
+        return new ClassBuilder(cls)
+            .AddMethods(new ClassMethodBuilder()
+                .WithName("ToBuilder")
+                .WithOverride()
+                .WithTypeName($"{Constants.Namespaces.CoreBuilders}.{entityName}Builder")
+                .AddLiteralCodeStatements(cls.Name.EndsWith("Base")
+                    ? $"throw new {typeof(NotSupportedException).FullName}(\"You can't convert a base class to builder\");"
+                    : $"return new {buildersNamespace}.{cls.Name}Builder(this);")
+            ).BuildTyped();
+    }
+
     private string GetCustomBuilderConstructorInitializeExpressionForSingleProperty(ClassPropertyBuilder property, string typeName)
         => property.IsNullable
             ? $"{{0}} = source.{{0}} == null ? null : {GetBuilderNamespace(typeName)}.{nameof(ExpressionBuilderFactory)}.Create(source.{{0}})"
