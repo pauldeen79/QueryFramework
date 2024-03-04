@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="pauldeen79.ClassFramework.TemplateFramework" Version="0.2.0" />
+    <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.6.1" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Specialized" Version="0.6.1" />
     <PackageReference Include="pauldeen79.TemplateFramework.Core.CodeGeneration" Version="0.9.0" />
   </ItemGroup>

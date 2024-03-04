@@ -1,4 +1,7 @@
-﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿using ExpressionFramework.Domain.Builders.Evaluatables;
+using Pipelines = ClassFramework.Pipelines;
+
+namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
@@ -19,4 +22,43 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
     protected override bool CopyInterfaces => true;
+
+    protected override IEnumerable<NamespaceMappingBuilder> CreateNamespaceMappings()
+    {
+        // From models to domain entities
+        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models").WithTargetNamespace(CoreNamespace);
+        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.Domains").WithTargetNamespace($"{ProjectName}.Abstractions.Domains");
+        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.Abstractions").WithTargetNamespace($"{ProjectName}.Abstractions");
+
+        // From domain entities to builders
+        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{ProjectName}.Abstractions").WithTargetNamespace($"{ProjectName}.Abstractions")
+            .AddMetadata
+            (
+                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(Pipelines.MetadataNames.CustomBuilderInterfaceNamespace),
+                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(Pipelines.MetadataNames.CustomBuilderInterfaceName),
+                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(Pipelines.MetadataNames.CustomBuilderParentTypeNamespace),
+                new MetadataBuilder().WithValue("{ParentTypeName.ClassName}Builder").WithName(Pipelines.MetadataNames.CustomBuilderParentTypeName)
+            );
+
+        foreach (var entityClassName in GetPureAbstractModels().Select(x => x.GetEntityClassName().ReplaceSuffix("Base", string.Empty, StringComparison.Ordinal)))
+        {
+            yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.{entityClassName}s").WithTargetNamespace($"{CoreNamespace}.{entityClassName}s");
+            yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CoreNamespace}.{entityClassName}s").WithTargetNamespace($"{CoreNamespace}.{entityClassName}s");
+        }
+    }
+
+    //protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
+    //    => base.CreateTypenameMappings().Concat(
+    //    [
+    //        new TypenameMappingBuilder()
+    //            .WithSourceTypeName(typeof(ComposedEvaluatable).FullName!)
+    //            .WithTargetTypeName(typeof(ComposedEvaluatable).FullName!)
+    //            .AddMetadata
+    //            (
+    //                new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(Pipelines.MetadataNames.CustomBuilderNamespace),
+    //                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(Pipelines.MetadataNames.CustomBuilderName),
+    //                new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}([Name])"/*"[Name][NullableSuffix].ToBuilder()"*/).WithName(Pipelines.MetadataNames.CustomBuilderSourceExpression),
+    //                new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+    //            )
+    //    ]);
 }

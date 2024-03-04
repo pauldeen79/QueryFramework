@@ -13,7 +13,7 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase
         => GetBuilders
         (
             GetCoreModels(),
-            Constants.Namespaces.Core,
-            Constants.Namespaces.CoreBuilders
+            Constants.Namespaces.CoreBuilders,
+            Constants.Namespaces.Core
         );
 }
