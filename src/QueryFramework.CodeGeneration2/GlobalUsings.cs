@@ -24,6 +24,8 @@ global using ClassFramework.TemplateFramework.Extensions;
 global using CrossCutting.ProcessingPipeline;
 global using CrossCutting.Utilities.Parsers.Extensions;
 global using ExpressionFramework.Domain;
+global using ExpressionFramework.Domain.Builders;
+global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Evaluatables;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.CodeGeneration2.CodeGenerationProviders;
