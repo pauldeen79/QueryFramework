@@ -47,18 +47,21 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
         }
     }
 
-    //protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
-    //    => base.CreateTypenameMappings().Concat(
-    //    [
-    //        new TypenameMappingBuilder()
-    //            .WithSourceTypeName(typeof(ComposedEvaluatable).FullName!)
-    //            .WithTargetTypeName(typeof(ComposedEvaluatable).FullName!)
-    //            .AddMetadata
-    //            (
-    //                new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(Pipelines.MetadataNames.CustomBuilderNamespace),
-    //                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(Pipelines.MetadataNames.CustomBuilderName),
-    //                new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}([Name])"/*"[Name][NullableSuffix].ToBuilder()"*/).WithName(Pipelines.MetadataNames.CustomBuilderSourceExpression),
-    //                new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
-    //            )
-    //    ]);
+    protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
+        => base.CreateTypenameMappings().Concat(
+        [
+            new TypenameMappingBuilder()
+                .WithSourceTypeName(typeof(ComposedEvaluatable).FullName!)
+                .WithTargetTypeName(typeof(ComposedEvaluatable).FullName!)
+                .AddMetadata
+                (
+                    new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(Pipelines.MetadataNames.CustomBuilderNamespace),
+                    new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(Pipelines.MetadataNames.CustomBuilderName),
+                    //TODO: Refactor so the custom builder constructor initialize expression can be set for both single and collection properties
+                    new MetadataBuilder().WithValue($"{{BuilderMemberName}} = new {typeof(ComposedEvaluatableBuilder).FullName}(source.{{Name}})").WithName(Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
+                    //TODO: Refactor so the custom builder default value expression can be set for both single and collection properties
+                    new MetadataBuilder().WithValue(new Literal($"default({typeof(ComposedEvaluatableBuilder).FullName})!", null)).WithName(Pipelines.MetadataNames.CustomBuilderDefaultValue),
+                    new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+                )
+        ]);
 }
