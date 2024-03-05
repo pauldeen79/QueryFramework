@@ -1,4 +1,6 @@
-﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿using CrossCutting.Common.Extensions;
+
+namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
@@ -15,6 +17,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override Type BuilderCollectionType => typeof(List<>);
 
     protected override string ProjectName => "QueryFramework";
+    protected override string RootNamespace => "QueryFramework.Core";
     protected override string CodeGenerationRootNamespace => "QueryFramework.CodeGeneration2";
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
@@ -69,5 +72,36 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                     new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})!", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue($"[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
                 ),
-        ]);
+        ]).Concat(
+            GetType().Assembly.GetTypes()
+                .Where(x => x.IsInterface
+                    && x.Namespace == $"{CodeGenerationRootNamespace}.Models.Abstractions"
+                    && !SkipNamespaceOnTypenameMappings(x.Namespace)
+                    && x.FullName is not null)
+                .SelectMany(x =>
+                    new[]
+                    {
+                        new TypenameMappingBuilder().WithSourceTypeName(x.FullName!).WithTargetTypeName($"{ProjectName}.Abstractions.{x.Name}"),
+                        new TypenameMappingBuilder().WithSourceTypeName($"{ProjectName}.Abstractions.{x.Name}").WithTargetTypeName($"{ProjectName}.Abstractions.{x.Name}")
+                            .AddMetadata
+                            (
+                                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
+                                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
+                                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceNamespace),
+                                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
+                                new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
+                                new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+                            )
+                    })
+        );
+
+    protected override Func<IParentTypeContainer, IType, bool>? InheritanceComparisonDelegate => new Func<IParentTypeContainer, IType, bool>((parentNameContainer, typeBase)
+        => parentNameContainer is not null
+        && typeBase is not null
+        && (string.IsNullOrEmpty(parentNameContainer.ParentTypeFullName)
+            || (BaseClass is not null && !BaseClass.Properties.Any(x => x.Name == (parentNameContainer as INameContainer)?.Name))
+            || parentNameContainer.ParentTypeFullName.GetClassName().In(typeBase.Name, $"I{typeBase.Name}")
+            || Array.Exists(GetModelAbstractBaseTyped(), x => x == parentNameContainer.ParentTypeFullName.GetClassName())
+            || (parentNameContainer.ParentTypeFullName.StartsWith($"{ProjectName}.Abstractions.") && typeBase.Namespace.In(RootNamespace, $"{ProjectName}.Abstractions.Builders"))
+        ));
 }
