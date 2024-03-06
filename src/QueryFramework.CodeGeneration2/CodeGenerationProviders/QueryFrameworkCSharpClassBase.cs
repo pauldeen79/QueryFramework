@@ -20,6 +20,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
     protected override bool CopyInterfaces => true;
+    protected override bool InheritFromInterfaces => true;
     protected override bool CopyMethods => true;
     protected override Func<IType, Method, bool>? CopyMethodPredicate => (type, method) => method.Name == "Build" && type.Interfaces.Count == 0;
 
@@ -92,7 +93,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                                 new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
                                 //new MetadataBuilder().WithValue($"new {ProjectName}.Core.Builders.{x.Name.Substring(1)}Builder([Name])").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
                                 new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
-                                new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+                                new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
+                                new MetadataBuilder().WithName(ClassFramework.Pipelines.MetadataNames.CustomEntityInterfaceTypeName).WithValue($"{ProjectName}.Abstractions.I{x.GetEntityClassName()}")
                             )
                     })
         );
