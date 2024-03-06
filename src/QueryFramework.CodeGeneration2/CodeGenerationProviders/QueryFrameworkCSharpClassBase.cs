@@ -22,6 +22,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
     protected override bool CopyInterfaces => true;
+    protected override bool CopyMethods => true;
+    protected override Func<IType, Method, bool>? CopyMethodPredicate => (type, method) => method.Name == "Build" && type.Interfaces.Count == 0;
 
     protected override IEnumerable<NamespaceMappingBuilder> CreateNamespaceMappings()
     {
@@ -82,6 +84,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                     new[]
                     {
                         new TypenameMappingBuilder().WithSourceTypeName(x.FullName!).WithTargetTypeName($"{ProjectName}.Abstractions.{x.Name}"),
+                        new TypenameMappingBuilder().WithSourceTypeName($"{ProjectName}.Abstractions.{x.Name.Substring(1)}").WithTargetTypeName($"{ProjectName}.Abstractions.{x.Name}"), // hacking
                         new TypenameMappingBuilder().WithSourceTypeName($"{ProjectName}.Abstractions.{x.Name}").WithTargetTypeName($"{ProjectName}.Abstractions.{x.Name}")
                             .AddMetadata
                             (
