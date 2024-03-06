@@ -9,12 +9,7 @@ public class OverrideQueryBuilders : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Paths.QueryBuilders;
 
-    public override IEnumerable<TypeBase> Model =>
-        GetBuilders(GetOverrideModels(typeof(Models.IQuery)), Constants.Namespaces.CoreBuildersQueries, Constants.Namespaces.CoreQueries);
-        /*GetBuilders(
-        GetOverrideModels(typeof(Models.IQuery)),
-        Constants.Namespaces.CoreBuildersQueries,
-        base.CurrentNamespace);*/
+    public override IEnumerable<TypeBase> Model => GetBuilders(GetOverrideModels(typeof(Models.IQuery)), Constants.Namespaces.CoreBuildersQueries, Constants.Namespaces.CoreQueries);
 
     protected override bool EnableEntityInheritance => true;
     protected override bool EnableBuilderInhericance => true;
