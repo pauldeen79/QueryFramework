@@ -1,6 +1,4 @@
-﻿using CrossCutting.Common.Extensions;
-
-namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public class CoreBuilders : QueryFrameworkCSharpClassBase
@@ -17,8 +15,5 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase
             GetCoreModels(),
             Constants.Namespaces.CoreBuilders,
             Constants.Namespaces.Core
-        ).Select(x => x.ToBuilder()
-            .With(y => y.Methods.Single(z => z.Name == "Build").WithReturnTypeName(y.Methods.Single(z => z.Name == "Build").ReturnTypeName.Replace(".Core.", ".Abstractions.I")))
-            .Build()
         );
 }
