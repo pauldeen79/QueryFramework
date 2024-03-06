@@ -1,6 +1,4 @@
-﻿using CrossCutting.Common.Extensions;
-
-namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
