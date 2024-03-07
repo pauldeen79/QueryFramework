@@ -68,7 +68,7 @@ public class GroupingQueryBuilderExtensionsTests
     }
 
     [Fact]
-    public void Having_With_Enumrable_Returns_Correct_Result()
+    public void Having_With_Enumerable_Returns_Correct_Result()
     {
         // Arrange
         var sut = new GroupingQueryBuilder();
