@@ -14,4 +14,9 @@ internal sealed class ParameterizedQueryMock : IParameterizedQuery
     public int? Offset { get; set; }
     public ComposedEvaluatable Filter { get; set; }
     public IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; set; }
+
+    public IQueryBuilder ToBuilder()
+    {
+        throw new NotImplementedException();
+    }
 }

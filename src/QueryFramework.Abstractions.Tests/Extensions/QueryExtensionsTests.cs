@@ -70,6 +70,11 @@ public class QueryExtensionsTests
 
         public IEnumerable<ValidationResult> ValidationResultValue { get; set; } = Enumerable.Empty<ValidationResult>();
 
+        public IQueryBuilder ToBuilder()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => ValidationResultValue;
     }
 }
