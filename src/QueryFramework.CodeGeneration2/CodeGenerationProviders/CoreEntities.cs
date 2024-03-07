@@ -7,7 +7,7 @@ public class CoreEntities : QueryFrameworkCSharpClassBase
     {
     }
 
-    public override IEnumerable<TypeBase> Model => GetImmutableClasses(GetCoreModels(), Constants.Namespaces.Core);
+    public override IEnumerable<TypeBase> Model => GetEntities(GetCoreModels(), Constants.Namespaces.Core);
 
     public override string Path => Constants.Namespaces.Core;
 }

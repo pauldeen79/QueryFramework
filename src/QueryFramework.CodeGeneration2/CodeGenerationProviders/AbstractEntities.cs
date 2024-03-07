@@ -10,7 +10,7 @@ public class AbstractEntities : QueryFrameworkCSharpClassBase
     public override string Path => Constants.Namespaces.Core;
 
     public override IEnumerable<TypeBase> Model
-        => GetImmutableClasses(GetAbstractModels(), Constants.Namespaces.Core);
+        => GetEntities(GetAbstractModels(), Constants.Namespaces.Core);
 
     protected override bool EnableEntityInheritance => true;
     protected override bool EnableBuilderInhericance => true;
