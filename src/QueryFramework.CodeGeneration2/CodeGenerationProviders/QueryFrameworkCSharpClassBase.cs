@@ -22,7 +22,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool CopyInterfaces => true;
     protected override bool InheritFromInterfaces => true;
     protected override bool CopyMethods => true;
-    protected override Func<IType, Method, bool>? CopyMethodPredicate => (type, method) => method.Name == "Build" && type.Interfaces.Count == 0;
+    protected override bool CreateRecord => true;
+    protected override Func<IType, Method, bool>? CopyMethodPredicate => (type, method) => method.Name.In("Build", "ToBuilder") && type.Interfaces.Count == 0;
 
     protected override IEnumerable<NamespaceMappingBuilder> CreateNamespaceMappings()
     {

@@ -9,7 +9,7 @@ public class AbstractionsInterfaces : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Namespaces.Abstractions;
 
-    public override IEnumerable<TypeBase> Model => GetInterfaces(GetAbstractionsInterfaces(), Constants.Namespaces.Abstractions);
+    public override IEnumerable<TypeBase> Model => GetEntityInterfaces(GetAbstractionsInterfaces(), Constants.Namespaces.Core, Constants.Namespaces.Abstractions);
 
     protected override bool EnableEntityInheritance => true;
 }
