@@ -31,14 +31,14 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore
         run: dotnet restore
-      - name: Install T4Plus
-        run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
+      # - name: Install T4Plus
+      #   run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
 
       # option 1: no post build event
-      - name: Build code generation artifacts
-        run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-      - name: Run code generation
-        run: t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
+      # - name: Build code generation artifacts
+      #   run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+      # - name: Run code generation
+      #   run: t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
 
       # option 2: post build event (which needs to be removed in Sonar build pipeline at least)
       #- name: Force first-time run of code generation
@@ -47,13 +47,18 @@ jobs:
       #  shell: pwsh
       #  run: ((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
 
+      - name: Build code generation
+        run: dotnet build src/QueryFramework.CodeGeneration2/QueryFramework.CodeGeneration2.csproj -c Release
+      - name: Run code generation
+        run: dotnet src/QueryFramework.CodeGeneration2/bin/Release/net8.0/QueryFramework.CodeGeneration2.dll
+
       - name: Build
         run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test -c Release --no-restore
       - name: Checking for external vulnerabilities
         run: |
-          dotnet list ${{ github.workspace }}/ModelFramework.sln package --vulnerable --include-transitive 2>&1 | tee vuln.log
+          dotnet list ${{ github.workspace }}/QueryFramework.sln package --vulnerable --include-transitive 2>&1 | tee vuln.log
           echo "Analyze dotnet list package..."
           ! grep -q -i "has the following vulnerable packages" vuln.log
       - name: Statistics
@@ -107,10 +112,12 @@ jobs:
           echo Version: $VERSION
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
-          dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
+          # dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
           dotnet restore
-          dotnet build -c Release src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-          t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
+          # dotnet build -c Release src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
+          # t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
+          dotnet build src/QueryFramework.CodeGeneration2/QueryFramework.CodeGeneration2.csproj -c Release
+          dotnet src/QueryFramework.CodeGeneration2/bin/Release/net8.0/QueryFramework.CodeGeneration2.dll
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
