@@ -15,7 +15,6 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override Type BuilderCollectionType => typeof(List<>);
 
     protected override string ProjectName => "QueryFramework";
-    protected override string RootNamespace => "QueryFramework.Core";
     protected override string CodeGenerationRootNamespace => "QueryFramework.CodeGeneration2";
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
@@ -106,6 +105,6 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
             || (BaseClass is not null && !BaseClass.Properties.Any(x => x.Name == (parentNameContainer as INameContainer)?.Name))
             || parentNameContainer.ParentTypeFullName.GetClassName().In(typeBase.Name, $"I{typeBase.Name}")
             || Array.Exists(GetModelAbstractBaseTyped(), x => x == parentNameContainer.ParentTypeFullName.GetClassName())
-            || (parentNameContainer.ParentTypeFullName.StartsWith($"{ProjectName}.Abstractions.") && typeBase.Namespace.In(RootNamespace, $"{ProjectName}.Abstractions.Builders"))
+            || (parentNameContainer.ParentTypeFullName.StartsWith($"{RootNamespace}.") && typeBase.Namespace.In(CoreNamespace, $"{ProjectName}.Abstractions.Builders"))
         ));
 }
