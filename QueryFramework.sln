@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSearch.Tests", "src\QueryFramework.FileSystemSearch.Tests\QueryFramework.FileSystemSearch.Tests.csproj", "{BE082275-7AB6-434C-A758-5D5B1F74B3B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration2", "src\QueryFramework.CodeGeneration2\QueryFramework.CodeGeneration2.csproj", "{D4CE70D5-6BB1-4B62-8184-657A748782C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration", "src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj", "{D4CE70D5-6BB1-4B62-8184-657A748782C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

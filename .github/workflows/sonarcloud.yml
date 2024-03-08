@@ -41,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet build src/QueryFramework.CodeGeneration2/QueryFramework.CodeGeneration2.csproj -c Release
-          dotnet src/QueryFramework.CodeGeneration2/bin/Release/net8.0/QueryFramework.CodeGeneration2.dll
+          dotnet build src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -c Release
+          dotnet src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll
           dotnet-sonarscanner begin /k:"pauldeen79_QueryFramework" /n:"QueryFramework" /o:"pauldeen79" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
           dotnet build --no-restore
           dotnet test --no-restore --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
