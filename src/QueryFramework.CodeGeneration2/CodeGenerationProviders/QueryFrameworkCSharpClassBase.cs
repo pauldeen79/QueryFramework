@@ -11,7 +11,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     public override Encoding Encoding => Encoding.UTF8;
 
     protected override Type EntityCollectionType => typeof(IReadOnlyCollection<>);
-    protected override Type EntityConcreteCollectionType => typeof(List<>);
+    protected override Type EntityConcreteCollectionType => typeof(ReadOnlyValueCollection<>);
     protected override Type BuilderCollectionType => typeof(List<>);
 
     protected override string ProjectName => "QueryFramework";
