@@ -73,14 +73,4 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                             )
                     })
         );
-
-    protected override Func<IParentTypeContainer, IType, bool>? InheritanceComparisonDelegate => new Func<IParentTypeContainer, IType, bool>((parentNameContainer, typeBase)
-        => parentNameContainer is not null
-        && typeBase is not null
-        && (string.IsNullOrEmpty(parentNameContainer.ParentTypeFullName)
-            || (BaseClass is not null && !BaseClass.Properties.Any(x => x.Name == (parentNameContainer as INameContainer)?.Name))
-            || parentNameContainer.ParentTypeFullName.GetClassName().In(typeBase.Name, $"I{typeBase.Name}")
-            || Array.Exists(GetModelAbstractBaseTyped(), x => x == parentNameContainer.ParentTypeFullName.GetClassName())
-            || (parentNameContainer.ParentTypeFullName.StartsWith($"{RootNamespace}.") && typeBase.Namespace.In(CoreNamespace, $"{ProjectName}.Abstractions.Builders"))
-        ));
 }
