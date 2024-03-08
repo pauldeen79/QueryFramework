@@ -23,30 +23,6 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool CopyMethods => true;
     protected override bool CreateRecord => true;
 
-    protected override IEnumerable<NamespaceMappingBuilder> CreateNamespaceMappings()
-    {
-        // From models to domain entities
-        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models").WithTargetNamespace(CoreNamespace);
-        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.Domains").WithTargetNamespace($"{ProjectName}.Abstractions.Domains");
-        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.Abstractions").WithTargetNamespace($"{ProjectName}.Abstractions");
-
-        // From domain entities to builders
-        yield return new NamespaceMappingBuilder().WithSourceNamespace($"{ProjectName}.Abstractions").WithTargetNamespace($"{ProjectName}.Abstractions")
-            .AddMetadata
-            (
-                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceNamespace),
-                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
-                new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderParentTypeNamespace),
-                new MetadataBuilder().WithValue("{ParentTypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderParentTypeName)
-            );
-
-        foreach (var entityClassName in GetPureAbstractModels().Select(x => x.GetEntityClassName().ReplaceSuffix("Base", string.Empty, StringComparison.Ordinal)))
-        {
-            yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CodeGenerationRootNamespace}.Models.{entityClassName}s").WithTargetNamespace($"{CoreNamespace}.{entityClassName}s");
-            yield return new NamespaceMappingBuilder().WithSourceNamespace($"{CoreNamespace}.{entityClassName}s").WithTargetNamespace($"{CoreNamespace}.{entityClassName}s");
-        }
-    }
-
     protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
         => base.CreateTypenameMappings().Concat(
         [
