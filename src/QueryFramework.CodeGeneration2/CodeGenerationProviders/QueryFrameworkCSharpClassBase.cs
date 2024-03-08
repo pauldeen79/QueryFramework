@@ -6,6 +6,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     {
     }
 
+    private const string TypeNameDotClassNameBuilder = "{TypeName.ClassName}Builder";
+
     public override bool RecurseOnDeleteGeneratedFiles => false;
     public override string LastGeneratedFilesFilename => string.Empty;
     public override Encoding Encoding => Encoding.UTF8;
@@ -32,7 +34,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                 .AddMetadata
                 (
                     new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-                    new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
+                    new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
                     new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}(source.{{Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
                     new MetadataBuilder().WithValue(new Literal($"new {typeof(ComposedEvaluatableBuilder).FullName}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
@@ -43,7 +45,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                 .AddMetadata
                 (
                     new MetadataBuilder().WithValue(typeof(ExpressionBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-                    new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
+                    new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
                     new MetadataBuilder().WithValue($"{typeof(ExpressionBuilderFactory).FullName}.Create(source.[Name])").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
                     new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})!", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue($"[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
@@ -63,9 +65,9 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                             .AddMetadata
                             (
                                 new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-                                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
+                                new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
                                 new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceNamespace),
-                                new MetadataBuilder().WithValue("{TypeName.ClassName}Builder").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
+                                new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
                                 //new MetadataBuilder().WithValue($"new {ProjectName}.Core.Builders.{x.Name.Substring(1)}Builder([Name])").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
                                 new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
                                 new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
