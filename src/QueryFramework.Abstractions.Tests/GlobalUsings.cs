@@ -8,6 +8,6 @@ global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Evaluatables;
 global using FluentAssertions;
 global using NSubstitute;
+global using QueryFramework.Abstractions.Builders;
 global using QueryFramework.Abstractions.Extensions;
-global using QueryFramework.Abstractions.Queries;
 global using Xunit;

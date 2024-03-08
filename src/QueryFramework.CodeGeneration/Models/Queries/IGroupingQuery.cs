@@ -1,7 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models.Queries;
+﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-public interface IGroupingQuery : IQuery
+internal interface IGroupingQuery : Models.IQuery, Abstractions.IGroupingQuery
 {
-    IReadOnlyCollection<Expression> GroupByFields { get; }
-    ComposedEvaluatable GroupByFilter { get; }
 }

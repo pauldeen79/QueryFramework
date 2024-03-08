@@ -1,9 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models;
+﻿namespace QueryFramework.CodeGeneration2.Models;
 
-public interface IQuerySortOrder
+internal interface IQuerySortOrder : Abstractions.IQuerySortOrder
 {
-    [Required]
-    Expression FieldNameExpression { get; }
-
-    QuerySortOrderDirection Order { get; }
 }

@@ -11,20 +11,20 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
@@ -35,27 +35,14 @@ jobs:
 
       - name: Restore
         run: dotnet restore
-      - name: Install T4Plus
-        run: dotnet tool install -g pauldeen79.TextTemplateTransformationFramework.T4.Plus.Cmd
-
-      # option 1: no post build event
-      - name: Build code generation artifacts
-        run: dotnet build -c Release --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-      - name: Run code generation
-        run: t4plus assembly -a src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll -p src/
-
-      # option 2: post build event (which needs to be removed in Sonar build pipeline at least)
-      #- name: Force first-time run of code generation
-      #  run: dotnet build --no-restore src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
-      #- name: Remove post build event
-      #  shell: pwsh
-      #  run: ((Get-Content -path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -Raw) -replace 't4plus','echo') | Set-Content -Path src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj
 
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
+          dotnet build src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -c Release
+          dotnet src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll
           dotnet-sonarscanner begin /k:"pauldeen79_QueryFramework" /n:"QueryFramework" /o:"pauldeen79" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
           dotnet build --no-restore
           dotnet test --no-restore --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover

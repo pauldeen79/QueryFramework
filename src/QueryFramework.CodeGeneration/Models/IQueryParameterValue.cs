@@ -1,7 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models;
+﻿namespace QueryFramework.CodeGeneration2.Models;
 
-public interface IQueryParameterValue
+internal interface IQueryParameterValue : Abstractions.IQueryParameterValue
 {
-    [Required]
-    string Name { get; }
 }

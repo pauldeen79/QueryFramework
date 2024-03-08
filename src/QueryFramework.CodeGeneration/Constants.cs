@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration;
+﻿namespace QueryFramework.CodeGeneration2;
 
 public static class Constants
 {
@@ -8,6 +8,7 @@ public static class Constants
     {
         public const string Abstractions = "QueryFramework.Abstractions";
         public const string AbstractionsBuilders = "QueryFramework.Abstractions.Builders";
+        public const string AbstractionsBuildersExtensions = "QueryFramework.Abstractions.Builders.Extensions";
         public const string AbstractionsExtensions = "QueryFramework.Abstractions.Extensions";
         public const string AbstractionsDomains = "QueryFramework.Abstractions.Domains";
         public const string Core = "QueryFramework.Core";

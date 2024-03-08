@@ -1,21 +1,13 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public class CoreEntities : QueryFrameworkCSharpClassBase
 {
-    public override string Path => Constants.Namespaces.Core;
+    public CoreEntities(ICsharpExpressionCreator csharpExpressionCreator, IPipeline<IConcreteTypeBuilder, BuilderContext> builderPipeline, IPipeline<IConcreteTypeBuilder, BuilderExtensionContext> builderExtensionPipeline, IPipeline<IConcreteTypeBuilder, EntityContext> entityPipeline, IPipeline<IConcreteTypeBuilder, OverrideEntityContext> overrideEntityPipeline, IPipeline<TypeBaseBuilder, ReflectionContext> reflectionPipeline, IPipeline<InterfaceBuilder, InterfaceContext> interfacePipeline) : base(csharpExpressionCreator, builderPipeline, builderExtensionPipeline, entityPipeline, overrideEntityPipeline, reflectionPipeline, interfacePipeline)
+    {
+    }
 
-    public override object CreateModel()
-        => GetImmutableClasses(GetCoreModels(), Constants.Namespaces.Core)
-            .OfType<IClass>()
-            .Select(x => new ClassBuilder(x)
-                .AddMethods(new[] { new ClassMethodBuilder()
-                    .WithName("ToBuilder")
-                    .WithTypeName($"{Constants.Namespaces.CoreBuilders}.{x.Name}Builder")
-                    .AddLiteralCodeStatements($"return new {Constants.Namespaces.CoreBuilders}.{x.Name}Builder(this);") }.Where(x => !x.Name.EndsWith("Base"))
-                )
-                .Chain(x => { if (x.Name.EndsWith("Base")) { x.Methods.RemoveAll(x => x.Name == "ToBuilder"); } })
-                .BuildTyped()
-            )
-            .ToArray();
+    public override IEnumerable<TypeBase> Model => GetEntities(GetCoreModels(), Constants.Namespaces.Core);
+
+    public override string Path => Constants.Namespaces.Core;
 }

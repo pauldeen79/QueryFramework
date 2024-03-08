@@ -1,9 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models;
+﻿namespace QueryFramework.CodeGeneration2.Models;
 
-public interface IQueryParameter
+internal interface IQueryParameter : Abstractions.IQueryParameter
 {
-    [Required]
-    string Name { get; }
-
-    object Value { get;}
 }

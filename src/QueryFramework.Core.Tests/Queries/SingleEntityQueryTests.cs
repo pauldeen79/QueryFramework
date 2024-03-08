@@ -41,9 +41,9 @@ public class SingleEntityQueryTests
             .BuildTyped(), Enumerable.Empty<IQuerySortOrder>());
         var q2 = new SingleEntityQuery(5, 64, new ComposedEvaluatableBuilder()
             .AddConditions(new ComposableEvaluatableBuilder()
-                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
-                                                        .WithOperator(new EqualsOperatorBuilder())
-                                                        .WithRightExpression(new ConstantExpressionBuilder().WithValue("A")))
+                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                .WithOperator(new EqualsOperatorBuilder())
+                .WithRightExpression(new ConstantExpressionBuilder().WithValue("A")))
             .BuildTyped(), Enumerable.Empty<IQuerySortOrder>());
 
         // Act

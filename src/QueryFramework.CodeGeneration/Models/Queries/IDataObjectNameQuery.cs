@@ -1,6 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models.Queries;
+﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-public interface IDataObjectNameQuery : IQuery
+internal interface IDataObjectNameQuery : Models.IQuery, Abstractions.IDataObjectNameQuery
 {
-    string DataObjectName { get; }
 }

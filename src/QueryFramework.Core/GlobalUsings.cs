@@ -10,7 +10,7 @@ global using ExpressionFramework.Domain.Builders.Operators;
 global using ExpressionFramework.Domain.Contracts;
 global using ExpressionFramework.Domain.Domains;
 global using QueryFramework.Abstractions.Builders;
-global using QueryFramework.Abstractions.Builders.Queries;
+global using QueryFramework.Abstractions.Builders.Extensions;
 global using QueryFramework.Abstractions.Domains;
 global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.Core.Builders;

@@ -1,6 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models.Queries;
+﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-public interface IParameterizedQuery : IQuery
+internal interface IParameterizedQuery : Models.IQuery, Abstractions.IParameterizedQuery
 {
-    IReadOnlyCollection<IQueryParameter> Parameters { get; }
 }

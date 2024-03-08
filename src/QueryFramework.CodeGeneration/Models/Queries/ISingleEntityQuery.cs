@@ -1,5 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models.Queries;
+﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-public interface ISingleEntityQuery : IQuery
+internal interface ISingleEntityQuery : Models.IQuery, Abstractions.ISingleEntityQuery
 {
 }

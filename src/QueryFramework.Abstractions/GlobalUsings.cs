@@ -8,5 +8,3 @@ global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Contracts;
 global using ExpressionFramework.Domain.Expressions;
 global using QueryFramework.Abstractions.Builders;
-global using QueryFramework.Abstractions.Builders.Queries;
-global using QueryFramework.Abstractions.Queries;

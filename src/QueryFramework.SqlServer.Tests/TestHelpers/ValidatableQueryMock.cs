@@ -22,6 +22,11 @@ internal sealed class ValidatableQueryMock : IQuery, IValidatableObject
         }
     }
 
+    public IQueryBuilder ToBuilder()
+    {
+        throw new NotImplementedException();
+    }
+
     public ValidatableQueryMock()
     {
         Filter = new(Enumerable.Empty<ComposableEvaluatable>());

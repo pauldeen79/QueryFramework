@@ -1,8 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models.Queries;
+﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-public interface IFieldSelectionQuery : IQuery
+internal interface IFieldSelectionQuery : Models.IQuery, Abstractions.IFieldSelectionQuery
 {
-    bool Distinct { get; }
-    bool GetAllFields { get; }
-    IReadOnlyCollection<string> FieldNames { get; }
 }

@@ -1,9 +1,5 @@
-﻿namespace QueryFramework.CodeGeneration.Models;
+﻿namespace QueryFramework.CodeGeneration2.Models;
 
-public interface IQuery
+internal interface IQuery : Abstractions.IQuery
 {
-    int? Limit { get; }
-    int? Offset { get; }
-    ComposedEvaluatable Filter { get; }
-    IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }
