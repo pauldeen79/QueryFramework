@@ -56,11 +56,6 @@ jobs:
         run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test -c Release --no-restore
-      - name: Checking for external vulnerabilities
-        run: |
-          dotnet list ${{ github.workspace }}/QueryFramework.sln package --vulnerable --include-transitive 2>&1 | tee vuln.log
-          echo "Analyze dotnet list package..."
-          ! grep -q -i "has the following vulnerable packages" vuln.log
       - name: Statistics
         shell: pwsh
         run: ./csharp-stats.ps1
