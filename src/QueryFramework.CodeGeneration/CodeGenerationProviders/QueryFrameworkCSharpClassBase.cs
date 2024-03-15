@@ -25,7 +25,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool CopyMethods => true;
     protected override bool CreateRecord => true;
 
-    //protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
+    protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
 
     protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
         => base.CreateTypenameMappings().Concat(
