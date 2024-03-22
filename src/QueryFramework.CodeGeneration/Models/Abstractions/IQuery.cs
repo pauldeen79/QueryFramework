@@ -4,6 +4,6 @@ internal interface IQuery
 {
     int? Limit { get; }
     int? Offset { get; }
-    [Required] ComposedEvaluatable Filter { get; }
-    [Required] IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
+    [Required][ValidateObject] ComposedEvaluatable Filter { get; }
+    [Required][ValidateObject] IReadOnlyCollection<IQuerySortOrder> OrderByFields { get; }
 }

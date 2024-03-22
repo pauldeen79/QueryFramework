@@ -2,5 +2,5 @@
 
 internal interface IParameterizedQuery : IQuery
 {
-    [Required] IReadOnlyCollection<IQueryParameter> Parameters { get; }
+    [Required][ValidateObject] IReadOnlyCollection<IQueryParameter> Parameters { get; }
 }

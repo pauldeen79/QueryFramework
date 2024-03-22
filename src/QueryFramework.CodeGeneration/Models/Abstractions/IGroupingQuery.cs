@@ -2,6 +2,6 @@
 
 internal interface IGroupingQuery : IQuery
 {
-    [Required] IReadOnlyCollection<Expression> GroupByFields { get; }
-    [Required] ComposedEvaluatable GroupByFilter { get; }
+    [Required][ValidateObject] IReadOnlyCollection<Expression> GroupByFields { get; }
+    [Required][ValidateObject] ComposedEvaluatable GroupByFilter { get; }
 }
