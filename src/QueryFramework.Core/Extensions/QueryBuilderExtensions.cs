@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Core.Extensions;
 
-public static class SingleEntityQueryBuilderExtensions
+public static class QueryBuilderExtensions
 {
     public static T Where<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder

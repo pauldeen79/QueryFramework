@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Core.Tests.Extensions;
 
-public class SingleEntityQueryBuilderExtensionsTests
+public class QueryBuilderExtensionsTests
 {
     [Fact]
     public void Can_Use_Where_With_ComposableEvaluatableBuilder_To_Add_Condition()
