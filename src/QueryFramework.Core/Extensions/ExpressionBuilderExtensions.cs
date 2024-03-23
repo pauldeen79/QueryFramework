@@ -14,7 +14,7 @@ public static class ExpressionBuilderExtensions
     /// <summary>Creates a query condition builder with the Contains query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    public static ComposableEvaluatableBuilder DoesContain(this ExpressionBuilder instance, string value)
+    public static ComposableEvaluatableBuilder Contains(this ExpressionBuilder instance, string value)
         => new ComposableEvaluatableBuilder()
         {
             LeftExpression = instance,
@@ -25,7 +25,7 @@ public static class ExpressionBuilderExtensions
     /// <summary>Creates a query condition builder with the EndsWith query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    public static ComposableEvaluatableBuilder DoesEndWith(this ExpressionBuilder instance, string value)
+    public static ComposableEvaluatableBuilder EndsWith(this ExpressionBuilder instance, string value)
         => new ComposableEvaluatableBuilder()
         {
             LeftExpression = instance,
@@ -204,7 +204,7 @@ public static class ExpressionBuilderExtensions
     /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
     /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
     /// <param name="combination">The combination.</param>
-    public static ComposableEvaluatableBuilder DoesStartWith(this ExpressionBuilder instance, string value)
+    public static ComposableEvaluatableBuilder StartsWith(this ExpressionBuilder instance, string value)
         => new ComposableEvaluatableBuilder()
         {
             LeftExpression = instance,
