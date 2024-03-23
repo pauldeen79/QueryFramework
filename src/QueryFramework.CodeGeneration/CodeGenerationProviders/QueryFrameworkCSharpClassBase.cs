@@ -2,7 +2,7 @@
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
-    protected QueryFrameworkCSharpClassBase(ICsharpExpressionDumper csharpExpressionDumper, IPipeline<IConcreteTypeBuilder, BuilderContext> builderPipeline, IPipeline<IConcreteTypeBuilder, BuilderExtensionContext> builderExtensionPipeline, IPipeline<IConcreteTypeBuilder, EntityContext> entityPipeline, IPipeline<IConcreteTypeBuilder, OverrideEntityContext> overrideEntityPipeline, IPipeline<TypeBaseBuilder, ReflectionContext> reflectionPipeline, IPipeline<InterfaceBuilder, InterfaceContext> interfacePipeline) : base(csharpExpressionDumper, builderPipeline, builderExtensionPipeline, entityPipeline, overrideEntityPipeline, reflectionPipeline, interfacePipeline)
+    protected QueryFrameworkCSharpClassBase(ICsharpExpressionDumper csharpExpressionDumper, IPipeline<IConcreteTypeBuilder, BuilderContext> builderPipeline, IPipeline<IConcreteTypeBuilder, BuilderExtensionContext> builderExtensionPipeline, IPipeline<IConcreteTypeBuilder, EntityContext> entityPipeline, IPipeline<TypeBaseBuilder, ReflectionContext> reflectionPipeline, IPipeline<InterfaceBuilder, InterfaceContext> interfacePipeline) : base(csharpExpressionDumper, builderPipeline, builderExtensionPipeline, entityPipeline, reflectionPipeline, interfacePipeline)
     {
     }
 
@@ -27,9 +27,9 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
 
     protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
 
-    protected override IEnumerable<TypenameMappingBuilder> CreateTypenameMappings()
-        => base.CreateTypenameMappings().Concat(
-        [
+    protected override IEnumerable<TypenameMappingBuilder> CreateAdditionalTypenameMappings()
+        => new TypenameMappingBuilder[]
+        {
             new TypenameMappingBuilder()
                 .WithSourceTypeName(typeof(ComposedEvaluatable).FullName!)
                 .WithTargetTypeName(typeof(ComposedEvaluatable).FullName!)
@@ -52,7 +52,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                     new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})!", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue($"[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
                 ),
-        ]).Concat(
+        }.Concat(
             GetType().Assembly.GetTypes()
                 .Where(x => x.IsInterface
                     && x.Namespace == $"{CodeGenerationRootNamespace}.Models.Abstractions"
