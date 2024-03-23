@@ -10,6 +10,10 @@ public static class QueryBuilderExtensions
         where T : IQueryBuilder
         => instance.Where(additionalConditions.ToArray());
 
+    public static ComposableEvaluatableBuilderWrapper<T> Where<T>(this T instance, string fieldName)
+        where T : IQueryBuilder
+        => new ComposableEvaluatableBuilderWrapper<T>(instance, fieldName);
+
     public static T Or<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.Or)));

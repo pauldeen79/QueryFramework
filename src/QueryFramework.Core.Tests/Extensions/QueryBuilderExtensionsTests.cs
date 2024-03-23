@@ -168,4 +168,41 @@ public class QueryBuilderExtensionsTests
         // Assert
         actual.Limit.Should().Be(200);
     }
+
+    [Fact]
+    public void Can_Use_Where_With_Value_To_Add_Condition()
+    {
+        // Arrange
+        var sut = new SingleEntityQueryBuilder();
+
+        // Act
+        var actual = sut.Where("field").IsEqualTo("value");
+
+        // Assert
+        actual.Filter.Conditions.Should().HaveCount(1);
+        var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
+        var field = firstCondition.LeftExpression as FieldExpressionBuilder;
+        var value = (firstCondition.RightExpression as ConstantExpressionBuilder)?.Value;
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
+        firstCondition.Operator.Should().BeOfType<EqualsOperatorBuilder>();
+        value.Should().Be("value");
+    }
+
+    [Fact]
+    public void Can_Use_Where_Without_Value_To_Add_Condition()
+    {
+        // Arrange
+        var sut = new SingleEntityQueryBuilder();
+
+        // Act
+        var actual = sut.Where("field").IsNull();
+
+        // Assert
+        actual.Filter.Conditions.Should().HaveCount(1);
+        var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
+        var field = firstCondition.LeftExpression as FieldExpressionBuilder;
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
+        firstCondition.Operator.Should().BeOfType<IsNullOperatorBuilder>();
+        firstCondition.RightExpression.Should().BeOfType<EmptyExpressionBuilder>();
+    }
 }
