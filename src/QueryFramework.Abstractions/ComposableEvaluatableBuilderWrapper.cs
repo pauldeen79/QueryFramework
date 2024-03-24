@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Core;
+﻿namespace QueryFramework.Abstractions;
 
 public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 {

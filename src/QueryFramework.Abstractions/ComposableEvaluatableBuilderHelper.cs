@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Core;
+﻿namespace QueryFramework.Abstractions;
 
 public static class ComposableEvaluatableBuilderHelper
 {

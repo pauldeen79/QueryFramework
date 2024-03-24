@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Core.Extensions;
+﻿namespace QueryFramework.Abstractions.Extensions;
 
 public static class GroupingQueryBuilderExtensions
 {
