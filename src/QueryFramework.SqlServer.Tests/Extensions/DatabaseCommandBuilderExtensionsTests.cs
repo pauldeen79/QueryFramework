@@ -108,7 +108,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Single_Condition_Without_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).BuildTyped();
+        var query = new FieldSelectionQueryBuilder().Where("Field").IsEqualTo("value").BuildTyped();
         _builder.From("MyTable");
 
         // Act
@@ -122,7 +122,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Single_Condition_With_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).BuildTyped();
+        var query = new FieldSelectionQueryBuilder().Where("Field").IsEqualTo("value").BuildTyped();
         _settingsMock.DefaultWhere.Returns("Field IS NOT NULL");
         _builder.From("MyTable");
 
@@ -137,8 +137,8 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Multiple_Conditions_Without_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value"))
-                                                    .And("Field2".IsNotNull())
+        var query = new FieldSelectionQueryBuilder().Where("Field").IsEqualTo("value")
+                                                    .And("Field2").IsNotNull()
                                                     .BuildTyped();
         _builder.From("MyTable");
 
@@ -153,7 +153,7 @@ public class DatabaseCommandBuilderExtensionsTests
     public void Where_Adds_Multiple_Conditions_With_Default_Where_Clause()
     {
         // Arrange
-        var query = new FieldSelectionQueryBuilder().Where("Field".IsEqualTo("value")).And("Field2".IsNotNull()).BuildTyped();
+        var query = new FieldSelectionQueryBuilder().Where("Field").IsEqualTo("value").And("Field2").IsNotNull().BuildTyped();
         _settingsMock.DefaultWhere.Returns("Field IS NOT NULL");
         _builder.From("MyTable");
 

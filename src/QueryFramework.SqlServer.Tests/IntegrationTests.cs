@@ -40,7 +40,7 @@ public sealed class IntegrationTests : IDisposable
     public void Can_Query_Filtered_Records()
     {
         // Arrange
-        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name".IsEqualTo("Test")).BuildTyped());
+        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").BuildTyped());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
         _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
                       .Returns(expectedResult);
@@ -57,7 +57,7 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value"))
+            .Where("Field1").IsEqualTo("Value")
             .BuildTyped();
 
         // Act
@@ -103,8 +103,8 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value1"))
-            .And("Field2".IsNotEqualTo("Value2"))
+            .Where("Field1").IsEqualTo("Value1")
+            .And("Field2").IsNotEqualTo("Value2")
             .BuildTyped();
 
         // Act
@@ -125,8 +125,8 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value1"))
-            .Or("Field2".IsGreaterThan("Value2"))
+            .Where("Field1").IsEqualTo("Value1")
+            .Or("Field2").IsGreaterThan("Value2")
             .BuildTyped();
 
         // Act
@@ -142,11 +142,11 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new SingleEntityQueryBuilder()
-            .Where("Field1".IsEqualTo("Value"))
+            .Where("Field1").IsEqualTo("Value")
             .AndAny
             (
-                "Field2".IsEqualTo("A"),
-                "Field2".IsEqualTo("B")
+                ComposableEvaluatableBuilderHelper.Create("Field2", new EqualsOperatorBuilder(), "A"),
+                ComposableEvaluatableBuilderHelper.Create("Field2", new EqualsOperatorBuilder(), "B")
             )
             .BuildTyped();
 

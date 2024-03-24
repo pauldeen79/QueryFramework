@@ -51,7 +51,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public void Create_With_Source_Argument_Generates_Correct_Command_When_DatabaseOperation_Is_Select()
     {
         // Act
-        var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(), DatabaseOperation.Select);
+        var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field").IsEqualTo("Value").BuildTyped(), DatabaseOperation.Select);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");

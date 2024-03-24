@@ -2,6 +2,23 @@
 
 internal static class SqlHelpers
 {
+    internal static void ExpressionSqlShouldBe<T>(ComposableEvaluatableBuilderWrapper<T> expression, string expectedSqlForExpression, object? context)
+        where T : IQueryBuilder
+    {
+        // Arrange
+        var queryBuilder = expression.IsEqualTo("test");
+
+        // Act
+        var actual = GetExpressionCommand
+        (
+            queryBuilder.Build(),
+            context
+        ).CommandText;
+
+        // Assert
+        actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+    }
+
     internal static void ExpressionSqlShouldBe<T>(ITypedExpressionBuilder<T> expression, string expectedSqlForExpression, object? context)
         => ExpressionSqlShouldBe(new ExpressionBuilderWrapper<T>(expression), expectedSqlForExpression, context);
 

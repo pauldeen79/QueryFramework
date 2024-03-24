@@ -50,7 +50,7 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         SetupSourceData(new[] { new MyEntity { Property = "Value" } });
 
         // Act
-        var actual = Sut.FindOne<MyEntity>(new SingleEntityQueryBuilder().Where("Property".IsEqualTo("Some value")).Build());
+        var actual = Sut.FindOne<MyEntity>(new SingleEntityQueryBuilder().Where("Property").IsEqualTo("Some value").Build());
 
         // Assert
         actual.Should().NotBeNull();

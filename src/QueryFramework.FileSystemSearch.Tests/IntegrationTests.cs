@@ -65,7 +65,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
             .Where(nameof(FileData.Directory)).EndsWith("FileSystemSearch.Tests")
-            .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
+            .And(nameof(FileData.FileName)).IsEqualTo("IntegrationTests.cs")
             .BuildTyped());
         var processor = CreateSut();
 
@@ -109,7 +109,7 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
+            .Where(nameof(FileData.Directory)).EndsWith("FileSystemSearch.Tests")
             .And(nameof(FileData.FileName)).IsEqualTo("IntegrationTests.cs")
             .And(nameof(FileData.Contents)).Contains("[Fact]")
             .And(nameof(LineData.Line)).Contains(nameof(Can_Query_Contents_Using_QueryProcessor))
