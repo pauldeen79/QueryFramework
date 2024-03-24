@@ -14,7 +14,7 @@ var items = new[]
 };
 var sut = new QueryProvider<MyClass>(items);
 var query = new SingleEntityQueryBuilder()
-    .Where(nameof(MyClass.Property).IsEqualTo("B"))
+    .Where(nameof(MyClass.Property)).IsEqualTo("B")
     .Build();
 
 var result = sut.Query(query);

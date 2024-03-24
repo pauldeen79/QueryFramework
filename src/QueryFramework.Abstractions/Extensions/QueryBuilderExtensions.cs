@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Core.Extensions;
+﻿namespace QueryFramework.Abstractions.Extensions;
 
-public static class SingleEntityQueryBuilderExtensions
+public static class QueryBuilderExtensions
 {
     public static T Where<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
@@ -10,6 +10,10 @@ public static class SingleEntityQueryBuilderExtensions
         where T : IQueryBuilder
         => instance.Where(additionalConditions.ToArray());
 
+    public static ComposableEvaluatableBuilderWrapper<T> Where<T>(this T instance, string fieldName)
+        where T : IQueryBuilder
+        => new ComposableEvaluatableBuilderWrapper<T>(instance, fieldName);
+
     public static T Or<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.Or)));
@@ -18,6 +22,10 @@ public static class SingleEntityQueryBuilderExtensions
         where T : IQueryBuilder
         => instance.Or(additionalConditions.ToArray());
 
+    public static ComposableEvaluatableBuilderWrapper<T> Or<T>(this T instance, string fieldName)
+        where T : IQueryBuilder
+        => new ComposableEvaluatableBuilderWrapper<T>(instance, fieldName, Combination.Or);
+    
     public static T And<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.And)));
@@ -25,6 +33,10 @@ public static class SingleEntityQueryBuilderExtensions
     public static T And<T>(this T instance, IEnumerable<ComposableEvaluatableBuilder> additionalConditions)
         where T : IQueryBuilder
         => instance.And(additionalConditions.ToArray());
+
+    public static ComposableEvaluatableBuilderWrapper<T> And<T>(this T instance, string fieldName)
+        where T : IQueryBuilder
+        => new ComposableEvaluatableBuilderWrapper<T>(instance, fieldName, Combination.And);
 
     public static T AndAny<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
@@ -50,14 +62,6 @@ public static class SingleEntityQueryBuilderExtensions
         where T : IQueryBuilder
         => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithFieldName(s)));
 
-    public static T OrderByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
-        where T : IQueryBuilder
-        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder().WithFieldNameExpression(so.FieldNameExpression).WithOrder(QuerySortOrderDirection.Descending)));
-
-    public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
-        where T : IQueryBuilder
-        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithFieldName(s).WithOrder(QuerySortOrderDirection.Descending)));
-
     public static T ThenBy<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
         where T : IQueryBuilder
         => instance.OrderBy(additionalSortOrders);
@@ -65,14 +69,6 @@ public static class SingleEntityQueryBuilderExtensions
     public static T ThenBy<T>(this T instance, params string[] additionalSortOrders)
         where T : IQueryBuilder
         => instance.OrderBy(additionalSortOrders);
-
-    public static T ThenByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
-        where T : IQueryBuilder
-        => instance.OrderByDescending(additionalSortOrders);
-
-    public static T ThenByDescending<T>(this T instance, params string[] additionalSortOrders)
-        where T : IQueryBuilder
-        => instance.OrderByDescending(additionalSortOrders);
 
     public static T Offset<T>(this T instance, int? offset)
         where T : IQueryBuilder
@@ -89,4 +85,47 @@ public static class SingleEntityQueryBuilderExtensions
     public static T Take<T>(this T instance, int? limit)
         where T : IQueryBuilder
         => instance.Limit(limit);
+
+    public static T OrderByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
+        where T : IQueryBuilder
+        => instance.OrderBy(additionalSortOrders.Select(so => new QuerySortOrderBuilder().WithFieldNameExpression(so.FieldNameExpression).WithOrder(QuerySortOrderDirection.Descending)));
+
+    public static T OrderByDescending<T>(this T instance, params string[] additionalSortOrders)
+        where T : IQueryBuilder
+        => instance.OrderBy(additionalSortOrders.Select(s => new QuerySortOrderBuilder().WithFieldName(s).WithOrder(QuerySortOrderDirection.Descending)));
+
+    public static T ThenByDescending<T>(this T instance, params IQuerySortOrderBuilder[] additionalSortOrders)
+        where T : IQueryBuilder
+        => instance.OrderByDescending(additionalSortOrders);
+
+    public static T ThenByDescending<T>(this T instance, params string[] additionalSortOrders)
+        where T : IQueryBuilder
+        => instance.OrderByDescending(additionalSortOrders);
+
+    private sealed class QuerySortOrderBuilder : IQuerySortOrderBuilder
+    {
+        public ExpressionBuilder FieldNameExpression { get; set; } = default!;
+        public QuerySortOrderDirection Order { get; set; }
+
+        public IQuerySortOrder Build() => new QuerySortOrder(FieldNameExpression?.Build(), Order);
+    }
+
+    private sealed class QuerySortOrder : IQuerySortOrder
+    {
+        public QuerySortOrder(Expression? expression, QuerySortOrderDirection order)
+        {
+            FieldNameExpression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Order = order;
+        }
+
+        public Expression FieldNameExpression { get; }
+        public QuerySortOrderDirection Order { get; }
+
+        public IQuerySortOrderBuilder ToBuilder()
+            => new QuerySortOrderBuilder
+            {
+                FieldNameExpression = ExpressionBuilderFactory.Create(FieldNameExpression),
+                Order = Order
+            };
+    }
 }

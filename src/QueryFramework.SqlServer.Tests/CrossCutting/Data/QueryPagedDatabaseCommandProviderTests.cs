@@ -43,7 +43,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field").IsEqualTo("Value").BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      0).DataCommand;
@@ -75,7 +75,7 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                              .Returns(queryFieldInfo);
 
         // Act
-        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field".IsEqualTo("Value")).BuildTyped(),
+        var actual = Sut.CreatePaged(new SingleEntityQueryBuilder().Where("Field").IsEqualTo("Value").BuildTyped(),
                                      DatabaseOperation.Select,
                                      0,
                                      pageSize);

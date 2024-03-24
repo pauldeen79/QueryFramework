@@ -3,8 +3,8 @@
 public sealed class IntegrationTests : IDisposable
 {
     private readonly ServiceProvider _serviceProvider;
-    private static string _basePath = Path.Combine(Directory.GetCurrentDirectory(), @"../../../../");
-    private static string _slash = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+    private static readonly string _basePath = Path.Combine(Directory.GetCurrentDirectory(), @"../../../../");
+    private static readonly string _slash = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
         ? "\\"
         : "/";
 
@@ -64,8 +64,8 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
-            .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
+            .Where(nameof(FileData.Directory)).EndsWith("FileSystemSearch.Tests")
+            .And(nameof(FileData.FileName)).IsEqualTo("IntegrationTests.cs")
             .BuildTyped());
         var processor = CreateSut();
 
@@ -87,10 +87,10 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
-            .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
-            .And(nameof(LineData.Line).DoesContain(nameof(Can_Query_Contents_Using_QueryProcessor)))
-            .And(nameof(LineData.Line).DoesEndWith(" //*"))
+            .Where(nameof(FileData.Directory)).EndsWith("FileSystemSearch.Tests")
+            .And(nameof(FileData.FileName)).IsEqualTo("IntegrationTests.cs")
+            .And(nameof(LineData.Line)).Contains(nameof(Can_Query_Contents_Using_QueryProcessor))
+            .And(nameof(LineData.Line)).EndsWith(" //*")
             .BuildTyped());
         var processor = CreateSut();
 
@@ -109,11 +109,11 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.Directory).DoesEndWith("FileSystemSearch.Tests"))
-            .And(nameof(FileData.FileName).IsEqualTo("IntegrationTests.cs"))
-            .And(nameof(FileData.Contents).DoesContain("[Fact]"))
-            .And(nameof(LineData.Line).DoesContain(nameof(Can_Query_Contents_Using_QueryProcessor)))
-            .And(nameof(LineData.Line).DoesEndWith(" //*"))
+            .Where(nameof(FileData.Directory)).EndsWith("FileSystemSearch.Tests")
+            .And(nameof(FileData.FileName)).IsEqualTo("IntegrationTests.cs")
+            .And(nameof(FileData.Contents)).Contains("[Fact]")
+            .And(nameof(LineData.Line)).Contains(nameof(Can_Query_Contents_Using_QueryProcessor))
+            .And(nameof(LineData.Line)).EndsWith(" //*")
             .BuildTyped());
         var processor = CreateSut();
 
@@ -132,11 +132,11 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.FileName).DoesNotEndWith(".generated.cs"))
-            .And(nameof(FileData.Directory).DoesNotContain($"{_slash}bin"))
-            .And(nameof(FileData.Directory).DoesNotContain($"{_slash}obj"))
-            .And(nameof(LineData.Line).DoesStartWith("namespace"))
-            .And(nameof(LineData.Line).DoesNotEndWith(";"))
+            .Where(nameof(FileData.FileName)).DoesNotEndWith(".generated.cs")
+            .And(nameof(FileData.Directory)).DoesNotContain($"{_slash}bin")
+            .And(nameof(FileData.Directory)).DoesNotContain($"{_slash}obj")
+            .And(nameof(LineData.Line)).StartsWith("namespace")
+            .And(nameof(LineData.Line)).DoesNotEndWith(";")
             .BuildTyped());
         var processor = CreateSut();
 
@@ -152,11 +152,11 @@ public sealed class IntegrationTests : IDisposable
     {
         // Arrange
         var query = new FileSystemQuery(_basePath, "*.cs", SearchOption.AllDirectories, new SingleEntityQueryBuilder()
-            .Where(nameof(FileData.FileName).DoesNotEndWith(".generated.cs"))
-            .And(nameof(FileData.Directory).DoesNotContain($"{_slash}bin"))
-            .And(nameof(FileData.Directory).DoesNotContain($"{_slash}obj"))
-            .And(nameof(LineData.Line).DoesStartWith("using "))
-            .And(nameof(LineData.Line).DoesEndWith(";"))
+            .Where(nameof(FileData.FileName)).DoesNotEndWith(".generated.cs")
+            .And(nameof(FileData.Directory)).DoesNotContain($"{_slash}bin")
+            .And(nameof(FileData.Directory)).DoesNotContain($"{_slash}obj")
+            .And(nameof(LineData.Line)).StartsWith("using ")
+            .And(nameof(LineData.Line)).EndsWith(";")
             .BuildTyped());
         var processor = CreateSut();
 

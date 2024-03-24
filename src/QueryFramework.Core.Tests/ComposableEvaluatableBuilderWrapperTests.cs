@@ -1,14 +1,14 @@
-﻿namespace QueryFramework.Core.Tests.Extensions;
+﻿namespace QueryFramework.Core.Tests;
 
-public class StringExtensionsTests
+public class ComposableEvaluatableBuilderWrapperTests
 {
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesContain()
-        => QueryConditionTest(x => x.DoesContain("value"), typeof(StringContainsOperator));
+        => QueryConditionTest(x => x.Contains("value"), typeof(StringContainsOperator));
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesEndWith()
-        => QueryConditionTest(x => x.DoesEndWith("value"), typeof(EndsWithOperator));
+        => QueryConditionTest(x => x.EndsWith("value"), typeof(EndsWithOperator));
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsEqualTo()
@@ -72,15 +72,16 @@ public class StringExtensionsTests
 
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesStartWith()
-        => QueryConditionTest(x => x.DoesStartWith("value"), typeof(StartsWithOperator));
+        => QueryConditionTest(x => x.StartsWith("value"), typeof(StartsWithOperator));
 
-    private static void QueryConditionTest(Func<string, ComposableEvaluatableBuilder> func, Type expectedOperatorType)
+    private static void QueryConditionTest(Func<ComposableEvaluatableBuilderWrapper<SingleEntityQueryBuilder>, SingleEntityQueryBuilder> func, Type expectedOperatorType)
     {
         // Arrange
-        var queryExpressionFieldName = "fieldname";
+        var queryBuilder = new SingleEntityQueryBuilder();
+        var wrapper = queryBuilder.Where("fieldname");
 
         // Act
-        var actual = func(queryExpressionFieldName);
+        var actual = func(wrapper).Filter.Conditions.Single();
 
         // Assert
         var leftExpression = actual.LeftExpression;

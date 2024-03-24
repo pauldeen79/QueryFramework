@@ -6,7 +6,7 @@ public class StringExtensionsTests
     public void Can_Use_Len_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Len();
@@ -19,7 +19,7 @@ public class StringExtensionsTests
     public void Can_Use_SqlTrim_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.SqlTrim();
@@ -32,7 +32,7 @@ public class StringExtensionsTests
     public void Can_Use_Upper_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Upper();
@@ -45,7 +45,7 @@ public class StringExtensionsTests
     public void Can_Use_Lower_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Lower();
@@ -58,7 +58,7 @@ public class StringExtensionsTests
     public void Can_Use_Left_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Left(1);
@@ -71,7 +71,7 @@ public class StringExtensionsTests
     public void Can_Use_Right_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Right(1);
@@ -84,7 +84,7 @@ public class StringExtensionsTests
     public void Can_Use_Year_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Year();
@@ -97,7 +97,7 @@ public class StringExtensionsTests
     public void Can_Use_Month_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Month();
@@ -110,7 +110,7 @@ public class StringExtensionsTests
     public void Can_Use_Day_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Day();
@@ -123,7 +123,7 @@ public class StringExtensionsTests
     public void Can_Use_Count_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Count();
@@ -136,7 +136,7 @@ public class StringExtensionsTests
     public void Can_Use_Sum_Function_On_FieldName_String()
     {
         // Arrange
-        var sut = "Field";
+        var sut = new SingleEntityQueryBuilder().Where("Field");
 
         // Act
         var actual = sut.Sum();

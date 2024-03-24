@@ -3,12 +3,12 @@
 public class QueryConditionExtensionsTests
 {
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesContain()
-        => AssertQueryCondition(x => x.DoesContain("value"), typeof(StringContainsOperator));
+    public void Can_Create_QueryCondition_Using_Contains()
+        => AssertQueryCondition(x => x.Contains("value"), typeof(StringContainsOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesEndWith()
-        => AssertQueryCondition(x => x.DoesEndWith("value"), typeof(EndsWithOperator));
+    public void Can_Create_QueryCondition_Using_EndsWith()
+        => AssertQueryCondition(x => x.EndsWith("value"), typeof(EndsWithOperator));
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsEqualTo()
@@ -71,8 +71,8 @@ public class QueryConditionExtensionsTests
         => AssertQueryCondition(x => x.DoesNotStartWith("value"), typeof(NotStartsWithOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesStartWith()
-        => AssertQueryCondition(x => x.DoesStartWith("value"), typeof(StartsWithOperator));
+    public void Can_Create_QueryCondition_Using_StartsWith()
+        => AssertQueryCondition(x => x.StartsWith("value"), typeof(StartsWithOperator));
 
     private static void AssertQueryCondition(Func<ExpressionBuilder, ComposableEvaluatableBuilder> func, Type expectedOperatorType)
     {

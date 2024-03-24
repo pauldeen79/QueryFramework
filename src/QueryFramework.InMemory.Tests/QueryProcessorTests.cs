@@ -20,7 +20,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where("UnknownField".IsEqualTo("something"))
+            .Where("UnknownField").IsEqualTo("something")
             .Build();
 
         // Act & Assert
@@ -86,7 +86,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsEqualTo("B"))
+            .Where(nameof(MyClass.Property)).IsEqualTo("B")
             .Build();
 
         // Act
@@ -103,9 +103,12 @@ public sealed class QueryProcessorTests : IDisposable
         // Arrange
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateContextSut(items);
-        var query = new SingleEntityQueryBuilder()
-            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}".IsEqualTo("##IGNORE##").WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context))))
-            .Build();
+        var builder = new SingleEntityQueryBuilder()
+            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}").IsEqualTo("##IGNORE##");
+        builder.Filter.Conditions
+            .Single()
+            .WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context)));
+        var query = builder.Build();
 
         // Act
         var actual = sut.FindPaged<MyClass>(query, "B");
@@ -122,8 +125,8 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsEqualTo("B"))
-            .And(nameof(MyClass.Property).IsEqualTo("A"))
+            .Where(nameof(MyClass.Property)).IsEqualTo("B")
+            .And(nameof(MyClass.Property)).IsEqualTo("A")
             .Build();
 
         // Act
@@ -140,7 +143,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsNotEqualTo("B"))
+            .Where(nameof(MyClass.Property)).IsNotEqualTo("B")
             .Build();
 
         // Act
@@ -158,7 +161,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesContain("zz"))
+            .Where(nameof(MyClass.Property)).Contains("zz")
             .Build();
 
         // Act
@@ -176,7 +179,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesNotContain("zz"))
+            .Where(nameof(MyClass.Property)).DoesNotContain("zz")
             .Build();
 
         // Act
@@ -194,7 +197,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesEndWith("er"))
+            .Where(nameof(MyClass.Property)).EndsWith("er")
             .Build();
 
         // Act
@@ -212,7 +215,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesNotEndWith("er"))
+            .Where(nameof(MyClass.Property)).DoesNotEndWith("er")
             .Build();
 
         // Act
@@ -230,7 +233,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesStartWith("Be"))
+            .Where(nameof(MyClass.Property)).StartsWith("Be")
             .Build();
 
         // Act
@@ -248,7 +251,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).DoesNotStartWith("Be"))
+            .Where(nameof(MyClass.Property)).DoesNotStartWith("Be")
             .Build();
 
         // Act
@@ -266,7 +269,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsNull())
+            .Where(nameof(MyClass.Property)).IsNull()
             .Build();
 
         // Act
@@ -283,7 +286,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsNotNull())
+            .Where(nameof(MyClass.Property)).IsNotNull()
             .Build();
 
         // Act
@@ -302,7 +305,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsNullOrEmpty())
+            .Where(nameof(MyClass.Property)).IsNullOrEmpty()
             .Build();
 
         // Act
@@ -319,7 +322,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsNotNullOrEmpty())
+            .Where(nameof(MyClass.Property)).IsNotNullOrEmpty()
             .Build();
 
         // Act
@@ -338,7 +341,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsSmallerThan("Coconut"))
+            .Where(nameof(MyClass.Property)).IsSmallerThan("Coconut")
             .Build();
 
         // Act
@@ -356,7 +359,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsSmallerOrEqualThan("Beer"))
+            .Where(nameof(MyClass.Property)).IsSmallerOrEqualThan("Beer")
             .Build();
 
         // Act
@@ -374,7 +377,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsGreaterThan("Coconut"))
+            .Where(nameof(MyClass.Property)).IsGreaterThan("Coconut")
             .Build();
 
         // Act
@@ -392,7 +395,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "Pizza" }, new MyClass { Property = "Beer" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsGreaterOrEqualThan("Pizza"))
+            .Where(nameof(MyClass.Property)).IsGreaterOrEqualThan("Pizza")
             .Build();
 
         // Act
@@ -410,7 +413,7 @@ public sealed class QueryProcessorTests : IDisposable
         var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
         var sut = CreateSut(items);
         var query = new SingleEntityQueryBuilder()
-            .Where(nameof(MyClass.Property).IsEqualTo("b"))
+            .Where(nameof(MyClass.Property)).IsEqualTo("b")
             .Build();
 
         // Act

@@ -1,5 +1,5 @@
 ﻿namespace QueryFramework.CodeGeneration2.Models.Queries;
 
-internal interface IParameterizedQuery : Models.IQuery, Abstractions.IParameterizedQuery
+internal interface IParameterizedQuery : IQuery, Abstractions.IParameterizedQuery
 {
 }

@@ -1,17 +1,3 @@
-﻿global using System;
-global using System.Collections;
-global using System.Collections.Generic;
-global using System.Linq;
-global using CrossCutting.Common.Extensions;
-global using ExpressionFramework.Domain.Builders;
-global using ExpressionFramework.Domain.Builders.Evaluatables;
-global using ExpressionFramework.Domain.Builders.Expressions;
-global using ExpressionFramework.Domain.Builders.Operators;
-global using ExpressionFramework.Domain.Contracts;
-global using ExpressionFramework.Domain.Domains;
-global using QueryFramework.Abstractions.Builders;
-global using QueryFramework.Abstractions.Builders.Extensions;
-global using QueryFramework.Abstractions.Domains;
+﻿global using System.Linq;
 global using QueryFramework.Abstractions.Extensions;
-global using QueryFramework.Core.Builders;
-global using QueryFramework.Core.Extensions;
+
