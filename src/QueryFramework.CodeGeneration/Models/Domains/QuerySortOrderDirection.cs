@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2.Models.Domains;
+﻿namespace QueryFramework.CodeGeneration.Models.Domains;
 
 public enum QuerySortOrderDirection
 {

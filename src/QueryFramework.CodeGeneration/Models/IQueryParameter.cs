@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2.Models;
+﻿namespace QueryFramework.CodeGeneration.Models;
 
 internal interface IQueryParameter : Abstractions.IQueryParameter
 {

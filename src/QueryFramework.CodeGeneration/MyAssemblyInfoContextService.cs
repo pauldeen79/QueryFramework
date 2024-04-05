@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2;
+﻿namespace QueryFramework.CodeGeneration;
 
 [ExcludeFromCodeCoverage]
 public class MyAssemblyInfoContextService : IAssemblyInfoContextService
@@ -26,7 +26,7 @@ public class MyAssemblyInfoContextService : IAssemblyInfoContextService
         "ClassFramework.TemplateFramework",
         "CsharpExpressionDumper.Abstractions",
         "CsharpExpressionDumper.Core",
-        "QueryFramework.CodeGeneration2",
+        "QueryFramework.CodeGeneration",
         "ExpressionFramework.Domain",
         "ExpressionFramework.Domain.Specialized",
     ];

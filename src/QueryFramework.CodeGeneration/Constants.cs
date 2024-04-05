@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2;
+﻿namespace QueryFramework.CodeGeneration;
 
 public static class Constants
 {

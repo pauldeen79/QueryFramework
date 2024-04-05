@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
@@ -17,7 +17,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override Type BuilderCollectionType => typeof(List<>);
 
     protected override string ProjectName => "QueryFramework";
-    protected override string CodeGenerationRootNamespace => "QueryFramework.CodeGeneration2";
+    protected override string CodeGenerationRootNamespace => "QueryFramework.CodeGeneration";
     protected override string CoreNamespace => "QueryFramework.Core";
     protected override bool CopyAttributes => true;
     protected override bool CopyInterfaces => true;

@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2.CodeGenerationProviders;
+﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 [ExcludeFromCodeCoverage]
 public class OverrideQueryEntities : QueryFrameworkCSharpClassBase

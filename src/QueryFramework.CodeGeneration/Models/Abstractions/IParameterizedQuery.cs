@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2.Models.Abstractions;
+﻿namespace QueryFramework.CodeGeneration.Models.Abstractions;
 
 internal interface IParameterizedQuery : IQuery
 {

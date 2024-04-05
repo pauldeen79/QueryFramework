@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.CodeGeneration2;
+﻿namespace QueryFramework.CodeGeneration;
 
 [ExcludeFromCodeCoverage]
 internal static class Program
