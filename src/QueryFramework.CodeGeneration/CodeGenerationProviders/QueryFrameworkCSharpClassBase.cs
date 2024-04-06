@@ -49,7 +49,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                     new MetadataBuilder().WithValue(typeof(ExpressionBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
                     new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
                     new MetadataBuilder().WithValue($"{typeof(ExpressionBuilderFactory).FullName}.Create(source.[Name])").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
-                    new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})!", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
+                    new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue($"[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
                 ),
         }.Concat(
