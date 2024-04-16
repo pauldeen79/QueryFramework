@@ -9,9 +9,9 @@ public class OverrideQueryEntities : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Paths.Queries;
 
-    public override IEnumerable<TypeBase> Model => GetEntities(GetOverrideModels(typeof(Models.IQuery)), CurrentNamespace);
+    public override IEnumerable<TypeBase> Model => GetEntities(GetOverrideModels(typeof(Models.IQuery)).Result, CurrentNamespace).Result;
 
     protected override bool EnableEntityInheritance => true;
     protected override bool EnableBuilderInhericance => true;
-    protected override Class? BaseClass => CreateBaseclass(typeof(Models.IQuery), Constants.Namespaces.Core);
+    protected override Class? BaseClass => CreateBaseclass(typeof(Models.IQuery), Constants.Namespaces.Core).Result;
 }

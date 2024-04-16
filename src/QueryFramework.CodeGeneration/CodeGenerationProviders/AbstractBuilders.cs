@@ -10,9 +10,9 @@ public class AbstractBuilders : QueryFrameworkCSharpClassBase
     public override string Path => $"{Constants.Namespaces.Core}/Builders";
 
     public override IEnumerable<TypeBase> Model => GetBuilders(
-        GetAbstractModels(),
+        GetAbstractModels().Result,
         Constants.Namespaces.CoreBuilders,
-        Constants.Namespaces.Core);
+        Constants.Namespaces.Core).Result;
 
     protected override bool AddNullChecks => false; // not needed for abstract builders, because each derived class will do its own validation
     protected override bool AddBackingFields => true; // backing fields are added when using null checks... so we need to add this explicitly

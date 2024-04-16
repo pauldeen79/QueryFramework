@@ -12,8 +12,8 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase
     public override IEnumerable<TypeBase> Model
         => GetBuilders
         (
-            GetCoreModels(),
+            GetCoreModels().Result,
             Constants.Namespaces.CoreBuilders,
             Constants.Namespaces.Core
-        );
+        ).Result;
 }
