@@ -48,9 +48,9 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                 (
                     new MetadataBuilder().WithValue(typeof(ExpressionBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
                     new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-                    new MetadataBuilder().WithValue($"{typeof(ExpressionBuilderFactory).FullName}.Create(source.[Name])").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
-                    new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
-                    new MetadataBuilder().WithValue($"[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+                    new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
+                    new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
+                    new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue)
                 ),
         }.Concat(
             GetType().Assembly.GetTypes()
@@ -70,8 +70,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                                 new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
                                 new MetadataBuilder().WithValue($"{ProjectName}.Abstractions.Builders").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceNamespace),
                                 new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderInterfaceName),
-                                new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
-                                new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
+                                new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
+                                new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
                                 new MetadataBuilder().WithName(ClassFramework.Pipelines.MetadataNames.CustomEntityInterfaceTypeName).WithValue($"{ProjectName}.Abstractions.I{x.GetEntityClassName()}")
                             )
                     })

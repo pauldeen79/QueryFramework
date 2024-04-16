@@ -124,7 +124,7 @@ public static class QueryBuilderExtensions
         public IQuerySortOrderBuilder ToBuilder()
             => new QuerySortOrderBuilder
             {
-                FieldNameExpression = ExpressionBuilderFactory.Create(FieldNameExpression),
+                FieldNameExpression = FieldNameExpression.ToBuilder(),
                 Order = Order
             };
     }
