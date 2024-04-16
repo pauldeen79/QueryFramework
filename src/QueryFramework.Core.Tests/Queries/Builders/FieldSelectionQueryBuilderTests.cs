@@ -36,7 +36,7 @@ public class FieldSelectionQueryBuilderTests
         var sut = new FieldSelectionQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
@@ -70,7 +70,7 @@ public class FieldSelectionQueryBuilderTests
         var sut = new FieldSelectionQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset,
             Distinct = distinct,
@@ -87,7 +87,7 @@ public class FieldSelectionQueryBuilderTests
         actual.GetAllFields.Should().Be(sut.GetAllFields);
         actual.Limit.Should().Be(sut.Limit);
         actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count());
+        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
         actual.FieldNames.Should().HaveCount(sut.FieldNames.Count);
         actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
     }

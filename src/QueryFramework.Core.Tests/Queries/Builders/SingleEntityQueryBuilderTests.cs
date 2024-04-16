@@ -30,7 +30,7 @@ public class SingleEntityQueryBuilderTests
         var sut = new SingleEntityQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset
         };
@@ -55,7 +55,7 @@ public class SingleEntityQueryBuilderTests
         var sut = new SingleEntityQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset
         };
@@ -67,7 +67,7 @@ public class SingleEntityQueryBuilderTests
         actual.Should().NotBeNull();
         actual.Limit.Should().Be(sut.Limit);
         actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count());
+        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
         actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
     }
 }
