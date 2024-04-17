@@ -3,24 +3,44 @@
 public class ComposableEvaluatableBuilderWrapperTests
 {
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesContain()
+    public void Can_Create_QueryCondition_Using_DoesContain_Constant_Value()
         => QueryConditionTest(x => x.Contains("value"), typeof(StringContainsOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesEndWith()
+    public void Can_Create_QueryCondition_Using_DoesContain_Expression()
+        => QueryConditionTest(x => x.Contains(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(StringContainsOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesEndWith_Constant_Value()
         => QueryConditionTest(x => x.EndsWith("value"), typeof(EndsWithOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsEqualTo()
+    public void Can_Create_QueryCondition_Using_DoesEndWith_Expression()
+        => QueryConditionTest(x => x.EndsWith(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(EndsWithOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsEqualTo_Constant_Value()
         => QueryConditionTest(x => x.IsEqualTo("value"), typeof(EqualsOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsGreaterOrEqualThan()
+    public void Can_Create_QueryCondition_Using_IsEqualTo_Expression()
+        => QueryConditionTest(x => x.IsEqualTo(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(EqualsOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsGreaterOrEqualThan_Constant_Value()
         => QueryConditionTest(x => x.IsGreaterOrEqualThan("value"), typeof(IsGreaterOrEqualOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsGreaterThan()
+    public void Can_Create_QueryCondition_Using_IsGreaterOrEqualThan_Expression()
+        => QueryConditionTest(x => x.IsGreaterOrEqualThan(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(IsGreaterOrEqualOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsGreaterThan_Constant_Value()
         => QueryConditionTest(x => x.IsGreaterThan("value"), typeof(IsGreaterOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsGreaterThan_Expression()
+        => QueryConditionTest(x => x.IsGreaterThan(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(IsGreaterOperator));
 
     [Fact]
     public void Can_Create_QueryCondition_Using_IsNotNullOrEmpty()
@@ -47,32 +67,60 @@ public class ComposableEvaluatableBuilderWrapperTests
         => QueryConditionTest(x => x.IsNull(), typeof(IsNullOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsSmallerOrEqualThan()
+    public void Can_Create_QueryCondition_Using_IsSmallerOrEqualThan_Constant_Value()
         => QueryConditionTest(x => x.IsSmallerOrEqualThan("value"), typeof(IsSmallerOrEqualOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsSmallerThan()
+    public void Can_Create_QueryCondition_Using_IsSmallerOrEqualThan_Expression()
+        => QueryConditionTest(x => x.IsSmallerOrEqualThan(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(IsSmallerOrEqualOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsSmallerThan_Constant_Value()
         => QueryConditionTest(x => x.IsSmallerThan("value"), typeof(IsSmallerOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesNotContain()
+    public void Can_Create_QueryCondition_Using_IsSmallerThan_Expression()
+        => QueryConditionTest(x => x.IsSmallerThan(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(IsSmallerOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesNotContain_Constant_Value()
         => QueryConditionTest(x => x.DoesNotContain("value"), typeof(StringNotContainsOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesNotEndWith()
+    public void Can_Create_QueryCondition_Using_DoesNotContain_Expression()
+        => QueryConditionTest(x => x.DoesNotContain(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(StringNotContainsOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesNotEndWith_Constant_Value()
         => QueryConditionTest(x => x.DoesNotEndWith("value"), typeof(NotEndsWithOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_IsNotEqualTo()
+    public void Can_Create_QueryCondition_Using_DoesNotEndWith_Expression()
+        => QueryConditionTest(x => x.DoesNotEndWith(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(NotEndsWithOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_IsNotEqualTo_Constant_Value()
         => QueryConditionTest(x => x.IsNotEqualTo("value"), typeof(NotEqualsOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesNotStartWith()
+    public void Can_Create_QueryCondition_Using_IsNotEqualTo_Expression()
+        => QueryConditionTest(x => x.IsNotEqualTo(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(NotEqualsOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesNotStartWith_Constant_Value()
         => QueryConditionTest(x => x.DoesNotStartWith("value"), typeof(NotStartsWithOperator));
 
     [Fact]
-    public void Can_Create_QueryCondition_Using_DoesStartWith()
+    public void Can_Create_QueryCondition_Using_DoesNotStartWith_Expression()
+        => QueryConditionTest(x => x.DoesNotStartWith(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(NotStartsWithOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesStartWith_Constant_Value()
         => QueryConditionTest(x => x.StartsWith("value"), typeof(StartsWithOperator));
+
+    [Fact]
+    public void Can_Create_QueryCondition_Using_DoesStartWith_Expression()
+        => QueryConditionTest(x => x.StartsWith(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(StartsWithOperator));
 
     private static void QueryConditionTest(Func<ComposableEvaluatableBuilderWrapper<SingleEntityQueryBuilder>, SingleEntityQueryBuilder> func, Type expectedOperatorType)
     {
@@ -88,7 +136,8 @@ public class ComposableEvaluatableBuilderWrapperTests
         var rightExpression = actual.RightExpression;
         var @operator = actual.Operator;
         var field = leftExpression as FieldExpressionBuilder;
-        var value = (rightExpression as ConstantExpressionBuilder)?.Value;
+        var value = (rightExpression as ConstantExpressionBuilder)?.Value
+            ?? (rightExpression as TypedConstantExpressionBuilder<string>)?.Value;
         ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("fieldname");
         if (expectedOperatorType == typeof(IsNullOperator)
             || expectedOperatorType == typeof(IsNullOrEmptyOperator)

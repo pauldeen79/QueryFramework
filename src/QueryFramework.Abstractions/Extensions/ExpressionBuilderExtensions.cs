@@ -17,11 +17,25 @@ public static class ExpressionBuilderExtensions
     public static ComposableEvaluatableBuilder Contains(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new StringContainsOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the Contains query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder Contains<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new StringContainsOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the EndsWith query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
     public static ComposableEvaluatableBuilder EndsWith(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new EndsWithOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the EndsWith query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder EndsWith<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new EndsWithOperatorBuilder(), expression);
 
     /// <summary>Creates a query condition builder with the Equals query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
@@ -29,17 +43,35 @@ public static class ExpressionBuilderExtensions
     public static ComposableEvaluatableBuilder IsEqualTo(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new EqualsOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the Equals query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsEqualTo(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new EqualsOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the GreaterOrEqualThan query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
     public static ComposableEvaluatableBuilder IsGreaterOrEqualThan(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new IsGreaterOrEqualOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the GreaterOrEqualThan query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsGreaterOrEqualThan(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new IsGreaterOrEqualOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the GreaterThan query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    public static ComposableEvaluatableBuilder IsGreaterThan(this ExpressionBuilder instance, object? value = null)
+    public static ComposableEvaluatableBuilder IsGreaterThan(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new IsGreaterOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the GreaterThan query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsGreaterThan(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new IsGreaterOperatorBuilder(), expression);
 
     /// <summary>Creates a query condition builder with the IsNotNull query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
@@ -77,11 +109,23 @@ public static class ExpressionBuilderExtensions
     public static ComposableEvaluatableBuilder IsSmallerOrEqualThan(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new IsSmallerOrEqualOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the LowerOrEqualThan query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsSmallerOrEqualThan(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new IsSmallerOrEqualOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the LowerTHan query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
     public static ComposableEvaluatableBuilder IsSmallerThan(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new IsSmallerOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the LowerTHan query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsSmallerThan(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new IsSmallerOperatorBuilder(), expression);
 
     /// <summary>Creates a query condition builder with the NotContains query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
@@ -89,23 +133,37 @@ public static class ExpressionBuilderExtensions
     public static ComposableEvaluatableBuilder DoesNotContain(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new StringNotContainsOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the NotContains query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder DoesNotContain<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new StringNotContainsOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the NotEndsWith query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
-    /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
-    /// <param name="combination">The combination.</param>
     public static ComposableEvaluatableBuilder DoesNotEndWith(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new NotEndsWithOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the NotEndsWith query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder DoesNotEndWith<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new NotEndsWithOperatorBuilder(), expression);
 
     /// <summary>Creates a query condition builder with the NotEqual query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
-    /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
-    /// <param name="combination">The combination.</param>
     public static ComposableEvaluatableBuilder IsNotEqualTo(this ExpressionBuilder instance, object? value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new NotEqualsOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the NotEqual query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder IsNotEqualTo(this ExpressionBuilder instance, ExpressionBuilder expression)
+        => ComposableEvaluatableBuilderHelper.Create(instance, new NotEqualsOperatorBuilder(), expression);
 
     /// <summary>Creates a query condition builder with the NotStartsWith query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
@@ -113,14 +171,25 @@ public static class ExpressionBuilderExtensions
     public static ComposableEvaluatableBuilder DoesNotStartWith(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new NotStartsWithOperatorBuilder(), value);
 
+    /// <summary>Creates a query condition builder with the NotStartsWith query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder DoesNotStartWith<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new NotStartsWithOperatorBuilder(), expression);
+
     /// <summary>Creates a query condition builder with the StartsWith query operator, using the specified values.</summary>
     /// <param name="instance">The query expression builder instance.</param>
     /// <param name="value">The value.</param>
-    /// <param name="openBracket">if set to <c>true</c> [open bracket].</param>
-    /// <param name="closeBracket">if set to <c>true</c> [close bracket].</param>
-    /// <param name="combination">The combination.</param>
     public static ComposableEvaluatableBuilder StartsWith(this ExpressionBuilder instance, string value)
         => ComposableEvaluatableBuilderHelper.Create(instance, new StartsWithOperatorBuilder(), value);
+
+    /// <summary>Creates a query condition builder with the StartsWith query operator, using the specified values.</summary>
+    /// <param name="instance">The query expression builder instance.</param>
+    /// <param name="expression">The expression for the right part of the operator.</param>
+    public static ComposableEvaluatableBuilder StartsWith<T>(this ExpressionBuilder instance, T expression)
+        where T : ExpressionBuilder, ITypedExpressionBuilder<string>
+        => ComposableEvaluatableBuilderHelper.Create(instance, new StartsWithOperatorBuilder(), expression);
     #endregion
 
     #region Built-in functions
