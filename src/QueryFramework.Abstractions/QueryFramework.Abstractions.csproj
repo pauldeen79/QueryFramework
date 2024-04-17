@@ -11,14 +11,12 @@
   <ItemGroup>
     <PackageReference Include="pauldeen79.CrossCutting.Common" Version="3.9.0" />
     <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.10.0" />
+    <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.6.3" />
+    <PackageReference Include="pauldeen79.ExpressionFramework.Domain.Builders" Version="0.6.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Builders\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ExpressionFramework\src\ExpressionFramework.Domain2\ExpressionFramework.Domain2.csproj" />
   </ItemGroup>
 
 </Project>

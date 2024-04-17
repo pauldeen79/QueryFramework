@@ -36,8 +36,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration", "src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj", "{D4CE70D5-6BB1-4B62-8184-657A748782C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionFramework.Domain2", "..\ExpressionFramework\src\ExpressionFramework.Domain2\ExpressionFramework.Domain2.csproj", "{13C2BBE2-8302-4473-8D36-89C91E1BFB9C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,10 +94,6 @@ Global
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13C2BBE2-8302-4473-8D36-89C91E1BFB9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13C2BBE2-8302-4473-8D36-89C91E1BFB9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13C2BBE2-8302-4473-8D36-89C91E1BFB9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13C2BBE2-8302-4473-8D36-89C91E1BFB9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
