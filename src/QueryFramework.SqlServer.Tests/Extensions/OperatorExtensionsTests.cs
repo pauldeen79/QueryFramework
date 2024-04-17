@@ -81,6 +81,11 @@ public class OperatorExtensionsTests
         {
         }
 
+        public override OperatorBuilder ToBuilder()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
         {
             throw new NotImplementedException();

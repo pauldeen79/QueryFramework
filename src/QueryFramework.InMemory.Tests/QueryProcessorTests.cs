@@ -687,6 +687,11 @@ public sealed class QueryProcessorTests : IDisposable
 
     public sealed record UnsupportedOperator : Operator
     {
+        public override OperatorBuilder ToBuilder()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Result<bool> Evaluate(object? leftValue, object? rightValue)
         {
             throw new NotImplementedException();

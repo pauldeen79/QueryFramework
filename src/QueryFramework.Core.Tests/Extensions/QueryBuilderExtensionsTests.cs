@@ -39,16 +39,20 @@ public class QueryBuilderExtensionsTests
         var actual = sut.OrderBy("Field1", "Field2", "Field3");
 
         // Assert
-        actual.OrderByFields.Should().HaveCount(3);
-        var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
-        var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
-        var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
-        field0.ToString().Should().Be("Field1");
-        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.ToString().Should().Be("Field2");
-        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.ToString().Should().Be("Field3");
-        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Ascending);
+        AssertOrderBy(actual);
+    }
+
+    [Fact]
+    public void Can_Use_Result_Of_OrderBy_To_Convert_To_Entity_And_Back_To_Builder()
+    {
+        // Arrange
+        var sut = new SingleEntityQueryBuilder();
+
+        // Act
+        var actual = sut.OrderBy("Field1", "Field2", "Field3").BuildTyped().ToTypedBuilder();
+
+        // Assert
+        AssertOrderBy(actual);
     }
 
     [Fact]
@@ -204,5 +208,19 @@ public class QueryBuilderExtensionsTests
         ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
         firstCondition.Operator.Should().BeOfType<IsNullOperatorBuilder>();
         firstCondition.RightExpression.Should().BeOfType<EmptyExpressionBuilder>();
+    }
+
+    private static void AssertOrderBy(SingleEntityQueryBuilder actual)
+    {
+        actual.OrderByFields.Should().HaveCount(3);
+        var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
+        var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
+        var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
+        field0.ToString().Should().Be("Field1");
+        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Ascending);
+        field1.ToString().Should().Be("Field2");
+        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Ascending);
+        field2.ToString().Should().Be("Field3");
+        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Ascending);
     }
 }

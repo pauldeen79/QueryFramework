@@ -104,7 +104,7 @@ public static class QueryBuilderExtensions
 
     private sealed class QuerySortOrderBuilder : IQuerySortOrderBuilder
     {
-        public ExpressionBuilder FieldNameExpression { get; set; } = default!;
+        [Required, ValidateObject] public ExpressionBuilder FieldNameExpression { get; set; } = default!;
         public QuerySortOrderDirection Order { get; set; }
 
         public IQuerySortOrder Build() => new QuerySortOrder(FieldNameExpression?.Build(), Order);
@@ -124,7 +124,7 @@ public static class QueryBuilderExtensions
         public IQuerySortOrderBuilder ToBuilder()
             => new QuerySortOrderBuilder
             {
-                FieldNameExpression = ExpressionBuilderFactory.Create(FieldNameExpression),
+                FieldNameExpression = FieldNameExpression.ToBuilder(),
                 Order = Order
             };
     }

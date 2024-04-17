@@ -33,7 +33,7 @@ public class GroupingQueryBuilderTests
         var sut = new GroupingQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset,
             GroupByFields = groupByFields.Cast<ExpressionBuilder>().ToList(),
@@ -63,7 +63,7 @@ public class GroupingQueryBuilderTests
         var sut = new GroupingQueryBuilder
         {
             Filter = new ComposedEvaluatableBuilder().AddConditions(conditions),
-            OrderByFields = orderByFields.Cast<IQuerySortOrderBuilder>().ToList(),
+            OrderByFields = orderByFields.ToList(),
             Limit = limit,
             Offset = offset,
             GroupByFields = groupByFields.Cast<ExpressionBuilder>().ToList(),
@@ -77,7 +77,7 @@ public class GroupingQueryBuilderTests
         actual.Should().NotBeNull();
         actual.Limit.Should().Be(sut.Limit);
         actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count());
+        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
         actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
         actual.GroupByFields.Should().HaveCount(1);
         actual.GroupByFilter.Conditions.Should().HaveCount(1);
