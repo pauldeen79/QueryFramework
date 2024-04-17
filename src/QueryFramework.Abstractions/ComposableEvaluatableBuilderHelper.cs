@@ -29,7 +29,7 @@ public static class ComposableEvaluatableBuilderHelper
             .WithStartGroup(startGroup)
             .WithEndGroup(endGroup);
 
-    public static ComposableEvaluatableBuilder Create(ExpressionBuilder leftExpression, OperatorBuilder @operator, Combination? combination = null, bool startGroup = false, bool endGroup = false, ExpressionBuilder? expression = null)
+    public static ComposableEvaluatableBuilder Create(ExpressionBuilder leftExpression, OperatorBuilder @operator, Combination? combination = null, bool startGroup = false, bool endGroup = false)
         => new ComposableEvaluatableBuilder()
             .WithCombination(combination)
             .WithLeftExpression(leftExpression)
