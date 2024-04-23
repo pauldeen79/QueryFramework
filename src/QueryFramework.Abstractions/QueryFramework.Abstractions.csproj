@@ -9,13 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="pauldeen79.CrossCutting.Common" Version="3.9.0" />
-    <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="2.10.0" />
     <PackageReference Include="pauldeen79.ExpressionFramework.Domain" Version="0.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Builders\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CrossCutting\src\CrossCutting.Common\CrossCutting.Common.csproj" />
+    <ProjectReference Include="..\..\..\CrossCutting\src\CrossCutting.Data.Abstractions\CrossCutting.Data.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
