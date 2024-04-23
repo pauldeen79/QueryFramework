@@ -241,7 +241,7 @@ internal static class PagedSelectCommandBuilderExtensions
     {
         var builder = new StringBuilder();
 
-        if (condition.StartGroup == true)
+        if (condition.StartGroup)
         {
             builder.Append("(");
         }
@@ -278,7 +278,7 @@ internal static class PagedSelectCommandBuilderExtensions
 
         AppendOperatorAndValue(condition, fieldInfo, builder, evaluator, parameterBag, context);
 
-        if (condition.EndGroup == true)
+        if (condition.EndGroup)
         {
             builder.Append(")");
         }
