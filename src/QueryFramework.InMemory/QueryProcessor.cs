@@ -23,6 +23,14 @@ public class QueryProcessor : IContextQueryProcessor
             GetData<TResult>(query, context)
         ).ToList();
 
+    public Task<IReadOnlyCollection<TResult>> FindManyAsync<TResult>(IQuery query, object? context, CancellationToken cancellationToken)
+        where TResult : class
+        => Task.FromResult(FindMany<TResult>(query, context));
+
+    public Task<IReadOnlyCollection<TResult>> FindManyAsync<TResult>(IQuery query, CancellationToken cancellationToken)
+        where TResult : class
+        => Task.FromResult(FindMany<TResult>(query));
+
     public TResult? FindOne<TResult>(IQuery query)
         where TResult : class
         => FindOne<TResult>(query, default);
@@ -34,6 +42,13 @@ public class QueryProcessor : IContextQueryProcessor
             new SingleEntityQuery(null, null, query.Filter, query.OrderByFields),
             GetData<TResult>(query, context)
         ).FirstOrDefault();
+
+    public Task<TResult?> FindOneAsync<TResult>(IQuery query, object? context, CancellationToken cancellationToken)
+        where TResult : class
+        => Task.FromResult(FindOne<TResult>(query, context));
+
+    public Task<TResult?> FindOneAsync<TResult>(IQuery query, CancellationToken cancellationToken) where TResult : class
+        => Task.FromResult(FindOne<TResult>(query));
 
     public IPagedResult<TResult> FindPaged<TResult>(IQuery query)
         where TResult : class
@@ -51,6 +66,14 @@ public class QueryProcessor : IContextQueryProcessor
             query.Limit.GetValueOrDefault()
         );
     }
+
+    public Task<IPagedResult<TResult>> FindPagedAsync<TResult>(IQuery query, object? context, CancellationToken cancellationToken)
+        where TResult : class
+        => Task.FromResult(FindPaged<TResult>(query, context));
+
+    public Task<IPagedResult<TResult>> FindPagedAsync<TResult>(IQuery query, CancellationToken cancellationToken)
+        where TResult : class
+        => Task.FromResult(FindPaged<TResult>(query));
 
     private IEnumerable<TResult> GetData<TResult>(IQuery query, object? context)
         where TResult : class

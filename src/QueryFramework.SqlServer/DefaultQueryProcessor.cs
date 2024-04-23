@@ -12,17 +12,29 @@ public class DefaultQueryProcessor : IQueryProcessor
         _databaseCommandProvider = databaseCommandProvider;
     }
 
-    public IReadOnlyCollection<T> FindMany<T>(IQuery query)
-        where T : class
-        => GetRetriever<T>(query).FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
+    public IReadOnlyCollection<TResult> FindMany<TResult>(IQuery query)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindMany(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand);
 
-    public T? FindOne<T>(IQuery query)
-        where T : class
-        => GetRetriever<T>(query).FindOne(GenerateCommand(query, 1).DataCommand);
+    public Task<IReadOnlyCollection<TResult>> FindManyAsync<TResult>(IQuery query, CancellationToken cancellationToken)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindManyAsync(GenerateCommand(query, query.Limit.GetValueOrDefault()).DataCommand, cancellationToken);
 
-    public IPagedResult<T> FindPaged<T>(IQuery query)
-        where T : class
-        => GetRetriever<T>(query).FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
+    public TResult? FindOne<TResult>(IQuery query)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindOne(GenerateCommand(query, 1).DataCommand);
+
+    public Task<TResult?> FindOneAsync<TResult>(IQuery query, CancellationToken cancellationToken)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindOneAsync(GenerateCommand(query, 1).DataCommand, cancellationToken);
+
+    public IPagedResult<TResult> FindPaged<TResult>(IQuery query)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindPaged(GenerateCommand(query, query.Limit.GetValueOrDefault()));
+
+    public Task<IPagedResult<TResult>> FindPagedAsync<TResult>(IQuery query, CancellationToken cancellationToken)
+        where TResult : class
+        => GetRetriever<TResult>(query).FindPagedAsync(GenerateCommand(query, query.Limit.GetValueOrDefault()), cancellationToken);
 
     private IPagedDatabaseCommand GenerateCommand(IQuery query, int limit)
         => _databaseCommandProvider.CreatePaged
