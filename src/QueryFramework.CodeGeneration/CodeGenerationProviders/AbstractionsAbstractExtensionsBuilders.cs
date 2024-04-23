@@ -9,7 +9,8 @@ public class AbstractionsAbstractExtensionsBuilders : QueryFrameworkCSharpClassB
 
     public override string Path => $"{Constants.Namespaces.Abstractions}/Extensions";
 
-    public override IEnumerable<TypeBase> Model => GetBuilderExtensions(GetAbstractionsInterfaces().Result, Constants.Namespaces.AbstractionsBuilders, Constants.Namespaces.Abstractions, Constants.Namespaces.AbstractionsBuildersExtensions).Result;
+    public override async Task<IEnumerable<TypeBase>> GetModel()
+        => await GetBuilderExtensions(await GetAbstractionsInterfaces(), Constants.Namespaces.AbstractionsBuilders, Constants.Namespaces.Abstractions, Constants.Namespaces.AbstractionsBuildersExtensions);
 
     protected override bool EnableEntityInheritance => true;
 }

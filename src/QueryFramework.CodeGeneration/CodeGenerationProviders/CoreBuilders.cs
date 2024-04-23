@@ -9,11 +9,6 @@ public class CoreBuilders : QueryFrameworkCSharpClassBase
 
     public override string Path => $"{Constants.Namespaces.Core}/Builders";
 
-    public override IEnumerable<TypeBase> Model
-        => GetBuilders
-        (
-            GetCoreModels().Result,
-            Constants.Namespaces.CoreBuilders,
-            Constants.Namespaces.Core
-        ).Result;
+    public override async Task<IEnumerable<TypeBase>> GetModel()
+        => await GetBuilders(await GetCoreModels(), Constants.Namespaces.CoreBuilders, Constants.Namespaces.Core);
 }

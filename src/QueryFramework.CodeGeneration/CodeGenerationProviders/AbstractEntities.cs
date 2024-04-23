@@ -9,8 +9,8 @@ public class AbstractEntities : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Namespaces.Core;
 
-    public override IEnumerable<TypeBase> Model
-        => GetEntities(GetAbstractModels().Result, Constants.Namespaces.Core).Result;
+    public override async Task<IEnumerable<TypeBase>> GetModel()
+        => await GetEntities(await GetAbstractModels(), Constants.Namespaces.Core);
 
     protected override bool EnableEntityInheritance => true;
     protected override bool EnableBuilderInhericance => true;

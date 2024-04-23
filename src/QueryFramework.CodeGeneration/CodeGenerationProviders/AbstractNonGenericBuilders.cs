@@ -7,7 +7,8 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
     {
     }
 
-    public override IEnumerable<TypeBase> Model => GetNonGenericBuilders(GetAbstractModels().Result, Constants.Namespaces.CoreBuilders, Constants.Namespaces.Core).Result;
+    public override async Task<IEnumerable<TypeBase>> GetModel()
+        => await GetNonGenericBuilders(await GetAbstractModels(), Constants.Namespaces.CoreBuilders, Constants.Namespaces.Core);
 
     public override string Path => $"{Constants.Namespaces.Core}/Builders";
 
