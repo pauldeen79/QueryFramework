@@ -29,7 +29,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
                          => new QueryPagedDatabaseCommandProvider
                          (
                              fieldInfoFactory,
-                             new[] { settingsProviderMock },
+                             [settingsProviderMock],
                              evaluatorMock
                          ).CreatePaged(x.ArgAt<IQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3), x.ArgAt<object?>(4)));
     }

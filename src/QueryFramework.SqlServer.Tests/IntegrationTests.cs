@@ -37,6 +37,22 @@ public sealed class IntegrationTests : IDisposable
     }
 
     [Fact]
+    public async Task Can_Query_All_Records_Async()
+    {
+        // Arrange
+        var query = new TestQuery();
+        var expectedResult = new[] { new TestEntity(), new TestEntity() };
+        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
+                      .Returns(expectedResult);
+
+        // Act
+        var actual = await CreateSut().FindManyAsync<TestEntity>(query);
+
+        // Assert
+        actual.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Fact]
     public void Can_Query_Filtered_Records()
     {
         // Arrange
@@ -47,6 +63,22 @@ public sealed class IntegrationTests : IDisposable
 
         // Act
         var actual = CreateSut().FindMany<TestEntity>(query);
+
+        // Assert
+        actual.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Fact]
+    public async Task Can_Query_Filtered_Records_Async()
+    {
+        // Arrange
+        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").BuildTyped());
+        var expectedResult = new[] { new TestEntity(), new TestEntity() };
+        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
+                      .Returns(expectedResult);
+
+        // Act
+        var actual = await CreateSut().FindManyAsync<TestEntity>(query);
 
         // Assert
         actual.Should().BeEquivalentTo(expectedResult);

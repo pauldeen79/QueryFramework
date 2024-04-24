@@ -5,6 +5,7 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Data;
 global using System.Linq;
 global using System.Text;
+global using System.Threading.Tasks;
 global using AutoFixture;
 global using AutoFixture.AutoNSubstitute;
 global using CrossCutting.Common;

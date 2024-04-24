@@ -14,11 +14,11 @@ internal sealed class ValidatableQueryMock : IQuery, IValidatableObject
     {
         if (Limit is null)
         {
-            yield return new ValidationResult("Limit is required", new[] { nameof(Limit) });
+            yield return new ValidationResult("Limit is required", [nameof(Limit)]);
         }
         if (Offset is null)
         {
-            yield return new ValidationResult("Offset is required", new[] { nameof(Offset) });
+            yield return new ValidationResult("Offset is required", [nameof(Offset)]);
         }
     }
 
