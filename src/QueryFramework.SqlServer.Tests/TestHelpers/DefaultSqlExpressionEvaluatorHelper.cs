@@ -6,8 +6,8 @@ internal static class DefaultSqlExpressionEvaluatorHelper
     {
         var evaluator = new DefaultSqlExpressionEvaluator
         (
-            new ISqlExpressionEvaluatorProvider[] { new FieldExpressionEvaluatorProvider(),
-                                                    new ConstantExpressionEvaluatorProvider() },
+            [ new FieldExpressionEvaluatorProvider(),
+                                                    new ConstantExpressionEvaluatorProvider() ],
             Enumerable.Empty<IFunctionParser>()
         );
         evaluatorMock.GetSqlExpression(Arg.Any<Expression>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), Arg.Any<object?>())

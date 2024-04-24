@@ -10,6 +10,5 @@ public static class ServiceCollectionExtensions
                 x.TryAddSingleton<IDataFactory, DefaultDataFactory>();
                 x.TryAddSingleton<IContextDataFactory, DefaultDataFactory>();
                 x.TryAddSingleton<IQueryProcessor, QueryProcessor>();
-                x.TryAddSingleton<IContextQueryProcessor, QueryProcessor>();
             });
 }

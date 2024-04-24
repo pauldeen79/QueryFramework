@@ -30,6 +30,22 @@ public sealed class QueryProcessorTests : IDisposable
     }
 
     [Fact]
+    public void Unknown_FieldName_Throws_On_FindPagedAsync()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder()
+            .Where("UnknownField").IsEqualTo("something")
+            .Build();
+
+        // Act & Assert
+        sut.Awaiting(x => x.FindPagedAsync<MyClass>(query))
+           .Should().ThrowAsync<InvalidOperationException>()
+           .WithMessage("Evaluation failed");
+    }
+
+    [Fact]
     public void Can_FindOne_On_InMemoryList_With_Zero_Conditions()
     {
         // Arrange
@@ -46,6 +62,22 @@ public sealed class QueryProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task Can_FindOne_On_InMemoryList_With_Zero_Conditions_Async()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder().Build();
+
+        // Act
+        var actual = await sut.FindOneAsync<MyClass>(query);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual?.Property.Should().Be("A");
+    }
+
+    [Fact]
     public void Can_FindMany_On_InMemoryList_With_Zero_Conditions()
     {
         // Arrange
@@ -55,6 +87,23 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act
         var actual = sut.FindMany<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(2);
+        actual.First().Property.Should().Be("A");
+        actual.Last().Property.Should().Be("B");
+    }
+
+    [Fact]
+    public async Task Can_FindMany_On_InMemoryList_With_Zero_Conditions_Async()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder().Build();
+
+        // Act
+        var actual = await sut.FindManyAsync<MyClass>(query);
 
         // Assert
         actual.Should().HaveCount(2);
@@ -80,6 +129,23 @@ public sealed class QueryProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task Can_FindPaged_On_InMemoryList_With_Zero_Conditions_Async()
+    {
+        // Arrange
+        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
+        var sut = CreateSut(items);
+        var query = new SingleEntityQueryBuilder().Build();
+
+        // Act
+        var actual = await sut.FindPagedAsync<MyClass>(query);
+
+        // Assert
+        actual.Should().HaveCount(2);
+        actual.First().Property.Should().Be("A");
+        actual.Last().Property.Should().Be("B");
+    }
+
+    [Fact]
     public void Can_FindPaged_On_InMemoryList_With_One_Equals_Condition()
     {
         // Arrange
@@ -91,27 +157,6 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act
         var actual = sut.FindPaged<MyClass>(query);
-
-        // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("B");
-    }
-
-    [Fact]
-    public void Can_FindPaged_On_InMemoryList_With_One_Equals_Condition_Using_Context()
-    {
-        // Arrange
-        var items = new[] { new MyClass { Property = "A" }, new MyClass { Property = "B" } };
-        var sut = CreateContextSut(items);
-        var builder = new SingleEntityQueryBuilder()
-            .Where($"{nameof(SurrogateContext.Item)}.{nameof(MyClass.Property)}").IsEqualTo("##IGNORE##");
-        builder.Filter.Conditions
-            .Single()
-            .WithRightExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(nameof(SurrogateContext.Context)));
-        var query = builder.Build();
-
-        // Act
-        var actual = sut.FindPaged<MyClass>(query, "B");
 
         // Assert
         actual.Should().HaveCount(1);
@@ -659,19 +704,6 @@ public sealed class QueryProcessorTests : IDisposable
         return _serviceProvider.GetRequiredService<IQueryProcessor>();
     }
 
-    private IContextQueryProcessor CreateContextSut(MyClass[] items)
-    {
-        _contextDataProviderMock.ContextResultDelegate = new Func<IQuery, object?, IEnumerable?>
-        (
-            (query, ctx) => items.Where
-            (
-                item =>query.Filter.Evaluate(new SurrogateContext(item, ctx)).GetValueOrThrow("Evaluation failed")
-            )
-        );
-        _contextDataProviderMock.ReturnValue = true;
-        return _serviceProvider.GetRequiredService<IContextQueryProcessor>();
-    }
-
     public void Dispose() => _serviceProvider.Dispose();
 
     public sealed class MyClass
@@ -696,17 +728,5 @@ public sealed class QueryProcessorTests : IDisposable
         {
             throw new NotImplementedException();
         }
-    }
-
-    private sealed record SurrogateContext
-    {
-        public SurrogateContext(MyClass item, object? context)
-        {
-            Item = item;
-            Context = context;
-        }
-
-        public MyClass Item { get; }
-        public object? Context { get; }
     }
 }

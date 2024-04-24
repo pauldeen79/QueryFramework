@@ -26,3 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Refactored code to fit FileSystemSearch on top of QueryFramework. As a result, this version is not backwards compatible with earlier versions.
+
+## [0.13.0] - 2024-04-24
+
+### Added
+- Added support for async querying
+
+## Removed
+- Removed IContextQueryProcessor interface

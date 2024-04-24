@@ -84,6 +84,6 @@ public class DefaultSqlExpressionEvaluatorTests
 
     private DefaultSqlExpressionEvaluator CreateSut()
         => new DefaultSqlExpressionEvaluator(
-            new[] { _expressionEvaluatorProviderMock },
-            new[] { _functionParserMock });
+            [_expressionEvaluatorProviderMock],
+            [_functionParserMock]);
 }

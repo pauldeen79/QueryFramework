@@ -312,7 +312,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.GroupByFields
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>([new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build()]));
         _builder.From("MyTable");
 
         // Act
@@ -327,8 +327,8 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.GroupByFields
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1").Build(),
-                                                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>([ new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1").Build(),
+                                                                           new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2").Build() ]));
         _builder.From("MyTable");
 
         // Act
@@ -343,7 +343,7 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.GroupByFields
-                  .Returns(new ReadOnlyValueCollection<Expression>(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build() }));
+                  .Returns(new ReadOnlyValueCollection<Expression>([new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field").Build()]));
         _builder.From("MyTable");
         _fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>())
                       .Returns(x => x.ArgAt<string>(0) + "A");
@@ -360,10 +360,10 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.GroupByFilter
-                  .Returns(new ComposedEvaluatable(new[] { new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                  .Returns(new ComposedEvaluatable([ new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
                                                                                              .WithOperator(new EqualsOperatorBuilder())
                                                                                              .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-                                                                                             .BuildTyped() }));
+                                                                                             .BuildTyped() ]));
         _builder.From("MyTable");
 
         // Act
@@ -378,11 +378,11 @@ public class DatabaseCommandBuilderExtensionsTests
     {
         // Arrange
         _queryMock.GroupByFilter
-                  .Returns(new ComposedEvaluatable(new[]
-                  {
+                  .Returns(new ComposedEvaluatable(
+                  [
                       new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value1")).BuildTyped(),
                       new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field2")).WithOperator(new EqualsOperatorBuilder()).WithRightExpression(new ConstantExpressionBuilder().WithValue("value2")).BuildTyped()
-                  }));
+                  ]));
         _builder.From("MyTable");
 
         // Act
