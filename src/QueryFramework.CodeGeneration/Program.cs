@@ -3,7 +3,7 @@
 [ExcludeFromCodeCoverage]
 internal static class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         // Setup code generation
         var currentDirectory = Directory.GetCurrentDirectory();
@@ -44,7 +44,7 @@ internal static class Program
         foreach (var instance in instances)
         {
             var generationEnvironment = new MultipleContentBuilderEnvironment();
-            engine.Generate(instance, generationEnvironment, codeGenerationSettings);
+            await engine.Generate(instance, generationEnvironment, codeGenerationSettings);
             count += generationEnvironment.Builder.Contents.Count();
 
             if (string.IsNullOrEmpty(basePath))
