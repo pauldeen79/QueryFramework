@@ -10,10 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="pauldeen79.CrossCutting.Data.Core" Version="3.9.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CrossCutting\src\CrossCutting.Data.Core\CrossCutting.Data.Core.csproj" />
     <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
     <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
   </ItemGroup>
