@@ -136,10 +136,14 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
 
         // For FindOne/FindMany
         retrieverMock.FindOne(Arg.Any<IDatabaseCommand>()).Returns(data.FirstOrDefault());
+        retrieverMock.FindOneAsync(Arg.Any<IDatabaseCommand>(), Arg.Any<CancellationToken>()).Returns(data.FirstOrDefault());
         retrieverMock.FindMany(Arg.Any<IDatabaseCommand>()).Returns(data.ToList());
+        retrieverMock.FindManyAsync(Arg.Any<IDatabaseCommand>(), Arg.Any<CancellationToken>()).Returns(data.ToList());
 
         // For FindPaged
         retrieverMock.FindPaged(Arg.Any<IPagedDatabaseCommand>())
+                     .Returns(x => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), x.ArgAt<IPagedDatabaseCommand>(0).Offset, x.ArgAt<IPagedDatabaseCommand>(0).PageSize));
+        retrieverMock.FindPagedAsync(Arg.Any<IPagedDatabaseCommand>(), Arg.Any<CancellationToken>())
                      .Returns(x => new PagedResult<MyEntity>(data, totalRecordCount ?? data.Count(), x.ArgAt<IPagedDatabaseCommand>(0).Offset, x.ArgAt<IPagedDatabaseCommand>(0).PageSize));
 
         // Hook up the database entity retriever to the SQL Database processor

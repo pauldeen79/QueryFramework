@@ -42,7 +42,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new TestQuery();
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
+        _retrieverMock.FindManyAsync(Arg.Any<IDatabaseCommand>(), Arg.Any<CancellationToken>())
                       .Returns(expectedResult);
 
         // Act
@@ -74,7 +74,7 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").BuildTyped());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
-        _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
+        _retrieverMock.FindManyAsync(Arg.Any<IDatabaseCommand>(), Arg.Any<CancellationToken>())
                       .Returns(expectedResult);
 
         // Act
