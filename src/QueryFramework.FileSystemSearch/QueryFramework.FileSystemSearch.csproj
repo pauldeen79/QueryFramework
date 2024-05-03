@@ -6,12 +6,19 @@
     <Nullable>enable</Nullable>
     <PackageId>pauldeen79.QueryFramework.FileSystemSearch</PackageId>
     <RepositoryUrl>https://github.com/pauldeen79/QueryFramework</RepositoryUrl>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\QueryFramework.Abstractions\QueryFramework.Abstractions.csproj" />
     <ProjectReference Include="..\QueryFramework.Core\QueryFramework.Core.csproj" />
     <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Readme.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
