@@ -186,7 +186,7 @@ public class QueryBuilderExtensionsTests
         actual.Filter.Conditions.Should().HaveCount(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
-        var value = (firstCondition.RightExpression as ConstantExpressionBuilder)?.Value;
+        var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
         ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
         firstCondition.Operator.Should().BeOfType<EqualsOperatorBuilder>();
         value.Should().Be("value");

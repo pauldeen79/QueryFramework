@@ -206,7 +206,7 @@ public class ComposableEvaluatableBuilderWrapperTests
         else
         {
             var value = (rightExpression as ConstantExpressionBuilder)?.Value
-            ?? (rightExpression as TypedConstantExpressionBuilder<string>)?.Value;
+                ?? (rightExpression as TypedConstantExpressionBuilder<string>)?.Value;
             ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("fieldname");
             if (expectedOperatorType == typeof(IsNullOperator)
                 || expectedOperatorType == typeof(IsNullOrEmptyOperator)

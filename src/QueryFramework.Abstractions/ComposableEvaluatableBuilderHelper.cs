@@ -2,12 +2,12 @@
 
 public static class ComposableEvaluatableBuilderHelper
 {
-    public static ComposableEvaluatableBuilder Create(string fieldName, OperatorBuilder @operator, object? value, Combination? combination = null, bool startGroup = false, bool endGroup = false, ExpressionBuilder? expression = null)
+    public static ComposableEvaluatableBuilder Create<T>(string fieldName, OperatorBuilder @operator, T value, Combination? combination = null, bool startGroup = false, bool endGroup = false, ExpressionBuilder? expression = null)
         => new ComposableEvaluatableBuilder()
             .WithCombination(combination)
             .WithLeftExpression(expression ?? new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName(fieldName))
             .WithOperator(@operator)
-            .WithRightExpression(new ConstantExpressionBuilder().WithValue(value))
+            .WithRightExpression(new TypedConstantExpressionBuilder<T>().WithValue(value))
             .WithStartGroup(startGroup)
             .WithEndGroup(endGroup);
 
@@ -29,14 +29,16 @@ public static class ComposableEvaluatableBuilderHelper
             .WithStartGroup(startGroup)
             .WithEndGroup(endGroup);
 
-    public static ComposableEvaluatableBuilder Create(ExpressionBuilder leftExpression, OperatorBuilder @operator, object? value, Combination? combination = null, bool startGroup = false, bool endGroup = false)
-        => new ComposableEvaluatableBuilder()
-            .WithCombination(combination)
-            .WithLeftExpression(leftExpression)
-            .WithOperator(@operator)
-            .WithRightExpression(new ConstantExpressionBuilder().WithValue(value))
-            .WithStartGroup(startGroup)
-            .WithEndGroup(endGroup);
+    public static ComposableEvaluatableBuilder Create<T>(ExpressionBuilder leftExpression, OperatorBuilder @operator, T value, Combination? combination = null, bool startGroup = false, bool endGroup = false)
+        => value is ExpressionBuilder expressionBuilder
+            ? Create(leftExpression, @operator, expressionBuilder, combination, startGroup, endGroup)
+            : new ComposableEvaluatableBuilder()
+                .WithCombination(combination)
+                .WithLeftExpression(leftExpression)
+                .WithOperator(@operator)
+                .WithRightExpression(new TypedConstantExpressionBuilder<T>().WithValue(value))
+                .WithStartGroup(startGroup)
+                .WithEndGroup(endGroup);
 
     public static ComposableEvaluatableBuilder Create<T>(ExpressionBuilder leftExpression, OperatorBuilder @operator, Func<T> valueDelegate, Combination? combination = null, bool startGroup = false, bool endGroup = false)
     => new ComposableEvaluatableBuilder()

@@ -25,7 +25,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T Contains<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StringContainsOperatorBuilder(), expression);
+        => AddFilterWithOperator(new StringContainsOperatorBuilder(), (ExpressionBuilder)expression);
 
     public T EndsWith(string value)
         => AddFilterWithOperator(new EndsWithOperatorBuilder(), value);
@@ -35,9 +35,9 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T EndsWith<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new EndsWithOperatorBuilder(), expression);
+        => AddFilterWithOperator(new EndsWithOperatorBuilder(), (ExpressionBuilder)expression);
 
-    public T IsEqualTo(object? value)
+    public T IsEqualTo<TValue>(TValue value)
         => AddFilterWithOperator(new EqualsOperatorBuilder(), value);
 
     public T IsEqualTo<TValue>(Func<TValue> valueDelegate)
@@ -46,7 +46,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
     public T IsEqualTo(ExpressionBuilder expression)
         => AddFilterWithOperator(new EqualsOperatorBuilder(), expression);
 
-    public T IsGreaterOrEqualThan(object? value)
+    public T IsGreaterOrEqualThan<TValue>(TValue value)
         => AddFilterWithOperator(new IsGreaterOrEqualOperatorBuilder(), value);
 
     public T IsGreaterOrEqualThan<TValue>(Func<TValue> valueDelegate)
@@ -55,7 +55,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
     public T IsGreaterOrEqualThan(ExpressionBuilder expression)
         => AddFilterWithOperator(new IsGreaterOrEqualOperatorBuilder(), expression);
 
-    public T IsGreaterThan(object? value)
+    public T IsGreaterThan<TValue>(TValue value)
         => AddFilterWithOperator(new IsGreaterOperatorBuilder(), value);
 
     public T IsGreaterThan<TValue>(Func<TValue> valueDelegate)
@@ -82,7 +82,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
     public T IsNullOrWhiteSpace()
         => AddFilterWithOperator(new IsNullOrWhiteSpaceOperatorBuilder());
 
-    public T IsSmallerOrEqualThan(object? value)
+    public T IsSmallerOrEqualThan<TValue>(TValue value)
         => AddFilterWithOperator(new IsSmallerOrEqualOperatorBuilder(), value);
 
     public T IsSmallerOrEqualThan<TValue>(Func<TValue> valueDelegate)
@@ -91,7 +91,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
     public T IsSmallerOrEqualThan(ExpressionBuilder expression)
         => AddFilterWithOperator(new IsSmallerOrEqualOperatorBuilder(), expression);
 
-    public T IsSmallerThan(object? value)
+    public T IsSmallerThan<TValue>(TValue value)
         => AddFilterWithOperator(new IsSmallerOperatorBuilder(), value);
 
     public T IsSmallerThan<TValue>(Func<TValue> valueDelegate)
@@ -108,7 +108,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T DoesNotContain<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StringNotContainsOperatorBuilder(), expression);
+        => AddFilterWithOperator(new StringNotContainsOperatorBuilder(), (ExpressionBuilder)expression);
 
     public T DoesNotEndWith(string value)
         => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), value);
@@ -118,9 +118,9 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T DoesNotEndWith<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), expression);
+        => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), (ExpressionBuilder)expression);
 
-    public T IsNotEqualTo(object? value)
+    public T IsNotEqualTo<TValue>(TValue value)
         => AddFilterWithOperator(new NotEqualsOperatorBuilder(), value);
 
     public T IsNotEqualTo<TValue>(Func<TValue> valueDelegate)
@@ -137,7 +137,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T DoesNotStartWith<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new NotStartsWithOperatorBuilder(), expression);
+        => AddFilterWithOperator(new NotStartsWithOperatorBuilder(), (ExpressionBuilder)expression);
 
     public T StartsWith(string value)
         => AddFilterWithOperator(new StartsWithOperatorBuilder(), value);
@@ -147,7 +147,7 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
 
     public T StartsWith<TExpression>(TExpression expression)
         where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StartsWithOperatorBuilder(), expression);
+        => AddFilterWithOperator(new StartsWithOperatorBuilder(), (ExpressionBuilder)expression);
     #endregion
 
     #region Built-in functions
@@ -231,8 +231,10 @@ public class ComposableEvaluatableBuilderWrapper<T> where T : IQueryBuilder
     }
     #endregion
 
-    private T AddFilterWithOperator(OperatorBuilder @operator, object? value)
-        => _instance.Where(ComposableEvaluatableBuilderHelper.Create(_fieldName, @operator, value, _combination, _startGroup, _endGroup, _expression));
+    private T AddFilterWithOperator<TValue>(OperatorBuilder @operator, TValue value)
+        => value is ExpressionBuilder expressionBuilder
+            ? AddFilterWithOperator(@operator, expressionBuilder)
+            : _instance.Where(ComposableEvaluatableBuilderHelper.Create(_fieldName, @operator, value, _combination, _startGroup, _endGroup, _expression));
 
     private T AddFilterWithOperator<TValue>(OperatorBuilder @operator, Func<TValue> valueDelegate)
         => _instance.Where(ComposableEvaluatableBuilderHelper.Create(_fieldName, @operator, valueDelegate, _combination, _startGroup, _endGroup, _expression));
