@@ -29,16 +29,10 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
             }
         }
 
-        Expression? innerExpression = null;
-
         if (result is null)
         {
-            innerExpression = expression.TryGetInnerExpression();
-            if (innerExpression is null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
-            }
-
+            var innerExpression = expression.TryGetInnerExpression()
+                ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
             var innerResult = GetSqlExpression(innerExpression, fieldInfo, parameterBag, context);
             result = TryGetSqlExpression(expression)?.Replace("{0}", innerResult) ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
         }
