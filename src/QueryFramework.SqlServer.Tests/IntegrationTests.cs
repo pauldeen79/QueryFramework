@@ -106,27 +106,6 @@ public sealed class IntegrationTests : IDisposable
     }
 
     [Fact]
-    public void Can_Get_SqlStatement_For_Single_Expression_With_Use_Of_Context()
-    {
-        // Arrange
-        var query = new SingleEntityQueryBuilder()
-            .Where("Field1").IsEqualTo(new ContextExpressionBuilder())
-            .Build();
-
-        // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, "Value");
-
-        // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
-        actual.CommandParameters.Should().NotBeNull();
-        var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo("@p0");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
-    }
-
-    [Fact]
     public void Can_Get_SqlStatement_For_Single_Expression_With_Parameters()
     {
         // Arrange
@@ -136,7 +115,7 @@ public sealed class IntegrationTests : IDisposable
             .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, "Value");
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");

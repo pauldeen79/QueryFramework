@@ -12,7 +12,7 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         _functionParsers = functionParsers;
     }
 
-    public string GetSqlExpression(IQuery query, Expression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context)
+    public string GetSqlExpression(IQuery query, Expression expression, IQueryFieldInfo fieldInfo, ParameterBag parameterBag)
     {
         if (expression is IUntypedExpressionProvider untypedProvider)
         {
@@ -22,7 +22,7 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         var result = default(string?);
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(query, expression, this, fieldInfo, parameterBag, context, out var providerResult))
+            if (sqlExpressionEvaluatorProvider.TryGetSqlExpression(query, expression, this, fieldInfo, parameterBag, out var providerResult))
             {
                 result = providerResult ?? string.Empty;
                 break;
@@ -33,14 +33,14 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         {
             var innerExpression = expression.TryGetInnerExpression()
                 ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
-            var innerResult = GetSqlExpression(query, innerExpression, fieldInfo, parameterBag, context);
+            var innerResult = GetSqlExpression(query, innerExpression, fieldInfo, parameterBag);
             result = TryGetSqlExpression(expression)?.Replace("{0}", innerResult) ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
         }
 
         return result;
     }
 
-    public string GetLengthExpression(IQuery query, Expression expression, IQueryFieldInfo fieldInfo, object? context)
+    public string GetLengthExpression(IQuery query, Expression expression, IQueryFieldInfo fieldInfo)
     {
         if (expression is IUntypedExpressionProvider untypedProvider)
         {
@@ -49,7 +49,7 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
 
         foreach (var sqlExpressionEvaluatorProvider in _sqlExpressionEvaluatorProviders)
         {
-            if (sqlExpressionEvaluatorProvider.TryGetLengthExpression(query, expression, this, fieldInfo, context, out var providerResult))
+            if (sqlExpressionEvaluatorProvider.TryGetLengthExpression(query, expression, this, fieldInfo, out var providerResult))
             {
                 return providerResult ?? string.Empty;
             }

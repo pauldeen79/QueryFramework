@@ -19,19 +19,18 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
                         .Returns(new DefaultQueryFieldInfo());
         settingsProviderMock.TryGet<IQuery>(out Arg.Any<IPagedDatabaseEntityRetrieverSettings>()!)
                             .Returns(x => { x[0] = settingsMock; return true; });
-        var pagedProviderMock = Fixture.Freeze<IContextPagedDatabaseCommandProvider<IQuery>>();
+        var pagedProviderMock = Fixture.Freeze<IPagedDatabaseCommandProvider<IQuery>>();
         pagedProviderMock.CreatePaged(Arg.Any<IQuery>(),
                                       Arg.Any<DatabaseOperation>(),
                                       Arg.Any<int>(),
-                                      Arg.Any<int>(),
-                                      Arg.Any<object?>())
+                                      Arg.Any<int>())
                          .Returns(x
                          => new QueryPagedDatabaseCommandProvider
                          (
                              fieldInfoFactory,
                              [settingsProviderMock],
                              evaluatorMock
-                         ).CreatePaged(x.ArgAt<IQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3), x.ArgAt<object?>(4)));
+                         ).CreatePaged(x.ArgAt<IQuery>(0), x.ArgAt<DatabaseOperation>(1), x.ArgAt<int>(2), x.ArgAt<int>(3)));
     }
 
     [Theory]

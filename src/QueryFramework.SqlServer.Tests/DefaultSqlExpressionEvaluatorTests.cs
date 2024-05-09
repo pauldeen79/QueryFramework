@@ -15,7 +15,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var sut = CreateSut();
 
         // Act
-        sut.Invoking(x => x.GetSqlExpression(_queryMock, new EmptyExpression(), _fieldInfoMock, _parameterBag, null))
+        sut.Invoking(x => x.GetSqlExpression(_queryMock, new EmptyExpression(), _fieldInfoMock, _parameterBag))
            .Should().ThrowExactly<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Unsupported expression: [EmptyExpression]");
     }
@@ -25,12 +25,12 @@ public class DefaultSqlExpressionEvaluatorTests
     {
         // Arrange
         var result = "result";
-        _expressionEvaluatorProviderMock.TryGetSqlExpression(Arg.Any<IQuery>(), Arg.Any<Expression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), Arg.Any<object?>(), out Arg.Any<string?>())
-                                        .Returns(x => { x[6] = result; return true; });
+        _expressionEvaluatorProviderMock.TryGetSqlExpression(Arg.Any<IQuery>(), Arg.Any<Expression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), out Arg.Any<string?>())
+                                        .Returns(x => { x[5] = result; return true; });
         var sut = CreateSut();
 
         // Act
-        var actual = sut.GetSqlExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock, _parameterBag, null);
+        var actual = sut.GetSqlExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock, _parameterBag);
 
         // Assert
         actual.Should().Be(result);
@@ -41,15 +41,15 @@ public class DefaultSqlExpressionEvaluatorTests
     {
         // Arrange
         var expressionResult = "result";
-        _expressionEvaluatorProviderMock.TryGetSqlExpression(Arg.Any<IQuery>(), Arg.Any<ConstantExpression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), Arg.Any<object?>(), out Arg.Any<string?>())
-                                        .Returns(x => { x[6] = expressionResult; return true; });
+        _expressionEvaluatorProviderMock.TryGetSqlExpression(Arg.Any<IQuery>(), Arg.Any<ConstantExpression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), out Arg.Any<string?>())
+                                        .Returns(x => { x[5] = expressionResult; return true; });
         var functionResult = "Function({0})";
         _functionParserMock.TryParse(Arg.Any<StringLengthExpression>(), Arg.Any<ISqlExpressionEvaluator>(), out Arg.Any<string?>())
                            .Returns(x => { x[2] = functionResult; return true; });
         var sut = CreateSut();
 
         // Act
-        var actual = sut.GetSqlExpression(_queryMock, new StringLengthExpression(new TypedConstantExpression<string>(expressionResult)), _fieldInfoMock, _parameterBag, null);
+        var actual = sut.GetSqlExpression(_queryMock, new StringLengthExpression(new TypedConstantExpression<string>(expressionResult)), _fieldInfoMock, _parameterBag);
 
         // Assert
         actual.Should().Be("Function(result)");
@@ -62,7 +62,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var sut = CreateSut();
 
         // Act
-        sut.Invoking(x => x.GetLengthExpression(_queryMock, new EmptyExpression(), _fieldInfoMock, null))
+        sut.Invoking(x => x.GetLengthExpression(_queryMock, new EmptyExpression(), _fieldInfoMock))
            .Should().ThrowExactly<ArgumentOutOfRangeException>()
            .And.Message.Should().StartWith("Unsupported expression: [EmptyExpression]");
     }
@@ -72,12 +72,12 @@ public class DefaultSqlExpressionEvaluatorTests
     {
         // Arrange
         var result = "result";
-        _expressionEvaluatorProviderMock.TryGetLengthExpression(Arg.Any<IQuery>(), Arg.Any<Expression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<object?>(), out Arg.Any<string?>())
-                                        .Returns(x => { x[5] = result; return true; });
+        _expressionEvaluatorProviderMock.TryGetLengthExpression(Arg.Any<IQuery>(), Arg.Any<Expression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), out Arg.Any<string?>())
+                                        .Returns(x => { x[4] = result; return true; });
         var sut = CreateSut();
 
         // Act
-        var actual = sut.GetLengthExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock, null);
+        var actual = sut.GetLengthExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock);
 
         // Assert
         actual.Should().Be(result);

@@ -2,7 +2,7 @@
 
 public class EmptyExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
-    public bool TryGetLengthExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
+    public bool TryGetLengthExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, out string? result)
     {
         if (expression is not EmptyExpression)
         {
@@ -14,7 +14,7 @@ public class EmptyExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
         return true;
     }
 
-    public bool TryGetSqlExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
+    public bool TryGetSqlExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, out string? result)
     {
         result = null;
         return expression is EmptyExpression;
