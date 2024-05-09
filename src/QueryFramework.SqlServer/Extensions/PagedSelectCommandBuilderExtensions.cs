@@ -179,7 +179,7 @@ internal static class PagedSelectCommandBuilderExtensions
         }
         else if (query.OrderByFields.Any() || !string.IsNullOrEmpty(settings.DefaultOrderBy))
         {
-            return instance.AppendOrderBy(query, query.OrderByFields, settings, fieldInfo, evaluator, parameterBag, context);
+            return instance.AppendOrderBy(query, settings, fieldInfo, evaluator, parameterBag, context);
         }
         else
         {
@@ -189,14 +189,13 @@ internal static class PagedSelectCommandBuilderExtensions
 
     private static PagedSelectCommandBuilder AppendOrderBy(this PagedSelectCommandBuilder instance,
                                                            IQuery query,
-                                                           IEnumerable<IQuerySortOrder> orderByFields,
                                                            IPagedDatabaseEntityRetrieverSettings settings,
                                                            IQueryFieldInfo fieldInfo,
                                                            ISqlExpressionEvaluator evaluator,
                                                            ParameterBag parameterBag,
                                                            object? context)
     {
-        foreach (var querySortOrder in orderByFields.Select((x, index) => new { Item = x, Index = index }))
+        foreach (var querySortOrder in query.OrderByFields.Select((x, index) => new { Item = x, Index = index }))
         {
             if (querySortOrder.Index > 0)
             {
@@ -206,7 +205,7 @@ internal static class PagedSelectCommandBuilderExtensions
             instance.OrderBy($"{evaluator.GetSqlExpression(query, querySortOrder.Item.FieldNameExpression, fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
         }
 
-        if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
+        if (!query.OrderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
         {
             instance.OrderBy(settings.DefaultOrderBy);
         }
