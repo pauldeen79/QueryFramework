@@ -553,7 +553,9 @@ public class DatabaseCommandBuilderExtensionsTests
     public void WithParameters_Adds_QueryParameters_When_Found()
     {
         // Arrange
-        var query = new ParameterizedQueryMock(new[] { new QueryParameter("name", "Value1") });
+        var query = new ParameterizedQueryBuilder()
+            .AddParameter("name", "Value1")
+            .BuildTyped();
         var parameterBag = new ParameterBag();
         parameterBag.CreateQueryParameterName("Value2");
 
