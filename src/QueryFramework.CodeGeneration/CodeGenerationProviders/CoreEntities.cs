@@ -3,12 +3,12 @@
 [ExcludeFromCodeCoverage]
 public class CoreEntities : QueryFrameworkCSharpClassBase
 {
-    public CoreEntities(IMediator mediator, ICsharpExpressionDumper csharpExpressionDumper) : base(mediator, csharpExpressionDumper)
+    public CoreEntities(IPipelineService pipelineService) : base(pipelineService)
     {
     }
 
     public override async Task<IEnumerable<TypeBase>> GetModel()
-        => await GetEntities(await GetCoreModels(), Constants.Namespaces.Core);
+        => await GetEntities(await GetCoreModels(), CurrentNamespace);
 
     public override string Path => Constants.Namespaces.Core;
 }

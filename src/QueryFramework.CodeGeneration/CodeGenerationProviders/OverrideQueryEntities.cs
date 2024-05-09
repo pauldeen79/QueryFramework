@@ -3,7 +3,7 @@
 [ExcludeFromCodeCoverage]
 public class OverrideQueryEntities : QueryFrameworkCSharpClassBase
 {
-    public OverrideQueryEntities(IMediator mediator, ICsharpExpressionDumper csharpExpressionDumper) : base(mediator, csharpExpressionDumper)
+    public OverrideQueryEntities(IPipelineService pipelineService) : base(pipelineService)
     {
     }
 

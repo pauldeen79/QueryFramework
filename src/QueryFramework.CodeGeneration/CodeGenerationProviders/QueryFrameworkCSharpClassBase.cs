@@ -4,7 +4,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
 {
     private const string TypeNameDotClassNameBuilder = "{TypeName.ClassName}Builder";
 
-    protected QueryFrameworkCSharpClassBase(IMediator mediator, ICsharpExpressionDumper csharpExpressionDumper) : base(mediator, csharpExpressionDumper)
+    protected QueryFrameworkCSharpClassBase(IPipelineService pipelineService) : base(pipelineService)
     {
     }
 
@@ -24,6 +24,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool InheritFromInterfaces => true;
     protected override bool CopyMethods => true;
     protected override bool CreateRecord => true;
+    protected override bool GenerateMultipleFiles => false;
 
     protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
 
