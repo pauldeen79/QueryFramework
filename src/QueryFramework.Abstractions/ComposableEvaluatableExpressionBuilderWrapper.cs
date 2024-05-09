@@ -1,165 +1,27 @@
 ﻿namespace QueryFramework.Abstractions;
 
-public class ComposableEvaluatableExpressionBuilderWrapper<T> where T : IQueryBuilder
+public class ComposableEvaluatableExpressionBuilderWrapper<T> : ComposableEvaluatableBuilderWrapperBase<T>
+    where T : IQueryBuilder
 {
-    private readonly T _instance;
-    private readonly ExpressionBuilder _leftExpression;
-    private Combination? _combination;
-    private bool _startGroup;
-    private bool _endGroup;
-
-    public ComposableEvaluatableExpressionBuilderWrapper(T instance, ExpressionBuilder leftExpression, Combination? combination = null)
+    public ComposableEvaluatableExpressionBuilderWrapper(T instance, ExpressionBuilder leftExpression, Combination? combination = null) : base(instance, leftExpression, combination)
     {
-        _instance = instance.IsNotNull(nameof(instance));
-        _leftExpression = leftExpression.IsNotNull(nameof(leftExpression));
-        _combination = combination;
     }
-
-    #region Generated code
-    public T Contains(string value)
-        => AddFilterWithOperator(new StringContainsOperatorBuilder(), value);
-
-    public T Contains(Func<string> valueDelegate)
-        => AddFilterWithOperator(new StringContainsOperatorBuilder(), valueDelegate);
-
-    public T Contains<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StringContainsOperatorBuilder(), (ExpressionBuilder)expression);
-
-    public T EndsWith(string value)
-        => AddFilterWithOperator(new EndsWithOperatorBuilder(), value);
-
-    public T EndsWith(Func<string> valueDelegate)
-        => AddFilterWithOperator(new EndsWithOperatorBuilder(), valueDelegate);
-
-    public T EndsWith<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new EndsWithOperatorBuilder(), (ExpressionBuilder)expression);
-
-    public T IsEqualTo<TValue>(TValue value)
-        => AddFilterWithOperator(new EqualsOperatorBuilder(), value);
-
-    public T IsEqualTo<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new EqualsOperatorBuilder(), valueDelegate);
-
-    public T IsGreaterOrEqualThan<TValue>(TValue value)
-        => AddFilterWithOperator(new IsGreaterOrEqualOperatorBuilder(), value);
-
-    public T IsGreaterOrEqualThan<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new IsGreaterOrEqualOperatorBuilder(), valueDelegate);
-
-    public T IsGreaterThan<TValue>(TValue value)
-        => AddFilterWithOperator(new IsGreaterOperatorBuilder(), value);
-
-    public T IsGreaterThan<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new IsGreaterOperatorBuilder(), valueDelegate);
-
-    public T IsNotNull()
-        => AddFilterWithOperator(new IsNotNullOperatorBuilder());
-
-    public T IsNotNullOrEmpty()
-        => AddFilterWithOperator(new IsNotNullOrEmptyOperatorBuilder());
-
-    public T IsNotNullOrWhiteSpace()
-        => AddFilterWithOperator(new IsNotNullOrWhiteSpaceOperatorBuilder());
-
-    public T IsNull()
-        => AddFilterWithOperator(new IsNullOperatorBuilder());
-
-    public T IsNullOrEmpty()
-        => AddFilterWithOperator(new IsNullOrEmptyOperatorBuilder());
-
-    public T IsNullOrWhiteSpace()
-        => AddFilterWithOperator(new IsNullOrWhiteSpaceOperatorBuilder());
-
-    public T IsSmallerOrEqualThan<TValue>(TValue value)
-        => AddFilterWithOperator(new IsSmallerOrEqualOperatorBuilder(), value);
-
-    public T IsSmallerOrEqualThan<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new IsSmallerOrEqualOperatorBuilder(), valueDelegate);
-
-    public T IsSmallerThan<TValue>(TValue value)
-        => AddFilterWithOperator(new IsSmallerOperatorBuilder(), value);
-
-    public T IsSmallerThan<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new IsSmallerOperatorBuilder(), valueDelegate);
-
-    public T DoesNotContain(string value)
-        => AddFilterWithOperator(new StringNotContainsOperatorBuilder(), value);
-
-    public T DoesNotContain(Func<string> valueDelegate)
-        => AddFilterWithOperator(new StringNotContainsOperatorBuilder(), valueDelegate);
-
-    public T DoesNotContain<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StringNotContainsOperatorBuilder(), (ExpressionBuilder)expression);
-
-    public T DoesNotEndWith(string value)
-        => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), value);
-
-    public T DoesNotEndWith(Func<string> valueDelegate)
-        => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), valueDelegate);
-
-    public T DoesNotEndWith<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new NotEndsWithOperatorBuilder(), (ExpressionBuilder)expression);
-
-    public T IsNotEqualTo<TValue>(TValue value)
-        => AddFilterWithOperator(new NotEqualsOperatorBuilder(), value);
-
-    public T IsNotEqualTo<TValue>(Func<TValue> valueDelegate)
-        => AddFilterWithOperator(new NotEqualsOperatorBuilder(), valueDelegate);
-
-    public T DoesNotStartWith(string value)
-        => AddFilterWithOperator(new NotStartsWithOperatorBuilder(), value);
-
-    public T DoesNotStartWith(Func<string> valueDelegate)
-        => AddFilterWithOperator(new NotStartsWithOperatorBuilder(), valueDelegate);
-
-    public T DoesNotStartWith<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new NotStartsWithOperatorBuilder(), (ExpressionBuilder)expression);
-
-    public T StartsWith(string value)
-        => AddFilterWithOperator(new StartsWithOperatorBuilder(), value);
-
-    public T StartsWith(Func<string> valueDelegate)
-        => AddFilterWithOperator(new StartsWithOperatorBuilder(), valueDelegate);
-
-    public T StartsWith<TExpression>(TExpression expression)
-        where TExpression : ExpressionBuilder, ITypedExpressionBuilder<string>
-        => AddFilterWithOperator(new StartsWithOperatorBuilder(), (ExpressionBuilder)expression);
-    #endregion
-
-    private T AddFilterWithOperator<TValue>(OperatorBuilder @operator, TValue value)
-        => value is ExpressionBuilder expressionBuilder
-            ? AddFilterWithOperator(@operator, expressionBuilder)
-            : _instance.Where(ComposableEvaluatableBuilderHelper.Create(_leftExpression, @operator, value, _combination, _startGroup, _endGroup));
-
-    private T AddFilterWithOperator<TValue>(OperatorBuilder @operator, Func<TValue> valueDelegate)
-        => _instance.Where(ComposableEvaluatableBuilderHelper.Create(_leftExpression, @operator, valueDelegate, _combination, _startGroup, _endGroup));
-
-    private T AddFilterWithOperator(OperatorBuilder @operator, ExpressionBuilder expression)
-        => _instance.Where(ComposableEvaluatableBuilderHelper.Create(_leftExpression, @operator, expression, _combination, _startGroup, _endGroup));
-
-    private T AddFilterWithOperator(OperatorBuilder @operator)
-        => _instance.Where(ComposableEvaluatableBuilderHelper.Create(_leftExpression, @operator, _combination, _startGroup, _endGroup));
 
     public ComposableEvaluatableExpressionBuilderWrapper<T> WithStartGroup(bool startGroup = true)
     {
-        _startGroup = startGroup;
+        StartGroup = startGroup;
         return this;
     }
 
     public ComposableEvaluatableExpressionBuilderWrapper<T> WithEndGroup(bool endGroup = true)
     {
-        _endGroup = endGroup;
+        EndGroup = endGroup;
         return this;
     }
 
     public ComposableEvaluatableExpressionBuilderWrapper<T> WithCombination(Combination combination)
     {
-        _combination = combination;
+        Combination = combination;
         return this;
     }
 }
