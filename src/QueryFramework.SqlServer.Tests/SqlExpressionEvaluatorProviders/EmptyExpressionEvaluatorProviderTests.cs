@@ -8,12 +8,13 @@ public class EmptyExpressionEvaluatorProviderTests
         // Arrange
         var sut = new EmptyExpressionEvaluatorProvider();
         var expression = new ConstantExpressionBuilder().Build();
+        var queryMock = Substitute.For<IQuery>();
         var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
         var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
         var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
+        var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -26,13 +27,14 @@ public class EmptyExpressionEvaluatorProviderTests
         // Arrange
         var sut = new EmptyExpressionEvaluatorProvider();
         var expression = new EmptyExpressionBuilder().Build();
+        var queryMock = Substitute.For<IQuery>();
         var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
         var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
         fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>()).Returns(x => x.ArgAt<string>(0));
         var parameterBag = new ParameterBag();
 
         // Act
-        var actual = sut.TryGetSqlExpression(expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
+        var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, default, out var result);
 
         // Assert
         actual.Should().BeTrue();
@@ -45,11 +47,12 @@ public class EmptyExpressionEvaluatorProviderTests
         // Arrange
         var sut = new EmptyExpressionEvaluatorProvider();
         var expression = new ConstantExpressionBuilder().Build();
+        var queryMock = Substitute.For<IQuery>();
         var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
         var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
 
         // Act
-        var actual = sut.TryGetLengthExpression(expression, evaluatorMock, fieldInfoMock, default, out var result);
+        var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, default, out var result);
 
         // Assert
         actual.Should().BeFalse();
@@ -62,12 +65,13 @@ public class EmptyExpressionEvaluatorProviderTests
         // Arrange
         var sut = new EmptyExpressionEvaluatorProvider();
         var expression = new EmptyExpressionBuilder().Build();
+        var queryMock = Substitute.For<IQuery>();
         var evaluatorMock = Substitute.For<ISqlExpressionEvaluator>();
         var fieldInfoMock = Substitute.For<IQueryFieldInfo>();
         fieldInfoMock.GetDatabaseFieldName(Arg.Any<string>()).Returns(x => x.ArgAt<string>(0));
 
         // Act
-        var actual = sut.TryGetLengthExpression(expression, evaluatorMock, fieldInfoMock, default, out var result);
+        var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, default, out var result);
 
         // Assert
         actual.Should().BeTrue();

@@ -2,9 +2,9 @@
 
 public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvider
 {
-    public bool TryGetLengthExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
+    public bool TryGetLengthExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, object? context, out string? result)
     {
-        if (!(expression is DelegateExpression delegateExpression))
+        if (expression is not DelegateExpression delegateExpression)
         {
             result = null;
             return false;
@@ -14,9 +14,9 @@ public class DelegateExpressionEvaluatorProvider : ISqlExpressionEvaluatorProvid
         return true;
     }
 
-    public bool TryGetSqlExpression(Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
+    public bool TryGetSqlExpression(IQuery query, Expression expression, ISqlExpressionEvaluator evaluator, IQueryFieldInfo fieldInfo, ParameterBag parameterBag, object? context, out string? result)
     {
-        if (!(expression is DelegateExpression delegateExpression))
+        if (expression is not DelegateExpression delegateExpression)
         {
             result = null;
             return false;

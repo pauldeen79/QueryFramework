@@ -4,7 +4,7 @@ public static class ParameterizedQueryBuilderExtensions
 {
     public static T AddParameter<T>(this T instance, string name, object? value)
         where T : IParameterizedQueryBuilder
-        => instance.AddParameters(new QueryParameterBuilder().WithName("name").WithValue("Value1"));
+        => instance.AddParameters(new QueryParameterBuilder().WithName(name).WithValue(value));
 
     private sealed class QueryParameterBuilder : IQueryParameterBuilder
     {

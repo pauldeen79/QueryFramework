@@ -37,7 +37,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.Select(", ");
             }
 
-            instance.Select(evaluator.GetSqlExpression(new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(expression.Item)), fieldInfo, parameterBag, context));
+            instance.Select(evaluator.GetSqlExpression(fieldSelectionQuery, new FieldExpression(new ContextExpression(), new TypedConstantExpression<string>(expression.Item)), fieldInfo, parameterBag, context));
         }
 
         return instance;
@@ -91,6 +91,7 @@ internal static class PagedSelectCommandBuilderExtensions
         {
             instance.AppendQueryCondition
             (
+                query,
                 queryCondition,
                 fieldInfo,
                 evaluator,
@@ -124,7 +125,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.GroupBy(", ");
             }
 
-            instance.GroupBy(evaluator.GetSqlExpression(groupBy.Item, fieldInfo, parameterBag, context));
+            instance.GroupBy(evaluator.GetSqlExpression(groupingQuery, groupBy.Item, fieldInfo, parameterBag, context));
         }
 
         return instance;
@@ -150,6 +151,7 @@ internal static class PagedSelectCommandBuilderExtensions
             }
             instance.AppendQueryCondition
             (
+                groupingQuery,
                 having.Item,
                 fieldInfo,
                 evaluator,
@@ -177,7 +179,7 @@ internal static class PagedSelectCommandBuilderExtensions
         }
         else if (query.OrderByFields.Any() || !string.IsNullOrEmpty(settings.DefaultOrderBy))
         {
-            return instance.AppendOrderBy(query.OrderByFields, settings, fieldInfo, evaluator, parameterBag, context);
+            return instance.AppendOrderBy(query, query.OrderByFields, settings, fieldInfo, evaluator, parameterBag, context);
         }
         else
         {
@@ -186,6 +188,7 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     private static PagedSelectCommandBuilder AppendOrderBy(this PagedSelectCommandBuilder instance,
+                                                           IQuery query,
                                                            IEnumerable<IQuerySortOrder> orderByFields,
                                                            IPagedDatabaseEntityRetrieverSettings settings,
                                                            IQueryFieldInfo fieldInfo,
@@ -200,7 +203,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 instance.OrderBy(", ");
             }
 
-            instance.OrderBy($"{evaluator.GetSqlExpression(querySortOrder.Item.FieldNameExpression, fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
+            instance.OrderBy($"{evaluator.GetSqlExpression(query, querySortOrder.Item.FieldNameExpression, fieldInfo, parameterBag, context)} {querySortOrder.Item.ToSql()}");
         }
 
         if (!orderByFields.Any() && !string.IsNullOrEmpty(settings.DefaultOrderBy))
@@ -219,7 +222,7 @@ internal static class PagedSelectCommandBuilderExtensions
         {
             foreach (var parameter in parameterizedQuery.Parameters)
             {
-                instance.AppendParameter(parameter.Name, parameter.Value);
+                instance.AppendParameter(parameter.Name, parameter.Value!);
             }
         }
 
@@ -232,6 +235,7 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     internal static PagedSelectCommandBuilder AppendQueryCondition(this PagedSelectCommandBuilder instance,
+                                                                   IQuery query,
                                                                    ComposableEvaluatable condition,
                                                                    IQueryFieldInfo fieldInfo,
                                                                    ISqlExpressionEvaluator evaluator,
@@ -264,7 +268,7 @@ internal static class PagedSelectCommandBuilderExtensions
                 builder.Append("COALESCE(TRIM(");
             }
 
-            builder.Append(evaluator.GetSqlExpression(condition.LeftExpression, fieldInfo, parameterBag, context));
+            builder.Append(evaluator.GetSqlExpression(query, condition.LeftExpression, fieldInfo, parameterBag, context));
 
             if (condition.Operator.GetType().In(typeof(IsNullOrEmptyOperator), typeof(IsNotNullOrEmptyOperator)))
             {
@@ -276,7 +280,7 @@ internal static class PagedSelectCommandBuilderExtensions
             }
         }
 
-        AppendOperatorAndValue(condition, fieldInfo, builder, evaluator, parameterBag, context);
+        AppendOperatorAndValue(condition, query, fieldInfo, builder, evaluator, parameterBag, context);
 
         if (condition.EndGroup)
         {
@@ -289,15 +293,16 @@ internal static class PagedSelectCommandBuilderExtensions
     }
 
     private static void AppendOperatorAndValue(ComposableEvaluatable condition,
+                                               IQuery query,
                                                IQueryFieldInfo fieldInfo,
                                                StringBuilder builder,
                                                ISqlExpressionEvaluator evaluator,
                                                ParameterBag parameterBag,
                                                object? context)
     {
-        var leftExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(condition.LeftExpression, fieldInfo, parameterBag, context));
-        var rightExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(condition.RightExpression, fieldInfo, parameterBag, context));
-        var length = new Func<string>(() => evaluator.GetLengthExpression(condition.RightExpression, fieldInfo, context));
+        var leftExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(query, condition.LeftExpression, fieldInfo, parameterBag, context));
+        var rightExpressionSql = new Func<string>(() => evaluator.GetSqlExpression(query, condition.RightExpression, fieldInfo, parameterBag, context));
+        var length = new Func<string>(() => evaluator.GetLengthExpression(query, condition.RightExpression, fieldInfo, context));
 
         var sqlToAppend = condition.Operator switch
         {
