@@ -37,7 +37,7 @@ internal static class SqlHelpers
         actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
-    internal static IDatabaseCommand GetExpressionCommand(IQuery query, object? context)
+    internal static IDatabaseCommand GetExpressionCommand(IQuery query, object? context = null)
     {
         // Arrange
         var settingsMock = Substitute.For<IPagedDatabaseEntityRetrieverSettings>();

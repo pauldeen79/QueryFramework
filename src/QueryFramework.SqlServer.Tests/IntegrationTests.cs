@@ -93,7 +93,7 @@ public sealed class IntegrationTests : IDisposable
             .BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
@@ -137,7 +137,7 @@ public sealed class IntegrationTests : IDisposable
             .BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
@@ -159,7 +159,7 @@ public sealed class IntegrationTests : IDisposable
             .BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
@@ -180,7 +180,7 @@ public sealed class IntegrationTests : IDisposable
             .BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
@@ -202,7 +202,7 @@ public sealed class IntegrationTests : IDisposable
             ).BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
@@ -222,7 +222,7 @@ public sealed class IntegrationTests : IDisposable
             ).BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(@p0) ASC");
@@ -244,7 +244,7 @@ public sealed class IntegrationTests : IDisposable
             ).BuildTyped();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY @p0 ASC");
