@@ -3,13 +3,39 @@
 public class QueryBuilderExtensionsTests
 {
     [Fact]
-    public void Can_Use_Where_With_ComposableEvaluatableBuilder_To_Add_Condition()
+    public void Can_Use_Where_With_ComposableEvaluatableBuilder_To_Add_Condition_Using_FieldName()
     {
         // Arrange
         var sut = new SingleEntityQueryBuilder();
 
         // Act
         var actual = sut.Where("field")
+            .WithStartGroup()
+            .WithEndGroup()
+            .WithCombination(Combination.Or)
+            .IsGreaterThan("value");
+
+        // Assert
+        actual.Filter.Conditions.Should().HaveCount(1);
+        var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
+        var field = firstCondition.LeftExpression as FieldExpressionBuilder;
+        var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
+        firstCondition.Operator.Should().BeOfType<IsGreaterOperatorBuilder>();
+        firstCondition.StartGroup.Should().BeTrue();
+        firstCondition.EndGroup.Should().BeTrue();
+        firstCondition.Combination.Should().Be(Combination.Or);
+        value.Should().Be("value");
+    }
+
+    [Fact]
+    public void Can_Use_Where_With_ComposableEvaluatableBuilder_To_Add_Condition_Using_Expression()
+    {
+        // Arrange
+        var sut = new SingleEntityQueryBuilder();
+
+        // Act
+        var actual = sut.Where(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
             .WithStartGroup()
             .WithEndGroup()
             .WithCombination(Combination.Or)

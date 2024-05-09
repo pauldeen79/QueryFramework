@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.Core.Tests;
 
-public class ComposableEvaluatableBuilderWrapperTests
+public class ComposableEvaluatableExpressionBuilderWrapperTests
 {
     [Fact]
     public void Can_Create_QueryCondition_Using_DoesContain_Constant_Value()
@@ -170,11 +170,11 @@ public class ComposableEvaluatableBuilderWrapperTests
     public void Can_Create_QueryCondition_Using_DoesStartWith_Expression()
         => QueryConditionTest(x => x.StartsWith(new TypedConstantExpressionBuilder<string>().WithValue("value")), typeof(StartsWithOperator));
 
-    private static void QueryConditionTest(Func<ComposableEvaluatableBuilderWrapper<SingleEntityQueryBuilder>, SingleEntityQueryBuilder> builderDelegate, Type expectedOperatorType)
+    private static void QueryConditionTest(Func<ComposableEvaluatableExpressionBuilderWrapper<SingleEntityQueryBuilder>, SingleEntityQueryBuilder> builderDelegate, Type expectedOperatorType)
     {
         // Arrange
         var queryBuilder = new SingleEntityQueryBuilder();
-        var wrapper = queryBuilder.Where("fieldname");
+        var wrapper = queryBuilder.Where(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("fieldname"));
 
         // Act
         var actual = builderDelegate(wrapper).Filter.Conditions.Single();

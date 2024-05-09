@@ -2,7 +2,7 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe<T>(ComposableEvaluatableBuilderWrapper<T> expression, string expectedSqlForExpression, object? context)
+    internal static void ExpressionSqlShouldBe<T>(ComposableEvaluatableFieldNameBuilderWrapper<T> expression, string expectedSqlForExpression, object? context)
         where T : IQueryBuilder
     {
         // Arrange
@@ -28,13 +28,7 @@ internal static class SqlHelpers
         var actual = GetExpressionCommand
         (
             new SingleEntityQueryBuilder()
-                .Where
-                (
-                    new ComposableEvaluatableBuilder()
-                        .WithLeftExpression(expression)
-                        .WithOperator(new EqualsOperatorBuilder())
-                        .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
-                )
+                .Where(expression).IsEqualTo("test")
                 .BuildTyped(),
             context
         ).CommandText;
