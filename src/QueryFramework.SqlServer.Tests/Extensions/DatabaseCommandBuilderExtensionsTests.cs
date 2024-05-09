@@ -361,9 +361,9 @@ public class DatabaseCommandBuilderExtensionsTests
         // Arrange
         _queryMock.GroupByFilter
                   .Returns(new ComposedEvaluatable([ new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
-                                                                                             .WithOperator(new EqualsOperatorBuilder())
-                                                                                             .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-                                                                                             .BuildTyped() ]));
+                                                                                       .WithOperator(new EqualsOperatorBuilder())
+                                                                                       .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
+                                                                                       .BuildTyped() ]));
         _builder.From("MyTable");
 
         // Act

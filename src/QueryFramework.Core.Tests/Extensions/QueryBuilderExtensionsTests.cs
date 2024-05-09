@@ -9,18 +9,17 @@ public class QueryBuilderExtensionsTests
         var sut = new SingleEntityQueryBuilder();
 
         // Act
-        var actual = sut.Where(new ComposableEvaluatableBuilder().WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("field"))
-                                                                 .WithOperator(new IsGreaterOperatorBuilder())
-                                                                 .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-                                                                 .WithStartGroup()
-                                                                 .WithEndGroup()
-                                                                 .WithCombination(Combination.Or));
+        var actual = sut.Where("field")
+            .WithStartGroup()
+            .WithEndGroup()
+            .WithCombination(Combination.Or)
+            .IsGreaterThan("value");
 
         // Assert
         actual.Filter.Conditions.Should().HaveCount(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
-        var value = (firstCondition.RightExpression as ConstantExpressionBuilder)?.Value;
+        var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
         ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
         firstCondition.Operator.Should().BeOfType<IsGreaterOperatorBuilder>();
         firstCondition.StartGroup.Should().BeTrue();
