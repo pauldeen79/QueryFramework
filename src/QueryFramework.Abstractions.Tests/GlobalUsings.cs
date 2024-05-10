@@ -2,12 +2,17 @@
 global using System.Collections.Generic;
 global using System.ComponentModel.DataAnnotations;
 global using System.Linq;
+global using AutoFixture;
+global using AutoFixture.AutoNSubstitute;
 global using CrossCutting.Common;
 global using CrossCutting.Common.Extensions;
+global using CrossCutting.Common.Results;
 global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Evaluatables;
 global using FluentAssertions;
 global using NSubstitute;
 global using QueryFramework.Abstractions.Builders;
+global using QueryFramework.Abstractions.Expressions;
+global using QueryFramework.Abstractions.Expressions.Builders;
 global using QueryFramework.Abstractions.Extensions;
 global using Xunit;
