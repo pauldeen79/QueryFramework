@@ -4,13 +4,12 @@ public static class ParameterizedQueryBuilderExtensions
 {
     public static T AddParameter<T>(this T instance, string name, object? value)
         where T : IParameterizedQueryBuilder
-        => instance.AddParameters(new QueryParameterBuilder().WithName(name).WithValue(value));
+        => instance.AddParameters(new QueryParameterBuilder().WithName(name.IsNotNull(nameof(name))).WithValue(value));
 
     private sealed class QueryParameterBuilder : IQueryParameterBuilder
     {
         public string Name { get; set; } = string.Empty;
         public object? Value { get; set; }
-
         public IQueryParameter Build() => new QueryParameter(Name, Value);
     }
 
@@ -18,7 +17,7 @@ public static class ParameterizedQueryBuilderExtensions
     {
         public QueryParameter(string name, object? value)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Value = value;
         }
 
