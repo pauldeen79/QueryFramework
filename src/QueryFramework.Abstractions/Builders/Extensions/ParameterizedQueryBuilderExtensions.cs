@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Extensions;
+﻿namespace QueryFramework.Abstractions.Builders.Extensions;
 
-public static class ParameterizedQueryBuilderExtensions
+public static partial class ParameterizedQueryBuilderExtensions
 {
     public static T AddParameter<T>(this T instance, string name, object? value)
         where T : IParameterizedQueryBuilder

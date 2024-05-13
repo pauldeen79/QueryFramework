@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Extensions;
+﻿namespace QueryFramework.Abstractions.Builders.Extensions;
 
-public static class QueryBuilderExtensions
+public static partial class QueryBuilderExtensions
 {
     public static T Where<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
@@ -29,7 +29,7 @@ public static class QueryBuilderExtensions
     public static ComposableEvaluatableFieldNameBuilderWrapper<T> Or<T>(this T instance, string fieldName)
         where T : IQueryBuilder
         => new ComposableEvaluatableFieldNameBuilderWrapper<T>(instance, fieldName, Combination.Or);
-    
+
     public static T And<T>(this T instance, params ComposableEvaluatableBuilder[] additionalConditions)
         where T : IQueryBuilder
         => instance.Where(additionalConditions.Select(a => a.WithCombination(combination: Combination.And)));

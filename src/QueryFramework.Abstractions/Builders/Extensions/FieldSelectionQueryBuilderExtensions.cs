@@ -1,6 +1,6 @@
-﻿namespace QueryFramework.Abstractions.Extensions;
+﻿namespace QueryFramework.Abstractions.Builders.Extensions;
 
-public static class FieldSelectionQueryBuilderExtensions
+public static partial class FieldSelectionQueryBuilderExtensions
 {
     public static T Select<T>(this T instance, params string[] additionalFieldNames)
         where T : IFieldSelectionQueryBuilder

@@ -1,10 +1,10 @@
-﻿namespace QueryFramework.Abstractions.Extensions;
+﻿namespace QueryFramework.Abstractions.Builders.Extensions;
 
-public static class GroupingQueryBuilderExtensions
+public static partial class GroupingQueryBuilderExtensions
 {
     public static T GroupBy<T>(this T instance, params ExpressionBuilder[] additionalFieldNames)
         where T : IGroupingQueryBuilder
-        => instance.With(x=> x.GroupByFields.AddRange(additionalFieldNames));
+        => instance.With(x => x.GroupByFields.AddRange(additionalFieldNames));
 
     public static T GroupBy<T>(this T instance, params string[] additionalFieldNames)
         where T : IGroupingQueryBuilder

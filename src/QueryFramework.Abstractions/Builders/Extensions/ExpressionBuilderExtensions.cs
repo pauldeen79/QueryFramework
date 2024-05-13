@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Abstractions.Extensions;
+﻿namespace QueryFramework.Abstractions.Builders.Extensions;
 
 public static class ExpressionBuilderExtensions
 {
