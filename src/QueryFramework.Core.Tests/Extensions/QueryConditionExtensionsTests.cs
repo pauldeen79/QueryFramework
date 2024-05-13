@@ -8,7 +8,7 @@ public class QueryConditionExtensionsTests
 
     [Fact]
     public void Can_Create_QueryCondition_Using_Contains_Delegate()
-        => AssertQueryCondition(x => x.Contains("value"), typeof(StringContainsOperator));
+        => AssertQueryCondition(x => x.Contains(() => "value"), typeof(StringContainsOperator));
 
     [Fact]
     public void Can_Create_QueryCondition_Using_Contains_Expression()
