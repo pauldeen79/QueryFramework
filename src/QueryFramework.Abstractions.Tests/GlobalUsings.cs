@@ -12,6 +12,7 @@ global using ExpressionFramework.Domain.Evaluatables;
 global using FluentAssertions;
 global using NSubstitute;
 global using QueryFramework.Abstractions.Builders;
+global using QueryFramework.Abstractions.Builders.Extensions;
 global using QueryFramework.Abstractions.Expressions;
 global using QueryFramework.Abstractions.Expressions.Builders;
 global using QueryFramework.Abstractions.Extensions;
