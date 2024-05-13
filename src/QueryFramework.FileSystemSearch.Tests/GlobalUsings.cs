@@ -9,7 +9,7 @@ global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using NSubstitute;
 global using QueryFramework.Abstractions;
-global using QueryFramework.Abstractions.Extensions;
+global using QueryFramework.Abstractions.Builders.Extensions;
 global using QueryFramework.Core.Builders.Queries;
 global using QueryFramework.FileSystemSearch.Abstractions;
 global using QueryFramework.FileSystemSearch.Entities;

@@ -1,6 +1,6 @@
 ﻿namespace QueryFramework.SqlServer.CrossCutting.Data;
 
-public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandProvider<IQuery>
+public class QueryPagedDatabaseCommandProvider : IPagedDatabaseCommandProvider<IQuery>
 {
     private readonly IQueryFieldInfoFactory _fieldInfoFactory;
     private readonly IEnumerable<IPagedDatabaseEntityRetrieverSettingsProvider> _settingsProviders;
@@ -16,9 +16,6 @@ public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandPro
     }
 
     public IPagedDatabaseCommand CreatePaged(IQuery source, DatabaseOperation operation, int offset, int pageSize)
-        => CreatePaged(source, operation, offset, pageSize, default);
-
-    public IPagedDatabaseCommand CreatePaged(IQuery source, DatabaseOperation operation, int offset, int pageSize, object? context)
     {
         if (operation != DatabaseOperation.Select)
         {
@@ -43,15 +40,15 @@ public class QueryPagedDatabaseCommandProvider : IContextPagedDatabaseCommandPro
         var fieldInfo = _fieldInfoFactory.Create(source);
         var parameterBag = new ParameterBag();
         return new PagedSelectCommandBuilder()
-            .Select(settings, fieldInfo, fieldSelectionQuery, _evaluator, parameterBag, context)
+            .Select(settings, fieldInfo, fieldSelectionQuery, _evaluator, parameterBag)
             .Top(source, settings)
             .Offset(source)
             .Distinct(fieldSelectionQuery)
             .From(source, settings)
-            .Where(source, settings, fieldInfo, _evaluator, parameterBag, context)
-            .GroupBy(groupingQuery, fieldInfo, _evaluator, parameterBag, context)
-            .Having(groupingQuery, fieldInfo, _evaluator, parameterBag, context)
-            .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag, context)
+            .Where(source, settings, fieldInfo, _evaluator, parameterBag)
+            .GroupBy(groupingQuery, fieldInfo, _evaluator, parameterBag)
+            .Having(groupingQuery, fieldInfo, _evaluator, parameterBag)
+            .OrderBy(source, settings, fieldInfo, _evaluator, parameterBag)
             .WithParameters(parameterizedQuery, parameterBag)
             .Build();
     }

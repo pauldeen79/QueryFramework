@@ -3,5 +3,5 @@
 internal interface IQueryParameter
 {
     [Required] string Name { get; }
-    object Value { get; }
+    object? Value { get; }
 }

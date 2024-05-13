@@ -20,6 +20,7 @@ global using ExpressionFramework.Domain.Operators;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Domains;
+global using QueryFramework.Abstractions.Expressions;
 global using QueryFramework.Abstractions.Extensions;
 global using QueryFramework.SqlServer.Abstractions;
 global using QueryFramework.SqlServer.CrossCutting.Data;

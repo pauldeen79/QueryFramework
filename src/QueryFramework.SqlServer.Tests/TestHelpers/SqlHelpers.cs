@@ -2,48 +2,37 @@
 
 internal static class SqlHelpers
 {
-    internal static void ExpressionSqlShouldBe<T>(ComposableEvaluatableBuilderWrapper<T> expression, string expectedSqlForExpression, object? context)
+    internal static void ExpressionSqlShouldBe<T>(ComposableEvaluatableFieldNameBuilderWrapper<T> expression, string expectedSqlForExpression)
         where T : IQueryBuilder
     {
         // Arrange
         var queryBuilder = expression.IsEqualTo("test");
 
         // Act
-        var actual = GetExpressionCommand
-        (
-            queryBuilder.Build(),
-            context
-        ).CommandText;
+        var actual = GetExpressionCommand(queryBuilder.Build()).CommandText;
 
         // Assert
         actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
-    internal static void ExpressionSqlShouldBe<T>(ITypedExpressionBuilder<T> expression, string expectedSqlForExpression, object? context)
-        => ExpressionSqlShouldBe(new ExpressionBuilderWrapper<T>(expression), expectedSqlForExpression, context);
+    internal static void ExpressionSqlShouldBe<T>(ITypedExpressionBuilder<T> expression, string expectedSqlForExpression)
+        => ExpressionSqlShouldBe(new ExpressionBuilderWrapper<T>(expression), expectedSqlForExpression);
 
-    internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression, object? context)
+    internal static void ExpressionSqlShouldBe(ExpressionBuilder expression, string expectedSqlForExpression)
     {
         // Arrange & Act
         var actual = GetExpressionCommand
         (
             new SingleEntityQueryBuilder()
-                .Where
-                (
-                    new ComposableEvaluatableBuilder()
-                        .WithLeftExpression(expression)
-                        .WithOperator(new EqualsOperatorBuilder())
-                        .WithRightExpression(new ConstantExpressionBuilder().WithValue("test"))
-                )
-                .BuildTyped(),
-            context
+                .Where(expression).IsEqualTo("test")
+                .BuildTyped()
         ).CommandText;
 
         // Assert
         actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
-    internal static IDatabaseCommand GetExpressionCommand(IQuery query, object? context)
+    internal static IDatabaseCommand GetExpressionCommand(IQuery query)
     {
         // Arrange
         var settingsMock = Substitute.For<IPagedDatabaseEntityRetrieverSettings>();
@@ -64,9 +53,9 @@ internal static class SqlHelpers
             .AddSingleton(settingsProviderMock)
             .AddSingleton(queryFieldInfoFactory)
             .BuildServiceProvider();
-        var provider = serviceProvider.GetRequiredService<IContextDatabaseCommandProvider<IQuery>>();
+        var provider = serviceProvider.GetRequiredService<IDatabaseCommandProvider<IQuery>>();
 
         // Act
-        return provider.Create(query, DatabaseOperation.Select, context);
+        return provider.Create(query, DatabaseOperation.Select);
     }
 }

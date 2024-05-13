@@ -56,7 +56,7 @@ public sealed class IntegrationTests : IDisposable
     public void Can_Query_Filtered_Records()
     {
         // Arrange
-        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").BuildTyped());
+        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").Build());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
         _retrieverMock.FindMany(Arg.Any<IDatabaseCommand>())
                       .Returns(expectedResult);
@@ -72,7 +72,7 @@ public sealed class IntegrationTests : IDisposable
     public async Task Can_Query_Filtered_Records_Async()
     {
         // Arrange
-        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").BuildTyped());
+        var query = new TestQuery(new SingleEntityQueryBuilder().Where("Name").IsEqualTo("Test").Build());
         var expectedResult = new[] { new TestEntity(), new TestEntity() };
         _retrieverMock.FindManyAsync(Arg.Any<IDatabaseCommand>(), Arg.Any<CancellationToken>())
                       .Returns(expectedResult);
@@ -90,10 +90,10 @@ public sealed class IntegrationTests : IDisposable
         // Arrange
         var query = new SingleEntityQueryBuilder()
             .Where("Field1").IsEqualTo("Value")
-            .BuildTyped();
+            .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
@@ -106,28 +106,25 @@ public sealed class IntegrationTests : IDisposable
     }
 
     [Fact]
-    public void Can_Get_SqlStatement_For_Single_Expression_With_Use_Of_Context()
+    public void Can_Get_SqlStatement_For_Single_Expression_With_Parameters()
     {
         // Arrange
-        var query = new SingleEntityQueryBuilder()
-            .Where(new ComposableEvaluatableBuilder()
-                .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field1"))
-                .WithOperator(new EqualsOperatorBuilder())
-                .WithRightExpression(new ContextExpressionBuilder())
-            )
-            .BuildTyped();
+        var query = new ParameterizedQueryBuilder()
+            .AddParameter("MyParameter", "Value")
+            .Where("Field1").IsEqualToParameter("MyParameter")
+            .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, "Value");
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
         actual.CommandParameters.Should().NotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
         dict.Should().NotBeNull();
-        dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo("@p0");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
+        dict.Should().HaveCount(2);
+        dict?.Keys.Should().BeEquivalentTo("MyParameter", "@p0");
+        dict?.Values.Should().BeEquivalentTo(new[] { "Value", "Value" });
     }
 
     [Fact]
@@ -137,10 +134,10 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .Where("Field1").IsEqualTo("Value1")
             .And("Field2").IsNotEqualTo("Value2")
-            .BuildTyped();
+            .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
@@ -159,10 +156,10 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .Where("Field1").IsEqualTo("Value1")
             .Or("Field2").IsGreaterThan("Value2")
-            .BuildTyped();
+            .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
@@ -180,10 +177,10 @@ public sealed class IntegrationTests : IDisposable
                 ComposableEvaluatableBuilderHelper.Create("Field2", new EqualsOperatorBuilder(), "A"),
                 ComposableEvaluatableBuilderHelper.Create("Field2", new EqualsOperatorBuilder(), "B")
             )
-            .BuildTyped();
+            .Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
@@ -202,10 +199,10 @@ public sealed class IntegrationTests : IDisposable
                         .WithFieldNameExpression("Field1")
                     )
                 )
-            ).BuildTyped();
+            ).Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
@@ -222,10 +219,10 @@ public sealed class IntegrationTests : IDisposable
                         .WithValue("Sql injection, here we go")
                     )
                 )
-            ).BuildTyped();
+            ).Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(@p0) ASC");
@@ -244,10 +241,10 @@ public sealed class IntegrationTests : IDisposable
         var query = new SingleEntityQueryBuilder()
             .OrderBy(new QuerySortOrderBuilder()
                 .WithFieldNameExpression(new DefaultExpressionBuilder<string>())
-            ).BuildTyped();
+            ).Build();
 
         // Act
-        var actual = SqlHelpers.GetExpressionCommand(query, default);
+        var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
         actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY @p0 ASC");

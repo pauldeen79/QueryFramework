@@ -36,10 +36,10 @@ public class SingleEntityQueryParserTests
 
         // Assert
         actual.Filter.Conditions.Should().HaveCount(1);
-        var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        var conditionField = actual.Filter.Conditions[0].LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.Conditions[0].RightExpression as ConstantExpressionBuilder)?.Value;
         ((TypedConstantExpressionBuilder<string>)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
-        actual.Filter.Conditions.First().Operator.Should().BeOfType(expectedOperatorBuilder);
+        actual.Filter.Conditions[0].Operator.Should().BeOfType(expectedOperatorBuilder);
         conditionValue.Should().Be(value == "NULL" ? null : value);
     }
 
@@ -55,10 +55,10 @@ public class SingleEntityQueryParserTests
 
         // Assert
         actual.Filter.Conditions.Should().HaveCount(1);
-        var conditionField = actual.Filter.Conditions.First().LeftExpression as FieldExpressionBuilder;
-        var conditionValue = (actual.Filter.Conditions.First().RightExpression as ConstantExpressionBuilder)?.Value;
+        var conditionField = actual.Filter.Conditions[0].LeftExpression as FieldExpressionBuilder;
+        var conditionValue = (actual.Filter.Conditions[0].RightExpression as ConstantExpressionBuilder)?.Value;
         ((TypedConstantExpressionBuilder<string>)conditionField!.FieldNameExpression).Value.Should().Be("MyFieldName");
-        actual.Filter.Conditions.First().Operator.Should().BeOfType<EqualsOperatorBuilder>();
+        actual.Filter.Conditions[0].Operator.Should().BeOfType<EqualsOperatorBuilder>();
         conditionValue.Should().Be("My Value");
     }
 
