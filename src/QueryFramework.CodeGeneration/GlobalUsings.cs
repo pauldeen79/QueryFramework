@@ -20,6 +20,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
 global using QueryFramework.CodeGeneration.Models.Domains;
 global using TemplateFramework.Abstractions.CodeGeneration;
+global using TemplateFramework.Abstractions.Extensions;
 global using TemplateFramework.Core.CodeGeneration;
 global using TemplateFramework.Core.CodeGeneration.Extensions;
 global using TemplateFramework.Core.Extensions;
