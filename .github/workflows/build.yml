@@ -31,11 +31,6 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore
         run: dotnet restore
-      - name: Build code generation
-        run: dotnet build src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -c Release
-      - name: Run code generation
-        run: dotnet src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll
-
       - name: Build
         run: dotnet build -c Release --no-restore
       - name: Test
@@ -92,7 +87,6 @@ jobs:
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
           dotnet restore
-          dotnet build src/QueryFramework.CodeGeneration/QueryFramework.CodeGeneration.csproj -c Release
           dotnet src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
