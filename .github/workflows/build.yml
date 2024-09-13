@@ -87,7 +87,6 @@ jobs:
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
           dotnet restore
-          dotnet src/QueryFramework.CodeGeneration/bin/Release/net8.0/QueryFramework.CodeGeneration.dll
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg
       - name: Push to GitHub Feed
         run: |
