@@ -16,6 +16,7 @@ global using ExpressionFramework.Domain;
 global using ExpressionFramework.Domain.Builders;
 global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Evaluatables;
+global using ExpressionFramework.Parser;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
 global using QueryFramework.CodeGeneration.Models.Domains;

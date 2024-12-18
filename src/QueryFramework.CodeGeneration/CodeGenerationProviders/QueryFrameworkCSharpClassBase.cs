@@ -2,7 +2,7 @@
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
-    private const string TypeNameDotClassNameBuilder = "{TypeName.ClassName}Builder";
+    private const string TypeNameDotClassNameBuilder = "{NoGenerics(ClassName($property.TypeName))}Builder";
 
     protected QueryFrameworkCSharpClassBase(IPipelineService pipelineService) : base(pipelineService)
     {
@@ -39,7 +39,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                 (
                     new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
                     new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-                    new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}(source.{{Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
+                    new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}(source.{{$property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
                     new MetadataBuilder().WithValue(new Literal($"new {typeof(ComposedEvaluatableBuilder).FullName}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
                 ),
