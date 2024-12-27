@@ -9,8 +9,8 @@ public class AbstractionsInterfaces : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Namespaces.Abstractions;
 
-    public override async Task<IEnumerable<TypeBase>> GetModel()
-        => await GetEntityInterfaces(await GetAbstractionsInterfaces(), Constants.Namespaces.Core, CurrentNamespace);
+    public override Task<Result<IEnumerable<TypeBase>>> GetModel(CancellationToken cancellationToken)
+        => GetEntityInterfaces(GetAbstractionsInterfaces(), Constants.Namespaces.Core, CurrentNamespace);
 
     protected override bool EnableEntityInheritance => true;
 }

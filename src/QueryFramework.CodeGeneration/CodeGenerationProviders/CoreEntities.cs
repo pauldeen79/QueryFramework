@@ -7,8 +7,8 @@ public class CoreEntities : QueryFrameworkCSharpClassBase
     {
     }
 
-    public override async Task<IEnumerable<TypeBase>> GetModel()
-        => await GetEntities(await GetCoreModels(), CurrentNamespace);
+    public override Task<Result<IEnumerable<TypeBase>>> GetModel(CancellationToken cancellationToken)
+        => GetEntities(GetCoreModels(), CurrentNamespace);
 
     public override string Path => Constants.Namespaces.Core;
 }
