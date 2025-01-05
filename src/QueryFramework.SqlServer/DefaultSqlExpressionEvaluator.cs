@@ -31,10 +31,13 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
 
         if (result is null)
         {
-            var innerExpression = expression.TryGetInnerExpression()
-                ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
+            result = TryGetSqlExpression(expression, out var innerExpression);
+            if (result is null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
+            }
             var innerResult = GetSqlExpression(query, innerExpression, fieldInfo, parameterBag);
-            result = TryGetSqlExpression(expression)?.Replace("{0}", innerResult) ?? throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
+            return result.Replace("{0}", innerResult);
         }
 
         return result;
@@ -58,16 +61,18 @@ public class DefaultSqlExpressionEvaluator : ISqlExpressionEvaluator
         throw new ArgumentOutOfRangeException(nameof(expression), $"Unsupported expression: [{expression.GetType().Name}]");
     }
 
-    private string? TryGetSqlExpression(Expression expression)
+    private string? TryGetSqlExpression(Expression expression, out Expression innerExpression)
     {
         foreach (var parser in _functionParsers)
         {
-            if (parser.TryParse(expression, this, out var sqlExpression))
+            if (parser.TryParse(expression, this, out var sqlExpression, out var ex))
             {
+                innerExpression = ex;
                 return sqlExpression;
             }
         }
 
+        innerExpression = new EmptyExpression();
         return default;
     }
 }

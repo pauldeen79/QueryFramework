@@ -44,8 +44,8 @@ public class DefaultSqlExpressionEvaluatorTests
         _expressionEvaluatorProviderMock.TryGetSqlExpression(Arg.Any<IQuery>(), Arg.Any<ConstantExpression>(), Arg.Any<ISqlExpressionEvaluator>(), Arg.Any<IQueryFieldInfo>(), Arg.Any<ParameterBag>(), out Arg.Any<string?>())
                                         .Returns(x => { x[5] = expressionResult; return true; });
         var functionResult = "Function({0})";
-        _functionParserMock.TryParse(Arg.Any<StringLengthExpression>(), Arg.Any<ISqlExpressionEvaluator>(), out Arg.Any<string?>())
-                           .Returns(x => { x[2] = functionResult; return true; });
+        _functionParserMock.TryParse(Arg.Any<StringLengthExpression>(), Arg.Any<ISqlExpressionEvaluator>(), out Arg.Any<string?>(), out Arg.Any<Expression>())
+                           .Returns(x => { x[2] = functionResult; x[3] = x.ArgAt<StringLengthExpression>(0).Expression; return true; });
         var sut = CreateSut();
 
         // Act

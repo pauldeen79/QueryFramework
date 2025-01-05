@@ -14,9 +14,6 @@ public static class ExpressionExtensions
             _ => null
         };
 
-    public static Expression? TryGetInnerExpression(this Expression instance)
-        => instance.GetSingleContainedExpression().Value;
-
     public static string? TryGetValue(this Expression expression, object? context)
         => expression.Evaluate(context).Value?.ToString();
 
