@@ -28,9 +28,6 @@ public record QueryParameterExpression : Expression
         return Result.Success(parameter.Value);
     }
 
-    public override Result<Expression> GetSingleContainedExpression()
-        => Result.NotFound<Expression>();
-
     public override ExpressionBuilder ToBuilder()
         => new QueryParameterExpressionBuilder(this);
 }

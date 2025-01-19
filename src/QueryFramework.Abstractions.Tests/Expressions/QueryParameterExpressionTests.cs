@@ -87,22 +87,6 @@ public class QueryParameterExpressionTests : TestBase
         }
     }
 
-    public class GetSingleContainedExpression : QueryParameterExpressionTests
-    {
-        [Fact]
-        public void Returns_NotFound()
-        {
-            // Arrange
-            var sut = new QueryParameterExpression("ParameterName");
-
-            // Act
-            var result = sut.GetSingleContainedExpression();
-
-            // Assert
-            result.Status.Should().Be(ResultStatus.NotFound);
-        }
-    }
-
     public class ToBuilder : QueryParameterExpressionTests
     {
         [Fact]
