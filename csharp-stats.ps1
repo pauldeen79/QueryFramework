@@ -4,9 +4,9 @@ foreach ($directory in Get-ChildItem -Path ./src -Directory)
     [long]$totalLines = 0;
     [long]$generatedLines = 0;
     [long]$notGeneratedLines = 0;
-    foreach ($file in Get-ChildItem -Path $directory -File -Filter *.cs -Recurse)
+    foreach ($file in Get-ChildItem -Path $directory.FullName -File -Filter *.cs -Recurse)
     {
-        $lineCount = (Get-Content $file).Length
+        $lineCount = (Get-Content $file.FullName).Length
         $totalLines += $lineCount
         if ($file.FullName.EndsWith(".template.generated.cs"))
         {
