@@ -26,6 +26,8 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool CreateRecord => true;
     protected override bool GenerateMultipleFiles => false;
     protected override bool EnableGlobalUsings => true;
+    protected override bool AddImplicitOperatorOnBuilder => false;
+    protected override bool UseBuilderAbstractionsTypeConversion => false;
 
     protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
 

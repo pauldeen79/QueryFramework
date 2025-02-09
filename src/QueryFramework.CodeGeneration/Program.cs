@@ -1,4 +1,6 @@
-﻿namespace QueryFramework.CodeGeneration;
+﻿using CsharpExpressionDumper.Abstractions;
+
+namespace QueryFramework.CodeGeneration;
 
 [ExcludeFromCodeCoverage]
 internal static class Program
@@ -19,7 +21,6 @@ internal static class Program
             .AddTemplateFrameworkRuntime()
             .AddCsharpExpressionDumper()
             .AddClassFrameworkTemplates()
-            .AddExpressionParser()
             .AddScoped<IAssemblyInfoContextService, MyAssemblyInfoContextService>();
 
         var generators = typeof(Program).Assembly.GetExportedTypes()
@@ -35,6 +36,16 @@ internal static class Program
         using var scope = serviceProvider.CreateScope();
         var engine = scope.ServiceProvider.GetRequiredService<ICodeGenerationEngine>();
 
+        var dumper = scope.ServiceProvider.GetRequiredService<ICsharpExpressionDumper>();
+        var service = scope.ServiceProvider.GetRequiredService<IPipelineService>();
+        var settings = new PipelineSettingsBuilder().WithCopyInterfaces().WithInheritFromInterfaces();
+        var results = new List<TypeBase>();
+        foreach (var type in typeof(Program).Assembly.GetTypes().Where(x => x.Namespace?.StartsWith("QueryFramework.CodeGeneration.Models") == true))
+        {
+            var result = await service.ProcessAsync(new ClassFramework.Pipelines.Reflection.ReflectionContext(type, settings, System.Globalization.CultureInfo.InvariantCulture));
+            results.Add(result.Value!);
+        }
+        var source = dumper.Dump(results);
         // Generate code
         await Task.WhenAll(generators
             .Select(x => (ICodeGenerationProvider)scope.ServiceProvider.GetRequiredService(x))
