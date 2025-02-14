@@ -1,11 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel;
-using System.Reflection;
-using ClassFramework.Domain.Builders;
-using CsharpExpressionDumper.Abstractions;
-using CsharpExpressionDumper.Abstractions.Requests;
-
-namespace QueryFramework.CodeGeneration;
+﻿namespace QueryFramework.CodeGeneration;
 
 [ExcludeFromCodeCoverage]
 internal static class Program
@@ -26,7 +19,6 @@ internal static class Program
             .AddTemplateFrameworkRuntime()
             .AddCsharpExpressionDumper()
             .AddClassFrameworkTemplates()
-            .AddSingleton<IObjectHandlerPropertyFilter, SkipDefaultValues>()
             .AddScoped<IAssemblyInfoContextService, MyAssemblyInfoContextService>();
 
         var generators = typeof(Program).Assembly.GetExportedTypes()
@@ -41,17 +33,6 @@ internal static class Program
         using var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
         var engine = scope.ServiceProvider.GetRequiredService<ICodeGenerationEngine>();
-
-        var dumper = scope.ServiceProvider.GetRequiredService<ICsharpExpressionDumper>();
-        var service = scope.ServiceProvider.GetRequiredService<IPipelineService>();
-        var settings = new PipelineSettingsBuilder().WithCopyInterfaces().WithInheritFromInterfaces().WithAllowGenerationWithoutProperties();
-        var results = new List<TypeBaseBuilder>();
-        foreach (var type in typeof(Program).Assembly.GetTypes().Where(x => x.Namespace?.StartsWith("QueryFramework.CodeGeneration.Models") == true))
-        {
-            var result = await service.ProcessAsync(new ClassFramework.Pipelines.Reflection.ReflectionContext(type, settings, System.Globalization.CultureInfo.InvariantCulture));
-            results.Add(result.Value!.ToBuilder());
-        }
-        var source = dumper.Dump(results);
 
         // Generate code
         foreach (var generatorType in generators)
@@ -82,43 +63,5 @@ internal static class Program
         {
             WriteError(innerResult);
         }
-    }
-}
-
-internal class SkipDefaultValues : IObjectHandlerPropertyFilter
-{
-    public bool IsValid(ObjectHandlerRequest command, PropertyInfo propertyInfo)
-    {
-        var defaultValue = GetDefaultValue(propertyInfo);
-
-        var actualValue = propertyInfo.GetValue(command.Instance);
-
-        if (defaultValue is null && actualValue is null)
-        {
-            return false;
-        }
-
-        if (propertyInfo.PropertyType == typeof(string) && actualValue?.Equals(string.Empty) == true)
-        {
-            return false;
-        }
-
-        return defaultValue is null
-            || actualValue is null
-            || (actualValue is IEnumerable e && !e.OfType<object>().Any())
-            || !actualValue.Equals(defaultValue);
-    }
-
-    private static object? GetDefaultValue(PropertyInfo propertyInfo)
-    {
-        var defaultValueAttribute = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
-        if (defaultValueAttribute is not null)
-        {
-            return defaultValueAttribute.Value;
-        }
-
-        return propertyInfo.PropertyType.IsValueType && Nullable.GetUnderlyingType(propertyInfo.PropertyType) is null
-            ? Activator.CreateInstance(propertyInfo.PropertyType)
-            : null;
     }
 }
