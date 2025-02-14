@@ -35,10 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.FileSystemSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFramework.CodeGeneration", "src\QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj", "{D4CE70D5-6BB1-4B62-8184-657A748782C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassFramework.TemplateFramework", "..\ClassFramework\src\ClassFramework.TemplateFramework\ClassFramework.TemplateFramework.csproj", "{6567C064-C57E-473B-BF5E-C7219676B4DB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassFramework.Pipelines", "..\ClassFramework\src\ClassFramework.Pipelines\ClassFramework.Pipelines.csproj", "{A95F537F-21A9-4A12-9D20-F41257D4DD4F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,14 +93,6 @@ Global
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4CE70D5-6BB1-4B62-8184-657A748782C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6567C064-C57E-473B-BF5E-C7219676B4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6567C064-C57E-473B-BF5E-C7219676B4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6567C064-C57E-473B-BF5E-C7219676B4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6567C064-C57E-473B-BF5E-C7219676B4DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A95F537F-21A9-4A12-9D20-F41257D4DD4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A95F537F-21A9-4A12-9D20-F41257D4DD4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A95F537F-21A9-4A12-9D20-F41257D4DD4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A95F537F-21A9-4A12-9D20-F41257D4DD4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
