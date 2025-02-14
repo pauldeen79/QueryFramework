@@ -2,6 +2,7 @@
 global using System.Diagnostics.CodeAnalysis;
 global using System.Text;
 global using ClassFramework.Domain;
+global using ClassFramework.Domain.Builders.Extensions;
 global using ClassFramework.Pipelines.Abstractions;
 global using ClassFramework.Pipelines.Builders;
 global using ClassFramework.Pipelines.Domains;
@@ -17,7 +18,6 @@ global using ExpressionFramework.Domain;
 global using ExpressionFramework.Domain.Builders;
 global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Evaluatables;
-global using ExpressionFramework.Parser.Extensions;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
 global using QueryFramework.CodeGeneration.Models.Domains;
