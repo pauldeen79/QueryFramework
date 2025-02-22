@@ -11,7 +11,7 @@ public class QueryParameterExpressionBuilderTests
             var sut = new QueryParameterExpressionBuilder();
 
             // Assert
-            sut.Should().NotBeNull();
+            sut.ShouldNotBeNull();
         }
     }
 
@@ -21,9 +21,9 @@ public class QueryParameterExpressionBuilderTests
         public void Throws_On_Null_Instance()
         {
             // Act & Assert
-            this.Invoking(_ => new QueryParameterExpressionBuilder(source: null!))
-                .Should().Throw<ArgumentNullException>()
-                .WithParameterName("source");
+            Action a = () => _ = new QueryParameterExpressionBuilder(source: null!);
+            a.ShouldThrow<ArgumentNullException>()
+             .ParamName.ShouldBe("source");
 
         }
     }
@@ -37,9 +37,9 @@ public class QueryParameterExpressionBuilderTests
             var sut = new QueryParameterExpressionBuilder();
 
             // Act & Assert
-            sut.Invoking(x => _ = x.WithParameterName(parameterName: null!))
-               .Should().Throw<ArgumentNullException>()
-               .WithParameterName("parameterName");
+            Action a = () => _ = sut.WithParameterName(parameterName: null!);
+            a.ShouldThrow<ArgumentNullException>()
+             .ParamName.ShouldBe("parameterName");
         }
     }
 }

@@ -11,8 +11,8 @@ public class QuerySortOrderExtensionsTests
                                                         .Build();
 
         // Act & Assert
-        querySortOrder.Invoking(x => x.ToSql())
-                      .Should().Throw<ArgumentOutOfRangeException>();
+        Action a = () => querySortOrder.ToSql();
+        a.ShouldThrow<ArgumentOutOfRangeException>();
     }
 
     [Theory]
@@ -29,6 +29,6 @@ public class QuerySortOrderExtensionsTests
         var actual = querySortOrder.ToSql();
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 }

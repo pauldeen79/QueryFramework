@@ -23,10 +23,10 @@ public class SingleEntityQueryTests
         var sut = new SingleEntityQuery(limit, offset, new ComposedEvaluatableBuilder().AddConditions(conditions).BuildTyped(), orderByFields);
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions.Select(x => x.BuildTyped()).ToArray());
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
     }
 
     [Fact]
@@ -50,6 +50,6 @@ public class SingleEntityQueryTests
         var actual = q1.Equals(q2);
 
         // Asset
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 }

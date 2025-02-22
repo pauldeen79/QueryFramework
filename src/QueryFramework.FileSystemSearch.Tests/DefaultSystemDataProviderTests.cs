@@ -10,8 +10,8 @@ public class DefaultSystemDataProviderTests
             .TryGetData<FileData>(new SingleEntityQueryBuilder().Build(), out var result);
 
         // Assert
-        actual.Should().BeFalse();
-        result.Should().BeNull();
+        actual.ShouldBeFalse();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -22,8 +22,8 @@ public class DefaultSystemDataProviderTests
             .TryGetData<object>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
-        actual.Should().BeFalse();
-        result.Should().BeNull();
+        actual.ShouldBeFalse();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -39,8 +39,8 @@ public class DefaultSystemDataProviderTests
             .TryGetData<IFileData>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
-        actual.Should().BeTrue();
-        result.Should().BeEquivalentTo(data);
+        actual.ShouldBeTrue();
+        result.ShouldBeEquivalentTo(data);
     }
 
     [Fact]
@@ -59,8 +59,8 @@ public class DefaultSystemDataProviderTests
             .TryGetData<ILineData>(new FileSystemQuery(Directory.GetCurrentDirectory(), "*.cs", SearchOption.TopDirectoryOnly), out var result);
 
         // Assert
-        actual.Should().BeTrue();
-        result.Should().NotBeNull();
-        result?.Select(x => x.Line).Should().BeEquivalentTo(lines);
+        actual.ShouldBeTrue();
+        result.ShouldNotBeNull();
+        result?.Select(x => x.Line).ToArray().ShouldBeEquivalentTo(lines);
     }
 }

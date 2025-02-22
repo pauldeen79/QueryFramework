@@ -9,10 +9,10 @@ public class SingleEntityQueryBuilderTests
         var sut = new SingleEntityQueryBuilder();
 
         // Assert
-        sut.Filter.Conditions.Should().BeEmpty();
-        sut.Limit.Should().BeNull();
-        sut.Offset.Should().BeNull();
-        sut.OrderByFields.Should().BeEmpty();
+        sut.Filter.Conditions.ShouldBeEmpty();
+        sut.Limit.ShouldBeNull();
+        sut.Offset.ShouldBeNull();
+        sut.OrderByFields.ShouldBeEmpty();
     }
 
     [Fact]
@@ -36,10 +36,10 @@ public class SingleEntityQueryBuilderTests
         };
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions);
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
     }
 
     [Fact]
@@ -64,10 +64,10 @@ public class SingleEntityQueryBuilderTests
         var actual = sut.Build();
 
         // Assert
-        actual.Should().NotBeNull();
-        actual.Limit.Should().Be(sut.Limit);
-        actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
-        actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
+        actual.ShouldNotBeNull();
+        actual.Limit.ShouldBe(sut.Limit);
+        actual.Offset.ShouldBe(sut.Offset);
+        actual.Filter.Conditions.Count.ShouldBe(sut.Filter.Conditions.Count);
+        actual.OrderByFields.Count.ShouldBe(sut.OrderByFields.Count);
     }
 }

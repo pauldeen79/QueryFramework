@@ -8,16 +8,16 @@ public class QueryParameterExpressionTests : TestBase
         public void Throws_On_Null_Argument()
         {
             // Act & Assert
-            this.Invoking(_ => new QueryParameterExpression(parameterName: null!))
-                .Should().Throw<ValidationException>();
+            Action a = () => _ = new QueryParameterExpression(parameterName: null!);
+            a.ShouldThrow<ValidationException>();
         }
 
         [Fact]
         public void Throws_On_Empty_Argument()
         {
             // Act & Assert
-            this.Invoking(_ => new QueryParameterExpression(parameterName: string.Empty))
-                .Should().Throw<ValidationException>();
+            Action a = () => _ = new QueryParameterExpression(parameterName: string.Empty);
+            a.ShouldThrow<ValidationException>();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ public class QueryParameterExpressionTests : TestBase
             var sut = new QueryParameterExpression("Test");
 
             // Assert
-            sut.ParameterName.Should().Be("Test");
+            sut.ParameterName.ShouldBe("Test");
         }
     }
 
@@ -44,8 +44,8 @@ public class QueryParameterExpressionTests : TestBase
             var result = sut.Evaluate(context);
 
             // Assert
-            result.Status.Should().Be(ResultStatus.Invalid);
-            result.ErrorMessage.Should().Be("Context should be of type IParameterizedQuery");
+            result.Status.ShouldBe(ResultStatus.Invalid);
+            result.ErrorMessage.ShouldBe("Context should be of type IParameterizedQuery");
         }
 
         [Fact]
@@ -63,8 +63,8 @@ public class QueryParameterExpressionTests : TestBase
             var result = sut.Evaluate(context);
 
             // Assert
-            result.Status.Should().Be(ResultStatus.Invalid);
-            result.ErrorMessage.Should().Be("Parameter with name [UnknownName] could not be found");
+            result.Status.ShouldBe(ResultStatus.Invalid);
+            result.ErrorMessage.ShouldBe("Parameter with name [UnknownName] could not be found");
         }
 
         [Fact]
@@ -82,8 +82,8 @@ public class QueryParameterExpressionTests : TestBase
             var result = sut.Evaluate(context);
 
             // Assert
-            result.Status.Should().Be(ResultStatus.Ok);
-            result.Value.Should().BeEquivalentTo("Value");
+            result.Status.ShouldBe(ResultStatus.Ok);
+            result.Value.ShouldBeEquivalentTo("Value");
         }
     }
 
@@ -99,8 +99,8 @@ public class QueryParameterExpressionTests : TestBase
             var result = sut.ToBuilder();
 
             // Assert
-            result.Should().BeOfType<QueryParameterExpressionBuilder>();
-            ((QueryParameterExpressionBuilder)result).ParameterName.Should().Be("ParameterName");
+            result.ShouldBeOfType<QueryParameterExpressionBuilder>();
+            ((QueryParameterExpressionBuilder)result).ParameterName.ShouldBe("ParameterName");
         }
     }
 }

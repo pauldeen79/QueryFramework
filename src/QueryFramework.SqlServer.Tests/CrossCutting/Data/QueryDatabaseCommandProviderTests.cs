@@ -41,9 +41,9 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
     public void Create_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.Create(Substitute.For<IQuery>(), operation))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be("operation");
+        Action a = () => Sut.Create(Substitute.For<IQuery>(), operation);
+        a.ShouldThrow<ArgumentOutOfRangeException>()
+         .ParamName.ShouldBe("operation");
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class QueryDatabaseCommandProviderTests : TestBase<QueryDatabaseCommandPr
         var actual = Sut.Create(new SingleEntityQueryBuilder().Where("Field").IsEqualTo("Value").BuildTyped(), DatabaseOperation.Select);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field = @p0");
+        actual.CommandParameters.ShouldNotBeNull();
     }
 }

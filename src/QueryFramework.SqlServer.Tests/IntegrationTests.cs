@@ -33,7 +33,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
-        actual.Should().BeEquivalentTo(expectedResult);
+        actual.ToArray().ShouldBeEquivalentTo(expectedResult);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = await CreateSut().FindManyAsync<TestEntity>(query);
 
         // Assert
-        actual.Should().BeEquivalentTo(expectedResult);
+        actual.ToArray().ShouldBeEquivalentTo(expectedResult);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = CreateSut().FindMany<TestEntity>(query);
 
         // Assert
-        actual.Should().BeEquivalentTo(expectedResult);
+        actual.ToArray().ShouldBeEquivalentTo(expectedResult);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = await CreateSut().FindManyAsync<TestEntity>(query);
 
         // Assert
-        actual.Should().BeEquivalentTo(expectedResult);
+        actual.ToArray().ShouldBeEquivalentTo(expectedResult);
     }
 
     [Fact]
@@ -96,13 +96,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity WHERE Field1 = @p0");
+        actual.CommandParameters.ShouldNotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo("@p0");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value" });
+        dict.ShouldNotBeNull();
+        dict.Count.ShouldBe(1);
+        dict?.Keys.ToArray().ShouldBeEquivalentTo(new[] { "@p0" });
+        dict?.Values.ToArray().ShouldBeEquivalentTo(new object[] { "Value" });
     }
 
     [Fact]
@@ -118,13 +118,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity WHERE Field1 = @p0");
+        actual.CommandParameters.ShouldNotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(2);
-        dict?.Keys.Should().BeEquivalentTo("MyParameter", "@p0");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value", "Value" });
+        dict.ShouldNotBeNull();
+        dict.Count.ShouldBe(2);
+        dict?.Keys.ToArray().ShouldBeEquivalentTo(new[] { "MyParameter", "@p0" });
+        dict?.Values.ToArray().ShouldBeEquivalentTo(new object[] { "Value", "Value" });
     }
 
     [Fact]
@@ -140,13 +140,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity WHERE Field1 = @p0 AND Field2 <> @p1");
+        actual.CommandParameters.ShouldNotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(2);
-        dict?.Keys.Should().BeEquivalentTo("@p0", "@p1");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Value1", "Value2" });
+        dict.ShouldNotBeNull();
+        dict.Count.ShouldBe(2);
+        dict?.Keys.ToArray().ShouldBeEquivalentTo(new[] { "@p0", "@p1" });
+        dict?.Values.ToArray().ShouldBeEquivalentTo(new object[] { "Value1", "Value2" });
     }
 
     [Fact]
@@ -162,8 +162,8 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity WHERE Field1 = @p0 OR Field2 > @p1");
+        actual.CommandParameters.ShouldNotBeNull();
     }
 
     [Fact]
@@ -183,8 +183,8 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity WHERE Field1 = @p0 AND (Field2 = @p1 OR Field2 = @p2)");
+        actual.CommandParameters.ShouldNotBeNull();
     }
 
     [Fact]
@@ -205,7 +205,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity ORDER BY UPPER(Field1) ASC");
     }
 
     [Fact]
@@ -225,13 +225,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY UPPER(@p0) ASC");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity ORDER BY UPPER(@p0) ASC");
+        actual.CommandParameters.ShouldNotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo("@p0");
-        dict?.Values.Should().BeEquivalentTo(new[] { "Sql injection, here we go" });
+        dict.ShouldNotBeNull();
+        dict.Count.ShouldBe(1);
+        dict?.Keys.ToArray().ShouldBeEquivalentTo(new[] { "@p0" });
+        dict?.Values.ToArray().ShouldBeEquivalentTo(new object[] { "Sql injection, here we go" });
     }
 
     [Fact]
@@ -247,13 +247,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = SqlHelpers.GetExpressionCommand(query);
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyEntity ORDER BY @p0 ASC");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyEntity ORDER BY @p0 ASC");
+        actual.CommandParameters.ShouldNotBeNull();
         var dict = actual.CommandParameters as IDictionary<string, object>;
-        dict.Should().NotBeNull();
-        dict.Should().HaveCount(1);
-        dict?.Keys.Should().BeEquivalentTo("@p0");
-        dict?.Values.Should().BeEquivalentTo(new object?[] { null });
+        dict.ShouldNotBeNull();
+        dict.Count.ShouldBe(1);
+        dict?.Keys.ToArray().ShouldBeEquivalentTo(new[] { "@p0" });
+        dict?.Values.ToArray().ShouldBeEquivalentTo(new object?[] { null });
     }
 
     public void Dispose() => _serviceProvider.Dispose();

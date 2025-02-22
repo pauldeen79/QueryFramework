@@ -19,9 +19,9 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
     public void CreatePaged_Generates_Correct_Command_When_DatabaseOperation_Is_Not_Select(DatabaseOperation operation)
     {
         // Act
-        Sut.Invoking(x => x.CreatePaged(Substitute.For<IQuery>(), operation, 0, 0))
-           .Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be("operation");
+        Action a = () => Sut.CreatePaged(Substitute.For<IQuery>(), operation, 0, 0);
+        a.ShouldThrow<ArgumentOutOfRangeException>()
+         .ParamName.ShouldBe("operation");
     }
 
     [Fact]
@@ -49,8 +49,8 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                                      0).DataCommand;
 
         // Assert
-        actual.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
-        actual.CommandParameters.Should().NotBeNull();
+        actual.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field = @p0");
+        actual.CommandParameters.ShouldNotBeNull();
     }
 
     [Fact]
@@ -81,17 +81,17 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                                      pageSize);
 
         // Assert
-        actual.DataCommand.CommandText.Should().Be("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");
-        actual.DataCommand.CommandParameters.Should().NotBeNull();
+        actual.DataCommand.CommandText.ShouldBe("SELECT TOP 10 * FROM MyTable WHERE Field = @p0");
+        actual.DataCommand.CommandParameters.ShouldNotBeNull();
     }
 
     [Fact]
     public void CreatePaged_Throws_When_DatabaseOperation_Is_Select_But_No_Database_Entity_Retriever_Provider_Is_Registered()
     {
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .And.Message.Should().Be("No database entity retriever provider was found for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
+        Action a = () => Sut.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("No database entity retriever provider was found for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
     }
 
     [Fact]
@@ -104,8 +104,8 @@ public class QueryPagedDatabaseCommandProviderTests : TestBase<QueryPagedDatabas
                             .Returns(x => { x[0] = settings; return true; });
 
         // Act
-        Sut.Invoking(x => x.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .And.Message.Should().Be("Database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
+        Action a = () => Sut.CreatePaged(new SingleEntityQueryBuilder().BuildTyped(), DatabaseOperation.Select, 0, 0);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
     }
 }

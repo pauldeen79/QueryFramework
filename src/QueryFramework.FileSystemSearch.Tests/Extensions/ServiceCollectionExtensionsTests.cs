@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.FileSystemSearch.Tests.Extensions;
+namespace QueryFramework.FileSystemSearch.Tests.Extensions;
 
 public class ServiceCollectionExtensionsTests
 {
@@ -13,6 +13,6 @@ public class ServiceCollectionExtensionsTests
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 }

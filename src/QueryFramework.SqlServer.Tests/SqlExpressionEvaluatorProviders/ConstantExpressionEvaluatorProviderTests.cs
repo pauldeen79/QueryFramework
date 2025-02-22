@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests.SqlExpressionEvaluatorProviders;
+namespace QueryFramework.SqlServer.Tests.SqlExpressionEvaluatorProviders;
 
 public class ConstantExpressionEvaluatorProviderTests
 {
@@ -17,8 +17,8 @@ public class ConstantExpressionEvaluatorProviderTests
         var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
         // Assert
-        actual.Should().BeFalse();
-        result.Should().BeNull();
+        actual.ShouldBeFalse();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -37,8 +37,8 @@ public class ConstantExpressionEvaluatorProviderTests
         var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
         // Assert
-        actual.Should().BeTrue();
-        result.Should().Be("@p0");
+        actual.ShouldBeTrue();
+        result.ShouldBe("@p0");
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class ConstantExpressionEvaluatorProviderTests
         var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
         // Assert
-        actual.Should().BeFalse();
-        result.Should().BeNull();
+        actual.ShouldBeFalse();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class ConstantExpressionEvaluatorProviderTests
         var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
         // Assert
-        actual.Should().BeTrue();
-        result.Should().Be("Test".Length.ToString());
+        actual.ShouldBeTrue();
+        result.ShouldBe("Test".Length.ToString());
     }
 }

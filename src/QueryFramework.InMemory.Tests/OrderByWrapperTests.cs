@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.InMemory.Tests;
+namespace QueryFramework.InMemory.Tests;
 
 public class OrderByWrapperTests
 {
@@ -15,7 +15,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(0);
+        actual.ShouldBe(0);
     }
 
     [Theory]
@@ -33,7 +33,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 
     [Theory]
@@ -69,7 +69,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(0);
+        actual.ShouldBe(0);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo((object)new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().Be(-1);
+        actual.ShouldBe(-1);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class OrderByWrapperTests
         var actual = sut.CompareTo(other);
 
         // Assert
-        actual.Should().Be(1);
+        actual.ShouldBe(1);
     }
 
     [Fact]
@@ -133,7 +133,7 @@ public class OrderByWrapperTests
         var actual = sut.Equals((object)new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 
     [Fact]
@@ -149,7 +149,7 @@ public class OrderByWrapperTests
         var actual = sut.Equals(new OrderByWrapper(other, orderByFields));
 
         // Assert
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class OrderByWrapperTests
         var otherHash = sutOther.GetHashCode();
 
         // Assert
-        actualHash.Should().Be(otherHash);
+        actualHash.ShouldBe(otherHash);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class OrderByWrapperTests
         var otherHash = sutOther.GetHashCode();
 
         // Assert
-        actualHash.Should().NotBe(otherHash);
+        actualHash.ShouldNotBe(otherHash);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class OrderByWrapperTests
         var actual = sut == new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 
     [Fact]
@@ -218,7 +218,7 @@ public class OrderByWrapperTests
         var actual = sut != new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeFalse();
+        actual.ShouldBeFalse();
     }
 
     [Fact]
@@ -234,7 +234,7 @@ public class OrderByWrapperTests
         var actual = sut < new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 
     [Fact]
@@ -250,7 +250,7 @@ public class OrderByWrapperTests
         var actual = sut > new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeFalse();
+        actual.ShouldBeFalse();
     }
 
     [Fact]
@@ -266,7 +266,7 @@ public class OrderByWrapperTests
         var actual = sut <= new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeTrue();
+        actual.ShouldBeTrue();
     }
 
     [Fact]
@@ -282,7 +282,7 @@ public class OrderByWrapperTests
         var actual = sut >= new OrderByWrapper(other, orderByFields);
 
         // Assert
-        actual.Should().BeFalse();
+        actual.ShouldBeFalse();
     }
 
     public class MyClass

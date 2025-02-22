@@ -22,9 +22,9 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = Sut.FindPaged<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
-        actual.TotalRecordCount.Should().Be(1);
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
+        actual.TotalRecordCount.ShouldBe(1);
     }
 
     [Fact]
@@ -37,9 +37,9 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = await Sut.FindPagedAsync<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
-        actual.TotalRecordCount.Should().Be(1);
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
+        actual.TotalRecordCount.ShouldBe(1);
     }
 
     [Fact]
@@ -53,9 +53,9 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = Sut.FindPaged<MyEntity>(query);
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
-        actual.TotalRecordCount.Should().Be(10);
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
+        actual.TotalRecordCount.ShouldBe(10);
     }
 
     [Fact]
@@ -69,9 +69,9 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = await Sut.FindPagedAsync<MyEntity>(query);
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
-        actual.TotalRecordCount.Should().Be(10);
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
+        actual.TotalRecordCount.ShouldBe(10);
     }
 
     [Fact]
@@ -84,8 +84,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = Sut.FindOne<MyEntity>(new SingleEntityQueryBuilder().Where("Property").IsEqualTo("Some value").Build());
 
         // Assert
-        actual.Should().NotBeNull();
-        actual?.Property.Should().Be("Value");
+        actual.ShouldNotBeNull();
+        actual?.Property.ShouldBe("Value");
     }
 
     [Fact]
@@ -98,8 +98,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = await Sut.FindOneAsync<MyEntity>(new SingleEntityQueryBuilder().Where("Property").IsEqualTo("Some value").Build());
 
         // Assert
-        actual.Should().NotBeNull();
-        actual?.Property.Should().Be("Value");
+        actual.ShouldNotBeNull();
+        actual?.Property.ShouldBe("Value");
     }
 
     [Fact]
@@ -112,8 +112,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = Sut.FindMany<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
     }
 
     [Fact]
@@ -126,8 +126,8 @@ public class DefaultQueryProcessorTests : TestBase<DefaultQueryProcessor>
         var actual = await Sut.FindManyAsync<MyEntity>(new SingleEntityQueryBuilder().BuildTyped());
 
         // Assert
-        actual.Should().HaveCount(1);
-        actual.First().Property.Should().Be("Value");
+        actual.Count.ShouldBe(1);
+        actual.First().Property.ShouldBe("Value");
     }
 
     private void SetupSourceData(IEnumerable<MyEntity> data, int? totalRecordCount = null)

@@ -12,9 +12,9 @@ public class QueryExtensionsTests
         };
 
         // Act
-        sut.Invoking(x => x.Validate())
-           .Should().Throw<ValidationException>()
-           .And.Message.Should().Be("kaboom");
+        Action a = () => sut.Validate();
+        a.ShouldThrow<ValidationException>()
+         .Message.ShouldBe("kaboom");
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public class QueryExtensionsTests
         var actual = sut.GetTableName("default");
 
         // Assert
-        actual.Should().Be("custom");
+        actual.ShouldBe("custom");
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class QueryExtensionsTests
         var actual = sut.GetTableName("default");
 
         // Assert
-        actual.Should().Be("default");
+        actual.ShouldBe("default");
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class QueryExtensionsTests
         var actual = sut.GetTableName("default");
 
         // Assert
-        actual.Should().Be("default");
+        actual.ShouldBe("default");
     }
 
     private sealed class MyQueryMock : IQuery, IValidatableObject

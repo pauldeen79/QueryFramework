@@ -9,8 +9,8 @@ public class CombinationExtensionsTests
         var combination = (Combination)99;
 
         // Act & Assert
-        combination.Invoking(x => x.ToSql())
-                   .Should().Throw<ArgumentOutOfRangeException>();
+        Action a = () => combination.ToSql();
+        a.ShouldThrow<ArgumentOutOfRangeException>();
     }
 
     [Theory]
@@ -22,6 +22,6 @@ public class CombinationExtensionsTests
         var actual = input.ToSql();
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 }

@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.Collections.Generic;
 global using System.ComponentModel.DataAnnotations;
 global using System.Linq;
@@ -9,7 +9,7 @@ global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Builders.Operators;
 global using ExpressionFramework.Domain.Domains;
 global using ExpressionFramework.Domain.Operators;
-global using FluentAssertions;
+global using Shouldly;
 global using QueryFramework.Abstractions;
 global using QueryFramework.Abstractions.Builders;
 global using QueryFramework.Abstractions.Builders.Extensions;

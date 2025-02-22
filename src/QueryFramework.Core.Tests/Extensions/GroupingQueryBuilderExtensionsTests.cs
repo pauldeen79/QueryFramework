@@ -12,7 +12,7 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.GroupBy(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("MyField"));
 
         // Assert
-        result.GroupByFields.Should().HaveCount(1);
+        result.GroupByFields.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.GroupBy(new[] { new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("MyField") }.AsEnumerable());
 
         // Assert
-        result.GroupByFields.Should().HaveCount(1);
+        result.GroupByFields.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.GroupBy("MyField");
 
         // Assert
-        result.GroupByFields.Should().HaveCount(1);
+        result.GroupByFields.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.GroupBy(new[] { "MyField" }.AsEnumerable());
 
         // Assert
-        result.GroupByFields.Should().HaveCount(1);
+        result.GroupByFields.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.Having(new ComposableEvaluatableBuilder());
 
         // Assert
-        result.GroupByFilter.Conditions.Should().HaveCount(1);
+        result.GroupByFilter.Conditions.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -77,6 +77,6 @@ public class GroupingQueryBuilderExtensionsTests
         var result = sut.Having(new[] { new ComposableEvaluatableBuilder() }.AsEnumerable());
 
         // Assert
-        result.GroupByFilter.Conditions.Should().HaveCount(1);
+        result.GroupByFilter.Conditions.Count.ShouldBe(1);
     }
 }

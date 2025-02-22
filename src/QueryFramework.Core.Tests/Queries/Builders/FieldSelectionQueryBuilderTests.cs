@@ -9,13 +9,13 @@ public class FieldSelectionQueryBuilderTests
         var sut = new FieldSelectionQueryBuilder();
 
         // Assert
-        sut.Filter.Conditions.Should().BeEmpty();
-        sut.Distinct.Should().BeFalse();
-        sut.FieldNames.Should().BeEmpty();
-        sut.GetAllFields.Should().BeFalse();
-        sut.Limit.Should().BeNull();
-        sut.Offset.Should().BeNull();
-        sut.OrderByFields.Should().BeEmpty();
+        sut.Filter.Conditions.ShouldBeEmpty();
+        sut.Distinct.ShouldBeFalse();
+        sut.FieldNames.ShouldBeEmpty();
+        sut.GetAllFields.ShouldBeFalse();
+        sut.Limit.ShouldBeNull();
+        sut.Offset.ShouldBeNull();
+        sut.OrderByFields.ShouldBeEmpty();
     }
 
     [Fact]
@@ -45,13 +45,13 @@ public class FieldSelectionQueryBuilderTests
         };
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Distinct.Should().Be(distinct);
-        sut.FieldNames.Should().BeEquivalentTo(fields);
-        sut.GetAllFields.Should().Be(getAllFields);
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions);
+        sut.Distinct.ShouldBe(distinct);
+        sut.FieldNames.ToArray().ShouldBeEquivalentTo(fields);
+        sut.GetAllFields.ShouldBe(getAllFields);
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
     }
 
     [Fact]
@@ -82,13 +82,13 @@ public class FieldSelectionQueryBuilderTests
         var actual = sut.BuildTyped();
 
         // Assert
-        actual.Should().NotBeNull();
-        actual.Distinct.Should().Be(sut.Distinct);
-        actual.GetAllFields.Should().Be(sut.GetAllFields);
-        actual.Limit.Should().Be(sut.Limit);
-        actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
-        actual.FieldNames.Should().HaveCount(sut.FieldNames.Count);
-        actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
+        actual.ShouldNotBeNull();
+        actual.Distinct.ShouldBe(sut.Distinct);
+        actual.GetAllFields.ShouldBe(sut.GetAllFields);
+        actual.Limit.ShouldBe(sut.Limit);
+        actual.Offset.ShouldBe(sut.Offset);
+        actual.Filter.Conditions.Count.ShouldBe(sut.Filter.Conditions.Count);
+        actual.FieldNames.Count.ShouldBe(sut.FieldNames.Count);
+        actual.OrderByFields.Count.ShouldBe(sut.OrderByFields.Count);
     }
 }

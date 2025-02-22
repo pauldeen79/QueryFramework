@@ -19,8 +19,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -38,8 +38,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -61,8 +61,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -84,9 +84,9 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetSqlExpression(queryMock, expression, evaluatorMock, fieldInfoMock, parameterBag, out var result);
 
             // Assert
-            actual.Should().BeTrue();
-            result.Should().Be("@p0");
-            parameterBag.Parameters.Select(x => x.Value).Should().BeEquivalentTo(new object[] { "Value" });
+            actual.ShouldBeTrue();
+            result.ShouldBe("@p0");
+            parameterBag.Parameters.Select(x => x.Value).ToArray().ShouldBeEquivalentTo(new object[] { "Value" });
         }
     }
 
@@ -106,8 +106,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -124,8 +124,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -146,8 +146,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
             // Assert
-            actual.Should().BeFalse();
-            result.Should().BeNull();
+            actual.ShouldBeFalse();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -168,8 +168,8 @@ public class QueryParameterExpressionEvaluatorProviderTests : TestBase<QueryPara
             var actual = sut.TryGetLengthExpression(queryMock, expression, evaluatorMock, fieldInfoMock, out var result);
 
             // Assert
-            actual.Should().BeTrue();
-            result.Should().Be("Value".Length.ToString());
+            actual.ShouldBeTrue();
+            result.ShouldBe("Value".Length.ToString());
         }
     }
 }

@@ -16,16 +16,16 @@ public class QueryBuilderExtensionsTests
             .IsGreaterThan("value");
 
         // Assert
-        actual.Filter.Conditions.Should().HaveCount(1);
+        actual.Filter.Conditions.Count.ShouldBe(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
         var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
-        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
-        firstCondition.Operator.Should().BeOfType<IsGreaterOperatorBuilder>();
-        firstCondition.StartGroup.Should().BeTrue();
-        firstCondition.EndGroup.Should().BeTrue();
-        firstCondition.Combination.Should().Be(Combination.Or);
-        value.Should().Be("value");
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.ShouldBe("field");
+        firstCondition.Operator.ShouldBeOfType<IsGreaterOperatorBuilder>();
+        firstCondition.StartGroup.ShouldBeTrue();
+        firstCondition.EndGroup.ShouldBeTrue();
+        firstCondition.Combination.ShouldBe(Combination.Or);
+        value.ShouldBe("value");
     }
 
     [Fact]
@@ -42,16 +42,16 @@ public class QueryBuilderExtensionsTests
             .IsGreaterThan("value");
 
         // Assert
-        actual.Filter.Conditions.Should().HaveCount(1);
+        actual.Filter.Conditions.Count.ShouldBe(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
         var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
-        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
-        firstCondition.Operator.Should().BeOfType<IsGreaterOperatorBuilder>();
-        firstCondition.StartGroup.Should().BeTrue();
-        firstCondition.EndGroup.Should().BeTrue();
-        firstCondition.Combination.Should().Be(Combination.Or);
-        value.Should().Be("value");
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.ShouldBe("field");
+        firstCondition.Operator.ShouldBeOfType<IsGreaterOperatorBuilder>();
+        firstCondition.StartGroup.ShouldBeTrue();
+        firstCondition.EndGroup.ShouldBeTrue();
+        firstCondition.Combination.ShouldBe(Combination.Or);
+        value.ShouldBe("value");
     }
 
     [Fact]
@@ -90,16 +90,16 @@ public class QueryBuilderExtensionsTests
         var actual = sut.OrderByDescending("Field1", "Field2", "Field3");
 
         // Assert
-        actual.OrderByFields.Should().HaveCount(3);
+        actual.OrderByFields.Count.ShouldBe(3);
         var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
         var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
         var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
-        field0.ToString().Should().Be("Field1");
-        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Descending);
-        field1.ToString().Should().Be("Field2");
-        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Descending);
-        field2.ToString().Should().Be("Field3");
-        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Descending);
+        field0.ToString().ShouldBe("Field1");
+        actual.OrderByFields[0].Order.ShouldBe(QuerySortOrderDirection.Descending);
+        field1.ToString().ShouldBe("Field2");
+        actual.OrderByFields[1].Order.ShouldBe(QuerySortOrderDirection.Descending);
+        field2.ToString().ShouldBe("Field3");
+        actual.OrderByFields[2].Order.ShouldBe(QuerySortOrderDirection.Descending);
     }
 
     [Fact]
@@ -112,16 +112,16 @@ public class QueryBuilderExtensionsTests
         var actual = sut.ThenBy("Field2", "Field3");
 
         // Assert
-        actual.OrderByFields.Should().HaveCount(3);
+        actual.OrderByFields.Count.ShouldBe(3);
         var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
         var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
         var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
-        field0.ToString().Should().Be("Field1");
-        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.ToString().Should().Be("Field2");
-        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.ToString().Should().Be("Field3");
-        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Ascending);
+        field0.ToString().ShouldBe("Field1");
+        actual.OrderByFields[0].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field1.ToString().ShouldBe("Field2");
+        actual.OrderByFields[1].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field2.ToString().ShouldBe("Field3");
+        actual.OrderByFields[2].Order.ShouldBe(QuerySortOrderDirection.Ascending);
     }
 
     [Fact]
@@ -134,16 +134,16 @@ public class QueryBuilderExtensionsTests
         var actual = sut.ThenByDescending("Field3");
 
         // Assert
-        actual.OrderByFields.Should().HaveCount(3);
+        actual.OrderByFields.Count.ShouldBe(3);
         var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
         var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
         var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
-        field0.ToString().Should().Be("Field1");
-        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.ToString().Should().Be("Field2");
-        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.ToString().Should().Be("Field3");
-        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Descending);
+        field0.ToString().ShouldBe("Field1");
+        actual.OrderByFields[0].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field1.ToString().ShouldBe("Field2");
+        actual.OrderByFields[1].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field2.ToString().ShouldBe("Field3");
+        actual.OrderByFields[2].Order.ShouldBe(QuerySortOrderDirection.Descending);
     }
 
     [Fact]
@@ -156,7 +156,7 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Offset(100);
 
         // Assert
-        actual.Offset.Should().Be(100);
+        actual.Offset.ShouldBe(100);
     }
 
     [Fact]
@@ -169,7 +169,7 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Limit(200);
 
         // Assert
-        actual.Limit.Should().Be(200);
+        actual.Limit.ShouldBe(200);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Skip(100);
 
         // Assert
-        actual.Offset.Should().Be(100);
+        actual.Offset.ShouldBe(100);
     }
 
     [Fact]
@@ -195,7 +195,7 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Take(200);
 
         // Assert
-        actual.Limit.Should().Be(200);
+        actual.Limit.ShouldBe(200);
     }
 
     [Fact]
@@ -208,13 +208,13 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Where("field").IsEqualTo("value");
 
         // Assert
-        actual.Filter.Conditions.Should().HaveCount(1);
+        actual.Filter.Conditions.Count.ShouldBe(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
         var value = (firstCondition.RightExpression as TypedConstantExpressionBuilder<string>)?.Value;
-        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
-        firstCondition.Operator.Should().BeOfType<EqualsOperatorBuilder>();
-        value.Should().Be("value");
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.ShouldBe("field");
+        firstCondition.Operator.ShouldBeOfType<EqualsOperatorBuilder>();
+        value.ShouldBe("value");
     }
 
     [Fact]
@@ -227,25 +227,25 @@ public class QueryBuilderExtensionsTests
         var actual = sut.Where("field").IsNull();
 
         // Assert
-        actual.Filter.Conditions.Should().HaveCount(1);
+        actual.Filter.Conditions.Count.ShouldBe(1);
         var firstCondition = actual.Filter.Conditions.OfType<ComposableEvaluatableBuilder>().First();
         var field = firstCondition.LeftExpression as FieldExpressionBuilder;
-        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("field");
-        firstCondition.Operator.Should().BeOfType<IsNullOperatorBuilder>();
-        firstCondition.RightExpression.Should().BeOfType<EmptyExpressionBuilder>();
+        ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.ShouldBe("field");
+        firstCondition.Operator.ShouldBeOfType<IsNullOperatorBuilder>();
+        firstCondition.RightExpression.ShouldBeOfType<EmptyExpressionBuilder>();
     }
 
     private static void AssertOrderBy(SingleEntityQueryBuilder actual)
     {
-        actual.OrderByFields.Should().HaveCount(3);
+        actual.OrderByFields.Count.ShouldBe(3);
         var field0 = actual.OrderByFields[0].FieldNameExpression.Build().GetFieldName();
         var field1 = actual.OrderByFields[1].FieldNameExpression.Build().GetFieldName();
         var field2 = actual.OrderByFields[2].FieldNameExpression.Build().GetFieldName();
-        field0.ToString().Should().Be("Field1");
-        actual.OrderByFields[0].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field1.ToString().Should().Be("Field2");
-        actual.OrderByFields[1].Order.Should().Be(QuerySortOrderDirection.Ascending);
-        field2.ToString().Should().Be("Field3");
-        actual.OrderByFields[2].Order.Should().Be(QuerySortOrderDirection.Ascending);
+        field0.ToString().ShouldBe("Field1");
+        actual.OrderByFields[0].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field1.ToString().ShouldBe("Field2");
+        actual.OrderByFields[1].Order.ShouldBe(QuerySortOrderDirection.Ascending);
+        field2.ToString().ShouldBe("Field3");
+        actual.OrderByFields[2].Order.ShouldBe(QuerySortOrderDirection.Ascending);
     }
 }

@@ -11,9 +11,9 @@ public class ParameterizedQueryBuilderExtensionsTests : TestBase
             var sut = Fixture.Freeze<IParameterizedQueryBuilder>();
 
             // Act & Assert
-            sut.Invoking(x => x.AddParameter(name: null!, "some value"))
-               .Should().Throw<ArgumentNullException>()
-               .WithParameterName("name");
+            Action a = () => sut.AddParameter(name: null!, "some value");
+            a.ShouldThrow<ArgumentNullException>()
+             .ParamName.ShouldBe("name");
         }
 
         [Fact]
@@ -28,9 +28,9 @@ public class ParameterizedQueryBuilderExtensionsTests : TestBase
             _ = sut.AddParameter("Name", "some value");
 
             // Assert
-            parameterList.Should().HaveCount(1);
-            parameterList[0].Name.Should().Be("Name");
-            parameterList[0].Value.Should().BeEquivalentTo("some value");
+            parameterList.Count.ShouldBe(1);
+            parameterList[0].Name.ShouldBe("Name");
+            parameterList[0].Value.ShouldBeEquivalentTo("some value");
         }
 
         [Fact]
@@ -41,15 +41,15 @@ public class ParameterizedQueryBuilderExtensionsTests : TestBase
             var parameterList = new List<IQueryParameterBuilder>();
             sut.Parameters.ReturnsForAnyArgs(parameterList);
             _ = sut.AddParameter("Name", "some value");
-            parameterList.Should().HaveCount(1);
+            parameterList.Count.ShouldBe(1);
 
             // Act
             var parameter = parameterList[0].Build();
             var builder = parameter.ToBuilder();
 
             // Assert
-            builder.Name.Should().Be(parameterList[0].Name);
-            builder.Value.Should().BeEquivalentTo(parameterList[0].Value);
+            builder.Name.ShouldBe(parameterList[0].Name);
+            builder.Value.ShouldBeEquivalentTo(parameterList[0].Value);
         }
     }
 }

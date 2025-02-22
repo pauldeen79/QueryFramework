@@ -13,9 +13,9 @@ public class DefaultQueryFieldInfoFactoryTests
         var query = new SingleEntityQueryBuilder().BuildTyped();
 
         // Act
-        sut.Invoking(x => x.Create(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Query field info provider of type [QueryFramework.SqlServer.Tests.TestHelpers.QueryFieldInfoProviderMock] provided an empty result");
+        Action a = () => sut.Create(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Query field info provider of type [QueryFramework.SqlServer.Tests.TestHelpers.QueryFieldInfoProviderMock] provided an empty result");
     }
 
     [Fact]
@@ -29,9 +29,9 @@ public class DefaultQueryFieldInfoFactoryTests
         var query = new SingleEntityQueryBuilder().BuildTyped();
 
         // Act
-        sut.Invoking(x => x.Create(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] does not have a query field info provider");
+        Action a = () => sut.Create(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Query type [QueryFramework.Core.Queries.SingleEntityQuery] does not have a query field info provider");
     }
 
     [Fact]
@@ -50,6 +50,6 @@ public class DefaultQueryFieldInfoFactoryTests
         var actual = sut.Create(query);
 
         // Assert
-        actual.Should().BeSameAs(queryFieldInfo);
+        actual.ShouldBeSameAs(queryFieldInfo);
     }
 }

@@ -13,9 +13,9 @@ public class DefaultDataFactoryTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        sut.Invoking(x => x.GetData<object>(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.DataProviderMock] for data type [System.Object] provided an empty result");
+        Action a = () => sut.GetData<object>(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.DataProviderMock] for data type [System.Object] provided an empty result");
     }
 
     [Fact]
@@ -29,9 +29,9 @@ public class DefaultDataFactoryTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        sut.Invoking(x => x.GetData<object>(query, default))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.ContextDataProviderMock] for data type [System.Object] provided an empty result");
+        Action a = () => sut.GetData<object>(query, default);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Data provider of type [QueryFramework.InMemory.Tests.TestHelpers.ContextDataProviderMock] for data type [System.Object] provided an empty result");
     }
 
     [Fact]
@@ -45,9 +45,9 @@ public class DefaultDataFactoryTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        sut.Invoking(x => x.GetData<object>(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [System.Object] does not have a data provider");
+        Action a = () => sut.GetData<object>(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Query type [QueryFramework.Core.Queries.SingleEntityQuery] for data type [System.Object] does not have a data provider");
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class DefaultDataFactoryTests
         var actual = sut.GetData<object>(query);
 
         // Assert
-        actual.Should().BeSameAs(data);
+        actual.ShouldBeSameAs(data);
     }
 
     [Fact]
@@ -83,6 +83,6 @@ public class DefaultDataFactoryTests
         var actual = sut.GetData<object>(query, data);
 
         // Assert
-        actual.Should().BeSameAs(data);
+        actual.ShouldBeSameAs(data);
     }
 }

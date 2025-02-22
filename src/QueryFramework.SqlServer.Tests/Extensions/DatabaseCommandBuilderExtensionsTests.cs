@@ -41,7 +41,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Select(_settingsMock, _fieldInfoMock, query, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Select(_settingsMock, _fieldInfoMock, query, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT Field1, Field2, Field3 FROM MyTable");
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Select(_settingsMock, _fieldInfoMock, query, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1, Field2, Field3 FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT Field1, Field2, Field3 FROM MyTable");
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Select(_settingsMock, _fieldInfoMock, query, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT Field1A, Field2A, Field3A FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT Field1A, Field2A, Field3A FROM MyTable");
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Where(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Where(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field = @p0");
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Where(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0");
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Where(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field = @p0 AND Field2 IS NOT NULL");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field = @p0 AND Field2 IS NOT NULL");
     }
 
     [Fact]
@@ -161,7 +161,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Where(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0 AND Field2 IS NOT NULL");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field IS NOT NULL AND Field = @p0 AND Field2 IS NOT NULL");
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -204,7 +204,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable ORDER BY Field ASC");
     }
 
     [Fact]
@@ -218,7 +218,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field1 ASC, Field2 DESC");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable ORDER BY Field1 ASC, Field2 DESC");
     }
 
     [Fact]
@@ -233,7 +233,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable ORDER BY Field ASC");
     }
 
     [Fact]
@@ -248,7 +248,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY Field ASC");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable ORDER BY Field ASC");
     }
 
     [Fact]
@@ -264,7 +264,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable ORDER BY FieldA ASC");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable ORDER BY FieldA ASC");
     }
 
     [Fact]
@@ -275,9 +275,9 @@ public class DatabaseCommandBuilderExtensionsTests
         var query = new FieldSelectionQueryBuilder().OrderBy("Field").BuildTyped();
 
         // Act & Assert
-        _builder.Invoking(x => x.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag))
-                .Should().Throw<InvalidOperationException>()
-                .And.Message.Should().StartWith("Expression contains unknown field [Field]");
+        Action a = () => _builder.OrderBy(query, _settingsMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldStartWith("Expression contains unknown field [Field]");
     }
 
     [Fact]
@@ -291,7 +291,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.GroupBy(null, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -304,7 +304,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.GroupBy(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -319,7 +319,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.GroupBy(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable GROUP BY Field");
     }
 
     [Fact]
@@ -335,7 +335,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.GroupBy(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY Field1, Field2");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable GROUP BY Field1, Field2");
     }
 
     [Fact]
@@ -352,7 +352,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.GroupBy(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable GROUP BY FieldA");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable GROUP BY FieldA");
     }
 
     [Fact]
@@ -370,7 +370,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Having(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable HAVING Field = @p0");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable HAVING Field = @p0");
     }
 
     [Fact]
@@ -389,7 +389,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Having(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable HAVING Field1 = @p0 AND Field2 = @p1");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable HAVING Field1 = @p0 AND Field2 = @p1");
     }
 
     [Fact]
@@ -402,7 +402,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Having(null, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -415,7 +415,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Having(_queryMock, _fieldInfoMock, _evaluatorMock, _parameterBag);
 
         // Assert
-        actual.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable");
+        actual.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable");
     }
 
     [Fact]
@@ -436,7 +436,7 @@ public class DatabaseCommandBuilderExtensionsTests
                                            _builder.Where);
 
         // Assert
-        _builder.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE Field > @p0");
+        _builder.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE Field > @p0");
     }
 
     [Fact]
@@ -460,7 +460,7 @@ public class DatabaseCommandBuilderExtensionsTests
                                       _builder.Where);
 
         // Assert
-        _builder.Build().DataCommand.CommandText.Should().Be("SELECT * FROM MyTable WHERE CustomField > @p0");
+        _builder.Build().DataCommand.CommandText.ShouldBe("SELECT * FROM MyTable WHERE CustomField > @p0");
     }
 
     [Fact]
@@ -472,18 +472,18 @@ public class DatabaseCommandBuilderExtensionsTests
         _builder.From("MyTable");
 
         // Act
-        _builder.Invoking(x => x.AppendQueryCondition(_queryMock,
-                                                      new ComposableEvaluatableBuilder()
-                                                        .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
-                                                        .WithOperator(new IsGreaterOperatorBuilder())
-                                                        .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
-                                                        .BuildTyped(),
-                                                      _fieldInfoMock,
-                                                      _evaluatorMock,
-                                                      _parameterBag,
-                                                      _builder.Where))
-                .Should().Throw<InvalidOperationException>()
-                .And.Message.Should().StartWith("Expression contains unknown field [Field]");
+        Action a = () => _builder.AppendQueryCondition(_queryMock,
+                                                       new ComposableEvaluatableBuilder()
+                                                         .WithLeftExpression(new FieldExpressionBuilder().WithExpression(new ContextExpressionBuilder()).WithFieldName("Field"))
+                                                         .WithOperator(new IsGreaterOperatorBuilder())
+                                                         .WithRightExpression(new ConstantExpressionBuilder().WithValue("value"))
+                                                         .BuildTyped(),
+                                                       _fieldInfoMock,
+                                                       _evaluatorMock,
+                                                       _parameterBag,
+                                                       _builder.Where);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldStartWith("Expression contains unknown field [Field]");
     }
 
     [Theory]
@@ -511,7 +511,7 @@ public class DatabaseCommandBuilderExtensionsTests
                                       _builder.Where);
 
         // Assert
-        _builder.Build().DataCommand.CommandText.Should().Be($"SELECT * FROM MyTable WHERE {expectedCommandText}");
+        _builder.Build().DataCommand.CommandText.ShouldBe($"SELECT * FROM MyTable WHERE {expectedCommandText}");
     }
 
     [Theory]
@@ -546,7 +546,7 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.Build().DataCommand;
 
         // Assert
-        actual.CommandText.Should().Be($"SELECT * FROM MyTable WHERE {expectedCommandText}");
+        actual.CommandText.ShouldBe($"SELECT * FROM MyTable WHERE {expectedCommandText}");
     }
 
     [Fact]
@@ -563,10 +563,10 @@ public class DatabaseCommandBuilderExtensionsTests
         var actual = _builder.WithParameters(query, parameterBag);
 
         // Assert
-        actual.CommandParameters.Should().HaveCount(2);
-        actual.CommandParameters.First().Key.Should().Be("name");
-        actual.CommandParameters.First().Value.Should().Be("Value1");
-        actual.CommandParameters.Last().Key.Should().Be("@p0");
-        actual.CommandParameters.Last().Value.Should().Be("Value2");
+        actual.CommandParameters.Count.ShouldBe(2);
+        actual.CommandParameters.First().Key.ShouldBe("name");
+        actual.CommandParameters.First().Value.ShouldBe("Value1");
+        actual.CommandParameters.Last().Key.ShouldBe("@p0");
+        actual.CommandParameters.Last().Value.ShouldBe("Value2");
     }
 }

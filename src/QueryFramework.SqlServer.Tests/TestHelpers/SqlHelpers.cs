@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests.TestHelpers;
+namespace QueryFramework.SqlServer.Tests.TestHelpers;
 
 internal static class SqlHelpers
 {
@@ -12,7 +12,7 @@ internal static class SqlHelpers
         var actual = GetExpressionCommand(queryBuilder.Build()).CommandText;
 
         // Assert
-        actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+        actual.ShouldBe($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
     internal static void ExpressionSqlShouldBe<T>(ITypedExpressionBuilder<T> expression, string expectedSqlForExpression)
@@ -29,7 +29,7 @@ internal static class SqlHelpers
         ).CommandText;
 
         // Assert
-        actual.Should().Be($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
+        actual.ShouldBe($"SELECT * FROM MyEntity WHERE {expectedSqlForExpression} = @p0");
     }
 
     internal static IDatabaseCommand GetExpressionCommand(IQuery query)

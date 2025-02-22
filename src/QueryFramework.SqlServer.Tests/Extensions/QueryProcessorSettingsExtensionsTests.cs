@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests.Extensions;
+namespace QueryFramework.SqlServer.Tests.Extensions;
 
 public class QueryProcessorSettingsExtensionsTests
 {
@@ -18,6 +18,6 @@ public class QueryProcessorSettingsExtensionsTests
         var actual = sut.WithDefaultTableName(EntityTypeName);
 
         // Assert
-        actual.TableName.Should().Be(expectedOutput);
+        actual.TableName.ShouldBe(expectedOutput);
     }
 }

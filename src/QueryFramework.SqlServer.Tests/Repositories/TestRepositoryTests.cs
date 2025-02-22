@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.SqlServer.Tests.Repositories;
+namespace QueryFramework.SqlServer.Tests.Repositories;
 
 public class TestRepositoryTests : TestBase<TestRepository>
 {
@@ -15,10 +15,10 @@ public class TestRepositoryTests : TestBase<TestRepository>
         entity = Sut.Add(entity);
 
         // Assert
-        entity.Should().NotBeNull();
+        entity.ShouldNotBeNull();
         if (entity is not null)
         {
-            entity.Id.Should().Be(1);
+            entity.Id.ShouldBe(1);
         }
     }
 
@@ -35,10 +35,10 @@ public class TestRepositoryTests : TestBase<TestRepository>
         entity = Sut.Update(entity);
 
         // Assert
-        entity.Should().NotBeNull();
+        entity.ShouldNotBeNull();
         if (entity is not null)
         {
-            entity.Id.Should().Be(1);
+            entity.Id.ShouldBe(1);
         }
     }
 
@@ -55,10 +55,10 @@ public class TestRepositoryTests : TestBase<TestRepository>
         entity = Sut.Delete(entity);
 
         // Assert
-        entity.Should().NotBeNull();
+        entity.ShouldNotBeNull();
         if (entity is not null)
         {
-            entity.Id.Should().Be(2);
+            entity.Id.ShouldBe(2);
         }
     }
 
@@ -74,11 +74,11 @@ public class TestRepositoryTests : TestBase<TestRepository>
         var entity = Sut.Find(new TestEntityIdentity { Id = 1 });
 
         // Assert
-        entity.Should().NotBeNull();
+        entity.ShouldNotBeNull();
         if (entity is not null)
         {
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            entity.Id.ShouldBe(1);
+            entity.Name.ShouldBe("Test");
         }
     }
 
@@ -94,11 +94,11 @@ public class TestRepositoryTests : TestBase<TestRepository>
         var entity = Sut.FindUsingCommand(new TestEntityIdentity { Id = 1 });
 
         // Assert
-        entity.Should().NotBeNull();
+        entity.ShouldNotBeNull();
         if (entity is not null)
         {
-            entity.Id.Should().Be(1);
-            entity.Name.Should().Be("Test");
+            entity.Id.ShouldBe(1);
+            entity.Name.ShouldBe("Test");
         }
     }
 }

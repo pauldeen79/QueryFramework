@@ -13,9 +13,9 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        sut.Invoking(x => x.Create<object>(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Database entity retriever provider of data type [System.Object] for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
+        Action a = () => sut.Create<object>(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Database entity retriever provider of data type [System.Object] for query type [QueryFramework.Core.Queries.SingleEntityQuery] provided an empty result");
     }
 
     [Fact]
@@ -29,9 +29,9 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         var query = new SingleEntityQueryBuilder().Build();
 
         // Act
-        sut.Invoking(x => x.Create<object>(query))
-           .Should().ThrowExactly<InvalidOperationException>()
-           .WithMessage("Data type [System.Object] does not have a database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
+        Action a = () => sut.Create<object>(query);
+        a.ShouldThrow<InvalidOperationException>()
+         .Message.ShouldBe("Data type [System.Object] does not have a database entity retriever provider for query type [QueryFramework.Core.Queries.SingleEntityQuery]");
     }
 
     [Fact]
@@ -50,6 +50,6 @@ public class DefaultDatabaseEntityRetrieverFactoryTests
         var actual = sut.Create<object>(query);
 
         // Assert
-        actual.Should().BeSameAs(settings);
+        actual.ShouldBeSameAs(settings);
     }
 }

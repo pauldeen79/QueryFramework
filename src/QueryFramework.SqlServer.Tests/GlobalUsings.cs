@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.Collections;
 global using System.Collections.Generic;
 global using System.ComponentModel.DataAnnotations;
@@ -26,7 +26,7 @@ global using ExpressionFramework.Domain.Contracts;
 global using ExpressionFramework.Domain.Domains;
 global using ExpressionFramework.Domain.Evaluatables;
 global using ExpressionFramework.Domain.Expressions;
-global using FluentAssertions;
+global using Shouldly;
 global using Microsoft.Extensions.DependencyInjection;
 global using NSubstitute;
 global using QueryFramework.Abstractions;

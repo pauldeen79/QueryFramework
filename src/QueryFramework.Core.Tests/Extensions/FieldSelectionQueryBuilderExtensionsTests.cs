@@ -12,10 +12,10 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.Select("FieldName");
 
         // Assert
-        actual.FieldNames.Should().HaveCount(1);
+        actual.FieldNames.Count.ShouldBe(1);
         var field = actual.FieldNames[0];
-        field.Should().Be("FieldName");
-        actual.Distinct.Should().BeFalse();
+        field.ShouldBe("FieldName");
+        actual.Distinct.ShouldBeFalse();
     }
 
     [Fact]
@@ -28,12 +28,12 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.Select("FieldName1", "FieldName2");
 
         // Assert
-        actual.FieldNames.Should().HaveCount(2);
+        actual.FieldNames.Count.ShouldBe(2);
         var firstField = actual.FieldNames[0];
-        firstField.Should().Be("FieldName1");
+        firstField.ShouldBe("FieldName1");
         var lastField = actual.FieldNames[actual.FieldNames.Count - 1];
-        lastField.Should().Be("FieldName2");
-        actual.Distinct.Should().BeFalse();
+        lastField.ShouldBe("FieldName2");
+        actual.Distinct.ShouldBeFalse();
     }
 
     [Fact]
@@ -46,8 +46,8 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.SelectAll();
 
         // Assert
-        actual.FieldNames.Should().BeEmpty();
-        actual.GetAllFields.Should().BeTrue();
+        actual.FieldNames.ShouldBeEmpty();
+        actual.GetAllFields.ShouldBeTrue();
     }
 
     [Fact]
@@ -60,10 +60,10 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.SelectDistinct("FieldName");
 
         // Assert
-        actual.FieldNames.Should().HaveCount(1);
+        actual.FieldNames.Count.ShouldBe(1);
         var field = actual.FieldNames[0];
-        field.Should().Be("FieldName");
-        actual.Distinct.Should().BeTrue();
+        field.ShouldBe("FieldName");
+        actual.Distinct.ShouldBeTrue();
     }
 
     [Fact]
@@ -76,12 +76,12 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.SelectDistinct("FieldName1", "FieldName2");
 
         // Assert
-        actual.FieldNames.Should().HaveCount(2);
+        actual.FieldNames.Count.ShouldBe(2);
         var firstField = actual.FieldNames[0];
-        firstField.Should().Be("FieldName1");
+        firstField.ShouldBe("FieldName1");
         var lastField = actual.FieldNames[actual.FieldNames.Count - 1];
-        lastField.Should().Be("FieldName2");
-        actual.Distinct.Should().BeTrue();
+        lastField.ShouldBe("FieldName2");
+        actual.Distinct.ShouldBeTrue();
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.Distinct();
 
         // Assert
-        actual.Distinct.Should().BeTrue();
+        actual.Distinct.ShouldBeTrue();
     }
 
     [Fact]
@@ -107,6 +107,6 @@ public class FieldSelectionQueryBuilderExtensionsTests
         var actual = sut.GetAllFields();
 
         // Assert
-        actual.GetAllFields.Should().BeTrue();
+        actual.GetAllFields.ShouldBeTrue();
     }
 }

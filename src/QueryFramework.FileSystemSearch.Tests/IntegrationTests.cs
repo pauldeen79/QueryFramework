@@ -23,9 +23,9 @@ public sealed class IntegrationTests : IDisposable
             .ToArray();
 
         // Assert
-        actual.Should().ContainSingle();
-        actual[0].Directory.Should().EndWith("FileSystemSearch.Tests");
-        actual[0].FileName.Should().Be("IntegrationTests.cs");
+        actual.ShouldHaveSingleItem();
+        actual[0].Directory.ShouldEndWith("FileSystemSearch.Tests");
+        actual[0].FileName.ShouldBe("IntegrationTests.cs");
     }
 
     [Fact]
@@ -40,8 +40,8 @@ public sealed class IntegrationTests : IDisposable
             .ToArray();
 
         // Assert
-        actual.Should().ContainSingle();
-        actual[0].Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_Linq)}() //*");
+        actual.ShouldHaveSingleItem();
+        actual[0].Line.ShouldBe($"    public void {nameof(Can_Query_Contents_Using_Linq)}() //*");
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public sealed class IntegrationTests : IDisposable
             .ToArray();
 
         // Assert
-        actual.Should().BeEmpty(); //we only want to use file-scoped namespaces!
+        actual.ShouldBeEmpty(); //we only want to use file-scoped namespaces!
     }
 
     [Fact]
@@ -73,13 +73,13 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<FileData>(query);
 
         // Assert
-        actual.Should().ContainSingle();
-        actual.First().Directory.Should().EndWith("FileSystemSearch.Tests");
-        actual.First().FileName.Should().Be("IntegrationTests.cs");
-        actual.First().Extension.Should().Be(".cs");
-        actual.First().DateCreated.Should().BeAfter(DateTime.MinValue);
-        actual.First().DateLastModified.Should().BeAfter(DateTime.MinValue);
-        actual.First().Contents.Should().NotBeEmpty();
+        actual.ShouldHaveSingleItem();
+        actual.First().Directory.ShouldEndWith("FileSystemSearch.Tests");
+        actual.First().FileName.ShouldBe("IntegrationTests.cs");
+        actual.First().Extension.ShouldBe(".cs");
+        actual.First().DateCreated.ShouldNotBe(DateTime.MinValue);
+        actual.First().DateLastModified.ShouldNotBe(DateTime.MinValue);
+        actual.First().Contents.ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -98,10 +98,10 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<LineData>(query);
 
         // Assert
-        actual.Should().ContainSingle();
-        actual.First().Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
-        actual.First().LineNumber.Should().BeGreaterThan(0);
-        actual.First().FileData.FileName.Should().NotBeEmpty();
+        actual.ShouldHaveSingleItem();
+        actual.First().Line.ShouldBe($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
+        actual.First().LineNumber.ShouldBeGreaterThan(0);
+        actual.First().FileData.FileName.ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -121,10 +121,10 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<LineData>(query);
 
         // Assert
-        actual.Should().ContainSingle();
-        actual.First().Line.Should().Be($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
-        actual.First().LineNumber.Should().BeGreaterThan(0);
-        actual.First().FileData.FileName.Should().NotBeEmpty();
+        actual.ShouldHaveSingleItem();
+        actual.First().Line.ShouldBe($"    public void {nameof(Can_Query_Contents_Using_QueryProcessor)}() //*");
+        actual.First().LineNumber.ShouldBeGreaterThan(0);
+        actual.First().FileData.FileName.ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<LineData>(query);
 
         // Assert
-        actual.Should().BeEmpty(); //we only want to use file-scoped namespaces!
+        actual.ShouldBeEmpty(); //we only want to use file-scoped namespaces!
     }
 
     [Fact]
@@ -164,7 +164,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<LineData>(query);
 
         // Assert
-        actual.Should().BeEmpty(); //we only want to use global usings!
+        actual.ShouldBeEmpty(); //we only want to use global usings!
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public sealed class IntegrationTests : IDisposable
         var actual = processor.FindMany<LineData>(query);
 
         // Assert
-        actual.Should().BeEmpty(); //filesystem is not read, because condition is false!
+        actual.ShouldBeEmpty(); //filesystem is not read, because condition is false!
     }
 
     private IQueryProcessor CreateSut() => _serviceProvider.GetRequiredService<IQueryProcessor>();

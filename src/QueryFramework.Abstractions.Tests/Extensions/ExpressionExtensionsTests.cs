@@ -12,7 +12,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue(default);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue(default);
 
         // Assert
-        result.Should().Be("AA");
+        result.ShouldBe("AA");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue(default);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue(default);
 
         // Assert
-        result.Should().Be("AA");
+        result.ShouldBe("AA");
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue(default);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue("AA");
 
         // Assert
-        result.Should().Be("AA");
+        result.ShouldBe("AA");
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class ExpressionExtensionsTests
         var result = input.TryGetValue("context is ignored here");
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -100,7 +100,8 @@ public class ExpressionExtensionsTests
         var input = new EmptyExpressionBuilder().Build();
 
         // Act
-        input.Invoking(x => x.GetFieldName()).Should().Throw<NotSupportedException>();
+        Action a = () => input.GetFieldName();
+        a.ShouldThrow<NotSupportedException>();
     }
 
     [Fact]
@@ -113,7 +114,7 @@ public class ExpressionExtensionsTests
         var name = input.GetFieldName();
 
         // Assert
-        name.Should().Be("Name");
+        name.ShouldBe("Name");
     }
 
     [Fact]
@@ -126,6 +127,6 @@ public class ExpressionExtensionsTests
         var name = input.GetFieldName();
 
         // Assert
-        name.Should().Be("Name");
+        name.ShouldBe("Name");
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace QueryFramework.Core.Tests.Builders.Queries;
+namespace QueryFramework.Core.Tests.Builders.Queries;
 
 public class SingleEntityQueryBuilderTests
 {
@@ -15,7 +15,7 @@ public class SingleEntityQueryBuilderTests
         var success = sut.TryValidate(validationResults);
 
         // Assert
-        success.Should().BeFalse();
-        validationResults.Should().ContainSingle(); //validation errors of QuerySortOrder should be included
+        success.ShouldBeFalse();
+        validationResults.ShouldHaveSingleItem(); //validation errors of QuerySortOrder should be included
     }
 }

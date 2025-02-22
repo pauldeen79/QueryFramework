@@ -7,10 +7,10 @@ public class OperatorExtensionsTests
     {
         // Arrange
         var @operator = new UnsupportedOperator();
-        
+
         // Act & Assert
-        @operator.Invoking(x => x.ToSql())
-                 .Should().Throw<ArgumentOutOfRangeException>();
+        Action a = () => @operator.ToSql();
+        a.ShouldThrow<ArgumentOutOfRangeException>();
     }
 
     [Theory]
@@ -30,8 +30,8 @@ public class OperatorExtensionsTests
         var @operator = ((OperatorBuilder)Activator.CreateInstance(input)!).Build();
 
         // Act & Assert
-        @operator.Invoking(x => x.ToSql())
-                 .Should().Throw<ArgumentOutOfRangeException>();
+        Action a = () => @operator.ToSql();
+        a.ShouldThrow<ArgumentOutOfRangeException>();
     }
 
     [Theory]
@@ -50,7 +50,7 @@ public class OperatorExtensionsTests
         var actual = @operator.ToSql();
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 
     [Theory]
@@ -68,7 +68,7 @@ public class OperatorExtensionsTests
         var actual  = @operator.ToNot();
 
         // Assert
-        actual.Should().Be(expectedOutput);
+        actual.ShouldBe(expectedOutput);
     }
 
     private sealed record UnsupportedOperator : Operator

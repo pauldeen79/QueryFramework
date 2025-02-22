@@ -186,7 +186,7 @@ public class ComposableEvaluatableFieldNameBuilderWrapperTests
         var field = leftExpression as FieldExpressionBuilder;
         if (rightExpression is TypedDelegateExpressionBuilder<string> typedDelegateExpressionBuilder)
         {
-            typedDelegateExpressionBuilder.Value.Should().NotBeNull();
+            typedDelegateExpressionBuilder.Value.ShouldNotBeNull();
 
             var value = typedDelegateExpressionBuilder.Value.Invoke(null); //context is ignored
             if (expectedOperatorType == typeof(IsNullOperator)
@@ -196,18 +196,18 @@ public class ComposableEvaluatableFieldNameBuilderWrapperTests
                 || expectedOperatorType == typeof(IsNotNullOrEmptyOperator)
                 || expectedOperatorType == typeof(IsNotNullOrWhiteSpaceOperator))
             {
-                value.Should().BeNull();
+                value.ShouldBeNull();
             }
             else
             {
-                value.Should().Be("value");
+                value.ShouldBe("value");
             }
         }
         else
         {
             var value = (rightExpression as ConstantExpressionBuilder)?.Value
                 ?? (rightExpression as TypedConstantExpressionBuilder<string>)?.Value;
-            ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.Should().Be("fieldname");
+            ((TypedConstantExpressionBuilder<string>)field!.FieldNameExpression).Value.ShouldBe("fieldname");
             if (expectedOperatorType == typeof(IsNullOperator)
                 || expectedOperatorType == typeof(IsNullOrEmptyOperator)
                 || expectedOperatorType == typeof(IsNullOrWhiteSpaceOperator)
@@ -215,14 +215,14 @@ public class ComposableEvaluatableFieldNameBuilderWrapperTests
                 || expectedOperatorType == typeof(IsNotNullOrEmptyOperator)
                 || expectedOperatorType == typeof(IsNotNullOrWhiteSpaceOperator))
             {
-                value.Should().BeNull();
+                value.ShouldBeNull();
             }
             else
             {
-                value.Should().Be("value");
+                value.ShouldBe("value");
             }
         }
-        @operator.Should().NotBeNull();
-        @operator!.Build().Should().BeOfType(expectedOperatorType);
+        @operator.ShouldNotBeNull();
+        @operator!.Build().ShouldBeOfType(expectedOperatorType);
     }
 }

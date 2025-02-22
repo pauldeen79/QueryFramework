@@ -15,9 +15,9 @@ public class DefaultSqlExpressionEvaluatorTests
         var sut = CreateSut();
 
         // Act
-        sut.Invoking(x => x.GetSqlExpression(_queryMock, new EmptyExpression(), _fieldInfoMock, _parameterBag))
-           .Should().ThrowExactly<ArgumentOutOfRangeException>()
-           .And.Message.Should().StartWith("Unsupported expression: [EmptyExpression]");
+        Action a = () => sut.GetSqlExpression(_queryMock, new EmptyExpression(), _fieldInfoMock, _parameterBag);
+        a.ShouldThrow<ArgumentOutOfRangeException>()
+         .Message.ShouldStartWith("Unsupported expression: [EmptyExpression]");
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var actual = sut.GetSqlExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock, _parameterBag);
 
         // Assert
-        actual.Should().Be(result);
+        actual.ShouldBe(result);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var actual = sut.GetSqlExpression(_queryMock, new StringLengthExpression(new TypedConstantExpression<string>(expressionResult)), _fieldInfoMock, _parameterBag);
 
         // Assert
-        actual.Should().Be("Function(result)");
+        actual.ShouldBe("Function(result)");
     }
 
     [Fact]
@@ -62,9 +62,9 @@ public class DefaultSqlExpressionEvaluatorTests
         var sut = CreateSut();
 
         // Act
-        sut.Invoking(x => x.GetLengthExpression(_queryMock, new EmptyExpression(), _fieldInfoMock))
-           .Should().ThrowExactly<ArgumentOutOfRangeException>()
-           .And.Message.Should().StartWith("Unsupported expression: [EmptyExpression]");
+        Action a = () => sut.GetLengthExpression(_queryMock, new EmptyExpression(), _fieldInfoMock);
+        a.ShouldThrow<ArgumentOutOfRangeException>()
+         .Message.ShouldStartWith("Unsupported expression: [EmptyExpression]");
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class DefaultSqlExpressionEvaluatorTests
         var actual = sut.GetLengthExpression(_queryMock, new ConstantExpression(result), _fieldInfoMock);
 
         // Assert
-        actual.Should().Be(result);
+        actual.ShouldBe(result);
     }
 
     private DefaultSqlExpressionEvaluator CreateSut()

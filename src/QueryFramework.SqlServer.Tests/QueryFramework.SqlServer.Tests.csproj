@@ -1,13 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="7.0.0" />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="Objectivity.AutoFixture.XUnit2.AutoNSubstitute" Version="3.6.2" />
@@ -23,10 +22,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\QueryFramework.InMemory\QueryFramework.InMemory.csproj" />
     <ProjectReference Include="..\QueryFramework.SqlServer\QueryFramework.SqlServer.csproj" />
   </ItemGroup>
-
 </Project>

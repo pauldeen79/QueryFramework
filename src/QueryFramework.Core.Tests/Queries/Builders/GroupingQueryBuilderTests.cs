@@ -9,12 +9,12 @@ public class GroupingQueryBuilderTests
         var sut = new GroupingQueryBuilder();
 
         // Assert
-        sut.Filter.Conditions.Should().BeEmpty();
-        sut.Limit.Should().BeNull();
-        sut.Offset.Should().BeNull();
-        sut.OrderByFields.Should().BeEmpty();
-        sut.GroupByFields.Should().BeEmpty();
-        sut.GroupByFilter.Should().NotBeNull();
+        sut.Filter.Conditions.ShouldBeEmpty();
+        sut.Limit.ShouldBeNull();
+        sut.Offset.ShouldBeNull();
+        sut.OrderByFields.ShouldBeEmpty();
+        sut.GroupByFields.ShouldBeEmpty();
+        sut.GroupByFilter.ShouldNotBeNull();
     }
 
     [Fact]
@@ -41,12 +41,12 @@ public class GroupingQueryBuilderTests
         };
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
-        sut.GroupByFields.Should().HaveCount(1);
-        sut.GroupByFilter.Conditions.Should().HaveCount(1);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions);
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
+        sut.GroupByFields.Count.ShouldBe(1);
+        sut.GroupByFilter.Conditions.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -74,12 +74,12 @@ public class GroupingQueryBuilderTests
         var actual = sut.BuildTyped();
 
         // Assert
-        actual.Should().NotBeNull();
-        actual.Limit.Should().Be(sut.Limit);
-        actual.Offset.Should().Be(sut.Offset);
-        actual.Filter.Conditions.Should().HaveCount(sut.Filter.Conditions.Count);
-        actual.OrderByFields.Should().HaveCount(sut.OrderByFields.Count);
-        actual.GroupByFields.Should().HaveCount(1);
-        actual.GroupByFilter.Conditions.Should().HaveCount(1);
+        actual.ShouldNotBeNull();
+        actual.Limit.ShouldBe(sut.Limit);
+        actual.Offset.ShouldBe(sut.Offset);
+        actual.Filter.Conditions.Count.ShouldBe(sut.Filter.Conditions.Count);
+        actual.OrderByFields.Count.ShouldBe(sut.OrderByFields.Count);
+        actual.GroupByFields.Count.ShouldBe(1);
+        actual.GroupByFilter.Conditions.Count.ShouldBe(1);
     }
 }

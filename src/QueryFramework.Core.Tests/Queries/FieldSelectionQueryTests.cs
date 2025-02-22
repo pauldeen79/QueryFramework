@@ -9,13 +9,13 @@ public class FieldSelectionQueryTests
         var sut = new FieldSelectionQueryBuilder().BuildTyped();
 
         // Assert
-        sut.Filter.Conditions.Should().BeEmpty();
-        sut.Distinct.Should().BeFalse();
-        sut.FieldNames.Should().BeEmpty();
-        sut.GetAllFields.Should().BeFalse();
-        sut.Limit.Should().BeNull();
-        sut.Offset.Should().BeNull();
-        sut.OrderByFields.Should().BeEmpty();
+        sut.Filter.Conditions.ShouldBeEmpty();
+        sut.Distinct.ShouldBeFalse();
+        sut.FieldNames.ShouldBeEmpty();
+        sut.GetAllFields.ShouldBeFalse();
+        sut.Limit.ShouldBeNull();
+        sut.Offset.ShouldBeNull();
+        sut.OrderByFields.ShouldBeEmpty();
     }
 
     [Fact]
@@ -50,13 +50,13 @@ public class FieldSelectionQueryTests
             .Where(conditions);
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Distinct.Should().Be(distinct);
-        sut.FieldNames.Should().BeEmpty();
-        sut.GetAllFields.Should().Be(getAllFields);
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions);
+        sut.Distinct.ShouldBe(distinct);
+        sut.FieldNames.ShouldBeEmpty();
+        sut.GetAllFields.ShouldBe(getAllFields);
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
     }
 
     [Fact]
@@ -91,12 +91,12 @@ public class FieldSelectionQueryTests
             .Where(conditions);
 
         // Assert
-        sut.Filter.Conditions.Should().BeEquivalentTo(conditions);
-        sut.Distinct.Should().Be(distinct);
-        sut.FieldNames.Should().BeEquivalentTo(fields);
-        sut.GetAllFields.Should().BeFalse();
-        sut.Limit.Should().Be(limit);
-        sut.Offset.Should().Be(offset);
-        sut.OrderByFields.Should().BeEquivalentTo(orderByFields);
+        sut.Filter.Conditions.ToArray().ShouldBeEquivalentTo(conditions);
+        sut.Distinct.ShouldBe(distinct);
+        sut.FieldNames.ToArray().ShouldBeEquivalentTo(fields);
+        sut.GetAllFields.ShouldBeFalse();
+        sut.Limit.ShouldBe(limit);
+        sut.Offset.ShouldBe(offset);
+        sut.OrderByFields.ToArray().ShouldBeEquivalentTo(orderByFields);
     }
 }

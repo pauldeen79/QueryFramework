@@ -1,11 +1,11 @@
-﻿global using System;
+global using System;
 global using System.IO;
 global using System.Linq;
 global using System.Runtime.InteropServices;
 global using ExpressionFramework.Domain.Builders.Evaluatables;
 global using ExpressionFramework.Domain.Builders.Expressions;
 global using ExpressionFramework.Domain.Builders.Operators;
-global using FluentAssertions;
+global using Shouldly;
 global using Microsoft.Extensions.DependencyInjection;
 global using NSubstitute;
 global using QueryFramework.Abstractions;
