@@ -11,7 +11,7 @@ internal static class Program
             ? Path.Combine(currentDirectory, @"src/")
             : Path.Combine(currentDirectory, @"../../../../");
         var services = new ServiceCollection()
-            .AddParsers()
+            .AddExpressionEvaluator()
             .AddClassFrameworkPipelines()
             .AddTemplateFramework()
             .AddTemplateFrameworkChildTemplateProvider()
@@ -38,7 +38,7 @@ internal static class Program
         foreach (var generatorType in generators)
         {
             var generator = (CsharpClassGeneratorCodeGenerationProviderBase)scope.ServiceProvider.GetRequiredService(generatorType);
-            var result = await engine.Generate(generator, new MultipleStringContentBuilderEnvironment(), new CodeGenerationSettings(basePath, Path.Combine(generator.Path, $"{generatorType.Name}.template.generated.cs"))).ConfigureAwait(false);
+            var result = await engine.GenerateAsync(generator, new MultipleStringContentBuilderEnvironment(), new CodeGenerationSettings(basePath, Path.Combine(generator.Path, $"{generatorType.Name}.template.generated.cs"))).ConfigureAwait(false);
             if (!result.IsSuccessful())
             {
                 Console.WriteLine("Errors:");
@@ -59,7 +59,7 @@ internal static class Program
             Console.WriteLine($"{string.Join(",", validationError.MemberNames)}: {validationError.ErrorMessage}");
         }
 
-        foreach (var innerResult in error.InnerResults)
+        foreach (var innerResult in error.InnerResults.Where(x => !x.IsSuccessful()))
         {
             WriteError(innerResult);
         }

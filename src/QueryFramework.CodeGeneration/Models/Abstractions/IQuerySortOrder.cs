@@ -2,6 +2,6 @@
 
 internal interface IQuerySortOrder
 {
-    [Required][ValidateObject] Expression FieldNameExpression { get; }
+    [Required][ValidateObject] IExpression<string> FieldNameExpression { get; }
     QuerySortOrderDirection Order { get; }
 }

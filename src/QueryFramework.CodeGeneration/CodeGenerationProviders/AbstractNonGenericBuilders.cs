@@ -7,8 +7,8 @@ public class AbstractNonGenericBuilders : QueryFrameworkCSharpClassBase
     {
     }
 
-    public override Task<Result<IEnumerable<TypeBase>>> GetModel(CancellationToken cancellationToken)
-        => GetNonGenericBuilders(GetAbstractModels(), CurrentNamespace, Constants.Namespaces.Core);
+    public override Task<Result<IEnumerable<TypeBase>>> GetModelAsync(CancellationToken cancellationToken)
+        => GetNonGenericBuildersAsync(GetAbstractModelsAsync(), CurrentNamespace, Constants.Namespaces.Core);
 
     public override string Path => $"{Constants.Namespaces.Core}/Builders";
 

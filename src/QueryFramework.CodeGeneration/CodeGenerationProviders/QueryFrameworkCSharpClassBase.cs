@@ -2,7 +2,7 @@
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
-    private const string TypeNameDotClassNameBuilder = "{NoGenerics(ClassName($property.TypeName))}Builder";
+    private const string TypeNameDotClassNameBuilder = "{NoGenerics(ClassName(property.TypeName))}Builder";
 
     protected QueryFrameworkCSharpClassBase(IPipelineService pipelineService) : base(pipelineService)
     {
@@ -30,7 +30,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
 
     protected override IEnumerable<TypenameMappingBuilder> CreateAdditionalTypenameMappings()
-        => new TypenameMappingBuilder[]
+        => /*new TypenameMappingBuilder[]
         {
             new TypenameMappingBuilder()
                 .WithSourceTypeName(typeof(ComposedEvaluatable).FullName!)
@@ -54,7 +54,7 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                     new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
                     new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue)
                 ),
-        }.Concat(
+        }.Concat(*/
             GetType().Assembly.GetTypes()
                 .Where(x => x.IsInterface
                     && x.Namespace == $"{CodeGenerationRootNamespace}.Models.Abstractions"
@@ -76,6 +76,6 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                                 new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
                                 new MetadataBuilder().WithName(ClassFramework.Pipelines.MetadataNames.CustomEntityInterfaceTypeName).WithValue($"{ProjectName}.Abstractions.I{x.GetEntityClassName()}")
                             )
-                    })
-        );
+                    });
+        //);
 }

@@ -9,12 +9,12 @@ public class OverrideQueryBuilders : QueryFrameworkCSharpClassBase
 
     public override string Path => Constants.Paths.QueryBuilders;
 
-    public override Task<Result<IEnumerable<TypeBase>>> GetModel(CancellationToken cancellationToken)
-        => GetBuilders(GetOverrideModels(typeof(Models.IQuery)), CurrentNamespace, Constants.Namespaces.CoreQueries);
+    public override Task<Result<IEnumerable<TypeBase>>> GetModelAsync(CancellationToken cancellationToken)
+        => GetBuildersAsync(GetOverrideModelsAsync(typeof(Models.IQuery)), CurrentNamespace, Constants.Namespaces.CoreQueries);
 
     protected override bool EnableEntityInheritance => true;
     protected override bool EnableBuilderInhericance => true;
     protected override bool CreateAsObservable => true;
-    protected override Task<Result<TypeBase>> GetBaseClass() => CreateBaseClass(typeof(Models.IQuery), Constants.Namespaces.Core);
+    protected override Task<Result<TypeBase>> GetBaseClassAsync() => CreateBaseClassAsync(typeof(Models.IQuery), Constants.Namespaces.Core);
     protected override string BaseClassBuilderNamespace => Constants.Namespaces.CoreBuilders;
 }
