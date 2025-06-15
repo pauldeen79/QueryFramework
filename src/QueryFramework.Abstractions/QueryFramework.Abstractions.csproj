@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="pauldeen79.CrossCutting.Common" Version="3.29.0" />
     <PackageReference Include="pauldeen79.CrossCutting.Data.Abstractions" Version="4.0.2" />
-    <PackageReference Include="pauldeen79.CrossCutting.Utilities.ExpressionEvaluator" Version="2.0.9" />
+    <PackageReference Include="pauldeen79.CrossCutting.Utilities.ExpressionEvaluator" Version="2.0.10" />
   </ItemGroup>
 
   <ItemGroup>
