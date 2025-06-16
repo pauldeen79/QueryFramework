@@ -12,57 +12,6 @@ namespace QueryFramework.Abstractions.Builders.Extensions
 {
     public static partial class ConditionBuilderExtensions
     {
-        public static T WithStringComparison<T>(this T instance, System.StringComparison stringComparison)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            instance.StringComparison = stringComparison;
-            return instance;
-        }
-
-        public static T WithLeftExpression<T>(this T instance, CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable leftExpression)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            if (leftExpression is null) throw new System.ArgumentNullException(nameof(leftExpression));
-            instance.LeftExpression = leftExpression;
-            return instance;
-        }
-
-        public static T WithOperator<T>(this T instance, QueryFramework.Abstractions.Builders.IOperatorBuilder @operator)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            if (@operator is null) throw new System.ArgumentNullException(nameof(@operator));
-            instance.Operator = @operator;
-            return instance;
-        }
-
-        public static T WithRightExpression<T>(this T instance, CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable rightExpression)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            if (rightExpression is null) throw new System.ArgumentNullException(nameof(rightExpression));
-            instance.RightExpression = rightExpression;
-            return instance;
-        }
-
-        public static T WithCombination<T>(this T instance, System.Nullable<QueryFramework.Abstractions.Domains.Combination> combination)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            instance.Combination = combination;
-            return instance;
-        }
-
-        public static T WithStartGroup<T>(this T instance, bool startGroup = true)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            instance.StartGroup = startGroup;
-            return instance;
-        }
-
-        public static T WithEndGroup<T>(this T instance, bool endGroup = true)
-            where T : QueryFramework.Abstractions.Builders.IConditionBuilder
-        {
-            instance.EndGroup = endGroup;
-            return instance;
-        }
     }
     public static partial class DataObjectNameQueryBuilderExtensions
     {

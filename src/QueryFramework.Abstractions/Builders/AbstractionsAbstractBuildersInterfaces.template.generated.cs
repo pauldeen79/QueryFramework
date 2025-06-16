@@ -12,48 +12,6 @@ namespace QueryFramework.Abstractions.Builders
 {
     public partial interface IConditionBuilder
     {
-        System.StringComparison StringComparison
-        {
-            get;
-            set;
-        }
-
-        CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable LeftExpression
-        {
-            get;
-            set;
-        }
-
-        QueryFramework.Abstractions.Builders.IOperatorBuilder Operator
-        {
-            get;
-            set;
-        }
-
-        CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable RightExpression
-        {
-            get;
-            set;
-        }
-
-        System.Nullable<QueryFramework.Abstractions.Domains.Combination> Combination
-        {
-            get;
-            set;
-        }
-
-        bool StartGroup
-        {
-            get;
-            set;
-        }
-
-        bool EndGroup
-        {
-            get;
-            set;
-        }
-
         QueryFramework.Abstractions.ICondition Build();
     }
     public partial interface IDataObjectNameQueryBuilder : QueryFramework.Abstractions.Builders.IQueryBuilder

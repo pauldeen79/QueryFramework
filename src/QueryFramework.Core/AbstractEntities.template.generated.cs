@@ -10,6 +10,19 @@
 #nullable enable
 namespace QueryFramework.Core
 {
+    public abstract partial record Condition : QueryFramework.Abstractions.ICondition
+    {
+        protected Condition()
+        {
+        }
+
+        public abstract QueryFramework.Abstractions.Builders.IConditionBuilder ToBuilder();
+
+        QueryFramework.Abstractions.Builders.IConditionBuilder QueryFramework.Abstractions.ICondition.ToBuilder()
+        {
+            return ToBuilder();
+        }
+    }
     public abstract partial record Query : QueryFramework.Abstractions.IQuery
     {
         public System.Nullable<int> Limit

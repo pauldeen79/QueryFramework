@@ -10,6 +10,35 @@
 #nullable enable
 namespace QueryFramework.Core.Builders
 {
+    public abstract partial class ConditionBuilder<TBuilder, TEntity> : ConditionBuilder, QueryFramework.Abstractions.Builders.IConditionBuilder
+        where TEntity : QueryFramework.Core.Condition
+        where TBuilder : ConditionBuilder<TBuilder, TEntity>
+    {
+        protected ConditionBuilder(QueryFramework.Abstractions.ICondition source) : base(source)
+        {
+        }
+
+        protected ConditionBuilder() : base()
+        {
+        }
+
+        public override QueryFramework.Core.Condition Build()
+        {
+            return BuildTyped();
+        }
+
+        public abstract TEntity BuildTyped();
+
+        QueryFramework.Abstractions.ICondition QueryFramework.Abstractions.Builders.IConditionBuilder.Build()
+        {
+            return BuildTyped();
+        }
+
+        public static implicit operator QueryFramework.Core.Condition(ConditionBuilder<TBuilder, TEntity> entity)
+        {
+            return entity.BuildTyped();
+        }
+    }
     public abstract partial class QueryBuilder<TBuilder, TEntity> : QueryBuilder, QueryFramework.Abstractions.Builders.IQueryBuilder
         where TEntity : QueryFramework.Core.Query
         where TBuilder : QueryBuilder<TBuilder, TEntity>

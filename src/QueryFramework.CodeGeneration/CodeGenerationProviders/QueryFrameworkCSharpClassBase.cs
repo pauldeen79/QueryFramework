@@ -1,4 +1,7 @@
-﻿namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
+﻿using ClassFramework.Domain.Extensions;
+using CrossCutting.Common.Abstractions;
+
+namespace QueryFramework.CodeGeneration.CodeGenerationProviders;
 
 public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipelineCodeGenerationProviderBase
 {
@@ -27,36 +30,25 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool GenerateMultipleFiles => false;
     protected override bool EnableGlobalUsings => true;
 
-    protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type == typeof(Models.IQuery);
+    protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type.In(typeof(Models.IQuery), typeof(Models.ICondition));
 
     protected override IEnumerable<TypenameMappingBuilder> CreateAdditionalTypenameMappings()
         => new TypenameMappingBuilder[]
         {
-            //new TypenameMappingBuilder()
-            //    .WithSourceType(typeof(ComposedEvaluatable))
-            //    .WithTargetType(typeof(ComposedEvaluatable))
-            //    .AddMetadata
-            //    (
-            //        new MetadataBuilder().WithValue(typeof(ComposedEvaluatableBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-            //        new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-            //        new MetadataBuilder().WithValue($"new {typeof(ComposedEvaluatableBuilder).FullName}(source.{{$property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
-            //        new MetadataBuilder().WithValue(new Literal($"new {typeof(ComposedEvaluatableBuilder).FullName}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
-            //        new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
-            //    ),
-            //new TypenameMappingBuilder()
-            //    .WithSourceType(typeof(Expression))
-            //    .WithTargetType(typeof(Expression))
-            //    .AddMetadata
-            //    (
-            //        new MetadataBuilder().WithValue(typeof(ExpressionBuilder).Namespace).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-            //        new MetadataBuilder().WithValue(TypeNameDotClassNameBuilder).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-            //        new MetadataBuilder().WithValue("[Name][NullableSuffix].ToBuilder()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderSourceExpression),
-            //        new MetadataBuilder().WithValue("[Name][NullableSuffix].Build()[ForcedNullableSuffix]").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression),
-            //        new MetadataBuilder().WithValue(new Literal($"default({typeof(ExpressionBuilder).FullName})", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue)
-            //    ),
             new TypenameMappingBuilder()
-                .WithSourceType(typeof(ValidGroupsAttribute))
-                .WithTargetTypeName(typeof(ValidGroupsAttribute).FullName!.Replace(CodeGenerationRootNamespace, $"{ProjectName}.Abstractions"))
+                .WithSourceType(typeof(IEvaluatable))
+                .WithTargetType(typeof(IEvaluatable))
+                .AddMetadata
+                (
+                    new MetadataBuilder().WithValue(Constants.Namespaces.AbstractionsBuilders).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
+                    new MetadataBuilder().WithValue(typeof(IBuilder<object>).ReplaceGenericTypeName(typeof(IEvaluatable))).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
+                    new MetadataBuilder().WithValue($"new {Constants.TypeNames.ComposedEvaluatableBuilder}(source.{{property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
+                    new MetadataBuilder().WithValue(new Literal($"new {Constants.TypeNames.ComposedEvaluatableBuilder}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
+                    new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
+                ),
+                new TypenameMappingBuilder()
+                    .WithSourceType(typeof(ValidGroupsAttribute))
+                    .WithTargetTypeName(typeof(ValidGroupsAttribute).FullName!.Replace(CodeGenerationRootNamespace, $"{ProjectName}.Abstractions"))
         }.Concat(
             GetType().Assembly.GetTypes()
                 .Where(x => x.IsInterface

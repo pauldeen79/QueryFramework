@@ -17,7 +17,9 @@ public static class Constants
         public const string AbstractionsQueries = "QueryFramework.Abstractions.Queries";
         public const string AbstractionsBuildersQueries = "QueryFramework.Abstractions.Builders.Queries";
         public const string CoreQueries = "QueryFramework.Core.Queries";
+        public const string CoreConditions = "QueryFramework.Core.Conditions";
         public const string CoreBuildersQueries = "QueryFramework.Core.Builders.Queries";
+        public const string CoreBuildersConditions= "QueryFramework.Core.Builders.Conditions";
     }
 
     public static class Types
@@ -33,13 +35,15 @@ public static class Constants
         public const string IQuery = $"{Namespaces.Abstractions}.IQuery";
         public const string IQueryBuilder = $"{Namespaces.AbstractionsBuilders}.IQueryBuilder";
         public const string Query = $"{Namespaces.Core}.Query";
+        public const string ComposedEvaluatableBuilder = $"{Namespaces.CoreBuildersConditions}.ComposedEvaluatableBuilder";
     }
 
     [ExcludeFromCodeCoverage]
     public static class Paths
     {
         public const string Queries = $"{Namespaces.Core}/{nameof(Queries)}";
-
+        public const string Conditions = $"{Namespaces.Core}/{nameof(Conditions)}";
         public const string QueryBuilders = $"{Namespaces.Core}/Builders/{nameof(Queries)}";
+        public const string ConditionBuilders = $"{Namespaces.Core}/Builders/{nameof(Conditions)}";
     }
 }

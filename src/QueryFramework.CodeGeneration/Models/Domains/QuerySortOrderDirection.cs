@@ -1,5 +1,5 @@
 ﻿namespace QueryFramework.CodeGeneration.Models.Domains;
 
-public enum QuerySortOrderDirection
+internal enum QuerySortOrderDirection
 {
 }

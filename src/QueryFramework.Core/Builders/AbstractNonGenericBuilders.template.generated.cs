@@ -10,6 +10,38 @@
 #nullable enable
 namespace QueryFramework.Core.Builders
 {
+    public abstract partial class ConditionBuilder : QueryFramework.Abstractions.Builders.IConditionBuilder, System.ComponentModel.INotifyPropertyChanged
+    {
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+        protected ConditionBuilder(QueryFramework.Abstractions.ICondition source)
+        {
+        }
+
+        protected ConditionBuilder()
+        {
+            SetDefaultValues();
+        }
+
+        public abstract QueryFramework.Core.Condition Build();
+
+        QueryFramework.Abstractions.ICondition QueryFramework.Abstractions.Builders.IConditionBuilder.Build()
+        {
+            return Build();
+        }
+
+        partial void SetDefaultValues();
+
+        public static implicit operator QueryFramework.Core.Condition(ConditionBuilder entity)
+        {
+            return entity.Build();
+        }
+
+        protected void HandlePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    }
     public abstract partial class QueryBuilder : QueryFramework.Abstractions.Builders.IQueryBuilder, System.ComponentModel.INotifyPropertyChanged
     {
         private System.Nullable<int> _limit;
