@@ -24,7 +24,7 @@ namespace QueryFramework.Core
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        [QueryFramework.CodeGeneration.ValidGroupsAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         public System.Collections.Generic.IReadOnlyCollection<QueryFramework.Abstractions.ICondition> Filter
         {
             get;

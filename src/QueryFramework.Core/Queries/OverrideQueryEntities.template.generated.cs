@@ -101,6 +101,7 @@ namespace QueryFramework.Core.Queries
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         public System.Collections.Generic.IReadOnlyCollection<QueryFramework.Abstractions.ICondition> GroupByFilter
         {
             get;

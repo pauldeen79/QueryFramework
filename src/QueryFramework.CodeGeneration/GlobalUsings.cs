@@ -18,6 +18,7 @@ global using CsharpExpressionDumper.Core.Extensions;
 global using Microsoft.Extensions.DependencyInjection;
 global using QueryFramework.CodeGeneration.CodeGenerationProviders;
 global using QueryFramework.CodeGeneration.Models.Domains;
+global using QueryFramework.CodeGeneration.Validation;
 global using TemplateFramework.Abstractions.CodeGeneration;
 global using TemplateFramework.Abstractions.Extensions;
 global using TemplateFramework.Core.CodeGeneration;

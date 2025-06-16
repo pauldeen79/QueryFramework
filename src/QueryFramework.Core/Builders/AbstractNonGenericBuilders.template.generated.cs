@@ -52,7 +52,7 @@ namespace QueryFramework.Core.Builders
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        [QueryFramework.CodeGeneration.ValidGroupsAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         public System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder> Filter
         {
             get

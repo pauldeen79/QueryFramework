@@ -175,6 +175,7 @@ namespace QueryFramework.Core.Builders.Queries
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         public System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder> GroupByFilter
         {
             get

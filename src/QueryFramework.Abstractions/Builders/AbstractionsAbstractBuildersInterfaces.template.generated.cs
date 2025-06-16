@@ -102,6 +102,7 @@ namespace QueryFramework.Abstractions.Builders
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder> GroupByFilter
         {
             get;
@@ -142,7 +143,7 @@ namespace QueryFramework.Abstractions.Builders
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        [QueryFramework.CodeGeneration.ValidGroupsAttribute]
+        [QueryFramework.Abstractions.Validation.ValidGroupsAttribute]
         System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder> Filter
         {
             get;
