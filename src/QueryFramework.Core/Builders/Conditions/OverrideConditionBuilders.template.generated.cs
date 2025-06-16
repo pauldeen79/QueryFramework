@@ -14,11 +14,11 @@ namespace QueryFramework.Core.Builders.Conditions
     {
         private System.StringComparison _stringComparison;
 
-        private QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> _leftExpression;
+        private CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable _leftExpression;
 
         private QueryFramework.Abstractions.Builders.IOperatorBuilder _operator;
 
-        private QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> _rightExpression;
+        private CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable _rightExpression;
 
         private System.Nullable<QueryFramework.Abstractions.Domains.Combination> _combination;
 
@@ -40,7 +40,7 @@ namespace QueryFramework.Core.Builders.Conditions
             }
         }
 
-        public QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> LeftExpression
+        public CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable LeftExpression
         {
             get
             {
@@ -48,7 +48,7 @@ namespace QueryFramework.Core.Builders.Conditions
             }
             set
             {
-                bool hasChanged = !System.Collections.Generic.EqualityComparer<QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable>>.Default.Equals(_leftExpression!, value!);
+                bool hasChanged = !System.Collections.Generic.EqualityComparer<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable>.Default.Equals(_leftExpression!, value!);
                 _leftExpression = value ?? throw new System.ArgumentNullException(nameof(value));
                 if (hasChanged) HandlePropertyChanged(nameof(LeftExpression));
             }
@@ -68,7 +68,7 @@ namespace QueryFramework.Core.Builders.Conditions
             }
         }
 
-        public QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> RightExpression
+        public CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable RightExpression
         {
             get
             {
@@ -76,7 +76,7 @@ namespace QueryFramework.Core.Builders.Conditions
             }
             set
             {
-                bool hasChanged = !System.Collections.Generic.EqualityComparer<QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable>>.Default.Equals(_rightExpression!, value!);
+                bool hasChanged = !System.Collections.Generic.EqualityComparer<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable>.Default.Equals(_rightExpression!, value!);
                 _rightExpression = value ?? throw new System.ArgumentNullException(nameof(value));
                 if (hasChanged) HandlePropertyChanged(nameof(RightExpression));
             }
@@ -128,9 +128,9 @@ namespace QueryFramework.Core.Builders.Conditions
         {
             if (source is null) throw new System.ArgumentNullException(nameof(source));
             _stringComparison = source.StringComparison;
-            _leftExpression = new QueryFramework.Core.Builders.Conditions.ComposedEvaluatableBuilder(source.LeftExpression);
+            _leftExpression = new QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder(source.LeftExpression);
             _operator = source.Operator?.ToBuilder()!;
-            _rightExpression = new QueryFramework.Core.Builders.Conditions.ComposedEvaluatableBuilder(source.RightExpression);
+            _rightExpression = new QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder(source.RightExpression);
             _combination = source.Combination;
             _startGroup = source.StartGroup;
             _endGroup = source.EndGroup;
@@ -138,9 +138,9 @@ namespace QueryFramework.Core.Builders.Conditions
 
         public ComposableConditionBuilder() : base()
         {
-            _leftExpression = new QueryFramework.Core.Builders.Conditions.ComposedEvaluatableBuilder()!;
+            _leftExpression = new QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder()!;
             _operator = default(QueryFramework.Abstractions.IOperator)!;
-            _rightExpression = new QueryFramework.Core.Builders.Conditions.ComposedEvaluatableBuilder()!;
+            _rightExpression = new QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder()!;
             SetDefaultValues();
         }
 
@@ -162,7 +162,7 @@ namespace QueryFramework.Core.Builders.Conditions
             return this;
         }
 
-        public QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder WithLeftExpression(QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> leftExpression)
+        public QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder WithLeftExpression(CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable leftExpression)
         {
             if (leftExpression is null) throw new System.ArgumentNullException(nameof(leftExpression));
             LeftExpression = leftExpression;
@@ -176,7 +176,7 @@ namespace QueryFramework.Core.Builders.Conditions
             return this;
         }
 
-        public QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder WithRightExpression(QueryFramework.Abstractions.Builders.CrossCutting.Common.Abstractions.IBuilder<CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable> rightExpression)
+        public QueryFramework.Core.Builders.Conditions.ComposableConditionBuilder WithRightExpression(CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable rightExpression)
         {
             if (rightExpression is null) throw new System.ArgumentNullException(nameof(rightExpression));
             RightExpression = rightExpression;

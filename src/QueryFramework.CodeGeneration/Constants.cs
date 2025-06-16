@@ -35,7 +35,7 @@ public static class Constants
         public const string IQuery = $"{Namespaces.Abstractions}.IQuery";
         public const string IQueryBuilder = $"{Namespaces.AbstractionsBuilders}.IQueryBuilder";
         public const string Query = $"{Namespaces.Core}.Query";
-        public const string ComposedEvaluatableBuilder = $"{Namespaces.CoreBuildersConditions}.ComposedEvaluatableBuilder";
+        public const string ComposableConditionBuilder = $"{Namespaces.CoreBuildersConditions}.ComposableConditionBuilder";
     }
 
     [ExcludeFromCodeCoverage]

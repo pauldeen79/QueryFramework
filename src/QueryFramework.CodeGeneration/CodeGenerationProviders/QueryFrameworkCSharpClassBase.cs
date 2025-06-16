@@ -40,10 +40,10 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
                 .WithTargetType(typeof(IEvaluatable))
                 .AddMetadata
                 (
-                    new MetadataBuilder().WithValue(Constants.Namespaces.AbstractionsBuilders).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
+                    new MetadataBuilder().WithValue(string.Empty).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
                     new MetadataBuilder().WithValue(typeof(IBuilder<object>).ReplaceGenericTypeName(typeof(IEvaluatable))).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-                    new MetadataBuilder().WithValue($"new {Constants.TypeNames.ComposedEvaluatableBuilder}(source.{{property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
-                    new MetadataBuilder().WithValue(new Literal($"new {Constants.TypeNames.ComposedEvaluatableBuilder}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
+                    new MetadataBuilder().WithValue($"new {Constants.TypeNames.ComposableConditionBuilder}(source.{{property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
+                    new MetadataBuilder().WithValue(new Literal($"new {Constants.TypeNames.ComposableConditionBuilder}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
                     new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
                 ),
                 new TypenameMappingBuilder()
