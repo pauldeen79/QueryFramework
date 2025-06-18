@@ -29,7 +29,7 @@ public sealed class QueryProcessorTests : IDisposable
          .Message.ShouldBe("Evaluation failed");
     }
 
-    [Fact(Skip = "Not working with Shouldly, don't know why")]
+    [Fact]
     public async Task Unknown_FieldName_Throws_On_FindPagedAsync()
     {
         // Arrange
@@ -41,9 +41,7 @@ public sealed class QueryProcessorTests : IDisposable
 
         // Act & Assert
         Task t = sut.FindPagedAsync<MyClass>(query);
-        //Action a = async () => await sut.FindPagedAsync<MyClass>(query);
         (await t.ShouldThrowAsync<InvalidOperationException>())
-        //a.ShouldThrow<InvalidOperationException>()
          .Message.ShouldBe("Evaluation failed");
     }
 

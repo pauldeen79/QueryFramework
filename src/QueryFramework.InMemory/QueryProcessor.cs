@@ -21,7 +21,7 @@ public class QueryProcessor : IQueryProcessor
 
     public Task<IReadOnlyCollection<TResult>> FindManyAsync<TResult>(IQuery query, CancellationToken cancellationToken)
         where TResult : class
-        => Task.FromResult(FindMany<TResult>(query));
+        => Task.Run(() => FindMany<TResult>(query), cancellationToken);
 
     public TResult? FindOne<TResult>(IQuery query)
         where TResult : class
@@ -32,7 +32,7 @@ public class QueryProcessor : IQueryProcessor
         ).FirstOrDefault();
 
     public Task<TResult?> FindOneAsync<TResult>(IQuery query, CancellationToken cancellationToken) where TResult : class
-        => Task.FromResult(FindOne<TResult>(query));
+        => Task.Run(() => FindOne<TResult>(query), cancellationToken);
 
     public IPagedResult<TResult> FindPaged<TResult>(IQuery query)
         where TResult : class
@@ -49,7 +49,7 @@ public class QueryProcessor : IQueryProcessor
 
     public Task<IPagedResult<TResult>> FindPagedAsync<TResult>(IQuery query, CancellationToken cancellationToken)
         where TResult : class
-        => Task.FromResult(FindPaged<TResult>(query));
+        => Task.Run(() => FindPaged<TResult>(query), cancellationToken);
 
     private IEnumerable<TResult> GetData<TResult>(IQuery query)
         where TResult : class
