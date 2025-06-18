@@ -1,13 +1,13 @@
 ﻿namespace QueryFramework.Abstractions.Expressions.Builders;
 
-public class QueryParameterExpressionBuilder : ExpressionBuilder
+public class QueryParameterExpressionBuilder : IBuilder<IExpressionComponent>
 {
     public QueryParameterExpressionBuilder()
     {
         ParameterName = string.Empty;
     }
 
-    public QueryParameterExpressionBuilder(QueryParameterExpression source) : base(source)
+    public QueryParameterExpressionBuilder(QueryParameterExpression source)
     {
         source = source.IsNotNull(nameof(source));
 
@@ -17,11 +17,11 @@ public class QueryParameterExpressionBuilder : ExpressionBuilder
     [Required]
     public string ParameterName { get; set; }
 
-    public override Expression Build() => new QueryParameterExpression(ParameterName);
-
     public QueryParameterExpressionBuilder WithParameterName(string parameterName)
     {
         ParameterName = parameterName.IsNotNull(nameof(parameterName));
         return this;
     }
+
+    public IExpressionComponent Build() => new QueryParameterExpression(ParameterName);
 }
