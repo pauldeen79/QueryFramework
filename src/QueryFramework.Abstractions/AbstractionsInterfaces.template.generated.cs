@@ -24,6 +24,10 @@ namespace QueryFramework.Abstractions
 
         new QueryFramework.Abstractions.Builders.IDataObjectNameQueryBuilder ToBuilder();
     }
+    public partial interface IExpression
+    {
+        QueryFramework.Abstractions.Builders.IExpressionBuilder ToBuilder();
+    }
     public partial interface IFieldSelectionQuery : QueryFramework.Abstractions.IQuery
     {
         bool Distinct
@@ -48,7 +52,7 @@ namespace QueryFramework.Abstractions
     {
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        System.Collections.Generic.IReadOnlyCollection<CrossCutting.Utilities.ExpressionEvaluator.IExpression> GroupByFields
+        System.Collections.Generic.IReadOnlyCollection<QueryFramework.Abstractions.IExpression> GroupByFields
         {
             get;
         }

@@ -39,6 +39,35 @@ namespace QueryFramework.Core.Builders
             return entity.BuildTyped();
         }
     }
+    public abstract partial class ExpressionBuilder<TBuilder, TEntity> : ExpressionBuilder, QueryFramework.Abstractions.Builders.IExpressionBuilder
+        where TEntity : QueryFramework.Core.Expression
+        where TBuilder : ExpressionBuilder<TBuilder, TEntity>
+    {
+        protected ExpressionBuilder(QueryFramework.Abstractions.IExpression source) : base(source)
+        {
+        }
+
+        protected ExpressionBuilder() : base()
+        {
+        }
+
+        public override QueryFramework.Core.Expression Build()
+        {
+            return BuildTyped();
+        }
+
+        public abstract TEntity BuildTyped();
+
+        QueryFramework.Abstractions.IExpression QueryFramework.Abstractions.Builders.IExpressionBuilder.Build()
+        {
+            return BuildTyped();
+        }
+
+        public static implicit operator QueryFramework.Core.Expression(ExpressionBuilder<TBuilder, TEntity> entity)
+        {
+            return entity.BuildTyped();
+        }
+    }
     public abstract partial class QueryBuilder<TBuilder, TEntity> : QueryBuilder, QueryFramework.Abstractions.Builders.IQueryBuilder
         where TEntity : QueryFramework.Core.Query
         where TBuilder : QueryBuilder<TBuilder, TEntity>

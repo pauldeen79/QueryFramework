@@ -23,6 +23,9 @@ namespace QueryFramework.Abstractions.Builders.Extensions
             return instance;
         }
     }
+    public static partial class ExpressionBuilderExtensions
+    {
+    }
     public static partial class FieldSelectionQueryBuilderExtensions
     {
         public static T AddFieldNames<T>(this T instance, System.Collections.Generic.IEnumerable<string> fieldNames)
@@ -56,14 +59,14 @@ namespace QueryFramework.Abstractions.Builders.Extensions
     }
     public static partial class GroupingQueryBuilderExtensions
     {
-        public static T AddGroupByFields<T>(this T instance, System.Collections.Generic.IEnumerable<CrossCutting.Utilities.ExpressionEvaluator.IExpression> groupByFields)
+        public static T AddGroupByFields<T>(this T instance, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.Builders.IExpressionBuilder> groupByFields)
             where T : QueryFramework.Abstractions.Builders.IGroupingQueryBuilder
         {
             if (groupByFields is null) throw new System.ArgumentNullException(nameof(groupByFields));
             return instance.AddGroupByFields<T>(groupByFields.ToArray());
         }
 
-        public static T AddGroupByFields<T>(this T instance, params CrossCutting.Utilities.ExpressionEvaluator.IExpression[] groupByFields)
+        public static T AddGroupByFields<T>(this T instance, params QueryFramework.Abstractions.Builders.IExpressionBuilder[] groupByFields)
             where T : QueryFramework.Abstractions.Builders.IGroupingQueryBuilder
         {
             if (groupByFields is null) throw new System.ArgumentNullException(nameof(groupByFields));

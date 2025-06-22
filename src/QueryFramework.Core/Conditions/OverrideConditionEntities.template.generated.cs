@@ -17,7 +17,7 @@ namespace QueryFramework.Core.Conditions
             get;
         }
 
-        public CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable LeftExpression
+        public QueryFramework.Abstractions.IExpression LeftExpression
         {
             get;
         }
@@ -27,7 +27,7 @@ namespace QueryFramework.Core.Conditions
             get;
         }
 
-        public CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable RightExpression
+        public QueryFramework.Abstractions.IExpression RightExpression
         {
             get;
         }
@@ -47,7 +47,7 @@ namespace QueryFramework.Core.Conditions
             get;
         }
 
-        public ComposableCondition(System.StringComparison stringComparison, CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable leftExpression, QueryFramework.Abstractions.IOperator @operator, CrossCutting.Utilities.ExpressionEvaluator.IEvaluatable rightExpression, System.Nullable<QueryFramework.Abstractions.Domains.Combination> combination, bool startGroup, bool endGroup) : base()
+        public ComposableCondition(System.StringComparison stringComparison, QueryFramework.Abstractions.IExpression leftExpression, QueryFramework.Abstractions.IOperator @operator, QueryFramework.Abstractions.IExpression rightExpression, System.Nullable<QueryFramework.Abstractions.Domains.Combination> combination, bool startGroup, bool endGroup) : base()
         {
             this.StringComparison = stringComparison;
             this.LeftExpression = leftExpression;

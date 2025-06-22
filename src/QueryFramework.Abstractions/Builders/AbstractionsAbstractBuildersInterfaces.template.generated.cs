@@ -25,6 +25,10 @@ namespace QueryFramework.Abstractions.Builders
 
         new QueryFramework.Abstractions.IDataObjectNameQuery Build();
     }
+    public partial interface IExpressionBuilder
+    {
+        QueryFramework.Abstractions.IExpression Build();
+    }
     public partial interface IFieldSelectionQueryBuilder : QueryFramework.Abstractions.Builders.IQueryBuilder
     {
         bool Distinct
@@ -52,7 +56,7 @@ namespace QueryFramework.Abstractions.Builders
     {
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression> GroupByFields
+        System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IExpressionBuilder> GroupByFields
         {
             get;
             set;

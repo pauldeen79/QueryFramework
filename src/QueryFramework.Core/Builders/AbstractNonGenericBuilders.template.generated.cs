@@ -42,6 +42,38 @@ namespace QueryFramework.Core.Builders
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
     }
+    public abstract partial class ExpressionBuilder : QueryFramework.Abstractions.Builders.IExpressionBuilder, System.ComponentModel.INotifyPropertyChanged
+    {
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+        protected ExpressionBuilder(QueryFramework.Abstractions.IExpression source)
+        {
+        }
+
+        protected ExpressionBuilder()
+        {
+            SetDefaultValues();
+        }
+
+        public abstract QueryFramework.Core.Expression Build();
+
+        QueryFramework.Abstractions.IExpression QueryFramework.Abstractions.Builders.IExpressionBuilder.Build()
+        {
+            return Build();
+        }
+
+        partial void SetDefaultValues();
+
+        public static implicit operator QueryFramework.Core.Expression(ExpressionBuilder entity)
+        {
+            return entity.Build();
+        }
+
+        protected void HandlePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    }
     public abstract partial class QueryBuilder : QueryFramework.Abstractions.Builders.IQueryBuilder, System.ComponentModel.INotifyPropertyChanged
     {
         private System.Nullable<int> _limit;

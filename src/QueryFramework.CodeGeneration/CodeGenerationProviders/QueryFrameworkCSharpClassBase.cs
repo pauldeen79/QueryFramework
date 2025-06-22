@@ -30,25 +30,14 @@ public abstract class QueryFrameworkCSharpClassBase : CsharpClassGeneratorPipeli
     protected override bool GenerateMultipleFiles => false;
     protected override bool EnableGlobalUsings => true;
 
-    protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type.In(typeof(Models.IQuery), typeof(Models.ICondition));
+    protected override bool IsAbstractType(Type type) => base.IsAbstractType(type) || type.In(typeof(Models.IQuery), typeof(Models.ICondition), typeof(Models.IExpression));
 
     protected override IEnumerable<TypenameMappingBuilder> CreateAdditionalTypenameMappings()
         => new TypenameMappingBuilder[]
         {
             new TypenameMappingBuilder()
-                .WithSourceType(typeof(IEvaluatable))
-                .WithTargetType(typeof(IEvaluatable))
-                .AddMetadata
-                (
-                    new MetadataBuilder().WithValue(string.Empty).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderNamespace),
-                    new MetadataBuilder().WithValue(typeof(IBuilder<object>).ReplaceGenericTypeName(typeof(IEvaluatable))).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderName),
-                    new MetadataBuilder().WithValue($"new {Constants.TypeNames.ComposableConditionBuilder}(source.{{property.Name}})").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderConstructorInitializeExpression),
-                    new MetadataBuilder().WithValue(new Literal($"new {Constants.TypeNames.ComposableConditionBuilder}()", null)).WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderDefaultValue),
-                    new MetadataBuilder().WithValue("[Name][NullableSuffix].BuildTyped()").WithName(ClassFramework.Pipelines.MetadataNames.CustomBuilderMethodParameterExpression)
-                ),
-                new TypenameMappingBuilder()
-                    .WithSourceType(typeof(ValidGroupsAttribute))
-                    .WithTargetTypeName(typeof(ValidGroupsAttribute).FullName!.Replace(CodeGenerationRootNamespace, $"{ProjectName}.Abstractions"))
+                .WithSourceType(typeof(ValidGroupsAttribute))
+                .WithTargetTypeName(typeof(ValidGroupsAttribute).FullName!.Replace(CodeGenerationRootNamespace, $"{ProjectName}.Abstractions")),
         }.Concat(
             GetType().Assembly.GetTypes()
                 .Where(x => x.IsInterface

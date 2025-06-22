@@ -94,7 +94,7 @@ namespace QueryFramework.Core.Queries
     {
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        public System.Collections.Generic.IReadOnlyCollection<CrossCutting.Utilities.ExpressionEvaluator.IExpression> GroupByFields
+        public System.Collections.Generic.IReadOnlyCollection<QueryFramework.Abstractions.IExpression> GroupByFields
         {
             get;
         }
@@ -107,9 +107,9 @@ namespace QueryFramework.Core.Queries
             get;
         }
 
-        public GroupingQuery(System.Nullable<int> limit, System.Nullable<int> offset, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.ICondition> filter, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.IQuerySortOrder> orderByFields, System.Collections.Generic.IEnumerable<CrossCutting.Utilities.ExpressionEvaluator.IExpression> groupByFields, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.ICondition> groupByFilter) : base(limit, offset, filter, orderByFields)
+        public GroupingQuery(System.Nullable<int> limit, System.Nullable<int> offset, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.ICondition> filter, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.IQuerySortOrder> orderByFields, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.IExpression> groupByFields, System.Collections.Generic.IEnumerable<QueryFramework.Abstractions.ICondition> groupByFilter) : base(limit, offset, filter, orderByFields)
         {
-            this.GroupByFields = groupByFields is null ? null! : new CrossCutting.Common.ReadOnlyValueCollection<CrossCutting.Utilities.ExpressionEvaluator.IExpression>(groupByFields);
+            this.GroupByFields = groupByFields is null ? null! : new CrossCutting.Common.ReadOnlyValueCollection<QueryFramework.Abstractions.IExpression>(groupByFields);
             this.GroupByFilter = groupByFilter is null ? null! : new CrossCutting.Common.ReadOnlyValueCollection<QueryFramework.Abstractions.ICondition>(groupByFilter);
             System.ComponentModel.DataAnnotations.Validator.ValidateObject(this, new System.ComponentModel.DataAnnotations.ValidationContext(this, null, null), true);
         }

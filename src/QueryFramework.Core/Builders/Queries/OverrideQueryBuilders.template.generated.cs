@@ -153,13 +153,13 @@ namespace QueryFramework.Core.Builders.Queries
     }
     public partial class GroupingQueryBuilder : QueryFramework.Core.Builders.QueryBuilder<GroupingQueryBuilder, QueryFramework.Core.Queries.GroupingQuery>, QueryFramework.Abstractions.Builders.IQueryBuilder, QueryFramework.Abstractions.Builders.IGroupingQueryBuilder
     {
-        private System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression> _groupByFields;
+        private System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IExpressionBuilder> _groupByFields;
 
         private System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder> _groupByFilter;
 
         [System.ComponentModel.DataAnnotations.RequiredAttribute]
         [CrossCutting.Common.DataAnnotations.ValidateObjectAttribute]
-        public System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression> GroupByFields
+        public System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IExpressionBuilder> GroupByFields
         {
             get
             {
@@ -167,7 +167,7 @@ namespace QueryFramework.Core.Builders.Queries
             }
             set
             {
-                bool hasChanged = !System.Collections.Generic.EqualityComparer<System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression>>.Default.Equals(_groupByFields!, value!);
+                bool hasChanged = !System.Collections.Generic.EqualityComparer<System.Collections.Generic.IReadOnlyCollection<QueryFramework.Abstractions.Builders.IExpressionBuilder>>.Default.Equals(_groupByFields!, value!);
                 _groupByFields = value ?? throw new System.ArgumentNullException(nameof(value));
                 if (hasChanged) HandlePropertyChanged(nameof(GroupByFields));
             }
@@ -193,22 +193,22 @@ namespace QueryFramework.Core.Builders.Queries
         public GroupingQueryBuilder(QueryFramework.Abstractions.IGroupingQuery source) : base(source)
         {
             if (source is null) throw new System.ArgumentNullException(nameof(source));
-            _groupByFields = new System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression>();
+            _groupByFields = new System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IExpressionBuilder>();
             _groupByFilter = new System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder>();
-            if (source.GroupByFields is not null) foreach (var item in source.GroupByFields) _groupByFields.Add(item);
+            if (source.GroupByFields is not null) foreach (var item in source.GroupByFields.Select(x => x.ToBuilder())) _groupByFields.Add(item);
             if (source.GroupByFilter is not null) foreach (var item in source.GroupByFilter.Select(x => x.ToBuilder())) _groupByFilter.Add(item);
         }
 
         public GroupingQueryBuilder() : base()
         {
-            _groupByFields = new System.Collections.Generic.List<CrossCutting.Utilities.ExpressionEvaluator.IExpression>();
+            _groupByFields = new System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IExpressionBuilder>();
             _groupByFilter = new System.Collections.Generic.List<QueryFramework.Abstractions.Builders.IConditionBuilder>();
             SetDefaultValues();
         }
 
         public override QueryFramework.Core.Queries.GroupingQuery BuildTyped()
         {
-            return new QueryFramework.Core.Queries.GroupingQuery(Limit, Offset, Filter.Select(x => x.Build()!).ToList().AsReadOnly(), OrderByFields.Select(x => x.Build()!).ToList().AsReadOnly(), GroupByFields, GroupByFilter.Select(x => x.Build()!).ToList().AsReadOnly());
+            return new QueryFramework.Core.Queries.GroupingQuery(Limit, Offset, Filter.Select(x => x.Build()!).ToList().AsReadOnly(), OrderByFields.Select(x => x.Build()!).ToList().AsReadOnly(), GroupByFields.Select(x => x.Build()!).ToList().AsReadOnly(), GroupByFilter.Select(x => x.Build()!).ToList().AsReadOnly());
         }
 
         QueryFramework.Abstractions.IQuery QueryFramework.Abstractions.Builders.IQueryBuilder.Build()

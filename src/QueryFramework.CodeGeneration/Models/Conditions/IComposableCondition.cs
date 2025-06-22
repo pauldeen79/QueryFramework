@@ -4,9 +4,9 @@ internal interface IComposableCondition : ICondition
 {
     StringComparison StringComparison { get; set; }
 
-    IEvaluatable LeftExpression { get; set; }
+    Abstractions.IExpression LeftExpression { get; set; }
     IOperator Operator { get; set; }
-    IEvaluatable RightExpression { get; set; }
+    Abstractions.IExpression RightExpression { get; set; }
 
     Combination? Combination { get; set; }
     bool StartGroup { get; set; }

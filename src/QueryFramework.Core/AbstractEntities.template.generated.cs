@@ -23,6 +23,19 @@ namespace QueryFramework.Core
             return ToBuilder();
         }
     }
+    public abstract partial record Expression : QueryFramework.Abstractions.IExpression
+    {
+        protected Expression()
+        {
+        }
+
+        public abstract QueryFramework.Abstractions.Builders.IExpressionBuilder ToBuilder();
+
+        QueryFramework.Abstractions.Builders.IExpressionBuilder QueryFramework.Abstractions.IExpression.ToBuilder()
+        {
+            return ToBuilder();
+        }
+    }
     public abstract partial record Query : QueryFramework.Abstractions.IQuery
     {
         public System.Nullable<int> Limit
