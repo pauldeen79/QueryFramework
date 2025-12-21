@@ -34,3 +34,6 @@ Command to run code generation (example where you are in the root directory):
 ```powershell
 dotnet run --project ./src/QueryFramework.CodeGeneration\QueryFramework.CodeGeneration.csproj
 ```
+# Deprecated
+
+This library has been replaced by the QueryEvaluator component, which is part of my CrossCutting repository.
